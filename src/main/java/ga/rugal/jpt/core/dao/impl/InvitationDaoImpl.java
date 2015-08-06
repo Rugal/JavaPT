@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class InvitationDaoImpl extends HibernateBaseDao<Invitation, Integer> implements InvitationDao
 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Invitation.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(InvitationDaoImpl.class.getName());
 
     @Override
     @Transactional(readOnly = true)

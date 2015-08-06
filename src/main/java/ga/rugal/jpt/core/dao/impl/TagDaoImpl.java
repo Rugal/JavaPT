@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TagDaoImpl extends HibernateBaseDao<Tag, Integer> implements TagDao
 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Tag.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(TagDaoImpl.class.getName());
 
     @Override
     @Transactional(readOnly = true)

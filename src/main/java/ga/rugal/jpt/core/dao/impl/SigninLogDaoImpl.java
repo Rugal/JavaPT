@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SigninLogDaoImpl extends HibernateBaseDao<SigninLog, Integer> implements SigninLogDao
 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SigninLog.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(SigninLogDaoImpl.class.getName());
 
     @Override
     @Transactional(readOnly = true)

@@ -10,13 +10,13 @@ package ga.rugal.jpt.common;
 public interface CommonMessageContent
 {
 
-    String SAVE_SUCCEED = "New student registered";
+    String SAVE_USER = "User registered";
 
-    String PROFILE_UPDATED = "Student profile updated";
+    String UPDATE_USER = "User profile updated";
 
-    String STUDENT_DELETED = "Student profile deleted";
+    String DELETE_USER = "User deleted";
 
-    String GET_STUDENT = "Get student profile";
+    String GET_USER = "Get user profile";
 
     String ACCESS_FORBIDDEN = "Unmatched combination of username and credential";
 

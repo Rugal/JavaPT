@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ThreadDaoImpl extends HibernateBaseDao<Thread, Integer> implements ThreadDao
 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Thread.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(ThreadDaoImpl.class.getName());
 
     @Override
     @Transactional(readOnly = true)

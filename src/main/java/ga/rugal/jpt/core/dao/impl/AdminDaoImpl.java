@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminDaoImpl extends HibernateBaseDao<Admin, Integer> implements AdminDao
 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Admin.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(AdminDaoImpl.class.getName());
 
     @Override
     @Transactional(readOnly = true)

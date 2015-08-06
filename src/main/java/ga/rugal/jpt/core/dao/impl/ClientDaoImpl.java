@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ClientDaoImpl extends HibernateBaseDao<Client, Integer> implements ClientDao
 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Client.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(ClientDaoImpl.class.getName());
 
     @Override
     @Transactional(readOnly = true)

@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class LevelDaoImpl extends HibernateBaseDao<Level, Integer> implements LevelDao
 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Level.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(LevelDaoImpl.class.getName());
 
     @Override
     @Transactional(readOnly = true)

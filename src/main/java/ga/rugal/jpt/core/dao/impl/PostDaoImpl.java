@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostDaoImpl extends HibernateBaseDao<Post, Integer> implements PostDao
 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Post.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(PostDaoImpl.class.getName());
 
     @Override
     @Transactional(readOnly = true)
