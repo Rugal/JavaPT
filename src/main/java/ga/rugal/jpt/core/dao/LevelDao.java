@@ -19,5 +19,7 @@ public interface LevelDao
 
     Level save(Level bean);
 
+    Level getLevel(Integer credit);
+
     Level updateByUpdater(Updater<Level> updater);
 }

@@ -1,5 +1,6 @@
 package config;
 
+import ga.rugal.jpt.springmvc.controller.PackageInfo;
 import ga.rugal.jpt.springmvc.interceptor.AuthenticationInterceptor;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +34,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan(
-    {
-        "ga.rugal.jpt.springmvc.controller"
-    })
+@ComponentScan(basePackageClasses = PackageInfo.class)
 public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
 {
 

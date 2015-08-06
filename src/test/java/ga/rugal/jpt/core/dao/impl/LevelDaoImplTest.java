@@ -87,4 +87,15 @@ public class LevelDaoImplTest extends JUnitSpringTestBase
         fail("The test case is a prototype.");
     }
 
+    @Test
+    @Ignore
+    public void testgetLevel()
+    {
+        System.out.println("getLevel");
+        Integer credit = 100001;
+        Level result = levelDao.getLevel(credit);
+        System.out.println(result);
+        System.err.println(result.getName());
+    }
+
 }

@@ -27,12 +27,11 @@ public class Admin
     @Column(nullable = false)
     private Integer aid;
 
-//    @Column(columnDefinition = "bigint")
     @Column
     private Long since;
 
     @Column
-    private AdminLevel level;
+    private Level level;
 
     @JoinColumn(name = "uid", referencedColumnName = "uid")
     @ManyToOne
@@ -71,12 +70,12 @@ public class Admin
         this.since = since;
     }
 
-    public AdminLevel getLevel()
+    public Level getLevel()
     {
         return level;
     }
 
-    public void setLevel(AdminLevel level)
+    public void setLevel(Level level)
     {
         this.level = level;
     }
@@ -127,7 +126,7 @@ public class Admin
         return "ga.rugal.jpt.core.entity.Admin[ aid=" + aid + " ]";
     }
 
-    public enum AdminLevel
+    public enum Level
     {
 
         INSPECTOR, MONITOR, SUPER;

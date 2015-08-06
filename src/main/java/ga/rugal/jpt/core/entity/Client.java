@@ -37,7 +37,7 @@ public class Client
     private Boolean enabled;
 
     @OneToMany(mappedBy = "cid")
-    private List<User> userList;
+    private List<SigninLog> signinLogList;
 
     public Client()
     {
@@ -88,14 +88,14 @@ public class Client
         this.enabled = enabled;
     }
 
-    public List<User> getUserList()
+    public List<SigninLog> getSigninLogList()
     {
-        return userList;
+        return signinLogList;
     }
 
-    public void setUserList(List<User> userList)
+    public void setSigninLogList(List<SigninLog> signinLogList)
     {
-        this.userList = userList;
+        this.signinLogList = signinLogList;
     }
 
     @Override

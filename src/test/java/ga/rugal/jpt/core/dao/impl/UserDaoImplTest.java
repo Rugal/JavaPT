@@ -1,7 +1,6 @@
 package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.JUnitSpringTestBase;
-import ga.rugal.jpt.core.dao.StatusDao;
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.entity.User;
 import ml.rugal.sshcommon.page.Pagination;
@@ -19,9 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class UserDaoImplTest extends JUnitSpringTestBase
 {
-
-    @Autowired
-    private StatusDao statusDao;
 
     @Autowired
     private UserDao userDao;
@@ -73,13 +69,13 @@ public class UserDaoImplTest extends JUnitSpringTestBase
     {
         System.out.println("save");
         User bean = new User();
-        bean.setEmail("ryujin@163.com");
+        bean.setEmail("null@163.com");
         bean.setLastReport(System.currentTimeMillis());
         bean.setPasskey("123456");
         bean.setPassword("123456");
         bean.setRegisterTime(System.currentTimeMillis());
-        bean.setSid(statusDao.findById(1));
-        bean.setUsername("Rugal");
+        bean.setStatus(User.Status.VALID);
+        bean.setUsername("Spooky");
         bean.setReferee(null);
         User result = userDao.save(bean);
     }

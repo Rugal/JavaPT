@@ -5,6 +5,8 @@ import ga.rugal.jpt.core.entity.Level;
 import ml.rugal.sshcommon.hibernate.HibernateBaseDao;
 import ml.rugal.sshcommon.page.Pagination;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -19,6 +21,19 @@ public class LevelDaoImpl extends HibernateBaseDao<Level, Integer> implements Le
 {
 
     private static final Logger LOG = LoggerFactory.getLogger(Level.class.getName());
+
+    @Override
+    @Transactional(readOnly = true)
+    public Level getLevel(Integer credit)
+    {
+        //select * from level where minimum < 7000 order by minimum desc limit 1;
+
+        Criteria crit = createCriteria();
+        crit.add(Restrictions.lt("minimum", credit));
+        crit.addOrder(Order.desc("minimum"));
+        crit.setMaxResults(1);
+        return (Level) crit.list().get(0);
+    }
 
     @Override
     @Transactional(readOnly = true)

@@ -2,7 +2,6 @@ package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.JUnitSpringTestBase;
 import ga.rugal.jpt.core.dao.AdminDao;
-import ga.rugal.jpt.core.dao.AdminLevelDao;
 import ga.rugal.jpt.core.entity.Admin;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
@@ -19,9 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class AdminDaoImplTest extends JUnitSpringTestBase
 {
-
-    @Autowired
-    private AdminLevelDao adminLevelDao;
 
     @Autowired
     private AdminDao adminDao;
@@ -71,7 +67,7 @@ public class AdminDaoImplTest extends JUnitSpringTestBase
     {
         System.out.println("save");
         Admin bean = new Admin();
-        bean.setAlid(adminLevelDao.findById(6));
+        bean.setLevel(Admin.Level.INSPECTOR);
         bean.setSince(System.currentTimeMillis());
         //---------not yet completed
         Admin result = adminDao.save(bean);
