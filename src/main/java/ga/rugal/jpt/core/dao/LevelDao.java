@@ -13,7 +13,7 @@ public interface LevelDao
 
     Level deleteById(Integer id);
 
-    Level findById(Integer id);
+    Level getByID(Integer id);
 
     Pagination getPage(int pageNo, int pageSize);
 

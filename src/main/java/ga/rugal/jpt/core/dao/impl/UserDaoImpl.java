@@ -31,7 +31,7 @@ public class UserDaoImpl extends HibernateBaseDao<User, Integer> implements User
 
     @Override
     @Transactional(readOnly = true)
-    public User findById(Integer id)
+    public User getByID(Integer id)
     {
         User entity = get(id);
         return entity;

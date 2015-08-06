@@ -19,7 +19,7 @@ public interface SigninLogService
     SigninLog deleteById(Integer id);
 
     @Transactional(readOnly = true)
-    SigninLog findById(Integer id);
+    SigninLog getByID(Integer id);
 
     @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);

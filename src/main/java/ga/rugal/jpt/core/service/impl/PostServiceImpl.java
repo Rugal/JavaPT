@@ -34,9 +34,9 @@ public class PostServiceImpl implements PostService
 
     @Override
     @Transactional(readOnly = true)
-    public Post findById(Integer id)
+    public Post getByID(Integer id)
     {
-        return dao.findById(id);
+        return dao.getByID(id);
     }
 
     @Override

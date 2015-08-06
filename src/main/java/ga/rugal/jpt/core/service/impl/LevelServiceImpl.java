@@ -34,9 +34,9 @@ public class LevelServiceImpl implements LevelService
 
     @Override
     @Transactional(readOnly = true)
-    public Level findById(Integer id)
+    public Level getByID(Integer id)
     {
-        return dao.findById(id);
+        return dao.getByID(id);
     }
 
     @Override

@@ -13,7 +13,7 @@ public interface ThreadDao
 
     Thread deleteById(Integer id);
 
-    Thread findById(Integer id);
+    Thread getByID(Integer id);
 
     Pagination getPage(int pageNo, int pageSize);
 

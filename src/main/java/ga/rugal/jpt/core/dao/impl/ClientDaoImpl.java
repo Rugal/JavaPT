@@ -31,7 +31,7 @@ public class ClientDaoImpl extends HibernateBaseDao<Client, Integer> implements 
 
     @Override
     @Transactional(readOnly = true)
-    public Client findById(Integer id)
+    public Client getByID(Integer id)
     {
         Client entity = get(id);
         return entity;

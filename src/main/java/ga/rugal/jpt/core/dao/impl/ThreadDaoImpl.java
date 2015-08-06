@@ -31,7 +31,7 @@ public class ThreadDaoImpl extends HibernateBaseDao<Thread, Integer> implements 
 
     @Override
     @Transactional(readOnly = true)
-    public Thread findById(Integer id)
+    public Thread getByID(Integer id)
     {
         Thread entity = get(id);
         return entity;

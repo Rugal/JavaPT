@@ -14,7 +14,7 @@ public interface PostTagsService
     PostTags deleteById(Integer id);
 
     @Transactional(readOnly = true)
-    PostTags findById(Integer id);
+    PostTags getByID(Integer id);
 
     @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);

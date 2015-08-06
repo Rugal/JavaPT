@@ -13,7 +13,7 @@ public interface AdminDao
 
     Admin deleteById(Integer id);
 
-    Admin findById(Integer id);
+    Admin getByID(Integer id);
 
     Pagination getPage(int pageNo, int pageSize);
 

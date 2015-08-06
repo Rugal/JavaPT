@@ -31,7 +31,7 @@ public class TagDaoImpl extends HibernateBaseDao<Tag, Integer> implements TagDao
 
     @Override
     @Transactional(readOnly = true)
-    public Tag findById(Integer id)
+    public Tag getByID(Integer id)
     {
         Tag entity = get(id);
         return entity;

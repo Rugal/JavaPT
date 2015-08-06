@@ -31,7 +31,7 @@ public class PostTagsDaoImpl extends HibernateBaseDao<PostTags, Integer> impleme
 
     @Override
     @Transactional(readOnly = true)
-    public PostTags findById(Integer id)
+    public PostTags getByID(Integer id)
     {
         PostTags entity = get(id);
         return entity;

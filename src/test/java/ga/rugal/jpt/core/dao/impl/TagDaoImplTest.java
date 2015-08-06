@@ -58,7 +58,7 @@ public class TagDaoImplTest extends JUnitSpringTestBase
         Integer id = null;
         TagDaoImpl instance = new TagDaoImpl();
         Tag expResult = null;
-        Tag result = instance.findById(id);
+        Tag result = instance.getByID(id);
         assertEquals(expResult, result);
         fail("The test case is a prototype.");
     }

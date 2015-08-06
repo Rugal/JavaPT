@@ -31,7 +31,7 @@ public class PostDaoImpl extends HibernateBaseDao<Post, Integer> implements Post
 
     @Override
     @Transactional(readOnly = true)
-    public Post findById(Integer id)
+    public Post getByID(Integer id)
     {
         Post entity = get(id);
         return entity;

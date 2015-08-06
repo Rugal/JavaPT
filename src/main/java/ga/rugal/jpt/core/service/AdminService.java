@@ -14,7 +14,7 @@ public interface AdminService
     Admin deleteById(Integer id);
 
     @Transactional(readOnly = true)
-    Admin findById(Integer id);
+    Admin getByID(Integer id);
 
     @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);

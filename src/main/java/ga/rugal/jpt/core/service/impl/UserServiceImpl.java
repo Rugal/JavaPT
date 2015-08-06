@@ -34,9 +34,9 @@ public class UserServiceImpl implements UserService
 
     @Override
     @Transactional(readOnly = true)
-    public User findById(Integer id)
+    public User getByID(Integer id)
     {
-        return dao.findById(id);
+        return dao.getByID(id);
     }
 
     @Override

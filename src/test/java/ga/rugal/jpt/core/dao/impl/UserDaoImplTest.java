@@ -58,7 +58,7 @@ public class UserDaoImplTest extends JUnitSpringTestBase
         Integer id = null;
         UserDaoImpl instance = new UserDaoImpl();
         User expResult = null;
-        User result = instance.findById(id);
+        User result = instance.getByID(id);
         assertEquals(expResult, result);
         fail("The test case is a prototype.");
     }

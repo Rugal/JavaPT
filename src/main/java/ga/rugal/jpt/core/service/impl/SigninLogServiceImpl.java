@@ -34,9 +34,9 @@ public class SigninLogServiceImpl implements SigninLogService
 
     @Override
     @Transactional(readOnly = true)
-    public SigninLog findById(Integer id)
+    public SigninLog getByID(Integer id)
     {
-        return dao.findById(id);
+        return dao.getByID(id);
     }
 
     @Override

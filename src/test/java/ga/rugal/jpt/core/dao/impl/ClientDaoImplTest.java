@@ -58,7 +58,7 @@ public class ClientDaoImplTest extends JUnitSpringTestBase
         Integer id = null;
         ClientDaoImpl instance = new ClientDaoImpl();
         Client expResult = null;
-        Client result = instance.findById(id);
+        Client result = instance.getByID(id);
         assertEquals(expResult, result);
         fail("The test case is a prototype.");
     }

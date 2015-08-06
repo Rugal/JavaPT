@@ -46,7 +46,7 @@ public class LevelDaoImpl extends HibernateBaseDao<Level, Integer> implements Le
 
     @Override
     @Transactional(readOnly = true)
-    public Level findById(Integer id)
+    public Level getByID(Integer id)
     {
         Level entity = get(id);
         return entity;

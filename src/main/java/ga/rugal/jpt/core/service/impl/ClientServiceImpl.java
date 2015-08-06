@@ -34,9 +34,9 @@ public class ClientServiceImpl implements ClientService
 
     @Override
     @Transactional(readOnly = true)
-    public Client findById(Integer id)
+    public Client getByID(Integer id)
     {
-        return dao.findById(id);
+        return dao.getByID(id);
     }
 
     @Override

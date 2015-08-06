@@ -13,7 +13,7 @@ public interface SigninLogDao
 
     SigninLog deleteById(Integer id);
 
-    SigninLog findById(Integer id);
+    SigninLog getByID(Integer id);
 
     Pagination getPage(int pageNo, int pageSize);
 

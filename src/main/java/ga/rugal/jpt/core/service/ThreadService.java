@@ -14,7 +14,7 @@ public interface ThreadService
     Thread deleteById(Integer id);
 
     @Transactional(readOnly = true)
-    Thread findById(Integer id);
+    Thread getByID(Integer id);
 
     @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);

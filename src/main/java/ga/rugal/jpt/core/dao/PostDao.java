@@ -13,7 +13,7 @@ public interface PostDao
 
     Post deleteById(Integer id);
 
-    Post findById(Integer id);
+    Post getByID(Integer id);
 
     Pagination getPage(int pageNo, int pageSize);
 

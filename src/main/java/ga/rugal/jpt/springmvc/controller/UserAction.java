@@ -58,7 +58,7 @@ public class UserAction
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public Message updateUserProfile(@PathVariable("id") Integer id, @RequestBody User bean)
     {
-        User dbUser = userService.findById(id);
+        User dbUser = userService.getByID(id);
         if (null != dbUser)
         {
             userService.update(bean);
@@ -80,7 +80,7 @@ public class UserAction
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public Message deleteUser(@PathVariable("id") Integer id)
     {
-        User bean = userService.findById(id);
+        User bean = userService.getByID(id);
         if (null != bean)
         {
             userService.deleteById(id);
@@ -99,7 +99,7 @@ public class UserAction
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Message retrieveUserProfile(@PathVariable("id") Integer id)
     {
-        User bean = userService.findById(id);
+        User bean = userService.getByID(id);
         return Message.successMessage(CommonMessageContent.GET_USER, bean);
     }
 }

@@ -15,7 +15,7 @@ public interface InvitationDao
     Invitation deleteById(Integer id);
 
     @Transactional(readOnly = true)
-    Invitation findById(Integer id);
+    Invitation getByID(Integer id);
 
     @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);

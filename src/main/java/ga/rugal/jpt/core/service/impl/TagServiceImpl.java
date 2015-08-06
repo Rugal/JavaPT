@@ -34,9 +34,9 @@ public class TagServiceImpl implements TagService
 
     @Override
     @Transactional(readOnly = true)
-    public Tag findById(Integer id)
+    public Tag getByID(Integer id)
     {
-        return dao.findById(id);
+        return dao.getByID(id);
     }
 
     @Override

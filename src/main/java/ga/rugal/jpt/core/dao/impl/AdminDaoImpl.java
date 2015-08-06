@@ -31,7 +31,7 @@ public class AdminDaoImpl extends HibernateBaseDao<Admin, Integer> implements Ad
 
     @Override
     @Transactional(readOnly = true)
-    public Admin findById(Integer id)
+    public Admin getByID(Integer id)
     {
         Admin entity = get(id);
         return entity;

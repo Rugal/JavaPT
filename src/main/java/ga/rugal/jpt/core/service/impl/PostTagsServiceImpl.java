@@ -34,9 +34,9 @@ public class PostTagsServiceImpl implements PostTagsService
 
     @Override
     @Transactional(readOnly = true)
-    public PostTags findById(Integer id)
+    public PostTags getByID(Integer id)
     {
-        return dao.findById(id);
+        return dao.getByID(id);
     }
 
     @Override

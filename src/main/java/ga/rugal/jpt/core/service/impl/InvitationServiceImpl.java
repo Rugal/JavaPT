@@ -34,9 +34,9 @@ public class InvitationServiceImpl implements InvitationService
 
     @Override
     @Transactional(readOnly = true)
-    public Invitation findById(Integer id)
+    public Invitation getByID(Integer id)
     {
-        return dao.findById(id);
+        return dao.getByID(id);
     }
 
     @Override

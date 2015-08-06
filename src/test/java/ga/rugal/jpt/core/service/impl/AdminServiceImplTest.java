@@ -1,10 +1,10 @@
-package ga.rugal.jpt.core.dao.impl;
+package ga.rugal.jpt.core.service.impl;
 
 import ga.rugal.JUnitSpringTestBase;
-import ga.rugal.jpt.core.dao.LevelDao;
-import ga.rugal.jpt.core.entity.Level;
+import ga.rugal.jpt.core.entity.Admin;
+import ga.rugal.jpt.core.service.AdminService;
+import ga.rugal.jpt.core.service.UserService;
 import ml.rugal.sshcommon.page.Pagination;
-import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.junit.Before;
@@ -16,13 +16,16 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author Rugal Bernstein
  */
-public class LevelDaoImplTest extends JUnitSpringTestBase
+public class AdminServiceImplTest extends JUnitSpringTestBase
 {
 
     @Autowired
-    private LevelDao levelDao;
+    private AdminService service;
 
-    public LevelDaoImplTest()
+    @Autowired
+    private UserService userService;
+
+    public AdminServiceImplTest()
     {
     }
 
@@ -31,7 +34,6 @@ public class LevelDaoImplTest extends JUnitSpringTestBase
     {
     }
 
-    @After
     public void tearDown()
     {
     }
@@ -43,7 +45,7 @@ public class LevelDaoImplTest extends JUnitSpringTestBase
         System.out.println("getPage");
         int pageNo = 0;
         int pageSize = 0;
-        LevelDaoImpl instance = new LevelDaoImpl();
+        AdminServiceImpl instance = new AdminServiceImpl();
         Pagination expResult = null;
         Pagination result = instance.getPage(pageNo, pageSize);
         assertEquals(expResult, result);
@@ -56,22 +58,22 @@ public class LevelDaoImplTest extends JUnitSpringTestBase
     {
         System.out.println("findById");
         Integer id = null;
-        LevelDaoImpl instance = new LevelDaoImpl();
-        Level expResult = null;
-        Level result = instance.getByID(id);
+        AdminServiceImpl instance = new AdminServiceImpl();
+        Admin expResult = null;
+        Admin result = instance.getByID(id);
         assertEquals(expResult, result);
         fail("The test case is a prototype.");
     }
 
     @Test
     @Ignore
+//    @Transactional
     public void testSave()
     {
         System.out.println("save");
-        Level bean = new Level();
-        bean.setMinimum(500000);
-        bean.setName("Funky");
-        Level result = levelDao.save(bean);
+        Admin bean = new Admin();
+        bean.setUid(userService.getByID(1));
+        Admin result = service.save(bean);
     }
 
     @Test
@@ -80,22 +82,24 @@ public class LevelDaoImplTest extends JUnitSpringTestBase
     {
         System.out.println("deleteById");
         Integer id = null;
-        LevelDaoImpl instance = new LevelDaoImpl();
-        Level expResult = null;
-        Level result = instance.deleteById(id);
+        AdminServiceImpl instance = new AdminServiceImpl();
+        Admin expResult = null;
+        Admin result = instance.deleteById(id);
         assertEquals(expResult, result);
         fail("The test case is a prototype.");
     }
 
     @Test
     @Ignore
-    public void testgetLevel()
+    public void testUpdate()
     {
-        System.out.println("getLevel");
-        Integer credit = 100001;
-        Level result = levelDao.getLevel(credit);
-        System.out.println(result);
-        System.err.println(result.getName());
+        System.out.println("update");
+        Admin bean = null;
+        AdminServiceImpl instance = new AdminServiceImpl();
+        Admin expResult = null;
+        Admin result = instance.update(bean);
+        assertEquals(expResult, result);
+        fail("The test case is a prototype.");
     }
 
 }

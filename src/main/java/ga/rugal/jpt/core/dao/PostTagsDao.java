@@ -13,7 +13,7 @@ public interface PostTagsDao
 
     PostTags deleteById(Integer id);
 
-    PostTags findById(Integer id);
+    PostTags getByID(Integer id);
 
     Pagination getPage(int pageNo, int pageSize);
 

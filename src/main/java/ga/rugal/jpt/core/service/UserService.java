@@ -14,7 +14,7 @@ public interface UserService
     User deleteById(Integer id);
 
     @Transactional(readOnly = true)
-    User findById(Integer id);
+    User getByID(Integer id);
 
     @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);

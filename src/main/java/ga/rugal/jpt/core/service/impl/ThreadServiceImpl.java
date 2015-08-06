@@ -34,9 +34,9 @@ public class ThreadServiceImpl implements ThreadService
 
     @Override
     @Transactional(readOnly = true)
-    public Thread findById(Integer id)
+    public Thread getByID(Integer id)
     {
-        return dao.findById(id);
+        return dao.getByID(id);
     }
 
     @Override

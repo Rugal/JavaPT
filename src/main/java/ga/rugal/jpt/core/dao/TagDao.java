@@ -13,7 +13,7 @@ public interface TagDao
 
     Tag deleteById(Integer id);
 
-    Tag findById(Integer id);
+    Tag getByID(Integer id);
 
     Pagination getPage(int pageNo, int pageSize);
 

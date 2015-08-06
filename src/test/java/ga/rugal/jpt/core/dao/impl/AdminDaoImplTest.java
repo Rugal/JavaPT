@@ -57,7 +57,7 @@ public class AdminDaoImplTest extends JUnitSpringTestBase
         System.out.println("findById");
         Integer id = null;
         Admin expResult = null;
-        Admin result = adminDao.findById(id);
+        Admin result = adminDao.getByID(id);
         assertEquals(expResult, result);
         fail("The test case is a prototype.");
     }

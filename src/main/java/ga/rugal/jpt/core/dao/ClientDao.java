@@ -13,7 +13,7 @@ public interface ClientDao
 
     Client deleteById(Integer id);
 
-    Client findById(Integer id);
+    Client getByID(Integer id);
 
     Pagination getPage(int pageNo, int pageSize);
 

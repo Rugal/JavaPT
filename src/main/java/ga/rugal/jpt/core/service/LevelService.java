@@ -14,7 +14,7 @@ public interface LevelService
     Level deleteById(Integer id);
 
     @Transactional(readOnly = true)
-    Level findById(Integer id);
+    Level getByID(Integer id);
 
     @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);

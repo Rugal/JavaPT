@@ -14,7 +14,7 @@ public interface PostService
     Post deleteById(Integer id);
 
     @Transactional(readOnly = true)
-    Post findById(Integer id);
+    Post getByID(Integer id);
 
     @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);

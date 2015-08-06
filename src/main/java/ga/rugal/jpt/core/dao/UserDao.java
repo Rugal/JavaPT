@@ -13,7 +13,7 @@ public interface UserDao
 
     User deleteById(Integer id);
 
-    User findById(Integer id);
+    User getByID(Integer id);
 
     Pagination getPage(int pageNo, int pageSize);
 

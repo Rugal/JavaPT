@@ -31,7 +31,7 @@ public class InvitationDaoImpl extends HibernateBaseDao<Invitation, Integer> imp
 
     @Override
     @Transactional(readOnly = true)
-    public Invitation findById(Integer id)
+    public Invitation getByID(Integer id)
     {
         Invitation entity = get(id);
         return entity;

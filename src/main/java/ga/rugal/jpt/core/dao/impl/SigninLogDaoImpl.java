@@ -31,7 +31,7 @@ public class SigninLogDaoImpl extends HibernateBaseDao<SigninLog, Integer> imple
 
     @Override
     @Transactional(readOnly = true)
-    public SigninLog findById(Integer id)
+    public SigninLog getByID(Integer id)
     {
         SigninLog entity = get(id);
         return entity;

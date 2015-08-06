@@ -14,7 +14,7 @@ public interface ClientService
     Client deleteById(Integer id);
 
     @Transactional(readOnly = true)
-    Client findById(Integer id);
+    Client getByID(Integer id);
 
     @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);
