@@ -85,11 +85,7 @@ public class Invitation
             return false;
         }
         Invitation other = (Invitation) object;
-        if ((this.iid == null && other.iid != null) || (this.iid != null && !this.iid.equals(other.iid)))
-        {
-            return false;
-        }
-        return true;
+        return !((this.iid == null && other.iid != null) || (this.iid != null && !this.iid.equals(other.iid)));
     }
 
     @Override

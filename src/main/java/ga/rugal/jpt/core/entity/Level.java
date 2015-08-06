@@ -87,11 +87,7 @@ public class Level
             return false;
         }
         Level other = (Level) object;
-        if ((this.lid == null && other.lid != null) || (this.lid != null && !this.lid.equals(other.lid)))
-        {
-            return false;
-        }
-        return true;
+        return !((this.lid == null && other.lid != null) || (this.lid != null && !this.lid.equals(other.lid)));
     }
 
     @Override

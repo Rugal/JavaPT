@@ -117,11 +117,7 @@ public class Thread
             return false;
         }
         Thread other = (Thread) object;
-        if ((this.tid == null && other.tid != null) || (this.tid != null && !this.tid.equals(other.tid)))
-        {
-            return false;
-        }
-        return true;
+        return !((this.tid == null && other.tid != null) || (this.tid != null && !this.tid.equals(other.tid)));
     }
 
     @Override

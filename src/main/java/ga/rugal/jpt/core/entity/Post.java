@@ -210,11 +210,7 @@ public class Post
             return false;
         }
         Post other = (Post) object;
-        if ((this.pid == null && other.pid != null) || (this.pid != null && !this.pid.equals(other.pid)))
-        {
-            return false;
-        }
-        return true;
+        return !((this.pid == null && other.pid != null) || (this.pid != null && !this.pid.equals(other.pid)));
     }
 
     @Override

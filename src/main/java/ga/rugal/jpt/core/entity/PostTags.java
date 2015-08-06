@@ -91,11 +91,7 @@ public class PostTags
             return false;
         }
         PostTags other = (PostTags) object;
-        if ((this.ptid == null && other.ptid != null) || (this.ptid != null && !this.ptid.equals(other.ptid)))
-        {
-            return false;
-        }
-        return true;
+        return !((this.ptid == null && other.ptid != null) || (this.ptid != null && !this.ptid.equals(other.ptid)));
     }
 
     @Override

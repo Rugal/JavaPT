@@ -115,11 +115,7 @@ public class Client
             return false;
         }
         Client other = (Client) object;
-        if ((this.cid == null && other.cid != null) || (this.cid != null && !this.cid.equals(other.cid)))
-        {
-            return false;
-        }
-        return true;
+        return !((this.cid == null && other.cid != null) || (this.cid != null && !this.cid.equals(other.cid)));
     }
 
     @Override

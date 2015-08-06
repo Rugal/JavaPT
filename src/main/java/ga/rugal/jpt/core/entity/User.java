@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -51,6 +52,7 @@ public class User implements Serializable
     @Column(name = "last_report")
     private Long lastReport;
 
+    @Column
     private Integer credit;
 
     @Column(name = "register_time")
@@ -71,9 +73,11 @@ public class User implements Serializable
     @OneToMany(mappedBy = "uid")
     private List<Thread> threadList;
 
-    @JoinColumn(name = "sid", referencedColumnName = "sid")
-    @ManyToOne
-    private Status sid;
+    @Transient
+    private Level level;
+
+    @Column
+    private Status status;
 
     @OneToMany(mappedBy = "referee")
     private List<User> userList;
@@ -119,6 +123,26 @@ public class User implements Serializable
     public void setUsername(String username)
     {
         this.username = username;
+    }
+
+    public List<Admin> getGrantees()
+    {
+        return grantees;
+    }
+
+    public void setGrantees(List<Admin> grantees)
+    {
+        this.grantees = grantees;
+    }
+
+    public Level getLevel()
+    {
+        return level;
+    }
+
+    public void setLevel(Level level)
+    {
+        this.level = level;
     }
 
     public String getEmail()
@@ -211,16 +235,6 @@ public class User implements Serializable
         this.adminList = adminList;
     }
 
-    public List<Admin> getAdminList1()
-    {
-        return grantees;
-    }
-
-    public void setAdminList1(List<Admin> adminList1)
-    {
-        this.grantees = adminList1;
-    }
-
     public List<SigninLog> getSigninLogList()
     {
         return signinLogList;
@@ -241,14 +255,14 @@ public class User implements Serializable
         this.threadList = threadList;
     }
 
-    public Status getSid()
+    public Status getStatus()
     {
-        return sid;
+        return status;
     }
 
-    public void setSid(Status sid)
+    public void setStatus(Status status)
     {
-        this.sid = sid;
+        this.status = status;
     }
 
     public List<User> getUserList()
@@ -288,17 +302,19 @@ public class User implements Serializable
             return false;
         }
         User other = (User) object;
-        if ((this.uid == null && other.uid != null) || (this.uid != null && !this.uid.equals(other.uid)))
-        {
-            return false;
-        }
-        return true;
+        return !((this.uid == null && other.uid != null) || (this.uid != null && !this.uid.equals(other.uid)));
     }
 
     @Override
     public String toString()
     {
         return "ga.rugal.jpt.core.entity.User[ uid=" + uid + " ]";
+    }
+
+    public enum Status
+    {
+
+        VALID, BAN, DELETING
     }
 
 }

@@ -117,11 +117,7 @@ public class SigninLog
             return false;
         }
         SigninLog other = (SigninLog) object;
-        if ((this.slid == null && other.slid != null) || (this.slid != null && !this.slid.equals(other.slid)))
-        {
-            return false;
-        }
-        return true;
+        return !((this.slid == null && other.slid != null) || (this.slid != null && !this.slid.equals(other.slid)));
     }
 
     @Override

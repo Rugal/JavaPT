@@ -102,11 +102,7 @@ public class Tag
             return false;
         }
         Tag other = (Tag) object;
-        if ((this.tid == null && other.tid != null) || (this.tid != null && !this.tid.equals(other.tid)))
-        {
-            return false;
-        }
-        return true;
+        return !((this.tid == null && other.tid != null) || (this.tid != null && !this.tid.equals(other.tid)));
     }
 
     @Override

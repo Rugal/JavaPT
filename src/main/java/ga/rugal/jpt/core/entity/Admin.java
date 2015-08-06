@@ -31,9 +31,8 @@ public class Admin
     @Column
     private Long since;
 
-    @JoinColumn(name = "alid", referencedColumnName = "alid")
-    @ManyToOne
-    private AdminLevel alid;
+    @Column
+    private AdminLevel level;
 
     @JoinColumn(name = "uid", referencedColumnName = "uid")
     @ManyToOne
@@ -72,14 +71,14 @@ public class Admin
         this.since = since;
     }
 
-    public AdminLevel getAlid()
+    public AdminLevel getLevel()
     {
-        return alid;
+        return level;
     }
 
-    public void setAlid(AdminLevel alid)
+    public void setLevel(AdminLevel level)
     {
-        this.alid = alid;
+        this.level = level;
     }
 
     public User getUid()
@@ -119,17 +118,19 @@ public class Admin
             return false;
         }
         Admin other = (Admin) object;
-        if ((this.aid == null && other.aid != null) || (this.aid != null && !this.aid.equals(other.aid)))
-        {
-            return false;
-        }
-        return true;
+        return !((this.aid == null && other.aid != null) || (this.aid != null && !this.aid.equals(other.aid)));
     }
 
     @Override
     public String toString()
     {
         return "ga.rugal.jpt.core.entity.Admin[ aid=" + aid + " ]";
+    }
+
+    public enum AdminLevel
+    {
+
+        INSPECTOR, MONITOR, SUPER;
     }
 
 }
