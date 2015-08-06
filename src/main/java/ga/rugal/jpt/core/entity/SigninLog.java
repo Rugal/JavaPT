@@ -37,6 +37,10 @@ public class SigninLog
     @ManyToOne
     private User uid;
 
+    @JoinColumn(name = "cid", referencedColumnName = "cid")
+    @ManyToOne
+    private Client cid;
+
     public SigninLog()
     {
     }
@@ -84,6 +88,16 @@ public class SigninLog
     public void setUid(User uid)
     {
         this.uid = uid;
+    }
+
+    public Client getCid()
+    {
+        return cid;
+    }
+
+    public void setCid(Client cid)
+    {
+        this.cid = cid;
     }
 
     @Override

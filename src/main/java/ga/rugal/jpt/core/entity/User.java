@@ -19,7 +19,7 @@ import javax.persistence.Table;
  * @author Rugal Bernstein
  */
 @Entity
-@Table(catalog = "postgres", schema = "jpt", name = "user")
+@Table(schema = "jpt", name = "user")
 public class User implements Serializable
 {
 
@@ -70,10 +70,6 @@ public class User implements Serializable
 
     @OneToMany(mappedBy = "uid")
     private List<Thread> threadList;
-
-    @JoinColumn(name = "cid", referencedColumnName = "cid")
-    @ManyToOne
-    private Client cid;
 
     @JoinColumn(name = "sid", referencedColumnName = "sid")
     @ManyToOne
@@ -243,16 +239,6 @@ public class User implements Serializable
     public void setThreadList(List<Thread> threadList)
     {
         this.threadList = threadList;
-    }
-
-    public Client getCid()
-    {
-        return cid;
-    }
-
-    public void setCid(Client cid)
-    {
-        this.cid = cid;
     }
 
     public Status getSid()

@@ -1,7 +1,7 @@
 package ga.rugal.jpt.core.dao.impl;
 
-import ga.rugal.jpt.core.dao.SigninLogDao;
-import ga.rugal.jpt.core.entity.SigninLog;
+import ga.rugal.jpt.core.dao.InvitationDao;
+import ga.rugal.jpt.core.entity.Invitation;
 import ml.rugal.sshcommon.hibernate.HibernateBaseDao;
 import ml.rugal.sshcommon.page.Pagination;
 import org.hibernate.Criteria;
@@ -15,10 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Rugal Bernstein
  */
 @Repository
-public class SigninLogDaoImpl extends HibernateBaseDao<SigninLog, Integer> implements SigninLogDao
+public class InvitationDaoImpl extends HibernateBaseDao<Invitation, Integer> implements InvitationDao
 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SigninLog.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(Invitation.class.getName());
 
     @Override
     @Transactional(readOnly = true)
@@ -31,24 +31,23 @@ public class SigninLogDaoImpl extends HibernateBaseDao<SigninLog, Integer> imple
 
     @Override
     @Transactional(readOnly = true)
-    public SigninLog findById(Integer id)
+    public Invitation findById(Integer id)
     {
-        SigninLog entity = get(id);
+        Invitation entity = get(id);
         return entity;
     }
 
     @Override
-    public SigninLog save(SigninLog bean)
+    public Invitation save(Invitation bean)
     {
-        bean.setSigninTime(System.currentTimeMillis());
         getSession().save(bean);
         return bean;
     }
 
     @Override
-    public SigninLog deleteById(Integer id)
+    public Invitation deleteById(Integer id)
     {
-        SigninLog entity = super.get(id);
+        Invitation entity = super.get(id);
         if (entity != null)
         {
             getSession().delete(entity);
@@ -57,9 +56,9 @@ public class SigninLogDaoImpl extends HibernateBaseDao<SigninLog, Integer> imple
     }
 
     @Override
-    protected Class<SigninLog> getEntityClass()
+    protected Class<Invitation> getEntityClass()
     {
-        return SigninLog.class;
+        return Invitation.class;
     }
 
 }
