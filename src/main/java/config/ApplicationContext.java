@@ -1,10 +1,16 @@
 package config;
 
+import com.turn.ttorrent.tracker.Tracker;
 import com.zaxxer.hikari.HikariDataSource;
+import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.core.entity.PackageInfo;
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -33,6 +39,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan(value = "ga")
 public class ApplicationContext
 {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ApplicationContext.class.getName());
 
     public static final String hibernate_connection_autocommit = "hibernate.connection.autocommit";
 
@@ -106,5 +114,19 @@ public class ApplicationContext
         return txManager;
     }
 //</editor-fold>
+
+    @Bean
+    public Tracker tracker() throws IOException
+    {
+        try
+        {
+            return new Tracker(InetSocketAddress.createUnresolved("localhost", SystemDefaultProperties.TRACKER_PORT));
+        }
+        catch (IOException ex)
+        {
+            LOG.error("Unable to create bean [tracker]", ex);
+            throw ex;
+        }
+    }
 
 }

@@ -129,7 +129,7 @@ public class Admin
     public enum Level
     {
 
-        INSPECTOR, MONITOR, SUPER;
+        UPLOADER, INSPECTOR, MONITOR, SUPER;
     }
 
 }

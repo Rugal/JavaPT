@@ -9,9 +9,9 @@ package ga.rugal.jpt.common;
 public interface SystemDefaultProperties
 {
 
-    String map_range_default = "1000";
-
     String ID = "id";
 
     String CREDENTIAL = "credential";
+
+    int TRACKER_PORT = 6969;
 }

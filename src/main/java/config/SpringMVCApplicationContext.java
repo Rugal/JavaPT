@@ -2,6 +2,7 @@ package config;
 
 import ga.rugal.jpt.springmvc.controller.PackageInfo;
 import ga.rugal.jpt.springmvc.interceptor.AuthenticationInterceptor;
+import ga.rugal.jpt.springmvc.interceptor.AuthorityInterceptor;
 import java.util.ArrayList;
 import java.util.List;
 import ml.rugal.sshcommon.springmvc.method.annotation.FormModelMethodArgumentResolver;
@@ -40,6 +41,9 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
 
     @Autowired
     private AuthenticationInterceptor authenticationInterceptor;
+
+    @Autowired
+    private AuthorityInterceptor authorityInterceptor;
 
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer)
@@ -80,7 +84,7 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
         return resolver;
     }
 
-    @Bean
+//    @Bean
     public HandlerAdapter annotationMethodHandlerAdapter()
     {
         return new RequestMappingHandlerAdapter();
@@ -99,6 +103,7 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
     {
         //This is a very important interceptor for authentication usage
         registry.addInterceptor(authenticationInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(authorityInterceptor).addPathPatterns("/**");
     }
 
 }

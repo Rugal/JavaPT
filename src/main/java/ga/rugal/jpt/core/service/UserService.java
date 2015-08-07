@@ -19,6 +19,9 @@ public interface UserService
     @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);
 
+    @Transactional(readOnly = true)
+    boolean authenticateUser(Integer uid, String password);
+
     User save(User bean);
 
     User update(User bean);

@@ -15,28 +15,31 @@
  */
 package ga.rugal.jpt.springmvc.controller;
 
+import ga.rugal.ControllerClientSideTestBase;
+import ga.rugal.jpt.common.SystemDefaultProperties;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.MediaType;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import ga.rugal.ControllerClientSideTestBase;
 
 /**
  *
  * @author Rugal Bernstein
  */
-public class StudentActionClientSideTest extends ControllerClientSideTestBase
+public class TrackerActionClientSideTest extends ControllerClientSideTestBase
 {
 
     @Test
-    @Ignore
+//    @Ignore
     public void test() throws Exception
     {
-        this.mockMvc.perform(get("/student/1").contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))).andExpect(status()
-                .isOk());
+        this.mockMvc.perform(put("/tracker").
+            header(SystemDefaultProperties.ID, "1").
+            header(SystemDefaultProperties.CREDENTIAL, "123456")
+            .accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+            .andExpect(status().isOk());
         System.out.println("Rugal Bernstein");
     }
 

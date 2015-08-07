@@ -2,9 +2,13 @@ package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.entity.User;
+import java.util.List;
+import ml.rugal.sshcommon.hibernate.Finder;
 import ml.rugal.sshcommon.hibernate.HibernateBaseDao;
 import ml.rugal.sshcommon.page.Pagination;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -35,6 +39,44 @@ public class UserDaoImpl extends HibernateBaseDao<User, Integer> implements User
     {
         User entity = get(id);
         return entity;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean authenticateUser(Integer uid, String password)
+    {
+
+        String hql = "SELECT count(1) FROM User bean WHERE bean.uid=:uid AND bean.password=:password";
+        Query query = getSession().createQuery(hql);
+        query.setParameter("uid", uid);
+        query.setParameter("password", password);
+        return ((Number) query.iterate().next()).intValue() == 1;
+    }
+
+    public List<Object> getList(String ip, Integer userId)
+    {
+        String hql = " from BbsLimit bean where 1=1 ";
+        Finder f = Finder.create(hql);
+        if (StringUtils.isNotBlank(ip))
+        {
+            f.append(" and bean.ip=:ip").setParam("ip", ip);
+        }
+        if (userId != null)
+        {
+            f.append(" and bean.userId=:userId").setParam("userId", userId);
+        }
+        return find(f);
+    }
+
+    public List<Object> getListByUserIdStatus(Integer userId, Integer typeId,
+                                              Boolean status)
+    {
+        String hql = "from BbsMessage bean where  bean.user.id=:userId and bean.msgType=:typeId and bean.status=:status ";
+        Finder f = Finder.create(hql);
+        f.setParam("userId", userId);
+        f.setParam("typeId", typeId);
+        f.setParam("status", status);
+        return find(f);
     }
 
     @Override

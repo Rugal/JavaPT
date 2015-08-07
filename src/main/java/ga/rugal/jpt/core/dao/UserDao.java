@@ -20,4 +20,6 @@ public interface UserDao
     User save(User bean);
 
     User updateByUpdater(Updater<User> updater);
+
+    boolean authenticateUser(Integer uid, String password);
 }

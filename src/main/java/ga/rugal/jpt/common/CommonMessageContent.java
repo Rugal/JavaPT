@@ -20,4 +20,6 @@ public interface CommonMessageContent
 
     String ACCESS_FORBIDDEN = "Unmatched combination of username and credential";
 
+    String PERMISSION_DENIED = "Insufficient permission";
+
 }

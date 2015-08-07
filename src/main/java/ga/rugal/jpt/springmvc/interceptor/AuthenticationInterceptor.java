@@ -1,21 +1,22 @@
 package ga.rugal.jpt.springmvc.interceptor;
 
 import com.google.gson.Gson;
+import ga.rugal.jpt.common.CommonLogContent;
+import ga.rugal.jpt.common.CommonMessageContent;
+import ga.rugal.jpt.common.SystemDefaultProperties;
+import ga.rugal.jpt.core.service.UserService;
 import java.io.IOException;
 import java.text.MessageFormat;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import ml.rugal.sshcommon.springmvc.util.Message;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import ga.rugal.jpt.common.CommonLogContent;
-import ga.rugal.jpt.common.CommonMessageContent;
-import ga.rugal.jpt.common.SystemDefaultProperties;
 
 /**
  *
@@ -28,15 +29,17 @@ import ga.rugal.jpt.common.SystemDefaultProperties;
  * Useful when implementing Restful API.
  * <p>
  * @author Rugal Bernstein
- * @since 0.6
  */
 @Component
 public class AuthenticationInterceptor implements HandlerInterceptor
 {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AuthenticationInterceptor.class.getName());
+
     private final Gson gson = new Gson();
 
-    private static final Logger LOG = LoggerFactory.getLogger(AuthenticationInterceptor.class.getName());
+    @Autowired
+    private UserService userService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
@@ -48,7 +51,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor
                                       id,
                                       request.getRequestURI(),
                                       request.getRemoteAddr()));
-
         if (!isAuthenticatedUser(id, credential))
         {
             status = false;
@@ -96,9 +98,19 @@ public class AuthenticationInterceptor implements HandlerInterceptor
      * @return true if this user and credential meet requirement, otherwise
      *         return false
      */
-    private boolean isAuthenticatedUser(String username, String credential)
+    private boolean isAuthenticatedUser(String id, String credential)
     {
-        return StringUtils.equals(username, "rugal") && StringUtils.equals(credential, "123456");
+        boolean isAuthenticated = false;
+        try
+        {
+            isAuthenticated = userService.authenticateUser(Integer.parseInt(id), credential);
+        }
+        catch (Exception e)
+        {
+            LOG.error(e.getMessage());
+        }
+
+        return isAuthenticated;
     }
 
     @Override

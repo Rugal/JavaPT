@@ -1,8 +1,8 @@
 package ga.rugal.jpt.core.service.impl;
 
-import ga.rugal.jpt.core.service.UserService;
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.entity.User;
+import ga.rugal.jpt.core.service.UserService;
 import ml.rugal.sshcommon.hibernate.Updater;
 import ml.rugal.sshcommon.page.Pagination;
 import org.slf4j.Logger;
@@ -37,6 +37,13 @@ public class UserServiceImpl implements UserService
     public User getByID(Integer id)
     {
         return dao.getByID(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean authenticateUser(Integer uid, String password)
+    {
+        return dao.authenticateUser(uid, password);
     }
 
     @Override

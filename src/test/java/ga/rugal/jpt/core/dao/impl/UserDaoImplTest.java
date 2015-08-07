@@ -69,13 +69,13 @@ public class UserDaoImplTest extends JUnitSpringTestBase
     {
         System.out.println("save");
         User bean = new User();
-        bean.setEmail("null@163.com");
+        bean.setEmail("null@123.com");
         bean.setLastReport(System.currentTimeMillis());
         bean.setPasskey("123456");
         bean.setPassword("123456");
         bean.setRegisterTime(System.currentTimeMillis());
-        bean.setStatus(User.Status.VALID);
-        bean.setUsername("Spooky");
+        bean.setStatus(User.Status.DELETING);
+        bean.setUsername("Tiger");
         bean.setReferee(null);
         User result = userDao.save(bean);
     }
