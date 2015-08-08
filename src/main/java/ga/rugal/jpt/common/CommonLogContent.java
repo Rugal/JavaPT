@@ -13,9 +13,9 @@ public interface CommonLogContent
 
     String USER_ACCESS_SUCCEEDED = "User [{0}] access [{1}] from host [{2}] succeeded";
 
-    String USER_TRY_ROLE_ACCESS = "User [{0}] is trying to access handler [{1}]";
+    String USER_ROLE_ACCESS = "User [{0}] is trying to access handler [{1}]";
 
-    String USER_TRY_ROLE_FAILED = "User [{0}] is denied to access handler [{1}]";
+    String USER_ROLE_FAILED = "User [{0}] is denied to access handler [{1}]";
 
-    String USER_TRY_ROLE_SUCCEEDED = "User [{0}] is allowed to access handler [{1}]";
+    String USER_ROLE_SUCCEEDED = "User [{0}] is allowed to access handler [{1}]";
 }

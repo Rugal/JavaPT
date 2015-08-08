@@ -1,6 +1,5 @@
 package ga.rugal.jpt.springmvc.interceptor;
 
-import com.google.gson.Gson;
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
 import ga.rugal.jpt.common.SystemDefaultProperties;
@@ -22,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -34,12 +32,10 @@ import org.springframework.web.servlet.ModelAndView;
  * @since 0.1
  */
 @Component
-public class AuthorityInterceptor implements HandlerInterceptor
+public class AuthorityInterceptor extends BaseInterceptor
 {
 
     private static final Logger LOG = LoggerFactory.getLogger(AuthorityInterceptor.class.getName());
-
-    private final Gson gson = new Gson();
 
     @Autowired
     private UserService userService;
@@ -50,22 +46,21 @@ public class AuthorityInterceptor implements HandlerInterceptor
 
         String id = request.getHeader(SystemDefaultProperties.ID);
         HandlerMethod hm = (HandlerMethod) handler;
-        //TODO modify log level to TRACE or DEBUG in after test
-        LOG.info(MessageFormat.format(CommonLogContent.USER_TRY_ROLE_ACCESS,
-                                      id,
-                                      hm.getMethod().getName()));
+        LOG.debug(MessageFormat.format(CommonLogContent.USER_ROLE_ACCESS,
+                                       id,
+                                       hm.getMethod().getName()));
         boolean status = true;
         if (isAccessible(id, hm))
         {
-            LOG.info(MessageFormat.format(CommonLogContent.USER_TRY_ROLE_SUCCEEDED,
-                                          id,
-                                          hm.getMethod().getName()));
+            LOG.debug(MessageFormat.format(CommonLogContent.USER_ROLE_SUCCEEDED,
+                                           id,
+                                           hm.getMethod().getName()));
         }
         else
         {
             status = false;
             deniedResponse(response);
-            LOG.info(MessageFormat.format(CommonLogContent.USER_TRY_ROLE_FAILED,
+            LOG.warn(MessageFormat.format(CommonLogContent.USER_ROLE_FAILED,
                                           id,
                                           hm.getMethod().getName()));
 
@@ -81,7 +76,8 @@ public class AuthorityInterceptor implements HandlerInterceptor
      *
      * @param response The response corresponding to the request.
      */
-    private void deniedResponse(HttpServletResponse response)
+    @Override
+    protected void deniedResponse(HttpServletResponse response)
     {
         try
         {

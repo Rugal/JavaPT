@@ -1,6 +1,5 @@
 package ga.rugal.jpt.springmvc.interceptor;
 
-import com.google.gson.Gson;
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
 import ga.rugal.jpt.common.SystemDefaultProperties;
@@ -15,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -31,12 +29,10 @@ import org.springframework.web.servlet.ModelAndView;
  * @author Rugal Bernstein
  */
 @Component
-public class AuthenticationInterceptor implements HandlerInterceptor
+public class AuthenticationInterceptor extends BaseInterceptor
 {
 
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationInterceptor.class.getName());
-
-    private final Gson gson = new Gson();
 
     @Autowired
     private UserService userService;
@@ -47,14 +43,14 @@ public class AuthenticationInterceptor implements HandlerInterceptor
         String id = request.getHeader(SystemDefaultProperties.ID);
         String credential = request.getHeader(SystemDefaultProperties.CREDENTIAL);
         boolean status = true;
-        LOG.info(MessageFormat.format(CommonLogContent.USER_TRY_ACCESS,
-                                      id,
-                                      request.getRequestURI(),
-                                      request.getRemoteAddr()));
+        LOG.debug(MessageFormat.format(CommonLogContent.USER_TRY_ACCESS,
+                                       id,
+                                       request.getRequestURI(),
+                                       request.getRemoteAddr()));
         if (!isAuthenticatedUser(id, credential))
         {
             status = false;
-            forbiddenResponse(response);
+            deniedResponse(response);
             LOG.warn(MessageFormat.format(CommonLogContent.USER_ACCESS_FAILED,
                                           id,
                                           credential,
@@ -72,7 +68,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor
      *
      * @param response The response corresponding to the request.
      */
-    private void forbiddenResponse(HttpServletResponse response)
+    @Override
+    protected void deniedResponse(HttpServletResponse response)
     {
         try
         {
@@ -116,10 +113,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception
     {
-        LOG.info(MessageFormat.format(CommonLogContent.USER_ACCESS_SUCCEEDED,
-                                      request.getHeader(SystemDefaultProperties.ID),
-                                      request.getRequestURI(),
-                                      request.getRemoteAddr()));
+        LOG.debug(MessageFormat.format(CommonLogContent.USER_ACCESS_SUCCEEDED,
+                                       request.getHeader(SystemDefaultProperties.ID),
+                                       request.getRequestURI(),
+                                       request.getRemoteAddr()));
     }
 
     @Override
