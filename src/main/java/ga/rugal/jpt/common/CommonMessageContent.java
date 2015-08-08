@@ -32,4 +32,8 @@ public interface CommonMessageContent
     String TRACKER_NOT_STARTED = "Tracker start failed";
 
     String TRACKER_NOT_STOPPED = "Track stop failed";
+
+    String TRACKER_RUNNING = "Tracker is running";
+
+    String TRACKER_NOT_RUNNING = "Tracker is not running";
 }

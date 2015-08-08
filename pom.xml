@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ga.rugal</groupId>
     <artifactId>jpt</artifactId>
-    <version>0.1</version>
+    <version>0.1-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Java private tracker</name>
     <description>Java based private tracker site</description>
@@ -31,6 +31,21 @@
         <!-- ttorrent start -->
         <dependency>
             <groupId>com.turn</groupId>
+            <artifactId>ttorrent-core</artifactId>
+            <version>1.5-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--        <dependency>
+            <groupId>com.turn</groupId>
             <artifactId>ttorrent</artifactId>
             <version>1.4</version>
             <exclusions>
@@ -42,16 +57,8 @@
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-log4j12</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>commons-codec</groupId>
-                    <artifactId>commons-codec</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>net.sf</groupId>
-                    <artifactId>jargs</artifactId>
-                </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>

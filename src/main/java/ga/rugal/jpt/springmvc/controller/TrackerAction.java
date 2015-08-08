@@ -44,6 +44,11 @@ public class TrackerAction
     @RequestMapping(method = RequestMethod.POST)
     public Message startTracker(HttpServletRequest request)
     {
+        if (!tracker.isStop())
+        {
+            return Message.failMessage(CommonMessageContent.TRACKER_RUNNING);
+        }
+        //-----------------
         LOG.info(MessageFormat.format(CommonLogContent.SUPER_START_TRACKER,
                                       request.getHeader(SystemDefaultProperties.ID),
                                       request.getRemoteAddr()));
@@ -62,6 +67,7 @@ public class TrackerAction
                       e);
             message = Message.failMessage(CommonMessageContent.TRACKER_NOT_STARTED);
         }
+
         return message;
     }
 
@@ -76,6 +82,10 @@ public class TrackerAction
     @RequestMapping(method = RequestMethod.DELETE)
     public Message stopTracker(HttpServletRequest request)
     {
+        if (tracker.isStop())
+        {
+            return Message.failMessage(CommonMessageContent.TRACKER_NOT_RUNNING);
+        }
         LOG.info(MessageFormat.format(CommonLogContent.SUPER_STOP_TRACKER,
                                       request.getHeader(SystemDefaultProperties.ID),
                                       request.getRemoteAddr()));
