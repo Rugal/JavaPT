@@ -14,4 +14,8 @@ public interface SystemDefaultProperties
     String CREDENTIAL = "credential";
 
     int TRACKER_PORT = 6969;
+
+    String TORRENT_PATH = "./torrents";
+
+    String TORRENT_SUBFIX = ".torrent";
 }

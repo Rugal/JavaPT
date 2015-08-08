@@ -94,7 +94,10 @@ public class AuthorityInterceptor extends BaseInterceptor
     }
 
     /**
-     * check roles of this user and required role of handler.
+     * check roles of this user and required role of handler.<BR>
+     * If this handler require no role, treat this as Permit all.
+     * Otherwise, check user role. Only accessible if this user contain specific role that defined
+     * in {@code Role} annotation
      *
      * @param id
      * @param hm
@@ -104,10 +107,14 @@ public class AuthorityInterceptor extends BaseInterceptor
     private boolean isAccessible(String id, HandlerMethod hm)
     {
         Role r = getAnnotation(hm, Role.class);
-        //See if this handler is accessible by this user
+        //Permit access by default if require no role
         boolean value = true;
+        //-------------------
         if (null != r)
         {
+            //Deny access by default if without any required role
+            value = false;
+            //---------------------
             Set<Admin.Level> ownedLevel = new HashSet<>(5);
             User user = userService.getByID(Integer.parseInt(id));
             user.getAdminList().stream().forEach((admin) ->
@@ -119,11 +126,11 @@ public class AuthorityInterceptor extends BaseInterceptor
             {
                 if (ownedLevel.contains(requiredLevel))
                 {
+                    //If match any role
+                    value = true;
                     break;
                 }
             }
-            //Deny access if without any required role
-            value = false;
         }
         return value;
     }

@@ -1,10 +1,14 @@
 package config;
 
+import com.turn.ttorrent.tracker.TrackedTorrent;
 import com.turn.ttorrent.tracker.Tracker;
 import com.zaxxer.hikari.HikariDataSource;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.core.entity.PackageInfo;
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Properties;
 import javax.sql.DataSource;
@@ -115,12 +119,31 @@ public class ApplicationContext
     }
 //</editor-fold>
 
-    @Bean
+    /**
+     * Create a tracker server in local, with default port 6969.
+     * Spring will start this tracker after creation.
+     *
+     * @return
+     *
+     * @throws IOException
+     */
+    @Bean(initMethod = "start", destroyMethod = "stop")
     public Tracker tracker() throws IOException
     {
         try
         {
-            return new Tracker(InetSocketAddress.createUnresolved("localhost", SystemDefaultProperties.TRACKER_PORT));
+            InetSocketAddress isa = new InetSocketAddress(InetAddress.getLocalHost(),
+                                                          SystemDefaultProperties.TRACKER_PORT);
+            Tracker tracker = new Tracker(isa);
+
+            File torrentFolder = new File(SystemDefaultProperties.TORRENT_PATH);
+            FilenameFilter filter = (File dir, String name) -> name.endsWith(SystemDefaultProperties.TORRENT_SUBFIX);
+            //load any torrent file inside torrent folder
+            for (File f : torrentFolder.listFiles(filter))
+            {
+                tracker.announce(TrackedTorrent.load(f));
+            }
+            return tracker;
         }
         catch (IOException ex)
         {

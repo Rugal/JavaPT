@@ -21,7 +21,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -33,9 +32,9 @@ public class TrackerActionClientSideTest extends ControllerClientSideTestBase
 
     @Test
 //    @Ignore
-    public void test() throws Exception
+    public void testStart() throws Exception
     {
-        this.mockMvc.perform(put("/tracker").
+        this.mockMvc.perform(post("/tracker").
             header(SystemDefaultProperties.ID, "1").
             header(SystemDefaultProperties.CREDENTIAL, "123456")
             .accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
