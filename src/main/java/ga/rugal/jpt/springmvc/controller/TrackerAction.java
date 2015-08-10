@@ -92,7 +92,7 @@ public class TrackerAction
         Message message;
         try
         {
-            tracker.start();
+            tracker.stop();
             LOG.info(MessageFormat.format(CommonLogContent.TRACKER_STOPPED,
                                           request.getHeader(SystemDefaultProperties.ID)));
             message = Message.successMessage(CommonMessageContent.TRACKER_STOPPED, null);

@@ -48,13 +48,13 @@ public class AuthorityInterceptor extends BaseInterceptor
         HandlerMethod hm = (HandlerMethod) handler;
         LOG.debug(MessageFormat.format(CommonLogContent.USER_ROLE_ACCESS,
                                        id,
-                                       hm.getMethod().getName()));
+                                       getHandlerFullName(hm)));
         boolean status = true;
         if (isAccessible(id, hm))
         {
             LOG.debug(MessageFormat.format(CommonLogContent.USER_ROLE_SUCCEEDED,
                                            id,
-                                           hm.getMethod().getName()));
+                                           getHandlerFullName(hm)));
         }
         else
         {
@@ -62,10 +62,15 @@ public class AuthorityInterceptor extends BaseInterceptor
             deniedResponse(response);
             LOG.warn(MessageFormat.format(CommonLogContent.USER_ROLE_FAILED,
                                           id,
-                                          hm.getMethod().getName()));
+                                          getHandlerFullName(hm)));
 
         }
         return status;
+    }
+
+    private String getHandlerFullName(HandlerMethod hm)
+    {
+        return hm.getBeanType().getSimpleName() + "." + hm.getMethod().getName();
     }
 
     /**
