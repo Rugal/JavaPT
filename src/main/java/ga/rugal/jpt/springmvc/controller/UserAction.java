@@ -1,9 +1,9 @@
 package ga.rugal.jpt.springmvc.controller;
 
 import ga.rugal.jpt.common.CommonMessageContent;
-import ga.rugal.jpt.common.Message;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.UserService;
+import ml.rugal.sshcommon.springmvc.util.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

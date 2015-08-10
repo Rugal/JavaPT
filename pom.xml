@@ -30,7 +30,7 @@
         <!-- Data Source stop -->
         <!-- ttorrent start -->
         <dependency>
-            <groupId>com.turn</groupId>
+            <groupId>ml.rugal</groupId>
             <artifactId>ttorrent-core</artifactId>
             <version>1.5-SNAPSHOT</version>
             <exclusions>
