@@ -29,7 +29,7 @@
         </dependency>
         <!-- Data Source stop -->
         <!-- ttorrent start -->
-        <dependency>
+        <!--        <dependency>
             <groupId>ml.rugal</groupId>
             <artifactId>ttorrent-core</artifactId>
             <version>1.5-SNAPSHOT</version>
@@ -43,8 +43,8 @@
                     <artifactId>slf4j-log4j12</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <!--        <dependency>
+        </dependency>-->
+        <dependency>
             <groupId>com.turn</groupId>
             <artifactId>ttorrent</artifactId>
             <version>1.4</version>
@@ -58,12 +58,11 @@
                     <artifactId>slf4j-log4j12</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.9</version>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.simpleframework</groupId>
@@ -343,7 +342,7 @@
                     <version>9.3.0.M2</version>
                     <configuration>
                         <httpConnector>
-                            <port>80</port>
+                            <port>8080</port>
                             <host>localhost</host>
                         </httpConnector>
                         <scanIntervalSeconds>10</scanIntervalSeconds>

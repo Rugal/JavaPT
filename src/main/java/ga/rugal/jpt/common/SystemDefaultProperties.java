@@ -18,4 +18,6 @@ public interface SystemDefaultProperties
     String TORRENT_PATH = "./torrents";
 
     String TORRENT_SUBFIX = ".torrent";
+
+    String BYTE_ENCODING = "UTF-8";
 }
