@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ga.rugal.jpt.common.tracker;
+package ga.rugal.jpt.common.tracker.server;
 
-import com.turn.ttorrent.common.Peer;
-import com.turn.ttorrent.common.Torrent;
+import ga.rugal.jpt.common.tracker.common.Peer;
+import ga.rugal.jpt.common.tracker.common.Torrent;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -124,6 +124,11 @@ public class TrackedTorrent extends Torrent
     public TrackedPeer getPeer(String peerId)
     {
         return this.peers.get(peerId);
+    }
+
+    public boolean containsKey(String peerId)
+    {
+        return peers.containsKey(peerId);
     }
 
     /**

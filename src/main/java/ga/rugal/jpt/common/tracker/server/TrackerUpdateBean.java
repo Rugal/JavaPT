@@ -1,7 +1,7 @@
-package ga.rugal.jpt.common.tracker;
+package ga.rugal.jpt.common.tracker.server;
 
-import com.turn.ttorrent.common.Torrent;
-import com.turn.ttorrent.common.protocol.TrackerMessage;
+import ga.rugal.jpt.common.tracker.common.Torrent;
+import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
 import java.nio.ByteBuffer;
 import org.apache.commons.codec.binary.Hex;
 
@@ -14,7 +14,7 @@ public class TrackerUpdateBean
 
     private Torrent torrent;
 
-    private TrackerMessage.AnnounceRequestMessage.RequestEvent event;
+    private RequestEvent event;
 
     private TrackedPeer.PeerState state;
 
@@ -56,12 +56,12 @@ public class TrackerUpdateBean
         this.torrent = torrent;
     }
 
-    public TrackerMessage.AnnounceRequestMessage.RequestEvent getEvent()
+    public RequestEvent getEvent()
     {
         return event;
     }
 
-    public void setEvent(TrackerMessage.AnnounceRequestMessage.RequestEvent event)
+    public void setEvent(RequestEvent event)
     {
         this.event = event;
     }

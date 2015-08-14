@@ -1,7 +1,7 @@
 package config;
 
 import com.zaxxer.hikari.HikariDataSource;
-import ga.rugal.jpt.common.tracker.Tracker;
+import ga.rugal.jpt.common.tracker.server.Tracker;
 import ga.rugal.jpt.core.entity.PackageInfo;
 import java.io.IOException;
 import java.util.Properties;

@@ -1,17 +1,21 @@
 package ga.rugal.jpt.springmvc.controller;
 
-import com.turn.ttorrent.bcodec.BEValue;
-import com.turn.ttorrent.bcodec.BEncoder;
-import com.turn.ttorrent.common.protocol.TrackerMessage;
 import ga.rugal.jpt.common.SystemDefaultProperties;
-import ga.rugal.jpt.common.tracker.TrackedPeer;
-import ga.rugal.jpt.common.tracker.TrackedTorrent;
-import ga.rugal.jpt.common.tracker.Tracker;
-import ga.rugal.jpt.common.tracker.TrackerUpdateBean;
+import ga.rugal.jpt.common.tracker.bcodec.BEValue;
+import ga.rugal.jpt.common.tracker.bcodec.BEncoder;
+import ga.rugal.jpt.common.tracker.common.Peer;
+import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
+import ga.rugal.jpt.common.tracker.server.TrackedPeer;
+import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
+import ga.rugal.jpt.common.tracker.server.Tracker;
+import ga.rugal.jpt.common.tracker.server.TrackerUpdateBean;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +27,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *
@@ -59,15 +62,13 @@ public class AnnounceAction
      *
      * @throws java.lang.Exception
      */
-    @ResponseBody
     @RequestMapping(value = "/announce", method = RequestMethod.GET)
-
-    public String clientRequest(@RequestParam byte[] info_hash, @RequestParam byte[] peer_id, @RequestParam int port,
-                                @RequestParam long downloaded, @RequestParam long uploaded, @RequestParam long left,
-                                @RequestParam int compact, @RequestParam int no_peer_id, @RequestParam(required = false) String event,
-                                @RequestParam(defaultValue = "50") long numwant, @RequestParam String key,
-                                @RequestParam(required = false) String trackerid,
-                                HttpServletRequest request, HttpServletResponse response) throws Exception
+    public void clientRequest(@RequestParam byte[] info_hash, @RequestParam byte[] peer_id, @RequestParam int port,
+                              @RequestParam long downloaded, @RequestParam long uploaded, @RequestParam long left,
+                              @RequestParam(defaultValue = "0") int compact, @RequestParam int no_peer_id,
+                              @RequestParam(required = false) String event, @RequestParam(defaultValue = "50") long numwant,
+                              @RequestParam String key, @RequestParam(required = false) String trackerid,
+                              HttpServletRequest request, HttpServletResponse response) throws Exception
     {
         TrackerUpdateBean bean = new TrackerUpdateBean();
         try
@@ -82,12 +83,13 @@ public class AnnounceAction
             bean.setIp(request.getRemoteAddr());
             bean.setNoPeerId(no_peer_id);
             //In case of exception when parsing this value
-            bean.setEvent(TrackerMessage.AnnounceRequestMessage.RequestEvent.valueOf(event));
+            bean.setEvent(RequestEvent.valueOf(event.toUpperCase()));
             bean.setKey(key);
             bean.setTrackerid(trackerid);
         }
         catch (Exception e)
         {
+            throw new Exception("Bad Client event");
         }
         if (!tracker.containsKey(bean.getHexInfoHash()))
         {
@@ -102,8 +104,8 @@ public class AnnounceAction
         // previous 'started' announce request should have been made by the
         // client that would have had us register that peer on the torrent this
         // request refers to.
-        if (event != null && torrent.getPeer(peerId) == null
-            && TrackerMessage.AnnounceRequestMessage.RequestEvent.STARTED != bean.getEvent())
+        if (bean.getEvent() != null && torrent.containsKey(peerId)
+            && RequestEvent.STARTED != bean.getEvent())
         {
             //send error
             throw new Exception("Bad client event");
@@ -112,10 +114,10 @@ public class AnnounceAction
         // is operating. If we don't have a peer for this announce, it means
         // the tracker restarted while the client was running. Consider this
         // announce request as a 'started' event.
-        if ((bean.getEvent() == null || TrackerMessage.AnnounceRequestMessage.RequestEvent.NONE == bean.getEvent())
-            && torrent.getPeer(peerId) == null)
+        if ((bean.getEvent() == null || RequestEvent.NONE == bean.getEvent())
+            && torrent.containsKey(peerId))
         {
-            bean.setEvent(TrackerMessage.AnnounceRequestMessage.RequestEvent.STARTED);
+            bean.setEvent(RequestEvent.STARTED);
         }
         // Update the torrent according to the announce event
         TrackedPeer peer;
@@ -127,7 +129,53 @@ public class AnnounceAction
         {
             throw iae;
         }
-        return "Rugal";
+        WritableByteChannel channel = Channels.newChannel(response.getOutputStream());
+        ByteBuffer buffer = this.compactResponse(bean, torrent, torrent.getSomePeers(peer));
+        channel.write(buffer);
+    }
+
+    /**
+     * Craft a compact announce response message.
+     *
+     * @param bean
+     * @param torrent
+     * @param peer
+     * @param interval
+     * @param minInterval
+     * @param trackerId
+     * @param complete
+     * @param incomplete
+     * @param peers
+     *
+     * @return
+     *
+     * @throws java.io.IOException
+     * @throws java.io.UnsupportedEncodingException
+     */
+    public ByteBuffer compactResponse(TrackerUpdateBean bean, TrackedTorrent torrent, List<Peer> peers)
+        throws IOException, UnsupportedEncodingException
+    {
+        Map<String, BEValue> response = new HashMap<>();
+        response.put("interval", new BEValue(torrent.getAnnounceInterval()));
+        response.put("min interval", new BEValue(SystemDefaultProperties.MIN_REANNOUNCE_INTERVAL));
+        response.put("tracker id", new BEValue(SystemDefaultProperties.TRACKER_VERSION));
+        response.put("complete", new BEValue(torrent.seeders()));
+        response.put("incomplete", new BEValue(torrent.leechers()));
+
+        ByteBuffer data = ByteBuffer.allocate(peers.size() * 6);
+        for (Peer peer : peers)
+        {
+            byte[] ip = peer.getRawIp();
+            if (ip == null || ip.length != 4)
+            {
+                continue;
+            }
+            data.put(ip);
+            data.putShort((short) peer.getPort());
+        }
+        response.put("peers", new BEValue(data.array()));
+
+        return BEncoder.bencode(response);
     }
 
     @ExceptionHandler(Exception.class)

@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ga.rugal.jpt.common.tracker;
+package ga.rugal.jpt.common.tracker.server;
 
-import com.turn.ttorrent.bcodec.BEValue;
-import com.turn.ttorrent.common.Peer;
-import com.turn.ttorrent.common.Torrent;
+import ga.rugal.jpt.common.tracker.bcodec.BEValue;
+import ga.rugal.jpt.common.tracker.common.Peer;
+import ga.rugal.jpt.common.tracker.common.Torrent;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.Date;

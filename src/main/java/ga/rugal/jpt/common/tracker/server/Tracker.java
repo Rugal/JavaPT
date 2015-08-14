@@ -1,6 +1,6 @@
-package ga.rugal.jpt.common.tracker;
+package ga.rugal.jpt.common.tracker.server;
 
-import com.turn.ttorrent.common.Torrent;
+import ga.rugal.jpt.common.tracker.common.Torrent;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import org.slf4j.Logger;

@@ -9,15 +9,19 @@ package ga.rugal.jpt.common;
 public interface SystemDefaultProperties
 {
 
-    String ID = "id";
+    final String ID = "id";
 
-    String CREDENTIAL = "credential";
+    final String CREDENTIAL = "credential";
 
-    int TRACKER_PORT = 6969;
+    final int TRACKER_PORT = 6969;
 
-    String TORRENT_PATH = "./torrents";
+    final String TORRENT_PATH = "./torrents";
 
-    String TORRENT_SUBFIX = ".torrent";
+    final String TORRENT_SUBFIX = ".torrent";
 
-    String BYTE_ENCODING = "UTF-8";
+    final String BYTE_ENCODING = "UTF-8";
+
+    final int MIN_REANNOUNCE_INTERVAL = 15;
+
+    final String TRACKER_VERSION = "Rugal v1";
 }
