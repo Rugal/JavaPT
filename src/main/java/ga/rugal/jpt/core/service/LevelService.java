@@ -1,6 +1,6 @@
 package ga.rugal.jpt.core.service;
 
-import ga.rugal.jpt.core.entity.Level;
+import ga.rugal.jpt.core.entity.UserLevel;
 import ml.rugal.sshcommon.page.Pagination;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,16 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 public interface LevelService
 {
 
-    Level deleteById(Integer id);
+    UserLevel deleteById(Integer id);
 
     @Transactional(readOnly = true)
-    Level getByID(Integer id);
+    UserLevel getByID(Integer id);
 
     @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);
 
-    Level save(Level bean);
+    UserLevel save(UserLevel bean);
 
-    Level update(Level bean);
+    UserLevel update(UserLevel bean);
 
 }

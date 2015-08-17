@@ -2,7 +2,7 @@ package ga.rugal.jpt.core.service.impl;
 
 import ga.rugal.jpt.core.service.LevelService;
 import ga.rugal.jpt.core.dao.LevelDao;
-import ga.rugal.jpt.core.entity.Level;
+import ga.rugal.jpt.core.entity.UserLevel;
 import ml.rugal.sshcommon.hibernate.Updater;
 import ml.rugal.sshcommon.page.Pagination;
 import org.slf4j.Logger;
@@ -34,27 +34,27 @@ public class LevelServiceImpl implements LevelService
 
     @Override
     @Transactional(readOnly = true)
-    public Level getByID(Integer id)
+    public UserLevel getByID(Integer id)
     {
         return dao.getByID(id);
     }
 
     @Override
-    public Level save(Level bean)
+    public UserLevel save(UserLevel bean)
     {
         return dao.save(bean);
     }
 
     @Override
-    public Level deleteById(Integer id)
+    public UserLevel deleteById(Integer id)
     {
         return dao.deleteById(id);
     }
 
     @Override
-    public Level update(Level bean)
+    public UserLevel update(UserLevel bean)
     {
-        Updater<Level> updater = new Updater<>(bean);
+        Updater<UserLevel> updater = new Updater<>(bean);
         return dao.updateByUpdater(updater);
     }
 

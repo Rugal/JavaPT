@@ -19,8 +19,10 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -38,23 +40,21 @@ public class AnnounceAction
 
     private static final Logger LOG = LoggerFactory.getLogger(AnnounceAction.class.getName());
 
-//    @Autowired
+    @Autowired
     private Tracker tracker;
 
     @RequestMapping(value = "/announce", method = RequestMethod.GET)
     @ResponseBody
-    public void test(@ModelAttribute("bean") TrackerUpdateBean bean,
-                     HttpServletRequest request,
-                     HttpServletResponse response) throws Exception
+    public void announce(@Valid @ModelAttribute TrackerUpdateBean bean,
+                         HttpServletRequest request, HttpServletResponse response) throws Exception
     {
-        LOG.info(bean.getInfoHash());
         if (!tracker.containsKey(bean.getInfoHash()))
         {
             //report there is no such torrent
             throw new Exception("The Requested torrent not found in tracker");
         }
         TrackedTorrent torrent = tracker.get(bean.getInfoHash());
-        String peerId = bean.getHexPeerId();
+        String peerId = bean.getPeerId();
 
         // If an event other than 'started' is specified and we also haven't
         // seen the peer on this torrent before, something went wrong. A

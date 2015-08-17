@@ -121,7 +121,7 @@ public class ApplicationContext
      *
      * @throws IOException
      */
-//    @Bean(initMethod = "start", destroyMethod = "stop")
+    @Bean(initMethod = "start", destroyMethod = "stop")
     public Tracker tracker()
     {
         return new Tracker();

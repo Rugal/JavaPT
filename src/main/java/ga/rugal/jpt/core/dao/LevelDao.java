@@ -1,6 +1,6 @@
 package ga.rugal.jpt.core.dao;
 
-import ga.rugal.jpt.core.entity.Level;
+import ga.rugal.jpt.core.entity.UserLevel;
 import ml.rugal.sshcommon.hibernate.Updater;
 import ml.rugal.sshcommon.page.Pagination;
 
@@ -11,15 +11,15 @@ import ml.rugal.sshcommon.page.Pagination;
 public interface LevelDao
 {
 
-    Level deleteById(Integer id);
+    UserLevel deleteById(Integer id);
 
-    Level getByID(Integer id);
+    UserLevel getByID(Integer id);
 
     Pagination getPage(int pageNo, int pageSize);
 
-    Level save(Level bean);
+    UserLevel save(UserLevel bean);
 
-    Level getLevel(Integer credit);
+    UserLevel getLevel(Integer credit);
 
-    Level updateByUpdater(Updater<Level> updater);
+    UserLevel updateByUpdater(Updater<UserLevel> updater);
 }

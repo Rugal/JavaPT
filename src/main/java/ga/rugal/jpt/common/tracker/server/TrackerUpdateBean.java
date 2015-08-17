@@ -3,6 +3,9 @@ package ga.rugal.jpt.common.tracker.server;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
 import java.nio.ByteBuffer;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -13,29 +16,33 @@ public class TrackerUpdateBean
 
     private Torrent torrent;
 
-    private String event;
+    private RequestEvent event;
 
     private TrackedPeer.PeerState state;
 
+    @NotNull
     private String info_hash;
 
+    @NotNull
     private String peer_id;
 
+    @Min(6881)
+    @Max(6889)
     private int port;
 
-    private long downloaded;
+    private long downloaded = 0;
 
-    private long uploaded;
+    private long uploaded = 0;
 
-    private long left;
+    private long left = 0;
 
-    private int compact;
+    private int compact = 1;
 
     private int no_peer_id;
 
     private String ip;
 
-    private long numwant;
+    private int numwant = 50;
 
     private String key;
 
@@ -57,17 +64,17 @@ public class TrackerUpdateBean
 
     public RequestEvent getEvent()
     {
-        return RequestEvent.valueOf(event.toUpperCase());
-    }
-
-    public void setEvent(String event)
-    {
-        this.event = event;
+        return event;
     }
 
     public void setEvent(RequestEvent event)
     {
-        this.event = event.getEventName();
+        this.event = event;
+    }
+
+    public void setEvent(String event)
+    {
+        this.event = RequestEvent.valueOf(event);
     }
 
     public ByteBuffer getBufferPeerId()
@@ -80,7 +87,7 @@ public class TrackerUpdateBean
         return info_hash;
     }
 
-    public String getHexPeerId()
+    public String getPeerId()
     {
         return peer_id;
     }
@@ -185,12 +192,12 @@ public class TrackerUpdateBean
         this.ip = ip;
     }
 
-    public long getNumwant()
+    public int getNumwant()
     {
         return numwant;
     }
 
-    public void setNumwant(long numwant)
+    public void setNumwant(int numwant)
     {
         this.numwant = numwant;
     }

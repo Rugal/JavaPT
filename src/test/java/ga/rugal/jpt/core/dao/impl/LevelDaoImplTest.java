@@ -2,7 +2,7 @@ package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.JUnitSpringTestBase;
 import ga.rugal.jpt.core.dao.LevelDao;
-import ga.rugal.jpt.core.entity.Level;
+import ga.rugal.jpt.core.entity.UserLevel;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -20,7 +20,7 @@ public class LevelDaoImplTest extends JUnitSpringTestBase
     @Autowired
     private LevelDao levelDao;
 
-    private Level bean;
+    private UserLevel bean;
 
     public LevelDaoImplTest()
     {
@@ -30,7 +30,7 @@ public class LevelDaoImplTest extends JUnitSpringTestBase
     public void setUp()
     {
         System.out.println("setUp");
-        bean = new Level();
+        bean = new UserLevel();
         bean.setMinimum(Integer.MAX_VALUE);
         bean.setName("Test");
         levelDao.save(bean);
@@ -58,8 +58,8 @@ public class LevelDaoImplTest extends JUnitSpringTestBase
     {
         System.out.println("findById");
         Integer id = bean.getLid();
-        Level expResult = bean;
-        Level result = levelDao.getByID(id);
+        UserLevel expResult = bean;
+        UserLevel result = levelDao.getByID(id);
         assertEquals(expResult, result);
     }
 
@@ -68,7 +68,7 @@ public class LevelDaoImplTest extends JUnitSpringTestBase
     {
         System.out.println("getLevel");
         Integer credit = 100001;
-        Level result = levelDao.getLevel(credit);
+        UserLevel result = levelDao.getLevel(credit);
         System.out.println(result);
         System.out.println(result.getName());
     }

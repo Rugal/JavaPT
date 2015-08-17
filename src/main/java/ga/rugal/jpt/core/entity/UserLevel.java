@@ -15,7 +15,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(catalog = "postgres", schema = "jpt", name = "level")
-public class Level
+public class UserLevel
 {
 
     @Id
@@ -31,11 +31,11 @@ public class Level
     @Column(length = 50)
     private String name;
 
-    public Level()
+    public UserLevel()
     {
     }
 
-    public Level(Integer lid)
+    public UserLevel(Integer lid)
     {
         this.lid = lid;
     }
@@ -82,11 +82,11 @@ public class Level
     public boolean equals(Object object)
     {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Level))
+        if (!(object instanceof UserLevel))
         {
             return false;
         }
-        Level other = (Level) object;
+        UserLevel other = (UserLevel) object;
         return !((this.lid == null && other.lid != null) || (this.lid != null && !this.lid.equals(other.lid)));
     }
 

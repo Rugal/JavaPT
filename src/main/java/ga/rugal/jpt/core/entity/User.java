@@ -60,7 +60,7 @@ public class User implements Serializable
     private Long registerTime;
 
     @Transient
-    private Level level;
+    private UserLevel level;
 
     @Column
     private Status status;
@@ -136,12 +136,12 @@ public class User implements Serializable
         this.grantees = grantees;
     }
 
-    public Level getLevel()
+    public UserLevel getLevel()
     {
         return level;
     }
 
-    public void setLevel(Level level)
+    public void setLevel(UserLevel level)
     {
         this.level = level;
     }

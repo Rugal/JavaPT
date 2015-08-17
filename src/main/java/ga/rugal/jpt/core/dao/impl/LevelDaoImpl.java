@@ -1,7 +1,7 @@
 package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.jpt.core.dao.LevelDao;
-import ga.rugal.jpt.core.entity.Level;
+import ga.rugal.jpt.core.entity.UserLevel;
 import ml.rugal.sshcommon.hibernate.HibernateBaseDao;
 import ml.rugal.sshcommon.page.Pagination;
 import org.hibernate.Criteria;
@@ -17,14 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Rugal Bernstein
  */
 @Repository
-public class LevelDaoImpl extends HibernateBaseDao<Level, Integer> implements LevelDao
+public class LevelDaoImpl extends HibernateBaseDao<UserLevel, Integer> implements LevelDao
 {
 
     private static final Logger LOG = LoggerFactory.getLogger(LevelDaoImpl.class.getName());
 
     @Override
     @Transactional(readOnly = true)
-    public Level getLevel(Integer credit)
+    public UserLevel getLevel(Integer credit)
     {
         //select * from level where minimum < 7000 order by minimum desc limit 1;
 
@@ -32,7 +32,7 @@ public class LevelDaoImpl extends HibernateBaseDao<Level, Integer> implements Le
         crit.add(Restrictions.lt("minimum", credit));
         crit.addOrder(Order.desc("minimum"));
         crit.setMaxResults(1);
-        return (Level) crit.list().get(0);
+        return (UserLevel) crit.list().get(0);
     }
 
     @Override
@@ -46,23 +46,23 @@ public class LevelDaoImpl extends HibernateBaseDao<Level, Integer> implements Le
 
     @Override
     @Transactional(readOnly = true)
-    public Level getByID(Integer id)
+    public UserLevel getByID(Integer id)
     {
-        Level entity = get(id);
+        UserLevel entity = get(id);
         return entity;
     }
 
     @Override
-    public Level save(Level bean)
+    public UserLevel save(UserLevel bean)
     {
         getSession().save(bean);
         return bean;
     }
 
     @Override
-    public Level deleteById(Integer id)
+    public UserLevel deleteById(Integer id)
     {
-        Level entity = super.get(id);
+        UserLevel entity = super.get(id);
         if (entity != null)
         {
             getSession().delete(entity);
@@ -71,9 +71,9 @@ public class LevelDaoImpl extends HibernateBaseDao<Level, Integer> implements Le
     }
 
     @Override
-    protected Class<Level> getEntityClass()
+    protected Class<UserLevel> getEntityClass()
     {
-        return Level.class;
+        return UserLevel.class;
     }
 
 }

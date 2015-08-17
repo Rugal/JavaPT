@@ -250,15 +250,15 @@ public class TrackedTorrent extends Torrent
                 this.addPeer(peer);
                 break;
             case STOPPED:
-                peer = this.removePeer(bean.getHexPeerId());
+                peer = this.removePeer(bean.getPeerId());
                 state = TrackedPeer.PeerState.STOPPED;
                 break;
             case COMPLETED:
-                peer = this.getPeer(bean.getHexPeerId());
+                peer = this.getPeer(bean.getPeerId());
                 state = TrackedPeer.PeerState.COMPLETED;
                 break;
             case NONE:
-                peer = this.getPeer(bean.getHexPeerId());
+                peer = this.getPeer(bean.getPeerId());
                 state = TrackedPeer.PeerState.STARTED;
                 break;
             default:
