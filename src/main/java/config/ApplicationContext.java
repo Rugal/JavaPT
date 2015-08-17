@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         "classpath:jdbc.properties",
         "classpath:hibernate.properties"
     })
-@ComponentScan(value = "ga")
+@ComponentScan(basePackageClasses = ga.PackageInfo.class)
 public class ApplicationContext
 {
 
@@ -121,7 +121,7 @@ public class ApplicationContext
      *
      * @throws IOException
      */
-    @Bean(initMethod = "start", destroyMethod = "stop")
+//    @Bean(initMethod = "start", destroyMethod = "stop")
     public Tracker tracker()
     {
         return new Tracker();

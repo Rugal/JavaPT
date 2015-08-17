@@ -59,10 +59,10 @@ public class Post
     private User uid;
 
     @OneToMany(mappedBy = "pid")
-    private List<PostTags> postTagsList;
+    private transient List<PostTags> postTagsList;
 
     @OneToMany(mappedBy = "pid")
-    private List<Thread> threadList;
+    private transient List<Thread> threadList;
 
     public Post()
     {

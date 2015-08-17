@@ -34,7 +34,7 @@ public class Tag
     private String icon;
 
     @OneToMany(mappedBy = "tid")
-    private List<PostTags> postTagsList;
+    private transient List<PostTags> postTagsList;
 
     public Tag()
     {

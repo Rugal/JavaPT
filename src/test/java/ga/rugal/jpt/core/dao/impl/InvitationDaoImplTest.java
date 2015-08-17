@@ -1,9 +1,9 @@
 package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.JUnitSpringTestBase;
-import ga.rugal.jpt.core.dao.AdminDao;
+import ga.rugal.jpt.core.dao.InvitationDao;
 import ga.rugal.jpt.core.dao.UserDao;
-import ga.rugal.jpt.core.entity.Admin;
+import ga.rugal.jpt.core.entity.Invitation;
 import ga.rugal.jpt.core.entity.User;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
@@ -16,20 +16,20 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author Rugal Bernstein
  */
-public class AdminDaoImplTest extends JUnitSpringTestBase
+public class InvitationDaoImplTest extends JUnitSpringTestBase
 {
 
-    @Autowired
-    private AdminDao adminDao;
+    private Invitation bean;
+
+    private User user;
 
     @Autowired
     private UserDao userDao;
 
-    private User user;
+    @Autowired
+    private InvitationDao invitationDao;
 
-    private Admin bean;
-
-    public AdminDaoImplTest()
+    public InvitationDaoImplTest()
     {
     }
 
@@ -47,12 +47,11 @@ public class AdminDaoImplTest extends JUnitSpringTestBase
         user.setUsername("test");
         userDao.save(user);
 
-        bean = new Admin();
+        bean = new Invitation();
+        bean.setIssueTime(System.currentTimeMillis());
         bean.setUid(user);
-        bean.setGrantee(user);
-        bean.setSince(System.currentTimeMillis());
-        bean.setLevel(Admin.Level.ADMIN);
-        adminDao.save(bean);
+        invitationDao.save(bean);
+
     }
 
     @After
@@ -60,7 +59,7 @@ public class AdminDaoImplTest extends JUnitSpringTestBase
     {
         System.out.println("tearDown");
         //order is important
-        adminDao.deleteById(bean.getAid());
+        invitationDao.deleteById(bean.getIid());
         userDao.deleteById(user.getUid());
     }
 
@@ -70,17 +69,17 @@ public class AdminDaoImplTest extends JUnitSpringTestBase
         System.out.println("getPage");
         int pageNo = 0;
         int pageSize = 1;
-        Pagination result = adminDao.getPage(pageNo, pageSize);
+        Pagination result = invitationDao.getPage(pageNo, pageSize);
         System.out.println(result.getList().size());
     }
 
     @Test
-    public void testFindById()
+    public void testGetByID()
     {
-        System.out.println("findById");
-        Integer id = bean.getAid();
-        Admin expResult = bean;
-        Admin result = adminDao.getByID(id);
+        System.out.println("getByID");
+        Integer id = bean.getIid();
+        Invitation expResult = bean;
+        Invitation result = invitationDao.getByID(id);
         assertEquals(expResult, result);
     }
 

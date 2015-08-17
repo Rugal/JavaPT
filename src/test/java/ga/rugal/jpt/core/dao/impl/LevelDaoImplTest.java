@@ -6,9 +6,7 @@ import ga.rugal.jpt.core.entity.Level;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,6 +20,8 @@ public class LevelDaoImplTest extends JUnitSpringTestBase
     @Autowired
     private LevelDao levelDao;
 
+    private Level bean;
+
     public LevelDaoImplTest()
     {
     }
@@ -29,73 +29,48 @@ public class LevelDaoImplTest extends JUnitSpringTestBase
     @Before
     public void setUp()
     {
+        System.out.println("setUp");
+        bean = new Level();
+        bean.setMinimum(Integer.MAX_VALUE);
+        bean.setName("Test");
+        levelDao.save(bean);
     }
 
     @After
     public void tearDown()
     {
+        System.out.println("tearDown");
+        levelDao.deleteById(bean.getLid());
     }
 
     @Test
-    @Ignore
     public void testGetPage()
     {
         System.out.println("getPage");
         int pageNo = 0;
-        int pageSize = 0;
-        LevelDaoImpl instance = new LevelDaoImpl();
-        Pagination expResult = null;
-        Pagination result = instance.getPage(pageNo, pageSize);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
+        int pageSize = 1;
+        Pagination result = levelDao.getPage(pageNo, pageSize);
+        System.out.println(result.getList().size());
     }
 
     @Test
-    @Ignore
     public void testFindById()
     {
         System.out.println("findById");
-        Integer id = null;
-        LevelDaoImpl instance = new LevelDaoImpl();
-        Level expResult = null;
-        Level result = instance.getByID(id);
+        Integer id = bean.getLid();
+        Level expResult = bean;
+        Level result = levelDao.getByID(id);
         assertEquals(expResult, result);
-        fail("The test case is a prototype.");
     }
 
     @Test
-    @Ignore
-    public void testSave()
-    {
-        System.out.println("save");
-        Level bean = new Level();
-        bean.setMinimum(500000);
-        bean.setName("Funky");
-        Level result = levelDao.save(bean);
-    }
-
-    @Test
-    @Ignore
-    public void testDeleteById()
-    {
-        System.out.println("deleteById");
-        Integer id = null;
-        LevelDaoImpl instance = new LevelDaoImpl();
-        Level expResult = null;
-        Level result = instance.deleteById(id);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    @Ignore
     public void testgetLevel()
     {
         System.out.println("getLevel");
         Integer credit = 100001;
         Level result = levelDao.getLevel(credit);
         System.out.println(result);
-        System.err.println(result.getName());
+        System.out.println(result.getName());
     }
 
 }

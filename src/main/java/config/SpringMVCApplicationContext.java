@@ -21,7 +21,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.handler.AbstractHandlerMapping;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
+import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
@@ -84,10 +84,11 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
         return resolver;
     }
 
-//    @Bean
+    @Bean
     public HandlerAdapter annotationMethodHandlerAdapter()
     {
-        return new RequestMappingHandlerAdapter();
+//        return new RequestMappingHandlerAdapter();
+        return new AnnotationMethodHandlerAdapter();
     }
 
     @Bean

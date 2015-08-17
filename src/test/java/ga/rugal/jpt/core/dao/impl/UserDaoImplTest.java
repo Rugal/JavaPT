@@ -6,9 +6,7 @@ import ga.rugal.jpt.core.entity.User;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,6 +20,8 @@ public class UserDaoImplTest extends JUnitSpringTestBase
     @Autowired
     private UserDao userDao;
 
+    private User bean;
+
     public UserDaoImplTest()
     {
     }
@@ -29,68 +29,44 @@ public class UserDaoImplTest extends JUnitSpringTestBase
     @Before
     public void setUp()
     {
+        System.out.println("setUp");
+        bean = new User();
+        bean.setEmail("test@123.com");
+        bean.setLastReport(System.currentTimeMillis());
+        bean.setPasskey("test");
+        bean.setPassword("test");
+        bean.setRegisterTime(System.currentTimeMillis());
+        bean.setStatus(User.Status.DELETING);
+        bean.setUsername("test");
+        userDao.save(bean);
+
     }
 
     @After
     public void tearDown()
     {
+        System.out.println("tearDown");
+        userDao.deleteById(bean.getUid());
     }
 
     @Test
-    @Ignore
     public void testGetPage()
     {
         System.out.println("getPage");
         int pageNo = 0;
-        int pageSize = 0;
-        UserDaoImpl instance = new UserDaoImpl();
-        Pagination expResult = null;
-        Pagination result = instance.getPage(pageNo, pageSize);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
+        int pageSize = 1;
+        Pagination result = userDao.getPage(pageNo, pageSize);
+        System.out.println(result.getList().size());
     }
 
     @Test
-    @Ignore
     public void testFindById()
     {
         System.out.println("findById");
-        Integer id = null;
-        UserDaoImpl instance = new UserDaoImpl();
-        User expResult = null;
-        User result = instance.getByID(id);
+        Integer id = bean.getUid();
+        User expResult = bean;
+        User result = userDao.getByID(id);
         assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-//    @Ignore
-    public void testSave()
-    {
-        System.out.println("save");
-        User bean = new User();
-        bean.setEmail("null@123.com");
-        bean.setLastReport(System.currentTimeMillis());
-        bean.setPasskey("123456");
-        bean.setPassword("123456");
-        bean.setRegisterTime(System.currentTimeMillis());
-        bean.setStatus(User.Status.DELETING);
-        bean.setUsername("Tiger");
-        bean.setReferee(null);
-        User result = userDao.save(bean);
-    }
-
-    @Test
-    @Ignore
-    public void testDeleteById()
-    {
-        System.out.println("deleteById");
-        Integer id = null;
-        UserDaoImpl instance = new UserDaoImpl();
-        User expResult = null;
-        User result = instance.deleteById(id);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
     }
 
 }

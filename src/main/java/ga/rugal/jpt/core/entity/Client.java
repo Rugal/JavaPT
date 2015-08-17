@@ -37,7 +37,7 @@ public class Client
     private Boolean enabled;
 
     @OneToMany(mappedBy = "cid")
-    private List<SigninLog> signinLogList;
+    private transient List<SigninLog> signinLogList;
 
     public Client()
     {

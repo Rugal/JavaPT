@@ -31,7 +31,7 @@ public class TrackerActionClientSideTest extends ControllerClientSideTestBase
 {
 
     @Test
-//    @Ignore
+    @Ignore
     public void testStart() throws Exception
     {
         this.mockMvc.perform(post("/tracker").

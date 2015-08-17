@@ -59,33 +59,33 @@ public class User implements Serializable
     @Column(name = "register_time")
     private Long registerTime;
 
-    @OneToMany(mappedBy = "uid")
-    private List<Post> postList;
-
-    @OneToMany(mappedBy = "uid", fetch = FetchType.LAZY)
-    private List<Admin> adminList;
-
-    @OneToMany(mappedBy = "grantee")
-    private List<Admin> grantees;
-
-    @OneToMany(mappedBy = "uid")
-    private List<SigninLog> signinLogList;
-
-    @OneToMany(mappedBy = "uid")
-    private List<Thread> threadList;
-
     @Transient
     private Level level;
 
     @Column
     private Status status;
 
-    @OneToMany(mappedBy = "referee")
-    private List<User> userList;
-
     @JoinColumn(name = "referee", referencedColumnName = "uid")
     @ManyToOne
     private User referee;
+
+    @OneToMany(mappedBy = "uid")
+    private transient List<Post> postList;
+
+    @OneToMany(mappedBy = "uid", fetch = FetchType.LAZY)
+    private transient List<Admin> adminList;
+
+    @OneToMany(mappedBy = "grantee")
+    private transient List<Admin> grantees;
+
+    @OneToMany(mappedBy = "uid")
+    private transient List<SigninLog> signinLogList;
+
+    @OneToMany(mappedBy = "uid")
+    private transient List<Thread> threadList;
+
+    @OneToMany(mappedBy = "referee")
+    private transient List<User> userList;
 
     public User()
     {
