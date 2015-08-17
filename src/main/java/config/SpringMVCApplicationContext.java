@@ -103,8 +103,8 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
     public void addInterceptors(InterceptorRegistry registry)
     {
         //This is a very important interceptor for authentication usage
-        registry.addInterceptor(authenticationInterceptor).addPathPatterns("/**").excludePathPatterns("/announce");
-        registry.addInterceptor(authorityInterceptor).addPathPatterns("/**").excludePathPatterns("/announce");
+//        registry.addInterceptor(authenticationInterceptor).addPathPatterns("/**").excludePathPatterns("/announce");
+//        registry.addInterceptor(authorityInterceptor).addPathPatterns("/**").excludePathPatterns("/announce");
     }
 
 }

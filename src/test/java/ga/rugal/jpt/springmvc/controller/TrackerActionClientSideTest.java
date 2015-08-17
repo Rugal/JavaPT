@@ -20,6 +20,7 @@ import ga.rugal.jpt.common.SystemDefaultProperties;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.MediaType;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,5 +52,13 @@ public class TrackerActionClientSideTest extends ControllerClientSideTestBase
             .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))).andExpect(status()
                 .isOk());
         System.out.println("Rugal Bernstein");
+    }
+
+    @Test
+//    @Ignore
+    public void testBinding() throws Exception
+    {
+        this.mockMvc.perform(get("/test").param("bean.info_hash", "123456").accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
     }
 }

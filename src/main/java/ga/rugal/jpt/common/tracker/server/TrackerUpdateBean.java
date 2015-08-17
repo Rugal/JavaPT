@@ -3,7 +3,6 @@ package ga.rugal.jpt.common.tracker.server;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
 import java.nio.ByteBuffer;
-import org.apache.commons.codec.binary.Hex;
 
 /**
  *
@@ -14,13 +13,13 @@ public class TrackerUpdateBean
 
     private Torrent torrent;
 
-    private RequestEvent event;
+    private String event;
 
     private TrackedPeer.PeerState state;
 
-    private byte[] info_hash;
+    private String info_hash;
 
-    private byte[] peer_id;
+    private String peer_id;
 
     private int port;
 
@@ -58,27 +57,32 @@ public class TrackerUpdateBean
 
     public RequestEvent getEvent()
     {
-        return event;
+        return RequestEvent.valueOf(event.toUpperCase());
     }
 
-    public void setEvent(RequestEvent event)
+    public void setEvent(String event)
     {
         this.event = event;
     }
 
-    public ByteBuffer getBufferPeerId()
+    public void setEvent(RequestEvent event)
     {
-        return ByteBuffer.wrap(peer_id);
+        this.event = event.getEventName();
     }
 
-    public String getHexInfoHash()
+    public ByteBuffer getBufferPeerId()
     {
-        return new String(Hex.encodeHex(info_hash, false));
+        return ByteBuffer.wrap(peer_id.getBytes());
+    }
+
+    public String getInfoHash()
+    {
+        return info_hash;
     }
 
     public String getHexPeerId()
     {
-        return new String(Hex.encodeHex(peer_id, false));
+        return peer_id;
     }
 
     public TrackedPeer.PeerState getState()
@@ -91,22 +95,22 @@ public class TrackerUpdateBean
         this.state = state;
     }
 
-    public byte[] getInfoHash()
+    public byte[] getByteInfoHash()
     {
-        return info_hash;
+        return info_hash.getBytes();
     }
 
-    public void setInfoHash(byte[] info_hash)
+    public void setInfo_hash(String info_hash)
     {
         this.info_hash = info_hash;
     }
 
     public byte[] getBytePeerId()
     {
-        return peer_id;
+        return peer_id.getBytes();
     }
 
-    public void setPeerId(byte[] peer_id)
+    public void setPeer_id(String peer_id)
     {
         this.peer_id = peer_id;
     }
@@ -166,7 +170,7 @@ public class TrackerUpdateBean
         return no_peer_id;
     }
 
-    public void setNoPeerId(int no_peer_id)
+    public void setNo_peer_id(int no_peer_id)
     {
         this.no_peer_id = no_peer_id;
     }
