@@ -131,13 +131,20 @@ public class ApplicationContext
         {
             Tracker tracker = new Tracker();
             File folder = new File(SystemDefaultProperties.TORRENT_PATH);
+            LOG.debug("Opening torrents folder {}", folder.getAbsoluteFile());
             File[] torrentFiles = folder.listFiles((File file, String string) -> file.getName().endsWith(SystemDefaultProperties.TORRENT_SUBFIX));
             if (null != torrentFiles && torrentFiles.length != 0)
             {
                 for (File torrentFile : torrentFiles)
                 {
-                    tracker.announce(TrackedTorrent.load(torrentFile));
+                    TrackedTorrent torrent = TrackedTorrent.load(torrentFile);
+                    tracker.announce(torrent);
                 }
+                LOG.info("Tracker created with {} torrent(s)", torrentFiles.length);
+            }
+            else
+            {
+                LOG.info("Tracker created without announcing any torrent");
             }
             return tracker;
         }
