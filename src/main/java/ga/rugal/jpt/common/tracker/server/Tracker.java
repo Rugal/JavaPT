@@ -1,5 +1,6 @@
 package ga.rugal.jpt.common.tracker.server;
 
+import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.TrackerResponseException;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
@@ -128,6 +129,10 @@ public class Tracker
      */
     public void start()
     {
+        if (running)
+        {
+            return;
+        }
         running = true;
         if (this.cleaner == null || !this.cleaner.isAlive())
         {
@@ -138,6 +143,10 @@ public class Tracker
 
     public void stop()
     {
+        if (!running)
+        {
+            return;
+        }
         running = false;
         if (cleaner != null && cleaner.isAlive())
         {
@@ -156,8 +165,6 @@ public class Tracker
     private class PeerCollectorThread extends Thread
     {
 
-        private static final int PEER_COLLECTION_FREQUENCY_SECONDS = 15;
-
         @Override
         public void run()
         {
@@ -167,7 +174,7 @@ public class Tracker
             }
             try
             {
-                Thread.sleep(PeerCollectorThread.PEER_COLLECTION_FREQUENCY_SECONDS * 1000);
+                Thread.sleep(SystemDefaultProperties.PEER_COLLECTION_FREQUENCY_SECONDS * 1000);
             }
             catch (InterruptedException ie)
             {

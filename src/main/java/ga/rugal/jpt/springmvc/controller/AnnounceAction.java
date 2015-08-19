@@ -52,7 +52,6 @@ public class AnnounceAction
                          HttpServletResponse response) throws Exception
     {
         bean.setIp(request.getRemoteAddr());
-
         // Update the torrent according to the announce event
         TrackedPeer peer = tracker.update(bean);
         //Generate response content for normal request
@@ -83,7 +82,7 @@ public class AnnounceAction
      * @throws java.io.IOException
      * @throws java.io.UnsupportedEncodingException
      */
-    public ByteBuffer compactResponse(TrackerUpdateBean bean, TrackedTorrent torrent, List<Peer> peers)
+    private ByteBuffer compactResponse(TrackerUpdateBean bean, TrackedTorrent torrent, List<Peer> peers)
         throws IOException, UnsupportedEncodingException
     {
         Map<String, BEValue> response = new HashMap<>();

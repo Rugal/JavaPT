@@ -1,9 +1,11 @@
 package config;
 
 import com.zaxxer.hikari.HikariDataSource;
+import ga.rugal.jpt.common.SystemDefaultProperties;
+import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.common.tracker.server.Tracker;
 import ga.rugal.jpt.core.entity.PackageInfo;
-import java.io.IOException;
+import java.io.File;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
@@ -114,16 +116,34 @@ public class ApplicationContext
 //</editor-fold>
 
     /**
-     * Create a tracker server in local, with default port 6969.
+     * Create a tracker server in local, with same port to servlet container
      * Spring will start this tracker after creation.
      *
      * @return
      *
-     * @throws IOException
+     * @throws java.io.IOException
+     *
      */
     @Bean(initMethod = "start", destroyMethod = "stop")
-    public Tracker tracker()
+    public Tracker tracker() throws Exception
     {
-        return new Tracker();
+        try
+        {
+            Tracker tracker = new Tracker();
+            File folder = new File(SystemDefaultProperties.TORRENT_PATH);
+            File[] torrentFiles = folder.listFiles((File file, String string) -> file.getName().endsWith(SystemDefaultProperties.TORRENT_SUBFIX));
+            if (null != torrentFiles && torrentFiles.length != 0)
+            {
+                for (File torrentFile : torrentFiles)
+                {
+                    tracker.announce(TrackedTorrent.load(torrentFile));
+                }
+            }
+            return tracker;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Unable to create tracker", e);
+        }
     }
 }
