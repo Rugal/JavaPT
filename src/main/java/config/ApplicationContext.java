@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -36,7 +35,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         "classpath:jdbc.properties",
         "classpath:hibernate.properties"
     })
-@ComponentScan(basePackageClasses = ga.PackageInfo.class)
+//@ComponentScan(basePackageClasses = ga.PackageInfo.class)
 public class ApplicationContext
 {
 
@@ -60,8 +59,8 @@ public class ApplicationContext
     private Environment env;
 
 //<editor-fold defaultstate="collapsed" desc="HikariCP Datasoure Configuration" >
-    @Bean(destroyMethod = "close")
-    @Autowired
+//    @Bean(destroyMethod = "close")
+//    @Autowired
     public DataSource dataSource()
     {
         HikariDataSource dataSource = new HikariDataSource();
@@ -78,8 +77,8 @@ public class ApplicationContext
 //</editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="Hibernate Session factory configuration">
-    @Bean
-    @Autowired
+//    @Bean
+//    @Autowired
     public LocalSessionFactoryBean sessionFactory(DataSource datasouce)
     {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
@@ -106,8 +105,8 @@ public class ApplicationContext
 //</editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="Hibernate transaction manager">
-    @Bean
-    @Autowired
+//    @Bean
+//    @Autowired
     public HibernateTransactionManager transactionManager(SessionFactory sessionFactory)
     {
         HibernateTransactionManager txManager = new HibernateTransactionManager(sessionFactory);
@@ -131,8 +130,8 @@ public class ApplicationContext
         {
             Tracker tracker = new Tracker();
             File folder = new File(SystemDefaultProperties.TORRENT_PATH);
-            LOG.debug("Opening torrents folder {}", folder.getAbsoluteFile());
-            File[] torrentFiles = folder.listFiles((File file, String string) -> file.getName().endsWith(SystemDefaultProperties.TORRENT_SUBFIX));
+            LOG.debug("Opening torrents folder [{}]", folder.getAbsolutePath());
+            File[] torrentFiles = folder.listFiles((File dir, String fileName) -> fileName.endsWith(SystemDefaultProperties.TORRENT_SUBFIX));
             if (null != torrentFiles && torrentFiles.length != 0)
             {
                 for (File torrentFile : torrentFiles)
@@ -153,4 +152,5 @@ public class ApplicationContext
             throw new Exception("Unable to create tracker", e);
         }
     }
+
 }

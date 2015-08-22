@@ -56,7 +56,7 @@ public class Tracker
         if ((bean.getEvent() == null || RequestEvent.NONE == bean.getEvent())
             && torrent.containsKey(peerId))
         {
-            bean.setEvent(RequestEvent.STARTED);
+            bean.setEvent(RequestEvent.STARTED.getEventName());
         }
         // Update the torrent according to the announce event
         TrackedPeer peer;
@@ -89,7 +89,7 @@ public class Tracker
      */
     public synchronized TrackedTorrent announce(TrackedTorrent torrent)
     {
-        TrackedTorrent existing = torrents.get(torrent.getHexInfoHash());
+        TrackedTorrent existing = torrents.get(torrent.getHexInfoHash().toUpperCase());
         if (existing != null)
         {
             LOG.warn("Torrent [{}] already announced with hash {}.", existing.getName(), existing.getHexInfoHash());
@@ -139,6 +139,7 @@ public class Tracker
             this.cleaner = new PeerCollectorThread();
             this.cleaner.start();
         }
+        LOG.debug("Tracker started");
     }
 
     public void stop()
@@ -152,6 +153,7 @@ public class Tracker
         {
             cleaner.interrupt();
         }
+        LOG.debug("Tracker stopped");
     }
 
     /**
@@ -168,6 +170,7 @@ public class Tracker
         @Override
         public void run()
         {
+            LOG.debug("Collecting peers");
             for (TrackedTorrent torrent : torrents.values())
             {
                 torrent.collectUnfreshPeers();

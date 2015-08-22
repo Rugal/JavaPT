@@ -3,8 +3,6 @@ package ga.rugal.jpt.common.tracker.server;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
 import java.nio.ByteBuffer;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -26,8 +24,6 @@ public class TrackerUpdateBean
     @NotNull
     private String peer_id;
 
-    @Min(6881)
-    @Max(6889)
     private int port;
 
     private long downloaded = 0;
@@ -67,14 +63,9 @@ public class TrackerUpdateBean
         return event;
     }
 
-    public void setEvent(RequestEvent event)
-    {
-        this.event = event;
-    }
-
     public void setEvent(String event)
     {
-        this.event = RequestEvent.valueOf(event);
+        this.event = RequestEvent.getByName(event);
     }
 
     public ByteBuffer getBufferPeerId()

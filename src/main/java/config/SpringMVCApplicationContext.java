@@ -6,7 +6,6 @@ import ga.rugal.jpt.springmvc.interceptor.AuthorityInterceptor;
 import java.util.ArrayList;
 import java.util.List;
 import ml.rugal.sshcommon.springmvc.method.annotation.FormModelMethodArgumentResolver;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -39,10 +38,10 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
 {
 
-    @Autowired
+//    @Autowired
     private AuthenticationInterceptor authenticationInterceptor;
 
-    @Autowired
+//    @Autowired
     private AuthorityInterceptor authorityInterceptor;
 
     @Override
@@ -85,7 +84,7 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
     }
 
     @Bean
-    public HandlerAdapter annotationMethodHandlerAdapter()
+    public HandlerAdapter handlerAdapter()
     {
         return new RequestMappingHandlerAdapter();
     }

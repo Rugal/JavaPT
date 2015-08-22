@@ -1,5 +1,6 @@
 package config;
 
+import ga.rugal.jpt.common.SystemDefaultProperties;
 import javax.servlet.Filter;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -20,7 +21,7 @@ public class ServletContainerInitializer extends AbstractAnnotationConfigDispatc
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException
     {
-        servletContext.addFilter("openSessionInViewFilter", openSessionInViewFilter()).addMappingForUrlPatterns(null, false, "/*");
+//        servletContext.addFilter("openSessionInViewFilter", openSessionInViewFilter()).addMappingForUrlPatterns(null, false, "/*");
         servletContext.addFilter("characterEncodingFilter", characterEncodingFilter()).addMappingForUrlPatterns(null, true, "/*");
         servletContext.addFilter("hiddenHttpMethodFilter", hiddenHttpMethodFilter()).addMappingForUrlPatterns(null, true, "/*");
         super.onStartup(servletContext);
@@ -83,7 +84,8 @@ public class ServletContainerInitializer extends AbstractAnnotationConfigDispatc
     private Filter characterEncodingFilter()
     {
         CharacterEncodingFilter cef = new CharacterEncodingFilter();
-        cef.setEncoding("UTF-8");
+        cef.setEncoding(SystemDefaultProperties.BYTE_ENCODING);
+        cef.setForceEncoding(true);
         return cef;
     }
 

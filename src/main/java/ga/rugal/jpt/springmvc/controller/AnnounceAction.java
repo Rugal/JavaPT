@@ -45,12 +45,29 @@ public class AnnounceAction
     @Autowired
     private Tracker tracker;
 
+    /**
+     *
+     * Some useful references
+     * http://stackoverflow.com/questions/5637268/how-do-you-decode-info-hash-information-from-tracker-announce-request
+     * http://www.asciitable.com/
+     *
+     * @param bean
+     * @param request
+     * @param response
+     *
+     *
+     * @throws java.lang.Exception
+     */
     @RequestMapping(value = "/announce", method = RequestMethod.GET)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public void announce(@Valid @ModelAttribute TrackerUpdateBean bean, HttpServletRequest request,
+    public void announce(@Valid @ModelAttribute TrackerUpdateBean bean,
+                         HttpServletRequest request,
                          HttpServletResponse response) throws Exception
     {
+        LOG.trace(request.getQueryString());
+        bean.setInfo_hash(toSHA1(getParamater(request.getQueryString(), "info_hash")).toUpperCase());
+
         bean.setIp(request.getRemoteAddr());
         // Update the torrent according to the announce event
         TrackedPeer peer = tracker.update(bean);
@@ -62,6 +79,28 @@ public class AnnounceAction
         response.setDateHeader("Date", System.currentTimeMillis());
         WritableByteChannel channel = Channels.newChannel(response.getOutputStream());
         channel.write(buffer);
+    }
+
+    private String toSHA1(String text)
+    {
+        if (null == text || text.isEmpty())
+        {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < text.length(); i++)
+        {
+            if ('%' == text.charAt(i))
+            {
+                sb.append(text.substring(i + 1, i + 3));
+                i += 2;
+            }
+            else
+            {
+                sb.append(Integer.toHexString(text.charAt(i)));
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -104,8 +143,18 @@ public class AnnounceAction
             data.putShort((short) peer.getPort());
         }
         response.put("peers", new BEValue(data.array()));
-
         return BEncoder.bencode(response);
+    }
+
+    private String getParamater(String text, String name)
+    {
+        Map<String, String> params = new HashMap<>();
+        for (String pair : text.split("&"))
+        {
+            String[] keyval = pair.split("[=]", 2);
+            params.put(keyval[0], keyval[1]);
+        }
+        return params.get(name);
     }
 
     @ExceptionHandler(Exception.class)
@@ -126,4 +175,5 @@ public class AnnounceAction
             LOG.error(ioe.getMessage());
         }
     }
+
 }

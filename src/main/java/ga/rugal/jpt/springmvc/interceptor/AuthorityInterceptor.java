@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -37,7 +36,7 @@ public class AuthorityInterceptor extends BaseInterceptor
 
     private static final Logger LOG = LoggerFactory.getLogger(AuthorityInterceptor.class.getName());
 
-    @Autowired
+//    @Autowired
     private UserService userService;
 
     @Override

@@ -19,10 +19,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author Rugal Bernstein
  */
-public class AnnounceActionTest extends ControllerClientSideTestBase
+public class AnnounceActionClientSideTest extends ControllerClientSideTestBase
 {
 
-    public AnnounceActionTest()
+    public AnnounceActionClientSideTest()
     {
     }
 
@@ -49,4 +49,10 @@ public class AnnounceActionTest extends ControllerClientSideTestBase
             .andExpect(status().isOk());
     }
 
+//    @Test
+//    public void test()
+//    {
+//        String text = "%92%c345%c0%28%15%e4rr%b1y%17%b7%cbs%0a%ef%9a%fc";
+//        System.out.println(toSHA1(text));
+//    }
 }

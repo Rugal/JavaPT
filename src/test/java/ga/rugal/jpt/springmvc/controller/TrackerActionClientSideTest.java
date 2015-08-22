@@ -17,6 +17,7 @@ package ga.rugal.jpt.springmvc.controller;
 
 import ga.rugal.ControllerClientSideTestBase;
 import ga.rugal.jpt.common.SystemDefaultProperties;
+import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.MediaType;
@@ -55,10 +56,19 @@ public class TrackerActionClientSideTest extends ControllerClientSideTestBase
     }
 
     @Test
-//    @Ignore
+    @Ignore
     public void testBinding() throws Exception
     {
         this.mockMvc.perform(get("/test").param("bean.info_hash", "123456").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
+    }
+
+    @Test
+    @Ignore
+    public void testEventParse()
+    {
+
+        System.out.println(RequestEvent.valueOf("start".toUpperCase()));
+
     }
 }

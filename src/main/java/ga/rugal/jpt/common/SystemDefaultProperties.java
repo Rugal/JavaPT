@@ -13,12 +13,12 @@ public interface SystemDefaultProperties
 
     final String CREDENTIAL = "credential";
 
-//    final int TRACKER_PORT = 6969;
-    final String TORRENT_PATH = "./torrents";
+    final String TORRENT_PATH = "torrents";
 
     final String TORRENT_SUBFIX = ".torrent";
 
     final String BYTE_ENCODING = "UTF-8";
+//    final String BYTE_ENCODING = "ISO-8859-1";
 
     final int MIN_REANNOUNCE_INTERVAL = 15;
 
