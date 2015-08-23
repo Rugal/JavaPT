@@ -187,7 +187,6 @@ public class Tracker
             }
             catch (InterruptedException ie)
             {
-                // Ignore
             }
         }
     }

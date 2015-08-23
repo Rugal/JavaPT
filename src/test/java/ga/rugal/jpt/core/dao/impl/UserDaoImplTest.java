@@ -39,7 +39,6 @@ public class UserDaoImplTest extends JUnitSpringTestBase
         bean.setStatus(User.Status.DELETING);
         bean.setUsername("test");
         userDao.save(bean);
-
     }
 
     @After

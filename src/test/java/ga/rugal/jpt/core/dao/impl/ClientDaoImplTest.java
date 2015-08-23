@@ -57,7 +57,6 @@ public class ClientDaoImplTest extends JUnitSpringTestBase
         Integer id = bean.getCid();
         Client result = clientDao.getByID(id);
         Assert.assertEquals(result, bean);
-
     }
 
 }

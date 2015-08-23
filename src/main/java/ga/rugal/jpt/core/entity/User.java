@@ -48,16 +48,16 @@ public class User implements Serializable
     private String passkey;
 
     @Column(name = "upload_byte")
-    private Long uploadByte;
+    private Long uploadByte = 0l;
 
     @Column(name = "download_byte")
-    private Long downloadByte;
+    private Long downloadByte = 0l;
 
     @Column(name = "last_report")
     private Long lastReport;
 
     @Column
-    private Integer credit;
+    private Integer credit = 0;
 
     @Column(name = "register_time")
     private Long registerTime;

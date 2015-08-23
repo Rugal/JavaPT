@@ -30,13 +30,13 @@ public class ClientAnnounce
     private Long announceTime;
 
     @Column(name = "download_byte")
-    private Long downloadByte;
+    private Long downloadByte = 0l;
 
     @Column(name = "upload_byte")
-    private Long uploadByte;
+    private Long uploadByte = 0l;
 
     @Column(name = "left_byte")
-    private Long leftByte;
+    private Long leftByte = 0l;
 
     @JoinColumn(name = "uid", referencedColumnName = "uid")
     @ManyToOne
