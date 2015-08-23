@@ -15,6 +15,7 @@
  */
 package ga.rugal.jpt.common.tracker.server;
 
+import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.bcodec.BEValue;
 import ga.rugal.jpt.common.tracker.common.Peer;
 import ga.rugal.jpt.common.tracker.common.Torrent;
@@ -47,8 +48,6 @@ public class TrackedPeer extends Peer
 {
 
     private static final Logger logger = LoggerFactory.getLogger(TrackedPeer.class);
-
-    private static final int FRESH_TIME_SECONDS = 30;
 
     private long uploaded;
 
@@ -204,7 +203,7 @@ public class TrackedPeer extends Peer
     public boolean isFresh()
     {
         return (this.lastAnnounce != null
-            && (this.lastAnnounce.getTime() + (FRESH_TIME_SECONDS * 1000)
+            && (this.lastAnnounce.getTime() + (SystemDefaultProperties.FRESH_TIME_SECONDS * 1000)
             > new Date().getTime()));
     }
 
@@ -226,7 +225,7 @@ public class TrackedPeer extends Peer
         {
             peer.put("peer id", new BEValue(this.getPeerId().array()));
         }
-        peer.put("ip", new BEValue(this.getIp(), Torrent.BYTE_ENCODING));
+        peer.put("ip", new BEValue(this.getIp(), SystemDefaultProperties.BYTE_ENCODING));
         peer.put("port", new BEValue(this.getPort()));
         return new BEValue(peer);
     }

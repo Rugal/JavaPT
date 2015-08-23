@@ -15,6 +15,7 @@
  */
 package ga.rugal.jpt.common.tracker.common;
 
+import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.bcodec.BDecoder;
 import ga.rugal.jpt.common.tracker.bcodec.BEValue;
 import ga.rugal.jpt.common.tracker.bcodec.BEncoder;
@@ -72,21 +73,7 @@ import org.slf4j.LoggerFactory;
 public class Torrent
 {
 
-    private static final Logger logger
-        = LoggerFactory.getLogger(Torrent.class);
-
-    /**
-     * Torrent file piece length (in bytes), we use 512 kB.
-     */
-    public static final int DEFAULT_PIECE_LENGTH = 512 * 1024;
-
-    public static final int PIECE_HASH_SIZE = 20;
-
-    /**
-     * The query parameters encoding when parsing byte strings.
-     * Previous is ISO-8859-1
-     */
-    public static final String BYTE_ENCODING = "ISO-8859-1";
+    private static final Logger logger = LoggerFactory.getLogger(Torrent.class);
 
     /**
      *
@@ -182,9 +169,8 @@ public class Torrent
          */
         try
         {
-            this.trackers = new ArrayList<List<URI>>();
-            this.allTrackers = new HashSet<URI>();
-
+            this.trackers = new ArrayList<>();
+            this.allTrackers = new HashSet<>();
             if (this.decoded.containsKey("announce-list"))
             {
                 List<BEValue> tiers = this.decoded.get("announce-list").getList();
@@ -196,11 +182,10 @@ public class Torrent
                         continue;
                     }
 
-                    List<URI> tier = new ArrayList<URI>();
+                    List<URI> tier = new ArrayList<>();
                     for (BEValue tracker : trackers)
                     {
                         URI uri = new URI(tracker.getString());
-
                         // Make sure we're not adding duplicate trackers.
                         if (!this.allTrackers.contains(uri))
                         {
@@ -208,7 +193,6 @@ public class Torrent
                             this.allTrackers.add(uri);
                         }
                     }
-
                     // Only add the tier if it's not empty.
                     if (!tier.isEmpty())
                     {
@@ -222,7 +206,7 @@ public class Torrent
                 this.allTrackers.add(tracker);
 
                 // Build a single-tier announce list.
-                List<URI> tier = new ArrayList<URI>();
+                List<URI> tier = new ArrayList<>();
                 tier.add(tracker);
                 this.trackers.add(tier);
             }
@@ -244,7 +228,7 @@ public class Torrent
         this.name = this.decoded_info.get("name").getString();
         this.pieceLength = this.decoded_info.get("piece length").getInt();
 
-        this.files = new LinkedList<TorrentFile>();
+        this.files = new LinkedList<>();
 
         // Parse multi-file torrent file information structure.
         if (this.decoded_info.containsKey("files"))
@@ -283,7 +267,7 @@ public class Torrent
         logger.info("{}-file torrent information:",
                     this.isMultifile() ? "Multi" : "Single");
         logger.info("  Torrent name: {}", this.name);
-        logger.info("  Announced at:" + (this.trackers.size() == 0 ? " Seems to be trackerless" : ""));
+        logger.info("  Announced at:" + (this.trackers.isEmpty() ? " Seems to be trackerless" : ""));
         for (int i = 0; i < this.trackers.size(); i++)
         {
             List<URI> tier = this.trackers.get(i);
@@ -324,7 +308,6 @@ public class Torrent
                              });
             }
         }
-
         logger.info("  Pieces......: {} piece(s) ({} byte(s)/piece)",
                     (this.size / this.decoded_info.get("piece length").getInt()) + 1,
                     this.decoded_info.get("piece length").getInt());
@@ -340,6 +323,8 @@ public class Torrent
      * multi-file torrent, this is usually the name of a top-level directory
      * containing those files.
      * </p>
+     * <p>
+     * @return
      */
     public String getName()
     {
@@ -348,6 +333,8 @@ public class Torrent
 
     /**
      * Get this torrent's comment string.
+     * <p>
+     * @return
      */
     public String getComment()
     {
@@ -356,6 +343,8 @@ public class Torrent
 
     /**
      * Get this torrent's creator (user, software, whatever...).
+     * <p>
+     * @return
      */
     public String getCreatedBy()
     {
@@ -364,6 +353,8 @@ public class Torrent
 
     /**
      * Get the total size of this torrent.
+     * <p>
+     * @return
      */
     public long getSize()
     {
@@ -388,6 +379,8 @@ public class Torrent
 
     /**
      * Tells whether this torrent is multi-file or not.
+     * <p>
+     * @return
      */
     public boolean isMultifile()
     {
@@ -396,6 +389,8 @@ public class Torrent
 
     /**
      * Return the hash of the B-encoded meta-info structure of this torrent.
+     * <p>
+     * @return
      */
     public byte[] getInfoHash()
     {
@@ -404,6 +399,8 @@ public class Torrent
 
     /**
      * Get this torrent's info hash (as an hexadecimal-coded string).
+     * <p>
+     * @return
      */
     public String getHexInfoHash()
     {
@@ -416,7 +413,10 @@ public class Torrent
      * <p>
      * The torrent's name is used.
      * </p>
+     * <p>
+     * @return
      */
+    @Override
     public String toString()
     {
         return this.getName();
@@ -424,6 +424,8 @@ public class Torrent
 
     /**
      * Return the B-encoded meta-info of this torrent.
+     * <p>
+     * @return
      */
     public byte[] getEncoded()
     {
@@ -432,6 +434,8 @@ public class Torrent
 
     /**
      * Return the trackers for this torrent.
+     * <p>
+     * @return
      */
     public List<List<URI>> getAnnounceList()
     {
@@ -440,6 +444,8 @@ public class Torrent
 
     /**
      * Returns the number of trackers for this torrent.
+     * <p>
+     * @return
      */
     public int getTrackerCount()
     {
@@ -448,6 +454,8 @@ public class Torrent
 
     /**
      * Tells whether we were an initial seeder for this torrent.
+     * <p>
+     * @return
      */
     public boolean isSeeder()
     {
@@ -476,6 +484,8 @@ public class Torrent
      * representation of the original data.
      *
      * @param bytes The byte array to convert.
+     * <p>
+     * @return
      */
     public static String byteArrayToHexString(byte[] bytes)
     {
@@ -487,12 +497,14 @@ public class Torrent
      * given string, following the default, expected byte encoding.
      *
      * @param input The input string.
+     * <p>
+     * @return
      */
     public static String toHexString(String input)
     {
         try
         {
-            byte[] bytes = input.getBytes(Torrent.BYTE_ENCODING);
+            byte[] bytes = input.getBytes(SystemDefaultProperties.BYTE_ENCODING);
             return Torrent.byteArrayToHexString(bytes);
         }
         catch (UnsupportedEncodingException uee)
@@ -548,6 +560,8 @@ public class Torrent
      *
      * @param torrent The abstract {@link File} object representing the
      * <tt>.torrent</tt> file to load.
+     * <p>
+     * @return
      *
      * @throws IOException When the torrent file cannot be read.
      */
@@ -563,11 +577,12 @@ public class Torrent
      * <tt>.torrent</tt> file to load.
      * @param seeder  Whether we are a seeder for this torrent or not (disables
      *                local data validation).
+     * <p>
+     * @return
      *
      * @throws IOException When the torrent file cannot be read.
      */
-    public static Torrent load(File torrent, boolean seeder)
-        throws IOException
+    public static Torrent load(File torrent, boolean seeder) throws IOException
     {
         byte[] data = FileUtils.readFileToByteArray(torrent);
         return new Torrent(data, seeder);
@@ -589,11 +604,16 @@ public class Torrent
      * @param announce  The announce URI that will be used for this torrent.
      * @param createdBy The creator's name, or any string identifying the
      *                  torrent's creator.
+     * <p>
+     * @return
+     *         <p>
+     * @throws java.lang.InterruptedException
+     * @throws java.io.IOException
      */
     public static Torrent create(File source, URI announce, String createdBy)
         throws InterruptedException, IOException
     {
-        return Torrent.create(source, null, DEFAULT_PIECE_LENGTH,
+        return Torrent.create(source, null, SystemDefaultProperties.DEFAULT_PIECE_LENGTH,
                               announce, null, createdBy);
     }
 
@@ -613,11 +633,16 @@ public class Torrent
      * @param announce  The announce URI that will be used for this torrent.
      * @param createdBy The creator's name, or any string identifying the
      *                  torrent's creator.
+     * <p>
+     * @return
+     *         <p>
+     * @throws java.lang.InterruptedException
+     * @throws java.io.IOException
      */
     public static Torrent create(File parent, List<File> files, URI announce,
                                  String createdBy) throws InterruptedException, IOException
     {
-        return Torrent.create(parent, files, DEFAULT_PIECE_LENGTH,
+        return Torrent.create(parent, files, SystemDefaultProperties.DEFAULT_PIECE_LENGTH,
                               announce, null, createdBy);
     }
 
@@ -631,10 +656,16 @@ public class Torrent
      * </p>
      *
      * @param source       The file to use in the torrent.
+     * @param pieceLength
      * @param announceList The announce URIs organized as tiers that will
      *                     be used for this torrent
      * @param createdBy    The creator's name, or any string identifying the
      *                     torrent's creator.
+     * <p>
+     * @return
+     *         <p>
+     * @throws java.lang.InterruptedException
+     * @throws java.io.IOException
      */
     public static Torrent create(File source, int pieceLength, List<List<URI>> announceList,
                                  String createdBy) throws InterruptedException, IOException
@@ -656,10 +687,16 @@ public class Torrent
      * @param source       The parent directory or location of the torrent files,
      *                     also used as the torrent's name.
      * @param files        The files to add into this torrent.
+     * @param pieceLength
      * @param announceList The announce URIs organized as tiers that will
      *                     be used for this torrent
      * @param createdBy    The creator's name, or any string identifying the
      *                     torrent's creator.
+     * <p>
+     * @return
+     *         <p>
+     * @throws java.lang.InterruptedException
+     * @throws java.io.IOException
      */
     public static Torrent create(File source, List<File> files, int pieceLength,
                                  List<List<URI>> announceList, String createdBy)
@@ -703,7 +740,7 @@ public class Torrent
                         files.size(), parent.getName());
         }
 
-        Map<String, BEValue> torrent = new HashMap<String, BEValue>();
+        Map<String, BEValue> torrent = new HashMap<>();
 
         if (announce != null)
         {
@@ -711,10 +748,10 @@ public class Torrent
         }
         if (announceList != null)
         {
-            List<BEValue> tiers = new LinkedList<BEValue>();
+            List<BEValue> tiers = new LinkedList<>();
             for (List<URI> trackers : announceList)
             {
-                List<BEValue> tierInfo = new LinkedList<BEValue>();
+                List<BEValue> tierInfo = new LinkedList<>();
                 for (URI trackerURI : trackers)
                 {
                     tierInfo.add(new BEValue(trackerURI.toString()));
@@ -727,7 +764,7 @@ public class Torrent
         torrent.put("creation date", new BEValue(new Date().getTime() / 1000));
         torrent.put("created by", new BEValue(createdBy));
 
-        Map<String, BEValue> info = new TreeMap<String, BEValue>();
+        Map<String, BEValue> info = new TreeMap<>();
         info.put("name", new BEValue(parent.getName()));
         info.put("piece length", new BEValue(pieceLength));
 
@@ -735,17 +772,17 @@ public class Torrent
         {
             info.put("length", new BEValue(parent.length()));
             info.put("pieces", new BEValue(Torrent.hashFile(parent, pieceLength),
-                                           Torrent.BYTE_ENCODING));
+                                           SystemDefaultProperties.BYTE_ENCODING));
         }
         else
         {
-            List<BEValue> fileInfo = new LinkedList<BEValue>();
+            List<BEValue> fileInfo = new LinkedList<>();
             for (File file : files)
             {
-                Map<String, BEValue> fileMap = new HashMap<String, BEValue>();
+                Map<String, BEValue> fileMap = new HashMap<>();
                 fileMap.put("length", new BEValue(file.length()));
 
-                LinkedList<BEValue> filePath = new LinkedList<BEValue>();
+                LinkedList<BEValue> filePath = new LinkedList<>();
                 while (file != null)
                 {
                     if (file.equals(parent))
@@ -762,7 +799,7 @@ public class Torrent
             }
             info.put("files", new BEValue(fileInfo));
             info.put("pieces", new BEValue(Torrent.hashFiles(files, pieceLength),
-                                           Torrent.BYTE_ENCODING));
+                                           SystemDefaultProperties.BYTE_ENCODING));
         }
         torrent.put("info", new BEValue(info));
 
@@ -799,7 +836,7 @@ public class Torrent
         {
             this.md.reset();
             this.md.update(this.data.array());
-            return new String(md.digest(), Torrent.BYTE_ENCODING);
+            return new String(md.digest(), SystemDefaultProperties.BYTE_ENCODING);
         }
     }
 
@@ -833,7 +870,7 @@ public class Torrent
         int threads = getHashingThreadsCount();
         ExecutorService executor = Executors.newFixedThreadPool(threads);
         ByteBuffer buffer = ByteBuffer.allocate(pieceLenght);
-        List<Future<String>> results = new LinkedList<Future<String>>();
+        List<Future<String>> results = new LinkedList<>();
         StringBuilder hashes = new StringBuilder();
 
         long length = 0L;

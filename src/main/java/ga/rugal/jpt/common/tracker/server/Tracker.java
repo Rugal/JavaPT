@@ -1,7 +1,8 @@
 package ga.rugal.jpt.common.tracker.server;
 
+import ga.rugal.jpt.common.CommonLogContent;
+import ga.rugal.jpt.common.CommonMessageContent;
 import ga.rugal.jpt.common.SystemDefaultProperties;
-import ga.rugal.jpt.common.tracker.TrackerResponseException;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
 import java.io.UnsupportedEncodingException;
@@ -29,12 +30,12 @@ public class Tracker
     {
         if (false == running)
         {
-            throw new TrackerResponseException("Tracker is not running");
+            throw new TrackerResponseException(CommonMessageContent.TRACKER_NOT_RUNNING);
         }
         if (!this.torrents.containsKey(bean.getInfoHash()))
         {
             //report there is no such torrent
-            throw new TrackerResponseException("The Requested torrent not found");
+            throw new TrackerResponseException(CommonMessageContent.TORRENT_NOT_FOUND);
         }
         TrackedTorrent torrent = this.torrents.get(bean.getInfoHash());
         String peerId = bean.getPeerId();
@@ -47,7 +48,7 @@ public class Tracker
             && RequestEvent.STARTED != bean.getEvent())
         {
             //send error
-            throw new TrackerResponseException("Bad client event");
+            throw new TrackerResponseException(CommonMessageContent.BAD_EVENT);
         }
         // When no event is specified, it's a periodic update while the client
         // is operating. If we don't have a peer for this announce, it means
@@ -92,11 +93,11 @@ public class Tracker
         TrackedTorrent existing = torrents.get(torrent.getHexInfoHash().toUpperCase());
         if (existing != null)
         {
-            LOG.warn("Torrent [{}] already announced with hash {}.", existing.getName(), existing.getHexInfoHash());
+            LOG.warn(CommonLogContent.TORRENT_ANNOUNCED, existing.getName(), existing.getHexInfoHash());
             return existing;
         }
         torrents.put(torrent.getHexInfoHash(), torrent);
-        LOG.info("New torrent [{}] registered with hash {}.", torrent.getName(), torrent.getHexInfoHash());
+        LOG.info(CommonLogContent.TORRENT_NEW, torrent.getName(), torrent.getHexInfoHash());
         return torrent;
     }
 
@@ -109,7 +110,7 @@ public class Tracker
     {
         if (null != torrent && !torrents.containsKey(torrent.getHexInfoHash()))
         {
-            LOG.info("Torrent [{}] with hash {} is deleted.", torrent.getName(), torrent.getHexInfoHash());
+            LOG.info(CommonLogContent.TORRENT_DELETE, torrent.getName(), torrent.getHexInfoHash());
             torrents.remove(torrent.getHexInfoHash());
         }
     }
@@ -139,7 +140,7 @@ public class Tracker
             this.cleaner = new PeerCollectorThread();
             this.cleaner.start();
         }
-        LOG.debug("Tracker started");
+        LOG.info(CommonMessageContent.TRACKER_STARTED);
     }
 
     public void stop()
@@ -153,7 +154,7 @@ public class Tracker
         {
             cleaner.interrupt();
         }
-        LOG.debug("Tracker stopped");
+        LOG.debug(CommonMessageContent.TRACKER_STOPPED);
     }
 
     /**
@@ -170,7 +171,7 @@ public class Tracker
         @Override
         public void run()
         {
-            LOG.debug("Collecting peers");
+            LOG.debug(CommonMessageContent.COLLECT_PEERS);
             for (TrackedTorrent torrent : torrents.values())
             {
                 torrent.collectUnfreshPeers();

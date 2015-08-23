@@ -11,29 +11,36 @@ public interface CommonMessageContent
 {
 
     //User operation
-    String SAVE_USER = "User registered";
+    final String SAVE_USER = "User registered";
 
-    String UPDATE_USER = "User profile updated";
+    final String UPDATE_USER = "User profile updated";
 
-    String DELETE_USER = "User deleted";
+    final String DELETE_USER = "User deleted";
 
-    String GET_USER = "Get user profile";
+    final String GET_USER = "Get user profile";
 
     //Authentication and Authorization
-    String ACCESS_FORBIDDEN = "Unmatched combination of username and credential";
+    final String ACCESS_FORBIDDEN = "Unmatched combination of username and credential";
 
-    String PERMISSION_DENIED = "Insufficient permission";
+    final String PERMISSION_DENIED = "Insufficient permission";
 
     //Tracker operations
-    String TRACKER_STARTED = "Tracker started";
+    final String TRACKER_STARTED = "Tracker started";
 
-    String TRACKER_STOPPED = "Track stopped";
+    final String TRACKER_STOPPED = "Tracker stopped";
 
-    String TRACKER_NOT_STARTED = "Tracker start failed";
+    final String TRACKER_NOT_STARTED = "Tracker start failed";
 
-    String TRACKER_NOT_STOPPED = "Track stop failed";
+    final String TRACKER_NOT_STOPPED = "Tracker stop failed";
 
-    String TRACKER_RUNNING = "Tracker is running";
+    final String TRACKER_RUNNING = "Tracker is running";
 
-    String TRACKER_NOT_RUNNING = "Tracker is not running";
+    final String TRACKER_NOT_RUNNING = "Tracker is not running";
+
+    final String BAD_EVENT = "Bad client event";
+
+    final String COLLECT_PEERS = "Collecting peers";
+
+    //Torrents
+    final String TORRENT_NOT_FOUND = "The Requested torrent not found";
 }

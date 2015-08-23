@@ -15,6 +15,8 @@
  */
 package ga.rugal.jpt.common.tracker.server;
 
+import ga.rugal.jpt.common.CommonLogContent;
+import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.common.Peer;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import java.io.File;
@@ -49,21 +51,6 @@ public class TrackedTorrent extends Torrent
 
     private static final Logger logger = LoggerFactory.getLogger(TrackedTorrent.class);
 
-    /**
-     * Minimum announce interval requested from peers, in seconds.
-     */
-    public static final int MIN_ANNOUNCE_INTERVAL_SECONDS = 5;
-
-    /**
-     * Default number of peers included in a tracker response.
-     */
-    private static final int DEFAULT_ANSWER_NUM_PEERS = 30;
-
-    /**
-     * Default announce interval requested from peers, in seconds.
-     */
-    private static final int DEFAULT_ANNOUNCE_INTERVAL_SECONDS = 10;
-
     private int answerPeers;
 
     private int announceInterval;
@@ -85,8 +72,8 @@ public class TrackedTorrent extends Torrent
     {
         super(torrent, false);
         this.peers = new ConcurrentHashMap<>();
-        this.answerPeers = TrackedTorrent.DEFAULT_ANSWER_NUM_PEERS;
-        this.announceInterval = TrackedTorrent.DEFAULT_ANNOUNCE_INTERVAL_SECONDS;
+        this.answerPeers = SystemDefaultProperties.DEFAULT_ANSWER_NUM_PEERS;
+        this.announceInterval = SystemDefaultProperties.DEFAULT_ANNOUNCE_INTERVAL_SECONDS;
     }
 
     public TrackedTorrent(Torrent torrent) throws IOException
@@ -290,37 +277,32 @@ public class TrackedTorrent extends Torrent
         {
             // Collect unfresh peers, and obviously don't serve them as well.
             if (!candidate.isFresh()
-                || (candidate.looksLike(peer) && !candidate.equals(peer)))
+                || (candidate.looksLike(peer)
+                && !candidate.equals(peer)))
             {
-                logger.debug("Collecting stale peer {}...", candidate);
+                logger.debug(CommonLogContent.STALE_PEERS, candidate);
                 this.peers.remove(candidate.getHexPeerId());
                 continue;
             }
-
             // Don't include the requesting peer in the answer.
             if (peer.looksLike(candidate))
             {
                 continue;
             }
-
             // Collect unfresh peers, and obviously don't serve them as well.
             if (!candidate.isFresh())
             {
-                logger.debug("Collecting stale peer {}...",
-                             candidate.getHexPeerId());
+                logger.debug(CommonLogContent.STALE_PEERS, candidate.getHexPeerId());
                 this.peers.remove(candidate.getHexPeerId());
                 continue;
             }
-
             // Only serve at most ANSWER_NUM_PEERS peers
             if (count++ > this.answerPeers)
             {
                 break;
             }
-
             peers.add(candidate);
         }
-
         return peers;
     }
 

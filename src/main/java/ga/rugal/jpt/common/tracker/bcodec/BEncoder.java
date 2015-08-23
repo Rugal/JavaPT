@@ -44,8 +44,7 @@ public class BEncoder
 {
 
     @SuppressWarnings("unchecked")
-    public static void bencode(Object o, OutputStream out)
-        throws IOException, IllegalArgumentException
+    public static void bencode(Object o, OutputStream out) throws IOException, IllegalArgumentException
     {
         if (o instanceof BEValue)
         {

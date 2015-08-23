@@ -91,6 +91,8 @@ public class Peer
 
     /**
      * Tells whether this peer has a known peer ID yet or not.
+     * <p>
+     * @return
      */
     public boolean hasPeerId()
     {
@@ -99,6 +101,8 @@ public class Peer
 
     /**
      * Returns the raw peer ID as a {@link ByteBuffer}.
+     * <p>
+     * @return
      */
     public ByteBuffer getPeerId()
     {
@@ -126,6 +130,8 @@ public class Peer
 
     /**
      * Get the hexadecimal-encoded string representation of this peer's ID.
+     * <p>
+     * @return
      */
     public String getHexPeerId()
     {
@@ -134,6 +140,8 @@ public class Peer
 
     /**
      * Get the shortened hexadecimal-encoded peer ID.
+     * <p>
+     * @return
      */
     public String getShortHexPeerId()
     {
@@ -143,6 +151,8 @@ public class Peer
 
     /**
      * Returns this peer's IP address.
+     * <p>
+     * @return
      */
     public String getIp()
     {
@@ -151,6 +161,8 @@ public class Peer
 
     /**
      * Returns this peer's InetAddress.
+     * <p>
+     * @return
      */
     public InetAddress getAddress()
     {
@@ -159,6 +171,8 @@ public class Peer
 
     /**
      * Returns this peer's port number.
+     * <p>
+     * @return
      */
     public int getPort()
     {
@@ -167,6 +181,8 @@ public class Peer
 
     /**
      * Returns this peer's host identifier ("host:port").
+     * <p>
+     * @return
      */
     public String getHostIdentifier()
     {

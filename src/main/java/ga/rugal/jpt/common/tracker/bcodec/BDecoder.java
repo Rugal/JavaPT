@@ -83,6 +83,10 @@ public class BDecoder
      * </p>
      *
      * @param in The input stream to read from.
+     * <p>
+     * @return
+     *         <p>
+     * @throws java.io.IOException
      */
     public static BEValue bdecode(InputStream in) throws IOException
     {
@@ -98,6 +102,10 @@ public class BDecoder
      * </p>
      *
      * @param data The {@link ByteBuffer} to read from.
+     * <p>
+     * @return
+     *         <p>
+     * @throws java.io.IOException
      */
     public static BEValue bdecode(ByteBuffer data) throws IOException
     {
@@ -129,6 +137,10 @@ public class BDecoder
      * Gets the next indicator and returns either null when the stream
      * has ended or b-decodes the rest of the stream and returns the
      * appropriate BEValue encoded object.
+     * <p>
+     * @return
+     *         <p>
+     * @throws java.io.IOException
      */
     public BEValue bdecode() throws IOException
     {
@@ -163,6 +175,8 @@ public class BDecoder
      * Returns the next b-encoded value on the stream and makes sure it is a
      * byte array.
      *
+     * @return
+     *         <p>
      * @throws InvalidBEncodingException If it is not a b-encoded byte array.
      */
     public BEValue bdecodeBytes() throws IOException
@@ -199,6 +213,8 @@ public class BDecoder
      * Returns the next b-encoded value on the stream and makes sure it is a
      * number.
      *
+     * @return
+     *         <p>
      * @throws InvalidBEncodingException If it is not a number.
      */
     public BEValue bdecodeNumber() throws IOException
@@ -272,6 +288,8 @@ public class BDecoder
      * Returns the next b-encoded value on the stream and makes sure it is a
      * list.
      *
+     * @return
+     *         <p>
      * @throws InvalidBEncodingException If it is not a list.
      */
     public BEValue bdecodeList() throws IOException
@@ -284,7 +302,7 @@ public class BDecoder
         }
         this.indicator = 0;
 
-        List<BEValue> result = new ArrayList<BEValue>();
+        List<BEValue> result = new ArrayList<>();
         c = this.getNextIndicator();
         while (c != 'e')
         {
@@ -300,6 +318,8 @@ public class BDecoder
      * Returns the next b-encoded value on the stream and makes sure it is a
      * map (dictionary).
      *
+     * @return
+     *         <p>
      * @throws InvalidBEncodingException If it is not a map.
      */
     public BEValue bdecodeMap() throws IOException
@@ -312,7 +332,7 @@ public class BDecoder
         }
         this.indicator = 0;
 
-        Map<String, BEValue> result = new HashMap<String, BEValue>();
+        Map<String, BEValue> result = new HashMap<>();
         c = this.getNextIndicator();
         while (c != 'e')
         {

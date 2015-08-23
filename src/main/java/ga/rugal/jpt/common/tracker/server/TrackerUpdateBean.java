@@ -6,8 +6,13 @@ import java.nio.ByteBuffer;
 import javax.validation.constraints.NotNull;
 
 /**
+ * This is a JavaBean for updating torrents and peers.
+ * Just one JavaBean includes all properties needed.
+ * <p>
+ * Actually in 0.1 version, info_hash and peer_id fields need to be injected separately.
  *
  * @author Rugal Bernstein
+ * @since 0.1
  */
 public class TrackerUpdateBean
 {

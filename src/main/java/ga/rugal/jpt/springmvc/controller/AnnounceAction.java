@@ -33,8 +33,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
- *
+ * A simple announce action implemented by Rugal Bernstein.
+ * <p>
+ * Inspired by ttorent(https://github.com/mpetazzoni/ttorrent)
+ * <p>
  * @author Rugal Bernstein
+ * @since 0.1
  */
 @Controller
 public class AnnounceAction
@@ -45,29 +49,29 @@ public class AnnounceAction
     @Autowired
     private Tracker tracker;
 
+    private static final String INFO_HASH = "info_hash";
+
+    private static final String PEER_ID = "peer_id";
+
     /**
      *
-     * Some useful references
-     * http://stackoverflow.com/questions/5637268/how-do-you-decode-info-hash-information-from-tracker-announce-request
-     * http://www.asciitable.com/
+     * Some useful references.
      *
-     * @param bean
+     * @param bean     A JavaBean that includes all required information.
      * @param request
      * @param response
      *
-     *
-     * @throws java.lang.Exception
+     * @throws java.lang.Exception throw exceptions so that ExceptionHandler could deal with.
      */
     @RequestMapping(value = "/announce", method = RequestMethod.GET)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public void announce(@Valid @ModelAttribute TrackerUpdateBean bean,
-                         HttpServletRequest request,
-                         HttpServletResponse response) throws Exception
+                         HttpServletRequest request, HttpServletResponse response) throws Exception
     {
         LOG.trace(request.getQueryString());
-        bean.setInfo_hash(toSHA1(getParamater(request.getQueryString(), "info_hash")).toUpperCase());
-
+        bean.setInfo_hash(toSHA1(getParamater(request.getQueryString(), INFO_HASH)).toUpperCase());
+        bean.setPeer_id(toSHA1(getParamater(request.getQueryString(), PEER_ID)).toUpperCase());
         bean.setIp(request.getRemoteAddr());
         // Update the torrent according to the announce event
         TrackedPeer peer = tracker.update(bean);
@@ -81,6 +85,15 @@ public class AnnounceAction
         channel.write(buffer);
     }
 
+    /**
+     * Convert a Percent-encoded string into a SHA1 string.
+     * http://stackoverflow.com/questions/5637268/how-do-you-decode-info-hash-information-from-tracker-announce-request
+     * http://www.asciitable.com/
+     * <p>
+     * @param text
+     *             <p>
+     * @return
+     */
     private String toSHA1(String text)
     {
         if (null == text || text.isEmpty())
@@ -104,17 +117,11 @@ public class AnnounceAction
     }
 
     /**
-     * Craft a compact announce response message.
+     * Craft a compact normal announce response message from torrent and peers.
+     * <p>
+     * Notice the peers field are compacted only in 0.1 version.
      *
-     * @param bean
-     * @param torrent
-     * @param peer
-     * @param interval
-     * @param minInterval
-     * @param trackerId
-     * @param complete
-     * @param incomplete
-     * @param peers
+     * <p>
      *
      * @return
      *
@@ -157,6 +164,12 @@ public class AnnounceAction
         return params.get(name);
     }
 
+    /**
+     * A exception handler that wrap a exception message into an response with failure reason.
+     * <p>
+     * @param response
+     * @param ex
+     */
     @ExceptionHandler(Exception.class)
     public void handleAllException(HttpServletResponse response, Exception ex)
     {

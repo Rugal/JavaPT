@@ -1,4 +1,4 @@
-package ga.rugal.jpt.common.tracker;
+package ga.rugal.jpt.common.tracker.server;
 
 /**
  *
