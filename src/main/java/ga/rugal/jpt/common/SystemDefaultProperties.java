@@ -9,6 +9,8 @@ package ga.rugal.jpt.common;
 public interface SystemDefaultProperties
 {
 
+    final String SCHEMA = "jpt.";
+
     final String ID = "id";
 
     final String CREDENTIAL = "credential";
@@ -18,9 +20,6 @@ public interface SystemDefaultProperties
     final String TORRENT_SUBFIX = ".torrent";
 
     final String BYTE_ENCODING = "UTF-8";
-//    final String BYTE_ENCODING = "ISO-8859-1";
-
-    final int MIN_REANNOUNCE_INTERVAL = 15;
 
     final String TRACKER_VERSION = "Rugal PT v1";
 
@@ -28,10 +27,7 @@ public interface SystemDefaultProperties
 
     final int FRESH_TIME_SECONDS = 30;
 
-    /**
-     * Minimum announce interval requested from peers, in seconds.
-     */
-    final int MIN_ANNOUNCE_INTERVAL_SECONDS = 5;
+    final int MIN_REANNOUNCE_INTERVAL = 30;
 
     /**
      * Default number of peers included in a tracker response.
@@ -41,7 +37,7 @@ public interface SystemDefaultProperties
     /**
      * Default announce interval requested from peers, in seconds.
      */
-    final int DEFAULT_ANNOUNCE_INTERVAL_SECONDS = 10;
+    final int DEFAULT_ANNOUNCE_INTERVAL_SECONDS = 60;
 
     /**
      * Torrent file piece length (in bytes), we use 512 kB.

@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.entity;
 
+import ga.rugal.jpt.common.SystemDefaultProperties;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -23,9 +24,11 @@ import javax.persistence.Transient;
 public class Post
 {
 
+    private static final String sequence_name = "post_pid_seq";
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "post_pid_seq")
-    @SequenceGenerator(name = "post_pid_seq", sequenceName = "post_pid_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = sequence_name)
+    @SequenceGenerator(name = sequence_name, sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     private Integer pid;

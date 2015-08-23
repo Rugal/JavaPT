@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.entity;
 
+import ga.rugal.jpt.common.SystemDefaultProperties;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -20,9 +21,11 @@ import javax.persistence.Table;
 public class Tag
 {
 
+    private static final String sequence_name = "tag_tid_seq";
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tag_tid_seq")
-    @SequenceGenerator(name = "tag_tid_seq", sequenceName = "jpt.tag_tid_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = sequence_name)
+    @SequenceGenerator(name = sequence_name, sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     private Integer tid;

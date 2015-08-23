@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.entity;
 
+import ga.rugal.jpt.common.SystemDefaultProperties;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,9 +21,11 @@ import javax.persistence.Table;
 public class SigninLog
 {
 
+    private static final String sequence_name = "signin_log_slid_seq";
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "signin_log_slid_seq")
-    @SequenceGenerator(name = "signin_log_slid_seq", sequenceName = "signin_log_slid_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = sequence_name)
+    @SequenceGenerator(name = sequence_name, sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     private Integer slid;

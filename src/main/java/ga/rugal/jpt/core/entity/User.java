@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.entity;
 
+import ga.rugal.jpt.common.SystemDefaultProperties;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -25,9 +26,11 @@ import javax.persistence.Transient;
 public class User implements Serializable
 {
 
+    private static final String sequence_name = "user_uid_seq";
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_uid_seq")
-    @SequenceGenerator(name = "user_uid_seq", sequenceName = "jpt.user_uid_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = sequence_name)
+    @SequenceGenerator(name = sequence_name, sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     private Integer uid;
@@ -71,6 +74,9 @@ public class User implements Serializable
 
     @OneToMany(mappedBy = "uid")
     private transient List<Post> postList;
+
+    @OneToMany(mappedBy = "caid")
+    private transient List<ClientAnnounce> clientAnnouncesList;
 
     @OneToMany(mappedBy = "uid", fetch = FetchType.LAZY)
     private transient List<Admin> adminList;
@@ -134,6 +140,16 @@ public class User implements Serializable
     public void setGrantees(List<Admin> grantees)
     {
         this.grantees = grantees;
+    }
+
+    public List<ClientAnnounce> getClientAnnouncesList()
+    {
+        return clientAnnouncesList;
+    }
+
+    public void setClientAnnouncesList(List<ClientAnnounce> clientAnnouncesList)
+    {
+        this.clientAnnouncesList = clientAnnouncesList;
     }
 
     public UserLevel getLevel()

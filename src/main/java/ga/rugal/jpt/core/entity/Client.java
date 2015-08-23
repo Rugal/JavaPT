@@ -1,11 +1,14 @@
 package ga.rugal.jpt.core.entity;
 
+import ga.rugal.jpt.common.SystemDefaultProperties;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -18,9 +21,11 @@ import javax.persistence.Table;
 public class Client
 {
 
+    private static final String sequence_name = "client_cid_seq";
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "client_cid_seq")
-    @SequenceGenerator(name = "client_cid_seq", sequenceName = "jpt.client_cid_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = sequence_name)
+    @SequenceGenerator(name = sequence_name, sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     private Integer cid;
@@ -33,6 +38,9 @@ public class Client
 
     @Column
     private Boolean enabled;
+
+    @OneToMany(mappedBy = "caid")
+    private transient List<ClientAnnounce> clientAnnouncesList;
 
     public Client()
     {
@@ -61,6 +69,16 @@ public class Client
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    public List<ClientAnnounce> getClientAnnouncesList()
+    {
+        return clientAnnouncesList;
+    }
+
+    public void setClientAnnouncesList(List<ClientAnnounce> clientAnnouncesList)
+    {
+        this.clientAnnouncesList = clientAnnouncesList;
     }
 
     public String getVersion()
