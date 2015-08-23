@@ -140,7 +140,12 @@ public class Tracker
             this.cleaner = new PeerCollectorThread();
             this.cleaner.start();
         }
-        LOG.info(CommonMessageContent.TRACKER_STARTED);
+
+    }
+
+    public boolean isRunning()
+    {
+        return running;
     }
 
     public void stop()
@@ -154,7 +159,7 @@ public class Tracker
         {
             cleaner.interrupt();
         }
-        LOG.debug(CommonMessageContent.TRACKER_STOPPED);
+
     }
 
     /**
