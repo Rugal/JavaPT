@@ -94,8 +94,35 @@ public class AnnounceAction
     }
 
     /**
+     * Get request parameter from query string.
+     * <p>
+     * This method will separate parameters into map before get the real value. This might be a
+     * performance leak point.
+     * <p>
+     * @param text
+     * @param name
+     *             <p>
+     * @return
+     */
+    private String getParamater(String text, String name)
+    {
+        Map<String, String> params = new HashMap<>();
+        for (String pair : text.split("&"))
+        {
+            String[] keyval = pair.split("[=]", 2);
+            params.put(keyval[0], keyval[1]);
+        }
+        return params.get(name);
+    }
+
+    /**
      * Convert a Percent-encoded string into a SHA1 string.
+     * It is not functional to use {@link javax.servlet.ServletRequest#getParameter} since the
+     * percent-encoded info_hash and peer_id will be decoded by Springmvc.
+     * <p>
+     * Refer to
      * http://stackoverflow.com/questions/5637268/how-do-you-decode-info-hash-information-from-tracker-announce-request
+     * <p>
      * http://www.asciitable.com/
      * <p>
      * @param text
@@ -159,17 +186,6 @@ public class AnnounceAction
         }
         response.put("peers", new BEValue(data.array()));
         return BEncoder.bencode(response);
-    }
-
-    private String getParamater(String text, String name)
-    {
-        Map<String, String> params = new HashMap<>();
-        for (String pair : text.split("&"))
-        {
-            String[] keyval = pair.split("[=]", 2);
-            params.put(keyval[0], keyval[1]);
-        }
-        return params.get(name);
     }
 
     /**
