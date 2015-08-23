@@ -32,8 +32,8 @@ CREATE TABLE admin (
     aid integer NOT NULL,
     uid integer,
     grantee integer,
-    alid integer,
-    since bigint
+    since bigint,
+    level integer
 );
 
 
@@ -58,39 +58,6 @@ ALTER TABLE jpt.admin_aid_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE admin_aid_seq OWNED BY admin.aid;
-
-
---
--- Name: admin_level; Type: TABLE; Schema: jpt; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE admin_level (
-    alid integer NOT NULL,
-    name character varying(50)
-);
-
-
-ALTER TABLE jpt.admin_level OWNER TO postgres;
-
---
--- Name: admin_level_alid_seq; Type: SEQUENCE; Schema: jpt; Owner: postgres
---
-
-CREATE SEQUENCE admin_level_alid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE jpt.admin_level_alid_seq OWNER TO postgres;
-
---
--- Name: admin_level_alid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: postgres
---
-
-ALTER SEQUENCE admin_level_alid_seq OWNED BY admin_level.alid;
 
 
 --
@@ -126,6 +93,40 @@ ALTER TABLE jpt.client_cid_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE client_cid_seq OWNED BY client.cid;
+
+
+--
+-- Name: invitation; Type: TABLE; Schema: jpt; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE invitation (
+    iid integer NOT NULL,
+    uid integer,
+    issue_time bigint
+);
+
+
+ALTER TABLE jpt.invitation OWNER TO postgres;
+
+--
+-- Name: invitation_iid_seq; Type: SEQUENCE; Schema: jpt; Owner: postgres
+--
+
+CREATE SEQUENCE invitation_iid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE jpt.invitation_iid_seq OWNER TO postgres;
+
+--
+-- Name: invitation_iid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: postgres
+--
+
+ALTER SEQUENCE invitation_iid_seq OWNED BY invitation.iid;
 
 
 --
@@ -272,39 +273,6 @@ ALTER SEQUENCE signin_log_slid_seq OWNED BY signin_log.slid;
 
 
 --
--- Name: status; Type: TABLE; Schema: jpt; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE status (
-    sid integer NOT NULL,
-    name character varying(50)
-);
-
-
-ALTER TABLE jpt.status OWNER TO postgres;
-
---
--- Name: status_sid_seq; Type: SEQUENCE; Schema: jpt; Owner: postgres
---
-
-CREATE SEQUENCE status_sid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE jpt.status_sid_seq OWNER TO postgres;
-
---
--- Name: status_sid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: postgres
---
-
-ALTER SEQUENCE status_sid_seq OWNED BY status.sid;
-
-
---
 -- Name: tag; Type: TABLE; Schema: jpt; Owner: postgres; Tablespace: 
 --
 
@@ -388,10 +356,9 @@ CREATE TABLE "user" (
     download_byte bigint DEFAULT 0,
     last_report bigint,
     credit integer DEFAULT 0,
-    cid integer,
     referee integer,
-    sid integer,
-    register_time bigint
+    register_time bigint,
+    status integer
 );
 
 
@@ -426,17 +393,17 @@ ALTER TABLE ONLY admin ALTER COLUMN aid SET DEFAULT nextval('admin_aid_seq'::reg
 
 
 --
--- Name: alid; Type: DEFAULT; Schema: jpt; Owner: postgres
---
-
-ALTER TABLE ONLY admin_level ALTER COLUMN alid SET DEFAULT nextval('admin_level_alid_seq'::regclass);
-
-
---
 -- Name: cid; Type: DEFAULT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY client ALTER COLUMN cid SET DEFAULT nextval('client_cid_seq'::regclass);
+
+
+--
+-- Name: iid; Type: DEFAULT; Schema: jpt; Owner: postgres
+--
+
+ALTER TABLE ONLY invitation ALTER COLUMN iid SET DEFAULT nextval('invitation_iid_seq'::regclass);
 
 
 --
@@ -468,13 +435,6 @@ ALTER TABLE ONLY signin_log ALTER COLUMN slid SET DEFAULT nextval('signin_log_sl
 
 
 --
--- Name: sid; Type: DEFAULT; Schema: jpt; Owner: postgres
---
-
-ALTER TABLE ONLY status ALTER COLUMN sid SET DEFAULT nextval('status_sid_seq'::regclass);
-
-
---
 -- Name: tid; Type: DEFAULT; Schema: jpt; Owner: postgres
 --
 
@@ -499,7 +459,10 @@ ALTER TABLE ONLY "user" ALTER COLUMN uid SET DEFAULT nextval('user_uid_seq'::reg
 -- Data for Name: admin; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
-COPY admin (aid, uid, grantee, alid, since) FROM stdin;
+COPY admin (aid, uid, grantee, since, level) FROM stdin;
+8	1	\N	1439004612212	4
+9	6	6	1439782679993	3
+10	7	7	1439782680104	3
 \.
 
 
@@ -507,28 +470,7 @@ COPY admin (aid, uid, grantee, alid, since) FROM stdin;
 -- Name: admin_aid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('admin_aid_seq', 1, false);
-
-
---
--- Data for Name: admin_level; Type: TABLE DATA; Schema: jpt; Owner: postgres
---
-
-COPY admin_level (alid, name) FROM stdin;
-1	Basic
-2	Rudimentary
-3	Enhanced
-4	Advanced
-5	Master
-6	Super
-\.
-
-
---
--- Name: admin_level_alid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
---
-
-SELECT pg_catalog.setval('admin_level_alid_seq', 6, true);
+SELECT pg_catalog.setval('admin_aid_seq', 16, true);
 
 
 --
@@ -545,7 +487,22 @@ COPY client (cid, name, version, enabled) FROM stdin;
 -- Name: client_cid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('client_cid_seq', 2, true);
+SELECT pg_catalog.setval('client_cid_seq', 10, true);
+
+
+--
+-- Data for Name: invitation; Type: TABLE DATA; Schema: jpt; Owner: postgres
+--
+
+COPY invitation (iid, uid, issue_time) FROM stdin;
+\.
+
+
+--
+-- Name: invitation_iid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
+--
+
+SELECT pg_catalog.setval('invitation_iid_seq', 6, true);
 
 
 --
@@ -568,7 +525,7 @@ COPY level (lid, minimum, name) FROM stdin;
 -- Name: level_lid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('level_lid_seq', 8, true);
+SELECT pg_catalog.setval('level_lid_seq', 17, true);
 
 
 --
@@ -583,7 +540,7 @@ COPY post (pid, uid, title, content, torrent, post_time, size, enabled, visible)
 -- Name: post_pid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('post_pid_seq', 1, false);
+SELECT pg_catalog.setval('post_pid_seq', 18, true);
 
 
 --
@@ -598,7 +555,7 @@ COPY post_tags (ptid, tid, pid) FROM stdin;
 -- Name: post_tags_ptid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('post_tags_ptid_seq', 1, false);
+SELECT pg_catalog.setval('post_tags_ptid_seq', 6, true);
 
 
 --
@@ -614,26 +571,6 @@ COPY signin_log (slid, uid, signin_time, ip) FROM stdin;
 --
 
 SELECT pg_catalog.setval('signin_log_slid_seq', 1, false);
-
-
---
--- Data for Name: status; Type: TABLE DATA; Schema: jpt; Owner: postgres
---
-
-COPY status (sid, name) FROM stdin;
-1	Loginable
-2	Forbidden
-3	Unloginable
-4	Unactivated
-5	Deleting
-\.
-
-
---
--- Name: status_sid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
---
-
-SELECT pg_catalog.setval('status_sid_seq', 5, true);
 
 
 --
@@ -653,7 +590,7 @@ COPY tag (tid, name, icon) FROM stdin;
 -- Name: tag_tid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tag_tid_seq', 5, true);
+SELECT pg_catalog.setval('tag_tid_seq', 21, true);
 
 
 --
@@ -668,15 +605,19 @@ COPY thread (tid, pid, uid, content, post_time) FROM stdin;
 -- Name: thread_tid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('thread_tid_seq', 1, false);
+SELECT pg_catalog.setval('thread_tid_seq', 6, true);
 
 
 --
 -- Data for Name: user; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
-COPY "user" (uid, password, username, email, passkey, upload_byte, download_byte, last_report, credit, cid, referee, sid, register_time) FROM stdin;
-1	123456	Rugal	ryujin@163.com	123456	\N	\N	1438837127628	\N	\N	\N	1	1438837127628
+COPY "user" (uid, password, username, email, passkey, upload_byte, download_byte, last_report, credit, referee, register_time, status) FROM stdin;
+1	123456	Rugal	ryujin@163.com	123456	\N	\N	1438837127628	\N	\N	1438837127628	\N
+2	123456	Spooky	null@163.com	123456	\N	\N	1438965572744	\N	\N	1438965572744	0
+3	123456	Tiger	null@123.com	123456	\N	\N	1438965604092	\N	\N	1438965604092	2
+6	test	test	test@123.com	test	\N	\N	1439782679846	\N	\N	1439782679846	2
+7	test	test	test@123.com	test	\N	\N	1439782680097	\N	\N	1439782680097	2
 \.
 
 
@@ -684,15 +625,7 @@ COPY "user" (uid, password, username, email, passkey, upload_byte, download_byte
 -- Name: user_uid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('user_uid_seq', 1, true);
-
-
---
--- Name: admin_level_pkey; Type: CONSTRAINT; Schema: jpt; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY admin_level
-    ADD CONSTRAINT admin_level_pkey PRIMARY KEY (alid);
+SELECT pg_catalog.setval('user_uid_seq', 35, true);
 
 
 --
@@ -709,6 +642,14 @@ ALTER TABLE ONLY admin
 
 ALTER TABLE ONLY client
     ADD CONSTRAINT client_pkey PRIMARY KEY (cid);
+
+
+--
+-- Name: invitation_pkey; Type: CONSTRAINT; Schema: jpt; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY invitation
+    ADD CONSTRAINT invitation_pkey PRIMARY KEY (iid);
 
 
 --
@@ -744,14 +685,6 @@ ALTER TABLE ONLY signin_log
 
 
 --
--- Name: status_pkey; Type: CONSTRAINT; Schema: jpt; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY status
-    ADD CONSTRAINT status_pkey PRIMARY KEY (sid);
-
-
---
 -- Name: tag_pkey; Type: CONSTRAINT; Schema: jpt; Owner: postgres; Tablespace: 
 --
 
@@ -776,11 +709,10 @@ ALTER TABLE ONLY "user"
 
 
 --
--- Name: admin_alid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
+-- Name: unq_level_minimum; Type: INDEX; Schema: jpt; Owner: postgres; Tablespace: 
 --
 
-ALTER TABLE ONLY admin
-    ADD CONSTRAINT admin_alid_fkey FOREIGN KEY (alid) REFERENCES admin_level(alid);
+CREATE UNIQUE INDEX unq_level_minimum ON level USING btree (minimum);
 
 
 --
@@ -797,6 +729,14 @@ ALTER TABLE ONLY admin
 
 ALTER TABLE ONLY admin
     ADD CONSTRAINT admin_uid_fkey FOREIGN KEY (uid) REFERENCES "user"(uid);
+
+
+--
+-- Name: invitation_uid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
+--
+
+ALTER TABLE ONLY invitation
+    ADD CONSTRAINT invitation_uid_fkey FOREIGN KEY (uid) REFERENCES "user"(uid);
 
 
 --
@@ -848,27 +788,11 @@ ALTER TABLE ONLY thread
 
 
 --
--- Name: user_cid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
---
-
-ALTER TABLE ONLY "user"
-    ADD CONSTRAINT user_cid_fkey FOREIGN KEY (cid) REFERENCES client(cid);
-
-
---
 -- Name: user_referee_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY "user"
     ADD CONSTRAINT user_referee_fkey FOREIGN KEY (referee) REFERENCES "user"(uid);
-
-
---
--- Name: user_sid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
---
-
-ALTER TABLE ONLY "user"
-    ADD CONSTRAINT user_sid_fkey FOREIGN KEY (sid) REFERENCES status(sid);
 
 
 --

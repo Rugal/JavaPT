@@ -8,6 +8,7 @@ import ga.rugal.jpt.common.tracker.server.TrackedPeer;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.common.tracker.server.Tracker;
 import ga.rugal.jpt.common.tracker.server.TrackerUpdateBean;
+import ga.rugal.jpt.core.service.UserService;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
@@ -49,6 +50,9 @@ public class AnnounceAction
     @Autowired
     private Tracker tracker;
 
+    @Autowired
+    private UserService userService;
+
     private static final String INFO_HASH = "info_hash";
 
     private static final String PEER_ID = "peer_id";
@@ -75,6 +79,10 @@ public class AnnounceAction
         bean.setIp(request.getRemoteAddr());
         // Update the torrent according to the announce event
         TrackedPeer peer = tracker.update(bean);
+        //Update torrent information in database
+        //
+        //
+        //
         //Generate response content for normal request
         TrackedTorrent torrent = tracker.get(bean.getInfoHash());
         ByteBuffer buffer = this.compactResponse(bean, torrent, torrent.getSomePeers(peer));

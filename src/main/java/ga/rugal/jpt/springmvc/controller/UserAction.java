@@ -6,6 +6,7 @@ import ga.rugal.jpt.core.service.UserService;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,7 @@ public class UserAction
 
     private static final Logger LOG = LoggerFactory.getLogger(UserAction.class.getName());
 
-//    @Autowired
+    @Autowired
     private UserService userService;
 
     /**

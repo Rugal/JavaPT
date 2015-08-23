@@ -2,6 +2,7 @@ package ga.rugal.jpt.springmvc.controller;
 
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
+import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.server.Tracker;
 import ga.rugal.jpt.core.entity.Admin;
 import ga.rugal.jpt.springmvc.annotation.Role;
@@ -53,14 +54,14 @@ public class TrackerAction
         {
             try
             {
-                LOG.info(CommonLogContent.SUPER_START_TRACKER, request.getHeader("id"), request.getRemoteAddr());
+                LOG.info(CommonLogContent.SUPER_START_TRACKER, request.getHeader(SystemDefaultProperties.ID), request.getRemoteAddr());
                 tracker.start();
-                LOG.info(CommonLogContent.TRACKER_STARTED, request.getHeader("id"));
+                LOG.info(CommonLogContent.TRACKER_STARTED, request.getHeader(SystemDefaultProperties.ID));
                 message = Message.successMessage(CommonMessageContent.TRACKER_STARTED, null);
             }
             catch (Exception e)
             {
-                LOG.error(MessageFormat.format(CommonLogContent.TRACKER_NOT_STARTED, request.getHeader("id")), e);
+                LOG.error(MessageFormat.format(CommonLogContent.TRACKER_NOT_STARTED, request.getHeader(SystemDefaultProperties.ID)), e);
                 message = Message.failMessage(CommonMessageContent.TRACKER_NOT_STARTED);
             }
         }
@@ -88,14 +89,14 @@ public class TrackerAction
         {
             try
             {
-                LOG.info(CommonLogContent.SUPER_STOP_TRACKER, request.getHeader("id"), request.getRemoteAddr());
+                LOG.info(CommonLogContent.SUPER_STOP_TRACKER, request.getHeader(SystemDefaultProperties.ID), request.getRemoteAddr());
                 tracker.stop();
-                LOG.info(CommonLogContent.TRACKER_STOPPED, request.getHeader("id"));
+                LOG.info(CommonLogContent.TRACKER_STOPPED, request.getHeader(SystemDefaultProperties.ID));
                 message = Message.successMessage(CommonMessageContent.TRACKER_STOPPED, null);
             }
             catch (Exception e)
             {
-                LOG.error(MessageFormat.format(CommonLogContent.TRACKER_NOT_STOPPED, request.getHeader("id")), e);
+                LOG.error(MessageFormat.format(CommonLogContent.TRACKER_NOT_STOPPED, request.getHeader(SystemDefaultProperties.ID)), e);
                 message = Message.failMessage(CommonMessageContent.TRACKER_NOT_STOPPED);
             }
         }

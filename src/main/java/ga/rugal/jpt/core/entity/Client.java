@@ -1,13 +1,11 @@
 package ga.rugal.jpt.core.entity;
 
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -35,9 +33,6 @@ public class Client
 
     @Column
     private Boolean enabled;
-
-    @OneToMany(mappedBy = "cid")
-    private transient List<SigninLog> signinLogList;
 
     public Client()
     {
@@ -86,16 +81,6 @@ public class Client
     public void setEnabled(Boolean enabled)
     {
         this.enabled = enabled;
-    }
-
-    public List<SigninLog> getSigninLogList()
-    {
-        return signinLogList;
-    }
-
-    public void setSigninLogList(List<SigninLog> signinLogList)
-    {
-        this.signinLogList = signinLogList;
     }
 
     @Override

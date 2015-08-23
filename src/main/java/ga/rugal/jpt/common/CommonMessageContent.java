@@ -43,4 +43,7 @@ public interface CommonMessageContent
 
     //Torrents
     final String TORRENT_NOT_FOUND = "The Requested torrent not found";
+
+    //Signin
+    final String SIGNIN = "Signin recorded";
 }

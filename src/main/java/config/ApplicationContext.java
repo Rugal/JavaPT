@@ -1,6 +1,7 @@
 package config;
 
 import com.zaxxer.hikari.HikariDataSource;
+import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.common.tracker.server.Tracker;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -35,7 +37,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         "classpath:jdbc.properties",
         "classpath:hibernate.properties"
     })
-//@ComponentScan(basePackageClasses = ga.PackageInfo.class)
+@ComponentScan(basePackageClasses = ga.PackageInfo.class)
 public class ApplicationContext
 {
 
@@ -59,8 +61,8 @@ public class ApplicationContext
     private Environment env;
 
 //<editor-fold defaultstate="collapsed" desc="HikariCP Datasoure Configuration" >
-//    @Bean(destroyMethod = "close")
-//    @Autowired
+    @Bean(destroyMethod = "close")
+    @Autowired
     public DataSource dataSource()
     {
         HikariDataSource dataSource = new HikariDataSource();
@@ -77,8 +79,8 @@ public class ApplicationContext
 //</editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="Hibernate Session factory configuration">
-//    @Bean
-//    @Autowired
+    @Bean
+    @Autowired
     public LocalSessionFactoryBean sessionFactory(DataSource datasouce)
     {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
@@ -105,8 +107,8 @@ public class ApplicationContext
 //</editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="Hibernate transaction manager">
-//    @Bean
-//    @Autowired
+    @Bean
+    @Autowired
     public HibernateTransactionManager transactionManager(SessionFactory sessionFactory)
     {
         HibernateTransactionManager txManager = new HibernateTransactionManager(sessionFactory);
@@ -130,7 +132,7 @@ public class ApplicationContext
         {
             Tracker tracker = new Tracker();
             File folder = new File(SystemDefaultProperties.TORRENT_PATH);
-            LOG.debug("Opening torrents folder [{}]", folder.getAbsolutePath());
+            LOG.debug(CommonLogContent.OPEN_TORRENT_FOLDER, folder.getAbsolutePath());
             File[] torrentFiles = folder.listFiles((File dir, String fileName) -> fileName.endsWith(SystemDefaultProperties.TORRENT_SUBFIX));
             if (null != torrentFiles && torrentFiles.length != 0)
             {
@@ -139,17 +141,17 @@ public class ApplicationContext
                     TrackedTorrent torrent = TrackedTorrent.load(torrentFile);
                     tracker.announce(torrent);
                 }
-                LOG.info("Tracker created with {} torrent(s)", torrentFiles.length);
+                LOG.info(CommonLogContent.TRACKER_CREATED, torrentFiles.length);
             }
             else
             {
-                LOG.info("Tracker created without announcing any torrent");
+                LOG.info(CommonLogContent.TRACKER_NO_TORRENT);
             }
             return tracker;
         }
         catch (Exception e)
         {
-            throw new Exception("Unable to create tracker", e);
+            throw new Exception(CommonLogContent.TRACKER_NOT_CREATED, e);
         }
     }
 

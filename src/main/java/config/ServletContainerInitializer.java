@@ -21,7 +21,7 @@ public class ServletContainerInitializer extends AbstractAnnotationConfigDispatc
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException
     {
-//        servletContext.addFilter("openSessionInViewFilter", openSessionInViewFilter()).addMappingForUrlPatterns(null, false, "/*");
+        servletContext.addFilter("openSessionInViewFilter", openSessionInViewFilter()).addMappingForUrlPatterns(null, false, "/*");
         servletContext.addFilter("characterEncodingFilter", characterEncodingFilter()).addMappingForUrlPatterns(null, true, "/*");
         servletContext.addFilter("hiddenHttpMethodFilter", hiddenHttpMethodFilter()).addMappingForUrlPatterns(null, true, "/*");
         super.onStartup(servletContext);

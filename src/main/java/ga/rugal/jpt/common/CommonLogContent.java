@@ -34,6 +34,14 @@ public interface CommonLogContent
 
     final String TRACKER_NOT_STOPPED = "Unable to stop tracker server by superuser [{0}]";
 
+    final String TRACKER_CREATED = "Tracker created with {} torrent(s)";
+
+    final String TRACKER_NO_TORRENT = "Tracker created without announcing any torrent";
+
+    final String TRACKER_NOT_CREATED = "Unable to create tracker";
+
+    final String OPEN_TORRENT_FOLDER = "Opening torrents folder [{}]";
+
     //Torrent
     final String TORRENT_ANNOUNCED = "Torrent [{}] already announced with hash {}.";
 
@@ -41,6 +49,9 @@ public interface CommonLogContent
 
     final String TORRENT_DELETE = "Torrent [{}] with hash {} is deleted.";
 
-    //PEER
+    //Peer
     final String STALE_PEERS = "Collecting stale peer {}:";
+
+    //Signin
+    final String SIGNIN = "User [{0}] signin from host [{1}].";
 }
