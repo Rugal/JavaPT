@@ -2,6 +2,8 @@ package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.jpt.core.dao.ClientDao;
 import ga.rugal.jpt.core.entity.Client;
+import java.util.List;
+import ml.rugal.sshcommon.hibernate.Finder;
 import ml.rugal.sshcommon.hibernate.HibernateBaseDao;
 import ml.rugal.sshcommon.page.Pagination;
 import org.hibernate.Criteria;
@@ -35,6 +37,23 @@ public class ClientDaoImpl extends HibernateBaseDao<Client, Integer> implements 
     {
         Client entity = get(id);
         return entity;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Client getByPeerID(String cname, String version)
+    {
+        String hql = "FROM Client bean WHERE bean.cname=:cname AND bean.version=:version";
+        Finder f = Finder.create(hql);
+        f.setParam("cname", cname);
+        f.setParam("version", version);
+        f.setMaxResults(1);
+        List<Client> list = find(f);
+        if (list.isEmpty())
+        {
+            return null;
+        }
+        return list.get(0);
     }
 
     @Override

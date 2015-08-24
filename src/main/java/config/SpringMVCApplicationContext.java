@@ -1,11 +1,13 @@
 package config;
 
 import ga.rugal.jpt.springmvc.controller.PackageInfo;
+import ga.rugal.jpt.springmvc.interceptor.AnnounceInterceptor;
 import ga.rugal.jpt.springmvc.interceptor.AuthenticationInterceptor;
 import ga.rugal.jpt.springmvc.interceptor.AuthorityInterceptor;
 import java.util.ArrayList;
 import java.util.List;
 import ml.rugal.sshcommon.springmvc.method.annotation.FormModelMethodArgumentResolver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -43,6 +45,9 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
 
 //    @Autowired
     private AuthorityInterceptor authorityInterceptor;
+
+    @Autowired
+    private AnnounceInterceptor announceInterceptor;
 
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer)
@@ -103,6 +108,8 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
         //This is a very important interceptor for authentication usage
 //        registry.addInterceptor(authenticationInterceptor).addPathPatterns("/**").excludePathPatterns("/announce");
 //        registry.addInterceptor(authorityInterceptor).addPathPatterns("/**").excludePathPatterns("/announce");
+        registry.addInterceptor(announceInterceptor).addPathPatterns("/announce");
+
     }
 
 }

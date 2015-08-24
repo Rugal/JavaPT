@@ -1,8 +1,10 @@
 package ga.rugal.jpt.core.service.impl;
 
-import ga.rugal.jpt.core.service.ClientAnnounceService;
+import ga.rugal.jpt.common.tracker.server.TrackerUpdateBean;
 import ga.rugal.jpt.core.dao.ClientAnnounceDao;
 import ga.rugal.jpt.core.entity.ClientAnnounce;
+import ga.rugal.jpt.core.service.ClientAnnounceService;
+import ga.rugal.jpt.core.service.UserService;
 import ml.rugal.sshcommon.hibernate.Updater;
 import ml.rugal.sshcommon.page.Pagination;
 import org.slf4j.Logger;
@@ -24,6 +26,9 @@ public class ClientAnnounceServiceImpl implements ClientAnnounceService
 
     @Autowired
     private ClientAnnounceDao dao;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     @Transactional(readOnly = true)
@@ -47,7 +52,18 @@ public class ClientAnnounceServiceImpl implements ClientAnnounceService
 //        dao.save(bean);
 //        this.update(bean);
 //        return bean;
+    }
 
+    @Override
+    public ClientAnnounce save(TrackerUpdateBean bean)
+    {
+        ClientAnnounce clientAnnounce = new ClientAnnounce();
+        clientAnnounce.setDownloadByte(bean.getDownloaded());
+        clientAnnounce.setUploadByte(bean.getUploaded());
+        clientAnnounce.setLeftByte(bean.getLeft());
+        clientAnnounce.setAnnounceTime(System.currentTimeMillis());
+        clientAnnounce.setUid(userService.getByID(bean.getUid()));
+        return dao.save(clientAnnounce);
     }
 
     @Override

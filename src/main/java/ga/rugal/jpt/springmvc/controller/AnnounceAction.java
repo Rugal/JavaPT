@@ -8,6 +8,8 @@ import ga.rugal.jpt.common.tracker.server.TrackedPeer;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.common.tracker.server.Tracker;
 import ga.rugal.jpt.common.tracker.server.TrackerUpdateBean;
+import ga.rugal.jpt.core.service.ClientAnnounceService;
+import ga.rugal.jpt.core.service.ClientService;
 import ga.rugal.jpt.core.service.UserService;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -28,6 +30,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -53,35 +56,43 @@ public class AnnounceAction
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ClientService clientService;
+
+    @Autowired
+    private ClientAnnounceService clientAnnounceService;
+
     private static final String INFO_HASH = "info_hash";
 
     private static final String PEER_ID = "peer_id";
 
     /**
-     *
-     * Some useful references.
+     * Support Azureus-style peer id.
      *
      * @param bean     A JavaBean that includes all required information.
+     * @param uid
      * @param request
      * @param response
      *
      * @throws java.lang.Exception throw exceptions so that ExceptionHandler could deal with.
      */
-    @RequestMapping(value = "/announce", method = RequestMethod.GET)
+    @RequestMapping(value = "/announce/{uid}", method = RequestMethod.GET)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public void announce(@Valid @ModelAttribute TrackerUpdateBean bean,
+    public void announce(@Valid @ModelAttribute TrackerUpdateBean bean, @PathVariable("uid") Integer uid,
                          HttpServletRequest request, HttpServletResponse response) throws Exception
     {
         LOG.trace(request.getQueryString());
         bean.setInfo_hash(toSHA1(getParamater(request.getQueryString(), INFO_HASH)).toUpperCase());
         bean.setPeer_id(toSHA1(getParamater(request.getQueryString(), PEER_ID)).toUpperCase());
+        bean.setUid(uid);
+        bean.getPeerId();
         bean.setIp(request.getRemoteAddr());
         // Update the torrent according to the announce event
         TrackedPeer peer = tracker.update(bean);
         //Update torrent information in database
-        //
-        //
+        userService.getByID(uid);
+        clientAnnounceService.save(bean);
         //
         //Generate response content for normal request
         TrackedTorrent torrent = tracker.get(bean.getInfoHash());

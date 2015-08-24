@@ -45,7 +45,9 @@ public class TrackerUpdateBean
 
     private int numwant = 50;
 
-    private String key;
+    private Integer cid;
+
+    private Integer uid;
 
     private String trackerid;
 
@@ -128,6 +130,26 @@ public class TrackerUpdateBean
         this.port = port;
     }
 
+    public Integer getCid()
+    {
+        return cid;
+    }
+
+    public void setCid(Integer cid)
+    {
+        this.cid = cid;
+    }
+
+    public Integer getUid()
+    {
+        return uid;
+    }
+
+    public void setUid(Integer uid)
+    {
+        this.uid = uid;
+    }
+
     public long getDownloaded()
     {
         return downloaded;
@@ -196,16 +218,6 @@ public class TrackerUpdateBean
     public void setNumwant(int numwant)
     {
         this.numwant = numwant;
-    }
-
-    public String getKey()
-    {
-        return key;
-    }
-
-    public void setKey(String key)
-    {
-        this.key = key;
     }
 
     public String getTrackerid()

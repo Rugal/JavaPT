@@ -36,6 +36,9 @@ public class Client
     @Column(length = 10)
     private String version;
 
+    @Column(length = 10)
+    private String cname;
+
     @Column
     private Boolean enabled;
 
@@ -79,6 +82,16 @@ public class Client
     public void setClientAnnouncesList(List<ClientAnnounce> clientAnnouncesList)
     {
         this.clientAnnouncesList = clientAnnouncesList;
+    }
+
+    public String getCname()
+    {
+        return cname;
+    }
+
+    public void setCname(String cname)
+    {
+        this.cname = cname;
     }
 
     public String getVersion()

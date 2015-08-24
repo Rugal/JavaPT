@@ -23,4 +23,7 @@ public interface ClientDao
     Client save(Client bean);
 
     Client updateByUpdater(Updater<Client> updater);
+
+    @Transactional(readOnly = true)
+    Client getByPeerID(String cname, String version);
 }

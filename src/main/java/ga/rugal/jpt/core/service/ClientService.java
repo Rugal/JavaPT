@@ -23,4 +23,9 @@ public interface ClientService
 
     Client update(Client bean);
 
+    Client findByPeerID(String peerID);
+
+    @Transactional(readOnly = true)
+    Client getByPeerID(String cname, String version);
+
 }

@@ -19,6 +19,7 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>9.4-1201-jdbc41</version>
+            <scope>runtime</scope>
         </dependency>
         <!-- JDBC Connector stop -->
         <!-- Data Source start -->
@@ -39,6 +40,12 @@
             <artifactId>hibernate-validator</artifactId>
             <version>5.2.1.Final</version>
             <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml</groupId>
+                    <artifactId>classmate</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>javax.el</groupId>

@@ -1,8 +1,8 @@
 package ga.rugal.jpt.core.service.impl;
 
-import ga.rugal.jpt.core.service.ClientService;
 import ga.rugal.jpt.core.dao.ClientDao;
 import ga.rugal.jpt.core.entity.Client;
+import ga.rugal.jpt.core.service.ClientService;
 import ml.rugal.sshcommon.hibernate.Updater;
 import ml.rugal.sshcommon.page.Pagination;
 import org.slf4j.Logger;
@@ -24,6 +24,24 @@ public class ClientServiceImpl implements ClientService
 
     @Autowired
     private ClientDao dao;
+
+    @Override
+    @Transactional(readOnly = true)
+    public Client findByPeerID(String peerIDText)
+    {
+        //-AZ2060-
+        String peerID = peerIDText.split("-")[1];
+        String client = peerID.substring(0, 2);
+        String version = peerID.substring(2);
+        return dao.getByPeerID(client, version);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Client getByPeerID(String cname, String version)
+    {
+        return dao.getByPeerID(cname, version);
+    }
 
     @Override
     @Transactional(readOnly = true)

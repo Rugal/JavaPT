@@ -54,4 +54,7 @@ public interface CommonLogContent
 
     //Signin
     final String SIGNIN = "User [{0}] signin from host [{1}].";
+
+    //Announce
+    final String WRONG_FORMAT_UID = "Host [{}] fired wrong format uid";
 }
