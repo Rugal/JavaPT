@@ -44,9 +44,6 @@ public class User implements Serializable
     @Column(length = 100)
     private String email;
 
-    @Column(length = 50)
-    private String passkey;
-
     @Column(name = "upload_byte")
     private Long uploadByte = 0l;
 
@@ -170,16 +167,6 @@ public class User implements Serializable
     public void setEmail(String email)
     {
         this.email = email;
-    }
-
-    public String getPasskey()
-    {
-        return passkey;
-    }
-
-    public void setPasskey(String passkey)
-    {
-        this.passkey = passkey;
     }
 
     public Long getUploadByte()

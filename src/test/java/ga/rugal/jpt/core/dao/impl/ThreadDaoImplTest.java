@@ -52,7 +52,6 @@ public class ThreadDaoImplTest extends JUnitSpringTestBase
         user = new User();
         user.setEmail("test@123.com");
         user.setLastReport(System.currentTimeMillis());
-        user.setPasskey("test");
         user.setPassword("test");
         user.setRegisterTime(System.currentTimeMillis());
         user.setStatus(User.Status.DELETING);

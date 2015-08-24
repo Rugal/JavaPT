@@ -104,7 +104,7 @@ public class Client
         this.version = version;
     }
 
-    public Boolean getEnabled()
+    public Boolean isEnabled()
     {
         return enabled;
     }

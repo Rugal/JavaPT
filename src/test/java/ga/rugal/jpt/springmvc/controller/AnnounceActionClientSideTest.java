@@ -40,9 +40,9 @@ public class AnnounceActionClientSideTest extends ControllerClientSideTestBase
     @Ignore
     public void testAnnounce() throws Exception
     {
-        this.mockMvc.perform(get("/announce").param("ip", "1.1.1.1")
-            .param("info_hash", "123456")
-            .param("peer_id", "654321")
+        this.mockMvc.perform(get("/announce/1").param("ip", "1.1.1.1")
+            .param("info_hash", "%5c%84ao.%28%d0%3b%f9%c1%27%d7%bc%ca%a4%cf%0f%d5%7bC")
+            .param("peer_id", "-UT3440-%cf%9fg%fa%14Q%c0%afp1%1a%9a")
             .param("port", "6881")
             .accept(MediaType.TEXT_PLAIN))
             .andDo(print())

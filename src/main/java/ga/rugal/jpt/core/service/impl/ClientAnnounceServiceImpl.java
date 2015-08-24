@@ -62,7 +62,8 @@ public class ClientAnnounceServiceImpl implements ClientAnnounceService
         clientAnnounce.setUploadByte(bean.getUploaded());
         clientAnnounce.setLeftByte(bean.getLeft());
         clientAnnounce.setAnnounceTime(System.currentTimeMillis());
-        clientAnnounce.setUid(userService.getByID(bean.getUid()));
+        clientAnnounce.setUid(bean.getUser());
+        clientAnnounce.setCid(bean.getClient());
         return dao.save(clientAnnounce);
     }
 

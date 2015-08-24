@@ -7,8 +7,10 @@ import ga.rugal.jpt.common.tracker.common.Peer;
 import ga.rugal.jpt.common.tracker.server.TrackedPeer;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.common.tracker.server.Tracker;
+import ga.rugal.jpt.common.tracker.server.TrackerResponseException;
 import ga.rugal.jpt.common.tracker.server.TrackerUpdateBean;
-import ga.rugal.jpt.core.service.ClientAnnounceService;
+import ga.rugal.jpt.core.entity.Client;
+import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.ClientService;
 import ga.rugal.jpt.core.service.UserService;
 import java.io.IOException;
@@ -59,9 +61,6 @@ public class AnnounceAction
     @Autowired
     private ClientService clientService;
 
-    @Autowired
-    private ClientAnnounceService clientAnnounceService;
-
     private static final String INFO_HASH = "info_hash";
 
     private static final String PEER_ID = "peer_id";
@@ -85,14 +84,19 @@ public class AnnounceAction
         LOG.trace(request.getQueryString());
         bean.setInfo_hash(toSHA1(getParamater(request.getQueryString(), INFO_HASH)).toUpperCase());
         bean.setPeer_id(toSHA1(getParamater(request.getQueryString(), PEER_ID)).toUpperCase());
-        bean.setUid(uid);
-        bean.getPeerId();
         bean.setIp(request.getRemoteAddr());
+        bean.setUser(userService.getByID(uid));
+        //see if reported from allowed Client software.
+        Client client = clientService.findByPeerID(bean.getPeerId());
+        if (null == client || !client.isEnabled())
+        {
+            throw new TrackerResponseException("Client software not allowed");
+        }
+        bean.setClient(client);
         // Update the torrent according to the announce event
         TrackedPeer peer = tracker.update(bean);
         //Update torrent information in database
-        userService.getByID(uid);
-        clientAnnounceService.save(bean);
+        User user = userService.announce(bean);
         //
         //Generate response content for normal request
         TrackedTorrent torrent = tracker.get(bean.getInfoHash());
@@ -213,14 +217,16 @@ public class AnnounceAction
         response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
         try
         {
+            LOG.warn(ex.getMessage());
             WritableByteChannel channel = Channels.newChannel(response.getOutputStream());
             Map<String, BEValue> params = new HashMap<>();
             params.put("failure reason", new BEValue(ex.getMessage(), SystemDefaultProperties.BYTE_ENCODING));
+
             channel.write(BEncoder.bencode(params));
         }
         catch (IOException ioe)
         {
-            LOG.error(ioe.getMessage());
+            LOG.error(ioe.getMessage(), ioe);
         }
     }
 

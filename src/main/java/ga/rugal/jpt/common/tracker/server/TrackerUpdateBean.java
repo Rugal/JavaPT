@@ -2,6 +2,8 @@ package ga.rugal.jpt.common.tracker.server;
 
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
+import ga.rugal.jpt.core.entity.Client;
+import ga.rugal.jpt.core.entity.User;
 import java.nio.ByteBuffer;
 import javax.validation.constraints.NotNull;
 
@@ -45,9 +47,9 @@ public class TrackerUpdateBean
 
     private int numwant = 50;
 
-    private Integer cid;
+    private transient Client client;
 
-    private Integer uid;
+    private transient User user;
 
     private String trackerid;
 
@@ -130,24 +132,24 @@ public class TrackerUpdateBean
         this.port = port;
     }
 
-    public Integer getCid()
+    public Client getClient()
     {
-        return cid;
+        return client;
     }
 
-    public void setCid(Integer cid)
+    public void setClient(Client client)
     {
-        this.cid = cid;
+        this.client = client;
     }
 
-    public Integer getUid()
+    public User getUser()
     {
-        return uid;
+        return user;
     }
 
-    public void setUid(Integer uid)
+    public void setUser(User user)
     {
-        this.uid = uid;
+        this.user = user;
     }
 
     public long getDownloaded()
