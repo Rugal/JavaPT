@@ -19,6 +19,7 @@ import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.common.Peer;
 import ga.rugal.jpt.common.tracker.common.Torrent;
+import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -232,20 +233,20 @@ public class TrackedTorrent extends Torrent
         switch (bean.getEvent())
         {
             case STARTED:
-                peer = new TrackedPeer(this, bean.getIp(), bean.getPort(), bean.getBufferPeerId());
+                peer = new TrackedPeer(this, bean.getIp(), bean.getPort(), bean.getBufferPeerID());
                 state = TrackedPeer.PeerState.STARTED;
                 this.addPeer(peer);
                 break;
             case STOPPED:
-                peer = this.removePeer(bean.getPeerId());
+                peer = this.removePeer(bean.getPeerID());
                 state = TrackedPeer.PeerState.STOPPED;
                 break;
             case COMPLETED:
-                peer = this.getPeer(bean.getPeerId());
+                peer = this.getPeer(bean.getPeerID());
                 state = TrackedPeer.PeerState.COMPLETED;
                 break;
             case NONE:
-                peer = this.getPeer(bean.getPeerId());
+                peer = this.getPeer(bean.getPeerID());
                 state = TrackedPeer.PeerState.STARTED;
                 break;
             default:

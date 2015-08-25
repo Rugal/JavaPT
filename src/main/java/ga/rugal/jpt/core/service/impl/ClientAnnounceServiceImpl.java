@@ -1,6 +1,6 @@
 package ga.rugal.jpt.core.service.impl;
 
-import ga.rugal.jpt.common.tracker.server.TrackerUpdateBean;
+import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.core.dao.ClientAnnounceDao;
 import ga.rugal.jpt.core.entity.ClientAnnounce;
 import ga.rugal.jpt.core.service.ClientAnnounceService;

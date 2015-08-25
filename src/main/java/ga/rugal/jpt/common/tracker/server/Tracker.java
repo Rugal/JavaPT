@@ -4,6 +4,7 @@ import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.common.Torrent;
+import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,7 +39,7 @@ public class Tracker
             throw new TrackerResponseException(CommonMessageContent.TORRENT_NOT_FOUND);
         }
         TrackedTorrent torrent = this.torrents.get(bean.getInfoHash());
-        String peerId = bean.getPeerId();
+        String peerId = bean.getPeerID();
         // If an event other than 'started' is specified and we also haven't
         // seen the peer on this torrent before, something went wrong. A
         // previous 'started' announce request should have been made by the
@@ -57,7 +58,7 @@ public class Tracker
         if ((bean.getEvent() == null || RequestEvent.NONE == bean.getEvent())
             && torrent.containsKey(peerId))
         {
-            bean.setEvent(RequestEvent.STARTED.getEventName());
+            bean.setEvent(RequestEvent.STARTED);
         }
         // Update the torrent according to the announce event
         TrackedPeer peer;

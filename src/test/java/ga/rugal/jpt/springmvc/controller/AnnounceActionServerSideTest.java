@@ -6,7 +6,7 @@
 package ga.rugal.jpt.springmvc.controller;
 
 import ga.rugal.ControllerServerSideTestBase;
-import ga.rugal.jpt.common.tracker.server.TrackerUpdateBean;
+import ga.rugal.jpt.common.tracker.common.ClientRequestMessageBean;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.Ignore;
@@ -37,7 +37,7 @@ public class AnnounceActionServerSideTest extends ControllerServerSideTestBase
         request.setParameter("port", "6881");
         Class<?>[] parameterTypes = new Class<?>[]
         {
-            TrackerUpdateBean.class, HttpServletRequest.class, HttpServletResponse.class
+            ClientRequestMessageBean.class, HttpServletRequest.class, HttpServletResponse.class
 
         };
         ModelAndView mv = null;

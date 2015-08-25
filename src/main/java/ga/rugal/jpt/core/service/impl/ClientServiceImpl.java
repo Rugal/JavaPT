@@ -30,10 +30,19 @@ public class ClientServiceImpl implements ClientService
     public Client findByPeerID(String peerIDText)
     {
         //-AZ2060-
-        String peerID = peerIDText.split("-")[1];
-        String client = peerID.substring(0, 2);
-        String version = peerID.substring(2);
-        return dao.getByPeerID(client, version);
+        Client client = null;
+        try
+        {
+            String peerID = peerIDText.split("-")[1];
+            String cname = peerID.substring(0, 2);
+            String version = peerID.substring(2);
+            client = dao.getByPeerID(cname, version);
+        }
+        catch (ArrayIndexOutOfBoundsException aioobe)
+        {
+            LOG.error(aioobe.getMessage());
+        }
+        return client;
     }
 
     @Override

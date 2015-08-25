@@ -3,12 +3,13 @@ package ga.rugal.jpt.springmvc.controller;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.bcodec.BEValue;
 import ga.rugal.jpt.common.tracker.bcodec.BEncoder;
+import ga.rugal.jpt.common.tracker.common.ClientRequestMessageBean;
 import ga.rugal.jpt.common.tracker.common.Peer;
+import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.server.TrackedPeer;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.common.tracker.server.Tracker;
 import ga.rugal.jpt.common.tracker.server.TrackerResponseException;
-import ga.rugal.jpt.common.tracker.server.TrackerUpdateBean;
 import ga.rugal.jpt.core.entity.Client;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.ClientService;
@@ -78,23 +79,26 @@ public class AnnounceAction
     @RequestMapping(value = "/announce/{uid}", method = RequestMethod.GET)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public void announce(@Valid @ModelAttribute TrackerUpdateBean bean, @PathVariable("uid") Integer uid,
+    public void announce(@Valid @ModelAttribute ClientRequestMessageBean bean, @PathVariable("uid") Integer uid,
                          HttpServletRequest request, HttpServletResponse response) throws Exception
     {
         LOG.trace(request.getQueryString());
-        bean.setInfo_hash(toSHA1(getParamater(request.getQueryString(), INFO_HASH)).toUpperCase());
-        bean.setPeer_id(toSHA1(getParamater(request.getQueryString(), PEER_ID)).toUpperCase());
         bean.setIp(request.getRemoteAddr());
-        bean.setUser(userService.getByID(uid));
+
+        bean.setInfo_hash(getParamater(request.getQueryString(), INFO_HASH));
+        bean.setPeer_id(getParamater(request.getQueryString(), PEER_ID));
+        bean.setUserID(uid);
+
+        TrackerUpdateBean trackerUpdateBean = bean.generate();
+        LOG.debug("Hash: [{}], peer: [{}]", bean.getInfoHash(), bean.getPeerId());
         //see if reported from allowed Client software.
         Client client = clientService.findByPeerID(bean.getPeerId());
         if (null == client || !client.isEnabled())
         {
             throw new TrackerResponseException("Client software not allowed");
         }
-        bean.setClient(client);
         // Update the torrent according to the announce event
-        TrackedPeer peer = tracker.update(bean);
+        TrackedPeer peer = tracker.update(trackerUpdateBean);
         //Update torrent information in database
         User user = userService.announce(bean);
         //
@@ -106,6 +110,14 @@ public class AnnounceAction
         response.setDateHeader("Date", System.currentTimeMillis());
         WritableByteChannel channel = Channels.newChannel(response.getOutputStream());
         channel.write(buffer);
+    }
+
+    private String getPeerID(String text)
+    {
+        StringBuilder sb = new StringBuilder();
+        String random = toSHA1(text.substring(1 + text.lastIndexOf("-")));
+        sb.append(text.substring(0, text.lastIndexOf("-") + 1)).append(random);
+        return sb.toString();
     }
 
     /**
@@ -178,7 +190,7 @@ public class AnnounceAction
      * @throws java.io.IOException
      * @throws java.io.UnsupportedEncodingException
      */
-    private ByteBuffer compactResponse(TrackerUpdateBean bean, TrackedTorrent torrent, List<Peer> peers)
+    private ByteBuffer compactResponse(ClientRequestMessageBean bean, TrackedTorrent torrent, List<Peer> peers)
         throws IOException, UnsupportedEncodingException
     {
         Map<String, BEValue> response = new HashMap<>();
@@ -217,7 +229,7 @@ public class AnnounceAction
         response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
         try
         {
-            LOG.warn(ex.getMessage());
+            LOG.warn("", ex);
             WritableByteChannel channel = Channels.newChannel(response.getOutputStream());
             Map<String, BEValue> params = new HashMap<>();
             params.put("failure reason", new BEValue(ex.getMessage(), SystemDefaultProperties.BYTE_ENCODING));

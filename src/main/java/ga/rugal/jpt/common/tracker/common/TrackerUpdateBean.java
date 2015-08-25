@@ -1,35 +1,31 @@
-package ga.rugal.jpt.common.tracker.server;
+package ga.rugal.jpt.common.tracker.common;
 
-import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
+import ga.rugal.jpt.common.tracker.server.TrackedPeer;
 import ga.rugal.jpt.core.entity.Client;
 import ga.rugal.jpt.core.entity.User;
 import java.nio.ByteBuffer;
-import javax.validation.constraints.NotNull;
 
 /**
- * This is a JavaBean for updating torrents and peers.
- * Just one JavaBean includes all properties needed.
- * <p>
- * Actually in 0.1 version, info_hash and peer_id fields need to be injected separately.
  *
  * @author Rugal Bernstein
- * @since 0.1
  */
 public class TrackerUpdateBean
 {
 
-    private Torrent torrent;
+    private TrackedPeer.PeerState state;
 
     private RequestEvent event;
 
-    private TrackedPeer.PeerState state;
+    private String infoHash;
 
-    @NotNull
-    private String info_hash;
+    private String peerID;
 
-    @NotNull
-    private String peer_id;
+    private String cname;
+
+    private String version;
+
+    private String random;
 
     private int port;
 
@@ -41,55 +37,38 @@ public class TrackerUpdateBean
 
     private int compact = 1;
 
+    private String key;
+
     private int no_peer_id;
 
     private String ip;
 
     private int numwant = 50;
 
-    private transient Client client;
-
-    private transient User user;
-
     private String trackerid;
 
-    public TrackerUpdateBean()
-    {
-    }
+    private User user;
 
-    public Torrent getTorrent()
-    {
-        return torrent;
-    }
-
-    public void setTorrent(Torrent torrent)
-    {
-        this.torrent = torrent;
-    }
+    private Client client;
 
     public RequestEvent getEvent()
     {
         return event;
     }
 
-    public void setEvent(String event)
+    public void setEvent(RequestEvent event)
     {
-        this.event = RequestEvent.getByName(event);
+        this.event = event;
     }
 
-    public ByteBuffer getBufferPeerId()
+    public ByteBuffer getBufferPeerID()
     {
-        return ByteBuffer.wrap(peer_id.getBytes());
+        return ByteBuffer.wrap(peerID.getBytes());
     }
 
-    public String getInfoHash()
+    public String getPeerID()
     {
-        return info_hash;
-    }
-
-    public String getPeerId()
-    {
-        return peer_id;
+        return peerID;
     }
 
     public TrackedPeer.PeerState getState()
@@ -102,24 +81,44 @@ public class TrackerUpdateBean
         this.state = state;
     }
 
-    public byte[] getByteInfoHash()
+    public String getInfoHash()
     {
-        return info_hash.getBytes();
+        return infoHash;
     }
 
-    public void setInfo_hash(String info_hash)
+    public void setInfoHash(String infoHash)
     {
-        this.info_hash = info_hash;
+        this.infoHash = infoHash;
     }
 
-    public byte[] getBytePeerId()
+    public String getCname()
     {
-        return peer_id.getBytes();
+        return cname;
     }
 
-    public void setPeer_id(String peer_id)
+    public void setCname(String cname)
     {
-        this.peer_id = peer_id;
+        this.cname = cname;
+    }
+
+    public String getVersion()
+    {
+        return version;
+    }
+
+    public void setVersion(String version)
+    {
+        this.version = version;
+    }
+
+    public String getRandom()
+    {
+        return random;
+    }
+
+    public void setRandom(String random)
+    {
+        this.random = random;
     }
 
     public int getPort()
@@ -130,26 +129,6 @@ public class TrackerUpdateBean
     public void setPort(int port)
     {
         this.port = port;
-    }
-
-    public Client getClient()
-    {
-        return client;
-    }
-
-    public void setClient(Client client)
-    {
-        this.client = client;
-    }
-
-    public User getUser()
-    {
-        return user;
-    }
-
-    public void setUser(User user)
-    {
-        this.user = user;
     }
 
     public long getDownloaded()
@@ -192,7 +171,17 @@ public class TrackerUpdateBean
         this.compact = compact;
     }
 
-    public int getNoPeerId()
+    public String getKey()
+    {
+        return key;
+    }
+
+    public void setKey(String key)
+    {
+        this.key = key;
+    }
+
+    public int getNo_peer_id()
     {
         return no_peer_id;
     }
@@ -230,6 +219,26 @@ public class TrackerUpdateBean
     public void setTrackerid(String trackerid)
     {
         this.trackerid = trackerid;
+    }
+
+    public User getUser()
+    {
+        return user;
+    }
+
+    public void setUser(User user)
+    {
+        this.user = user;
+    }
+
+    public Client getClient()
+    {
+        return client;
+    }
+
+    public void setClient(Client client)
+    {
+        this.client = client;
     }
 
 }

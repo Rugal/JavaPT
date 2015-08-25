@@ -1,6 +1,6 @@
 package ga.rugal.jpt.core.service;
 
-import ga.rugal.jpt.common.tracker.server.TrackerUpdateBean;
+import ga.rugal.jpt.common.tracker.common.ClientRequestMessageBean;
 import ga.rugal.jpt.core.entity.User;
 import ml.rugal.sshcommon.page.Pagination;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +27,6 @@ public interface UserService
 
     User update(User bean);
 
-    User announce(TrackerUpdateBean bean);
+    User announce(ClientRequestMessageBean bean);
 
 }
