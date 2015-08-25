@@ -1,6 +1,6 @@
 package ga.rugal.jpt.core.service.impl;
 
-import ga.rugal.jpt.common.tracker.common.ClientRequestMessageBean;
+import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.ClientAnnounceService;
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public User announce(ClientRequestMessageBean bean)
+    public User announce(TrackerUpdateBean bean)
     {
         //logging Client Announce
 //        clientAnnounceService.save(bean);

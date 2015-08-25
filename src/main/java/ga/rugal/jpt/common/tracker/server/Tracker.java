@@ -11,11 +11,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author Rugal Bernstein
  */
+@Component
 public class Tracker
 {
 
@@ -177,7 +179,7 @@ public class Tracker
         @Override
         public void run()
         {
-            LOG.debug(CommonMessageContent.COLLECT_PEERS);
+            LOG.trace(CommonLogContent.COLLECT_PEERS);
             for (TrackedTorrent torrent : torrents.values())
             {
                 torrent.collectUnfreshPeers();

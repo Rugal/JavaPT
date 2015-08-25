@@ -91,16 +91,18 @@ public class AnnounceAction
         bean.setUserID(uid);
 
         TrackerUpdateBean trackerUpdateBean = requestBeanService.generateUpdateBean(bean);
+        //----------------------From now on starts use tracker update bean only
         LOG.debug("Hash: [{}], peer: [{}]", trackerUpdateBean.getInfoHash(), trackerUpdateBean.getPeerID());
 
         // Update the torrent according to the announce event
         TrackedPeer peer = tracker.update(trackerUpdateBean);
         //Update torrent information in database
-        User user = userService.announce(bean);
+        User user = userService.announce(trackerUpdateBean);
         //
         //Generate response content for normal request
-        TrackedTorrent torrent = tracker.get(bean.getInfoHash());
-        ByteBuffer buffer = this.compactResponse(bean, torrent, torrent.getSomePeers(peer));
+        TrackedTorrent torrent = tracker.get(trackerUpdateBean.getInfoHash());
+        LOG.error("{}", torrent == null);
+        ByteBuffer buffer = this.compactResponse(torrent, torrent.getSomePeers(peer));
         //Some setting for normal response
         response.setContentType(MediaType.TEXT_PLAIN_VALUE);
         response.setDateHeader("Date", System.currentTimeMillis());
@@ -144,7 +146,7 @@ public class AnnounceAction
      * @throws java.io.IOException
      * @throws java.io.UnsupportedEncodingException
      */
-    private ByteBuffer compactResponse(ClientRequestMessageBean bean, TrackedTorrent torrent, List<Peer> peers)
+    private ByteBuffer compactResponse(TrackedTorrent torrent, List<Peer> peers)
         throws IOException, UnsupportedEncodingException
     {
         Map<String, BEValue> response = new HashMap<>();
@@ -154,18 +156,23 @@ public class AnnounceAction
         response.put("complete", new BEValue(torrent.seeders()));
         response.put("incomplete", new BEValue(torrent.leechers()));
 
-        ByteBuffer data = ByteBuffer.allocate(peers.size() * 6);
-        for (Peer peer : peers)
+        //peers number might be 0 at the time that this tracker just started
+        if (!peers.isEmpty())
         {
-            byte[] ip = peer.getRawIp();
-            if (ip == null || ip.length != 4)
+            ByteBuffer data = ByteBuffer.allocate(peers.size() * 6);
+            for (Peer peer : peers)
             {
-                continue;
+                byte[] ip = peer.getRawIp();
+                if (ip == null || ip.length != 4)
+                {
+                    continue;
+                }
+                data.put(ip);
+                data.putShort((short) peer.getPort());
             }
-            data.put(ip);
-            data.putShort((short) peer.getPort());
+            response.put("peers", new BEValue(data.array()));
         }
-        response.put("peers", new BEValue(data.array()));
+
         return BEncoder.bencode(response);
     }
 
@@ -178,16 +185,15 @@ public class AnnounceAction
     @ExceptionHandler(Exception.class)
     public void handleAllException(HttpServletResponse response, Exception ex)
     {
+//        LOG.warn("", ex);
         response.setContentType(MediaType.TEXT_PLAIN_VALUE);
         response.setDateHeader("Date", System.currentTimeMillis());
         response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
         try
         {
-            LOG.warn("", ex);
             WritableByteChannel channel = Channels.newChannel(response.getOutputStream());
             Map<String, BEValue> params = new HashMap<>();
             params.put("failure reason", new BEValue(ex.getMessage(), SystemDefaultProperties.BYTE_ENCODING));
-
             channel.write(BEncoder.bencode(params));
         }
         catch (IOException ioe)

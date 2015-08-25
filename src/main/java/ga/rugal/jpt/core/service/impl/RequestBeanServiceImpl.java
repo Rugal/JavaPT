@@ -51,9 +51,10 @@ public class RequestBeanServiceImpl implements RequestBeanService
         //special SHA1 process
         try
         {
-            bean.setInfoHash(toSHA1(b.getInfoHash()));
+            //any torrent hash info must be in upper case
+            bean.setInfoHash(toSHA1(b.getInfoHash()).toUpperCase());
         }
-        catch (Exception e)
+        catch (RuntimeException e)
         {
             throw new TrackerResponseException("Info hash not valid");
         }
@@ -68,7 +69,6 @@ public class RequestBeanServiceImpl implements RequestBeanService
         bean.setRandom(toSHA1(peerIdSplit[2]));//the random is percent-encoded
 
         //Do database search for user and client
-        LOG.error("{}", userService == null);
         User user = userService.getByID(b.getUserID());
         if (null == user)
         {

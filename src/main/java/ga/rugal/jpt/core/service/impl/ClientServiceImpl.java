@@ -59,10 +59,13 @@ public class ClientServiceImpl implements ClientService
         Client client = dao.getByPeerID(cname, version);
         if (null == client)
         {
+            LOG.debug("Client [{}] version [{}] is not found", cname, version);
             client = dao.getByPeerID(cname, "*");
             if (null == client)
             {
+                LOG.debug("Client [{}] is not found", cname);
                 client = dao.getByID(0);
+                LOG.debug("Any other client softwares is {} by default", client.isEnabled() ? "enabled" : "disabled");
             }
         }
         return client;

@@ -39,8 +39,6 @@ public interface CommonMessageContent
 
     final String BAD_EVENT = "Bad client event";
 
-    final String COLLECT_PEERS = "Collecting peers";
-
     //Torrents
     final String TORRENT_NOT_FOUND = "The Requested torrent not found";
 

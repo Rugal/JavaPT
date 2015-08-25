@@ -42,6 +42,8 @@ public interface CommonLogContent
 
     final String OPEN_TORRENT_FOLDER = "Opening torrents folder [{}]";
 
+    final String COLLECT_PEERS = "Collecting peers";
+
     //Torrent
     final String TORRENT_ANNOUNCED = "Torrent [{}] already announced with hash {}.";
 
