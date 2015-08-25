@@ -40,8 +40,17 @@ public interface CommonMessageContent
     final String BAD_EVENT = "Bad client event";
 
     //Torrents
-    final String TORRENT_NOT_FOUND = "The Requested torrent not found";
+    final String TORRENT_NOT_FOUND = "The request torrent not found";
 
     //Signin
     final String SIGNIN = "Signin recorded";
+
+    //Announce
+    final String INVALID_INFOHASH = "Info hash invalid";
+
+    final String INVALID_PEERID = "Peer ID invalid";
+
+    final String USER_NOT_FOUND = "User not found";
+
+    final String UNSUPPORTED_CLIENT = "Client software unsupported";
 }

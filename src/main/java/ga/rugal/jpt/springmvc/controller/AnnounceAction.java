@@ -1,5 +1,6 @@
 package ga.rugal.jpt.springmvc.controller;
 
+import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.bcodec.BEValue;
 import ga.rugal.jpt.common.tracker.bcodec.BEncoder;
@@ -10,7 +11,6 @@ import ga.rugal.jpt.common.tracker.server.TrackedPeer;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.common.tracker.server.Tracker;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.service.ClientService;
 import ga.rugal.jpt.core.service.RequestBeanService;
 import ga.rugal.jpt.core.service.UserService;
 import java.io.IOException;
@@ -59,9 +59,6 @@ public class AnnounceAction
     private UserService userService;
 
     @Autowired
-    private ClientService clientService;
-
-    @Autowired
     private RequestBeanService requestBeanService;
 
     private static final String INFO_HASH = "info_hash";
@@ -91,8 +88,10 @@ public class AnnounceAction
         bean.setUserID(uid);
 
         TrackerUpdateBean trackerUpdateBean = requestBeanService.generateUpdateBean(bean);
-        //----------------------From now on starts use tracker update bean only
-        LOG.debug("Hash: [{}], peer: [{}]", trackerUpdateBean.getInfoHash(), trackerUpdateBean.getPeerID());
+        //--------After get formated tracker update bean, starts use tracker update bean only----------
+        LOG.debug(CommonLogContent.THE_REQUESTED_INFO,
+                  trackerUpdateBean.getInfoHash(),
+                  trackerUpdateBean.getPeerID());
 
         // Update the torrent according to the announce event
         TrackedPeer peer = tracker.update(trackerUpdateBean);
@@ -101,7 +100,6 @@ public class AnnounceAction
         //
         //Generate response content for normal request
         TrackedTorrent torrent = tracker.get(trackerUpdateBean.getInfoHash());
-        LOG.error("{}", torrent == null);
         ByteBuffer buffer = this.compactResponse(torrent, torrent.getSomePeers(peer));
         //Some setting for normal response
         response.setContentType(MediaType.TEXT_PLAIN_VALUE);
@@ -185,20 +183,20 @@ public class AnnounceAction
     @ExceptionHandler(Exception.class)
     public void handleAllException(HttpServletResponse response, Exception ex)
     {
-//        LOG.warn("", ex);
         response.setContentType(MediaType.TEXT_PLAIN_VALUE);
         response.setDateHeader("Date", System.currentTimeMillis());
         response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
         try
         {
+            LOG.debug(ex.getMessage());
             WritableByteChannel channel = Channels.newChannel(response.getOutputStream());
             Map<String, BEValue> params = new HashMap<>();
             params.put("failure reason", new BEValue(ex.getMessage(), SystemDefaultProperties.BYTE_ENCODING));
             channel.write(BEncoder.bencode(params));
         }
-        catch (IOException ioe)
+        catch (Exception e)
         {
-            LOG.error(ioe.getMessage(), ioe);
+            LOG.error(e.getMessage(), e);
         }
     }
 

@@ -39,7 +39,7 @@ public class AnnounceInterceptor implements HandlerInterceptor
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
     {
-        LOG.debug(request.getQueryString());
+        LOG.trace(request.getQueryString());
         int index = request.getRequestURI().indexOf(ANNOUNCE);
         String uidString = request.getRequestURI().substring(index + ANNOUNCE.length());
         if (null == uidString || uidString.isEmpty())

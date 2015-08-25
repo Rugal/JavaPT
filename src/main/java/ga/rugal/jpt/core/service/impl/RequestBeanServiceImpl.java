@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.service.impl;
 
+import ga.rugal.jpt.common.CommonMessageContent;
 import ga.rugal.jpt.common.tracker.common.ClientRequestMessageBean;
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
@@ -16,7 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
+ * Use this service class for better decoupling.
+ * <p>
+ * Separate TrackerUpdateBean's functionality with RequestMessageBean
+ * <p>
  * @author Rugal Bernstein
  */
 @Service
@@ -32,7 +36,15 @@ public class RequestBeanServiceImpl implements RequestBeanService
     @Autowired
     private ClientService clientService;
 
+    /**
+     * {@inheritDoc }
+     * <p>
+     * @param b
+     *          <p>
+     * @throws ga.rugal.jpt.common.tracker.server.TrackerResponseException
+     */
     @Override
+    @Transactional(readOnly = true)
     public TrackerUpdateBean generateUpdateBean(ClientRequestMessageBean b) throws TrackerResponseException
     {
         TrackerUpdateBean bean = new TrackerUpdateBean();
@@ -56,23 +68,14 @@ public class RequestBeanServiceImpl implements RequestBeanService
         }
         catch (RuntimeException e)
         {
-            throw new TrackerResponseException("Info hash not valid");
+            throw new TrackerResponseException(CommonMessageContent.INVALID_INFOHASH);
         }
-        //client information from peer_id field
-        String[] peerIdSplit = b.getPeerId().split("-");
-        if (null == peerIdSplit || peerIdSplit.length != 3)
-        {
-            throw new TrackerResponseException("Peer ID not valid");
-        }
-        bean.setCname(peerIdSplit[1].substring(0, 2));
-        bean.setVersion(peerIdSplit[1].substring(2));
-        bean.setRandom(toSHA1(peerIdSplit[2]));//the random is percent-encoded
-
+        readPeerID(bean, b.getPeerId());
         //Do database search for user and client
         User user = userService.getByID(b.getUserID());
         if (null == user)
         {
-            throw new TrackerResponseException("User not found");
+            throw new TrackerResponseException(CommonMessageContent.USER_NOT_FOUND);
         }
         bean.setUser(user);
 
@@ -80,11 +83,33 @@ public class RequestBeanServiceImpl implements RequestBeanService
         Client client = clientService.findByPeerID(bean.getCname(), bean.getVersion());
         if (!client.isEnabled())
         {
-            throw new TrackerResponseException("Client software not supported");
+            throw new TrackerResponseException(CommonMessageContent.UNSUPPORTED_CLIENT);
         }
         bean.setClient(client);
 
         return bean;
+    }
+
+    /**
+     * Extract peer id from percent-encoded format into client name, version and random number. set
+     * those data into TrackerUpdateBean.
+     * <p>
+     * @param bean
+     * @param peerID
+     *               <p>
+     * @throws TrackerResponseException
+     */
+    private void readPeerID(TrackerUpdateBean bean, String peerID) throws TrackerResponseException
+    {
+        //client information from peer_id field
+        String[] peerIdSplit = peerID.split("-", 3);
+        if (null == peerIdSplit || peerIdSplit.length != 3)
+        {
+            throw new TrackerResponseException(CommonMessageContent.INVALID_PEERID);
+        }
+        bean.setCname(peerIdSplit[1].substring(0, 2));
+        bean.setVersion(peerIdSplit[1].substring(2));
+        bean.setRandom(toSHA1(peerIdSplit[2]));//the random is percent-encoded
     }
 
     /**

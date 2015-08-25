@@ -59,4 +59,12 @@ public interface CommonLogContent
 
     //Announce
     final String WRONG_FORMAT_UID = "Host [{}] fired wrong format uid";
+
+    final String THE_REQUESTED_INFO = "Requesting hash: [{}], peer: [{}]";
+
+    final String CLIENT_VERSION_NOT_FOUND = "Client [{}] version [{}] is not found";
+
+    final String CLIENT_NOT_FOUND = "Client [{}] is not found";
+
+    final String OTHER_CLIENT = "Any other client softwares is {} by default";
 }

@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.service.impl;
 
+import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.core.dao.ClientDao;
 import ga.rugal.jpt.core.entity.Client;
 import ga.rugal.jpt.core.service.ClientService;
@@ -25,26 +26,9 @@ public class ClientServiceImpl implements ClientService
     @Autowired
     private ClientDao dao;
 
-    @Override
-    @Transactional(readOnly = true)
-    public Client findByPeerID(String peerIDText)
-    {
-        //-AZ2060-
-        Client client = null;
-        try
-        {
-            String peerID = peerIDText.split("-")[1];
-            String cname = peerID.substring(0, 2);
-            String version = peerID.substring(2);
-            client = dao.getByPeerID(cname, version);
-        }
-        catch (ArrayIndexOutOfBoundsException aioobe)
-        {
-            LOG.error(aioobe.getMessage());
-        }
-        return client;
-    }
-
+    /**
+     * {@inheritDoc }
+     */
     @Override
     @Transactional(readOnly = true)
     public Client getByPeerID(String cname, String version)
@@ -52,6 +36,9 @@ public class ClientServiceImpl implements ClientService
         return dao.getByPeerID(cname, version);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     @Transactional(readOnly = true)
     public Client findByPeerID(String cname, String version)
@@ -59,13 +46,15 @@ public class ClientServiceImpl implements ClientService
         Client client = dao.getByPeerID(cname, version);
         if (null == client)
         {
-            LOG.debug("Client [{}] version [{}] is not found", cname, version);
+            LOG.debug(CommonLogContent.CLIENT_VERSION_NOT_FOUND, cname, version);
             client = dao.getByPeerID(cname, "*");
             if (null == client)
             {
-                LOG.debug("Client [{}] is not found", cname);
+                LOG.debug(CommonLogContent.CLIENT_NOT_FOUND, cname);
                 client = dao.getByID(0);
-                LOG.debug("Any other client softwares is {} by default", client.isEnabled() ? "enabled" : "disabled");
+                //this method will find the default client for others.
+                //maybe use getByPeerID("*", "*") will be better.
+                LOG.debug(CommonLogContent.OTHER_CLIENT, client.isEnabled() ? "enabled" : "disabled");
             }
         }
         return client;
