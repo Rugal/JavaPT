@@ -28,4 +28,7 @@ public interface ClientService
     @Transactional(readOnly = true)
     Client getByPeerID(String cname, String version);
 
+    @Transactional(readOnly = true)
+    Client findByPeerID(String cname, String version);
+
 }

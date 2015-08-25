@@ -1,15 +1,12 @@
 package ga.rugal.jpt.common.tracker.common;
 
-import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
-import ga.rugal.jpt.core.service.ClientService;
-import ga.rugal.jpt.core.service.UserService;
 import java.nio.ByteBuffer;
 import javax.validation.constraints.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * This is a JavaBean for updating torrents and peers.
+ * This is a JavaBean that are sent from client.
  * Just one JavaBean includes all properties needed.
+ * We will extract information from this bean to generate a formal tracker update bean.
  * <p>
  * Actually in 0.1 version, info_hash and peer_id fields need to be injected separately.
  *
@@ -18,12 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class ClientRequestMessageBean
 {
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private ClientService clientService;
 
     private String event;
 
@@ -225,71 +216,4 @@ public class ClientRequestMessageBean
     {
         this.userID = userID;
     }
-
-    /**
-     * Convert a Percent-encoded string into a SHA1 string.
-     * It is not functional to use {@link javax.servlet.ServletRequest#getParameter} since the
-     * percent-encoded info_hash and peer_id will be decoded by Springmvc.
-     * <p>
-     * Refer to
-     * http://stackoverflow.com/questions/5637268/how-do-you-decode-info-hash-information-from-tracker-announce-request
-     * <p>
-     * http://www.asciitable.com/
-     * <p>
-     * @param text
-     *             <p>
-     * @return
-     */
-    private String toSHA1(String text)
-    {
-        if (null == text || text.isEmpty())
-        {
-            return null;
-        }
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < text.length(); i++)
-        {
-            if ('%' == text.charAt(i))
-            {
-                sb.append(text.substring(i + 1, i + 3));
-                i += 2;
-            }
-            else
-            {
-                sb.append(Integer.toHexString(text.charAt(i)));
-            }
-        }
-        return sb.toString();
-    }
-
-    public TrackerUpdateBean generate()
-    {
-        TrackerUpdateBean bean = new TrackerUpdateBean();
-        bean.setCompact(compact);
-        bean.setDownloaded(downloaded);
-        bean.setUploaded(uploaded);
-        bean.setLeft(left);
-        bean.setIp(ip);
-        bean.setKey(key);
-        bean.setNo_peer_id(no_peer_id);
-        bean.setNumwant(numwant);
-        bean.setPort(port);
-        bean.setTrackerid(trackerid);
-        bean.setEvent(RequestEvent.getByName(event));
-        //special SHA1 process
-        bean.setInfoHash(toSHA1(info_hash));
-        //client information from peer_id field
-//        this.peer_id;
-        String[] peerIdSplit = this.peer_id.split("-");
-        if (null == peerIdSplit || peerIdSplit.length != 3)
-        {
-            //throw
-        }
-        bean.setCname(peerIdSplit[1].substring(0, 2));
-        bean.setCname(peerIdSplit[1].substring(2));
-        bean.setRandom(toSHA1(peerIdSplit[2]));
-        //Do database search for user and client
-        return bean;
-    }
-
 }

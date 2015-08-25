@@ -54,6 +54,22 @@ public class ClientServiceImpl implements ClientService
 
     @Override
     @Transactional(readOnly = true)
+    public Client findByPeerID(String cname, String version)
+    {
+        Client client = dao.getByPeerID(cname, version);
+        if (null == client)
+        {
+            client = dao.getByPeerID(cname, "*");
+            if (null == client)
+            {
+                client = dao.getByID(0);
+            }
+        }
+        return client;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Pagination getPage(int pageNo, int pageSize)
     {
         return dao.getPage(pageNo, pageSize);

@@ -3,6 +3,8 @@ package ga.rugal.jpt.common.tracker.common;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
 import ga.rugal.jpt.common.tracker.server.TrackedPeer;
 import ga.rugal.jpt.core.entity.Client;
+import ga.rugal.jpt.core.entity.Client;
+import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.entity.User;
 import java.nio.ByteBuffer;
 
@@ -19,9 +21,9 @@ public class TrackerUpdateBean
 
     private String infoHash;
 
-    private String peerID;
-
     private String cname;
+
+    private String corrupt;
 
     private String version;
 
@@ -61,14 +63,24 @@ public class TrackerUpdateBean
         this.event = event;
     }
 
+    public String getCorrupt()
+    {
+        return corrupt;
+    }
+
+    public void setCorrupt(String corrupt)
+    {
+        this.corrupt = corrupt;
+    }
+
     public ByteBuffer getBufferPeerID()
     {
-        return ByteBuffer.wrap(peerID.getBytes());
+        return ByteBuffer.wrap(getPeerID().getBytes());
     }
 
     public String getPeerID()
     {
-        return peerID;
+        return this.getCname() + this.getVersion() + this.getRandom();
     }
 
     public TrackedPeer.PeerState getState()

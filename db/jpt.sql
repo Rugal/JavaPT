@@ -68,11 +68,50 @@ CREATE TABLE client (
     cid integer NOT NULL,
     name character varying(50),
     version character varying(10),
-    enabled boolean
+    enabled boolean,
+    cname character varying(10)
 );
 
 
 ALTER TABLE jpt.client OWNER TO postgres;
+
+--
+-- Name: client_announce; Type: TABLE; Schema: jpt; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE client_announce (
+    caid bigint NOT NULL,
+    announce_time bigint,
+    uid integer,
+    cid integer,
+    download_byte bigint,
+    upload_byte bigint,
+    left_byte bigint
+);
+
+
+ALTER TABLE jpt.client_announce OWNER TO postgres;
+
+--
+-- Name: client_announce_caid_seq; Type: SEQUENCE; Schema: jpt; Owner: postgres
+--
+
+CREATE SEQUENCE client_announce_caid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE jpt.client_announce_caid_seq OWNER TO postgres;
+
+--
+-- Name: client_announce_caid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: postgres
+--
+
+ALTER SEQUENCE client_announce_caid_seq OWNED BY client_announce.caid;
+
 
 --
 -- Name: client_cid_seq; Type: SEQUENCE; Schema: jpt; Owner: postgres
@@ -351,7 +390,6 @@ CREATE TABLE "user" (
     password character varying(100),
     username character varying(100),
     email character varying(100),
-    passkey character varying(50),
     upload_byte bigint DEFAULT 0,
     download_byte bigint DEFAULT 0,
     last_report bigint,
@@ -397,6 +435,13 @@ ALTER TABLE ONLY admin ALTER COLUMN aid SET DEFAULT nextval('admin_aid_seq'::reg
 --
 
 ALTER TABLE ONLY client ALTER COLUMN cid SET DEFAULT nextval('client_cid_seq'::regclass);
+
+
+--
+-- Name: caid; Type: DEFAULT; Schema: jpt; Owner: postgres
+--
+
+ALTER TABLE ONLY client_announce ALTER COLUMN caid SET DEFAULT nextval('client_announce_caid_seq'::regclass);
 
 
 --
@@ -477,17 +522,33 @@ SELECT pg_catalog.setval('admin_aid_seq', 16, true);
 -- Data for Name: client; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
-COPY client (cid, name, version, enabled) FROM stdin;
-1	Utorrent	*	t
-2	transmit	*	t
+COPY client (cid, name, version, enabled, cname) FROM stdin;
+1	Utorrent	*	t	\N
+2	transmit	*	t	\N
+0	*	*	f	*
 \.
+
+
+--
+-- Data for Name: client_announce; Type: TABLE DATA; Schema: jpt; Owner: postgres
+--
+
+COPY client_announce (caid, announce_time, uid, cid, download_byte, upload_byte, left_byte) FROM stdin;
+\.
+
+
+--
+-- Name: client_announce_caid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
+--
+
+SELECT pg_catalog.setval('client_announce_caid_seq', 8, true);
 
 
 --
 -- Name: client_cid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('client_cid_seq', 10, true);
+SELECT pg_catalog.setval('client_cid_seq', 18, true);
 
 
 --
@@ -563,6 +624,10 @@ SELECT pg_catalog.setval('post_tags_ptid_seq', 6, true);
 --
 
 COPY signin_log (slid, uid, signin_time, ip) FROM stdin;
+1	1	1440306141926	127.0.0.1
+2	1	1440348326046	0:0:0:0:0:0:0:1
+3	1	1440348329480	0:0:0:0:0:0:0:1
+4	1	1440348353474	127.0.0.1
 \.
 
 
@@ -570,7 +635,7 @@ COPY signin_log (slid, uid, signin_time, ip) FROM stdin;
 -- Name: signin_log_slid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('signin_log_slid_seq', 1, false);
+SELECT pg_catalog.setval('signin_log_slid_seq', 4, true);
 
 
 --
@@ -612,12 +677,12 @@ SELECT pg_catalog.setval('thread_tid_seq', 6, true);
 -- Data for Name: user; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
-COPY "user" (uid, password, username, email, passkey, upload_byte, download_byte, last_report, credit, referee, register_time, status) FROM stdin;
-1	123456	Rugal	ryujin@163.com	123456	\N	\N	1438837127628	\N	\N	1438837127628	\N
-2	123456	Spooky	null@163.com	123456	\N	\N	1438965572744	\N	\N	1438965572744	0
-3	123456	Tiger	null@123.com	123456	\N	\N	1438965604092	\N	\N	1438965604092	2
-6	test	test	test@123.com	test	\N	\N	1439782679846	\N	\N	1439782679846	2
-7	test	test	test@123.com	test	\N	\N	1439782680097	\N	\N	1439782680097	2
+COPY "user" (uid, password, username, email, upload_byte, download_byte, last_report, credit, referee, register_time, status) FROM stdin;
+1	123456	Rugal	ryujin@163.com	\N	\N	1438837127628	\N	\N	1438837127628	\N
+2	123456	Spooky	null@163.com	\N	\N	1438965572744	\N	\N	1438965572744	0
+3	123456	Tiger	null@123.com	\N	\N	1438965604092	\N	\N	1438965604092	2
+6	test	test	test@123.com	\N	\N	1439782679846	\N	\N	1439782679846	2
+7	test	test	test@123.com	\N	\N	1439782680097	\N	\N	1439782680097	2
 \.
 
 
@@ -625,7 +690,7 @@ COPY "user" (uid, password, username, email, passkey, upload_byte, download_byte
 -- Name: user_uid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('user_uid_seq', 35, true);
+SELECT pg_catalog.setval('user_uid_seq', 43, true);
 
 
 --
@@ -634,6 +699,14 @@ SELECT pg_catalog.setval('user_uid_seq', 35, true);
 
 ALTER TABLE ONLY admin
     ADD CONSTRAINT admin_pkey PRIMARY KEY (aid);
+
+
+--
+-- Name: client_announce_pkey; Type: CONSTRAINT; Schema: jpt; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY client_announce
+    ADD CONSTRAINT client_announce_pkey PRIMARY KEY (caid);
 
 
 --
@@ -709,10 +782,31 @@ ALTER TABLE ONLY "user"
 
 
 --
+-- Name: unq_client_cname; Type: INDEX; Schema: jpt; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX unq_client_cname ON client USING btree (cname);
+
+
+--
 -- Name: unq_level_minimum; Type: INDEX; Schema: jpt; Owner: postgres; Tablespace: 
 --
 
 CREATE UNIQUE INDEX unq_level_minimum ON level USING btree (minimum);
+
+
+--
+-- Name: unq_user_email; Type: INDEX; Schema: jpt; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX unq_user_email ON "user" USING btree (email);
+
+
+--
+-- Name: unq_user_username; Type: INDEX; Schema: jpt; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX unq_user_username ON "user" USING btree (username);
 
 
 --
@@ -729,6 +823,22 @@ ALTER TABLE ONLY admin
 
 ALTER TABLE ONLY admin
     ADD CONSTRAINT admin_uid_fkey FOREIGN KEY (uid) REFERENCES "user"(uid);
+
+
+--
+-- Name: client_announce_cid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
+--
+
+ALTER TABLE ONLY client_announce
+    ADD CONSTRAINT client_announce_cid_fkey FOREIGN KEY (cid) REFERENCES client(cid);
+
+
+--
+-- Name: client_announce_uid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
+--
+
+ALTER TABLE ONLY client_announce
+    ADD CONSTRAINT client_announce_uid_fkey FOREIGN KEY (uid) REFERENCES "user"(uid);
 
 
 --

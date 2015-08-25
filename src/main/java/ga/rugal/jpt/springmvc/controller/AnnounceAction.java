@@ -9,10 +9,9 @@ import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.server.TrackedPeer;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.common.tracker.server.Tracker;
-import ga.rugal.jpt.common.tracker.server.TrackerResponseException;
-import ga.rugal.jpt.core.entity.Client;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.ClientService;
+import ga.rugal.jpt.core.service.RequestBeanService;
 import ga.rugal.jpt.core.service.UserService;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -62,6 +61,9 @@ public class AnnounceAction
     @Autowired
     private ClientService clientService;
 
+    @Autowired
+    private RequestBeanService requestBeanService;
+
     private static final String INFO_HASH = "info_hash";
 
     private static final String PEER_ID = "peer_id";
@@ -84,19 +86,13 @@ public class AnnounceAction
     {
         LOG.trace(request.getQueryString());
         bean.setIp(request.getRemoteAddr());
-
         bean.setInfo_hash(getParamater(request.getQueryString(), INFO_HASH));
         bean.setPeer_id(getParamater(request.getQueryString(), PEER_ID));
         bean.setUserID(uid);
 
-        TrackerUpdateBean trackerUpdateBean = bean.generate();
-        LOG.debug("Hash: [{}], peer: [{}]", bean.getInfoHash(), bean.getPeerId());
-        //see if reported from allowed Client software.
-        Client client = clientService.findByPeerID(bean.getPeerId());
-        if (null == client || !client.isEnabled())
-        {
-            throw new TrackerResponseException("Client software not allowed");
-        }
+        TrackerUpdateBean trackerUpdateBean = requestBeanService.generateUpdateBean(bean);
+        LOG.debug("Hash: [{}], peer: [{}]", trackerUpdateBean.getInfoHash(), trackerUpdateBean.getPeerID());
+
         // Update the torrent according to the announce event
         TrackedPeer peer = tracker.update(trackerUpdateBean);
         //Update torrent information in database
@@ -112,14 +108,6 @@ public class AnnounceAction
         channel.write(buffer);
     }
 
-    private String getPeerID(String text)
-    {
-        StringBuilder sb = new StringBuilder();
-        String random = toSHA1(text.substring(1 + text.lastIndexOf("-")));
-        sb.append(text.substring(0, text.lastIndexOf("-") + 1)).append(random);
-        return sb.toString();
-    }
-
     /**
      * Get request parameter from query string.
      * <p>
@@ -133,49 +121,15 @@ public class AnnounceAction
      */
     private String getParamater(String text, String name)
     {
-        Map<String, String> params = new HashMap<>();
         for (String pair : text.split("&"))
         {
             String[] keyval = pair.split("[=]", 2);
-            params.put(keyval[0], keyval[1]);
-        }
-        return params.get(name);
-    }
-
-    /**
-     * Convert a Percent-encoded string into a SHA1 string.
-     * It is not functional to use {@link javax.servlet.ServletRequest#getParameter} since the
-     * percent-encoded info_hash and peer_id will be decoded by Springmvc.
-     * <p>
-     * Refer to
-     * http://stackoverflow.com/questions/5637268/how-do-you-decode-info-hash-information-from-tracker-announce-request
-     * <p>
-     * http://www.asciitable.com/
-     * <p>
-     * @param text
-     *             <p>
-     * @return
-     */
-    private String toSHA1(String text)
-    {
-        if (null == text || text.isEmpty())
-        {
-            return null;
-        }
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < text.length(); i++)
-        {
-            if ('%' == text.charAt(i))
+            if (keyval[0].equals(name))
             {
-                sb.append(text.substring(i + 1, i + 3));
-                i += 2;
-            }
-            else
-            {
-                sb.append(Integer.toHexString(text.charAt(i)));
+                return keyval[1];
             }
         }
-        return sb.toString();
+        return null;
     }
 
     /**

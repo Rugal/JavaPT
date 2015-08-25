@@ -56,11 +56,6 @@ public class ClientDaoImpl extends HibernateBaseDao<Client, Integer> implements 
         return list.get(0);
     }
 
-//    @Transactional(readOnly = true)
-//    public Client getExactByPeerID(String cname, String version)
-//    {
-//
-//    }
     @Override
     public Client save(Client bean)
     {
