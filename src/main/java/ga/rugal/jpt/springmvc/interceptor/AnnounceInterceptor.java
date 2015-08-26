@@ -1,6 +1,7 @@
 package ga.rugal.jpt.springmvc.interceptor;
 
 import ga.rugal.jpt.common.CommonLogContent;
+import ga.rugal.jpt.common.CommonMessageContent;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.bcodec.BEValue;
 import ga.rugal.jpt.common.tracker.bcodec.BEncoder;
@@ -44,8 +45,8 @@ public class AnnounceInterceptor implements HandlerInterceptor
         String uidString = request.getRequestURI().substring(index + ANNOUNCE.length());
         if (null == uidString || uidString.isEmpty())
         {
-            LOG.debug(CommonLogContent.WRONG_FORMAT_UID, request.getRemoteAddr());
-            deniedResponse(request, response, "Wrong format of UID");
+            LOG.debug(CommonLogContent.INVALID_FORMAT_UID, request.getRemoteAddr());
+            deniedResponse(request, response, CommonMessageContent.INVALID_UID);
             return false;
         }
         Integer uid = -1;
@@ -55,15 +56,15 @@ public class AnnounceInterceptor implements HandlerInterceptor
         }
         catch (NumberFormatException e)
         {
-            LOG.debug(CommonLogContent.WRONG_FORMAT_UID, request.getRemoteAddr());
-            deniedResponse(request, response, "Wrong format of UID");
+            LOG.debug(CommonLogContent.INVALID_FORMAT_UID, request.getRemoteAddr());
+            deniedResponse(request, response, CommonMessageContent.INVALID_UID);
             return false;
         }
         User user = userService.getByID(uid);
         if (null == user)
         {
-            LOG.debug(CommonLogContent.WRONG_FORMAT_UID, request.getRemoteAddr());
-            deniedResponse(request, response, "User not found");
+            LOG.debug(CommonLogContent.INVALID_FORMAT_UID, request.getRemoteAddr());
+            deniedResponse(request, response, CommonMessageContent.USER_NOT_FOUND);
         }
         return true;
     }

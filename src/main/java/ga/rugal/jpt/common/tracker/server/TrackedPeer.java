@@ -19,6 +19,7 @@ import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.bcodec.BEValue;
 import ga.rugal.jpt.common.tracker.common.Peer;
 import ga.rugal.jpt.common.tracker.common.Torrent;
+import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.Date;
@@ -100,12 +101,11 @@ public class TrackedPeer extends Peer
      * @param torrent The torrent this peer exchanges on.
      * @param ip      The peer's IP address.
      * @param port    The peer's port.
-     * @param peerId  The byte-encoded peer ID.
+     * @param peerIdByte  The byte-encoded peer ID.
      */
-    public TrackedPeer(Torrent torrent, String ip, int port,
-                       ByteBuffer peerId)
+    public TrackedPeer(Torrent torrent, String ip, int port, ByteBuffer peerIdByte)
     {
-        super(ip, port, peerId);
+        super(ip, port, peerIdByte);
         this.torrent = torrent;
 
         // Instantiated peers start in the UNKNOWN state.
@@ -125,27 +125,24 @@ public class TrackedPeer extends Peer
      * be automatically be set to COMPLETED.
      * </p>
      *
-     * @param state      The peer's state.
-     * @param uploaded   Uploaded byte count, as reported by the peer.
-     * @param downloaded Downloaded byte count, as reported by the peer.
-     * @param left       Left-to-download byte count, as reported by the peer.
+     * @param bean
      */
-    public void update(PeerState state, long uploaded, long downloaded, long left)
+    public void update(TrackerUpdateBean bean)
     {
-        if (PeerState.STARTED == state && left == 0)
+        if (PeerState.STARTED == bean.getState() && bean.getLeft() == 0)
         {
-            state = PeerState.COMPLETED;
+            bean.setState(PeerState.COMPLETED);
         }
 
-        if (state != this.state)
+        if (bean.getState() != this.state)
         {
-            logger.info("Peer {} {} download of {}.", this, state.name().toLowerCase(), this.torrent);
+            logger.info("Peer {} {} download of {}.", this, bean.getState().name().toLowerCase(), this.torrent);
         }
-        this.state = state;
+        this.state = bean.getState();
         this.lastAnnounce = new Date();
-        this.uploaded = uploaded;
-        this.downloaded = downloaded;
-        this.left = left;
+        this.uploaded = bean.getUploaded();
+        this.downloaded = bean.getDownloaded();
+        this.left = bean.getLeft();
     }
 
     /**
@@ -223,7 +220,7 @@ public class TrackedPeer extends Peer
         Map<String, BEValue> peer = new HashMap<>();
         if (this.hasPeerId())
         {
-            peer.put("peer id", new BEValue(this.getPeerId().array()));
+            peer.put("peer id", new BEValue(this.getPeerIdByte().array()));
         }
         peer.put("ip", new BEValue(this.getIp(), SystemDefaultProperties.BYTE_ENCODING));
         peer.put("port", new BEValue(this.getPort()));

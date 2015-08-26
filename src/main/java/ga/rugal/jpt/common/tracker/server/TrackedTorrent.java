@@ -16,13 +16,13 @@
 package ga.rugal.jpt.common.tracker.server;
 
 import ga.rugal.jpt.common.CommonLogContent;
+import ga.rugal.jpt.common.CommonMessageContent;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.common.Peer;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -99,7 +99,7 @@ public class TrackedTorrent extends Torrent
      */
     public void addPeer(TrackedPeer peer)
     {
-        this.peers.put(peer.getHexPeerId(), peer);
+        this.peers.put(peer.getPeerId(), peer);
     }
 
     /**
@@ -214,7 +214,10 @@ public class TrackedTorrent extends Torrent
 
     /**
      * Update this torrent's swarm from an announce event.
-     *
+     * <p>
+     * Either create new peer in tracked list or get it if already existed.
+     * <p>
+     * Then update the status of the tracked peer for future usage.
      * <p>
      * This will automatically create a new peer on a 'started' announce event,
      * and remove the peer on a 'stopped' announce event.
@@ -224,35 +227,34 @@ public class TrackedTorrent extends Torrent
      *
      * @return The peer that sent us the announce request.
      *
-     * @throws java.io.UnsupportedEncodingException
      */
-    public TrackedPeer update(TrackerUpdateBean bean) throws UnsupportedEncodingException
+    public TrackedPeer update(TrackerUpdateBean bean)
     {
         TrackedPeer peer;
-        TrackedPeer.PeerState state = TrackedPeer.PeerState.UNKNOWN;
+        bean.setState(TrackedPeer.PeerState.UNKNOWN);
         switch (bean.getEvent())
         {
             case STARTED:
                 peer = new TrackedPeer(this, bean.getIp(), bean.getPort(), bean.getBufferPeerID());
-                state = TrackedPeer.PeerState.STARTED;
+                bean.setState(TrackedPeer.PeerState.STARTED);
                 this.addPeer(peer);
                 break;
             case STOPPED:
                 peer = this.removePeer(bean.getPeerID());
-                state = TrackedPeer.PeerState.STOPPED;
+                bean.setState(TrackedPeer.PeerState.STOPPED);
                 break;
             case COMPLETED:
                 peer = this.getPeer(bean.getPeerID());
-                state = TrackedPeer.PeerState.COMPLETED;
+                bean.setState(TrackedPeer.PeerState.COMPLETED);
                 break;
             case NONE:
                 peer = this.getPeer(bean.getPeerID());
-                state = TrackedPeer.PeerState.STARTED;
+                bean.setState(TrackedPeer.PeerState.STARTED);
                 break;
             default:
-                throw new IllegalArgumentException("Unexpected announce event type!");
+                throw new IllegalArgumentException(CommonMessageContent.BAD_EVENT);
         }
-        peer.update(state, bean.getUploaded(), bean.getDownloaded(), bean.getLeft());
+        peer.update(bean);
         return peer;
     }
 

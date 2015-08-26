@@ -58,9 +58,9 @@ public interface CommonLogContent
     final String SIGNIN = "User [{0}] signin from host [{1}].";
 
     //Announce
-    final String WRONG_FORMAT_UID = "Host [{}] fired wrong format uid";
+    final String INVALID_FORMAT_UID = "Host [{}] fired invalid format uid";
 
-    final String THE_REQUESTED_INFO = "Requesting hash: [{}], peer: [{}]";
+    final String THE_REQUESTED_INFO = "Peer [{}] is requesting hash [{}]";
 
     final String CLIENT_VERSION_NOT_FOUND = "Client [{}] version [{}] is not found";
 

@@ -64,29 +64,28 @@ public class Peer
     /**
      * Instantiate a new peer.
      *
-     * @param ip     The peer's IP address.
-     * @param port   The peer's port.
-     * @param peerId The byte-encoded peer ID.
+     * @param ip         The peer's IP address.
+     * @param port       The peer's port.
+     * @param peerIdByte The byte-encoded peer ID.
      */
-    public Peer(String ip, int port, ByteBuffer peerId)
+    public Peer(String ip, int port, ByteBuffer peerIdByte)
     {
-        this(new InetSocketAddress(ip, port), peerId);
+        this(new InetSocketAddress(ip, port), peerIdByte);
     }
 
     /**
      * Instantiate a new peer.
      *
-     * @param address The peer's address, with port.
-     * @param peerId  The byte-encoded peer ID.
+     * @param address    The peer's address, with port.
+     * @param peerIdByte The byte-encoded peer ID.
      */
-    public Peer(InetSocketAddress address, ByteBuffer peerId)
+    public Peer(InetSocketAddress address, ByteBuffer peerIdByte)
     {
         this.address = address;
-        this.hostId = String.format("%s:%d",
-                                    this.address.getAddress(),
+        this.hostId = String.format("%s:%d", this.address.getAddress(),
                                     this.address.getPort());
 
-        this.setPeerId(peerId);
+        this.setPeerId(peerIdByte);
     }
 
     /**
@@ -104,7 +103,7 @@ public class Peer
      * <p>
      * @return
      */
-    public ByteBuffer getPeerId()
+    public ByteBuffer getPeerIdByte()
     {
         return this.peerId;
     }
@@ -126,6 +125,11 @@ public class Peer
             this.peerId = null;
             this.hexPeerId = null;
         }
+    }
+
+    public String getPeerId()
+    {
+        return new String(this.peerId.array());
     }
 
     /**

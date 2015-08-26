@@ -81,17 +81,17 @@ public class AnnounceAction
     public void announce(@Valid @ModelAttribute ClientRequestMessageBean bean, @PathVariable("uid") Integer uid,
                          HttpServletRequest request, HttpServletResponse response) throws Exception
     {
-        LOG.trace(request.getQueryString());
         bean.setIp(request.getRemoteAddr());
         bean.setInfo_hash(getParamater(request.getQueryString(), INFO_HASH));
         bean.setPeer_id(getParamater(request.getQueryString(), PEER_ID));
         bean.setUserID(uid);
 
         TrackerUpdateBean trackerUpdateBean = requestBeanService.generateUpdateBean(bean);
-        //--------After get formated tracker update bean, starts use tracker update bean only----------
+        //--------After get formated tracker update bean, starts use tracker update bean only-------
         LOG.debug(CommonLogContent.THE_REQUESTED_INFO,
-                  trackerUpdateBean.getInfoHash(),
-                  trackerUpdateBean.getPeerID());
+                  trackerUpdateBean.getPeerID(),
+                  trackerUpdateBean.getInfoHash()
+        );
 
         // Update the torrent according to the announce event
         TrackedPeer peer = tracker.update(trackerUpdateBean);
@@ -170,7 +170,6 @@ public class AnnounceAction
             }
             response.put("peers", new BEValue(data.array()));
         }
-
         return BEncoder.bencode(response);
     }
 

@@ -37,8 +37,6 @@ public interface CommonMessageContent
 
     final String TRACKER_NOT_RUNNING = "Tracker is not running";
 
-    final String BAD_EVENT = "Bad client event";
-
     //Torrents
     final String TORRENT_NOT_FOUND = "The request torrent not found";
 
@@ -53,4 +51,8 @@ public interface CommonMessageContent
     final String USER_NOT_FOUND = "User not found";
 
     final String UNSUPPORTED_CLIENT = "Client software unsupported";
+
+    final String INVALID_UID = "UID format invalid";
+
+    final String BAD_EVENT = "Bad client event";
 }

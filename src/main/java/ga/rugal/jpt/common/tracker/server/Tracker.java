@@ -39,13 +39,12 @@ public class Tracker
             throw new TrackerResponseException(CommonMessageContent.TORRENT_NOT_FOUND);
         }
         TrackedTorrent torrent = this.torrents.get(bean.getInfoHash());
-        String peerId = bean.getPeerID();
         // If an event other than 'started' is specified and we also haven't
         // seen the peer on this torrent before, something went wrong. A
         // previous 'started' announce request should have been made by the
         // client that would have had us register that peer on the torrent this
         // request refers to.
-        if (bean.getEvent() != null && torrent.containsKey(peerId)
+        if (bean.getEvent() != null && torrent.containsKey(bean.getPeerID())
             && RequestEvent.STARTED != bean.getEvent())
         {
             //send error
@@ -56,21 +55,13 @@ public class Tracker
         // the tracker restarted while the client was running. Consider this
         // announce request as a 'started' event.
         if ((bean.getEvent() == null || RequestEvent.NONE == bean.getEvent())
-            && torrent.containsKey(peerId))
+            && torrent.containsKey(bean.getPeerID()))
         {
             bean.setEvent(RequestEvent.STARTED);
         }
         // Update the torrent according to the announce event
-        TrackedPeer peer;
-        try
-        {
-            peer = torrent.update(bean);
-        }
-        catch (IllegalArgumentException iae)
-        {
-            throw iae;
-        }
-        return peer;
+        // Going to update a peer of a swarm of a torrent
+        return torrent.update(bean);
     }
 
     /**

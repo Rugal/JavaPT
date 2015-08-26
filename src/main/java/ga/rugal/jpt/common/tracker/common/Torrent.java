@@ -492,6 +492,11 @@ public class Torrent
         return new String(Hex.encodeHex(bytes, false));
     }
 
+    public static String byteToString(byte[] bytes)
+    {
+        return new String(bytes);
+    }
+
     /**
      * Return an hexadecimal representation of the bytes contained in the
      * given string, following the default, expected byte encoding.
