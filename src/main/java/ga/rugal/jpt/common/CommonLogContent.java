@@ -60,11 +60,22 @@ public interface CommonLogContent
     //Announce
     final String INVALID_FORMAT_UID = "Host [{}] fired invalid format uid";
 
-    final String THE_REQUESTED_INFO = "Peer [{}] is requesting hash [{}]";
+    final String THE_REQUESTED_INFO = "UID [{}] is requesting hash [{}]";
 
     final String CLIENT_VERSION_NOT_FOUND = "Client [{}] version [{}] is not found";
 
     final String CLIENT_NOT_FOUND = "Client [{}] is not found";
 
     final String OTHER_CLIENT = "Any other client softwares is {} by default";
+
+    final String BAD_EVENT = "UID [{}] report with bad event [{}]";
+
+    final String UPDATE_CONTENT = "UID [{0}] report [{1}] with download [{2}}, upload [{3}], left [{4}] from IP [{5}}";
+
+    final String START_GENERATE = "Start to generate corresponding tracker update bean";
+
+    final String START_UPDATE = "Start to update for UID [{}]";
+
+    final String MAKE_RESPONSE = "Making HTTP response for uid [{}]";
+
 }

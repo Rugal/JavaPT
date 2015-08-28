@@ -6,11 +6,14 @@ import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
+import ga.rugal.jpt.core.entity.User;
+import ga.rugal.jpt.core.service.UserService;
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -26,6 +29,9 @@ public class Tracker
     private Thread cleaner;
 
     private boolean running = false;
+
+    @Autowired
+    private UserService userService;
 
     public synchronized TrackedPeer update(TrackerUpdateBean bean) throws TrackerResponseException, UnsupportedEncodingException
     {
@@ -47,6 +53,8 @@ public class Tracker
         if (bean.getEvent() != null && torrent.containsKey(bean.getPeerID())
             && RequestEvent.STARTED != bean.getEvent())
         {
+            LOG.debug(CommonLogContent.BAD_EVENT, bean.getUser().getUid(), bean.getEvent().getEventName()
+            );
             //send error
             throw new TrackerResponseException(CommonMessageContent.BAD_EVENT);
         }
@@ -59,9 +67,16 @@ public class Tracker
         {
             bean.setEvent(RequestEvent.STARTED);
         }
+
         // Update the torrent according to the announce event
         // Going to update a peer of a swarm of a torrent
-        return torrent.update(bean);
+        // Must update tracker first then database.
+        // As state of peer might changes in peer update
+        TrackedPeer peer = torrent.update(bean);
+        // Update user information in database
+        User user = userService.announce(bean);
+
+        return peer;
     }
 
     /**

@@ -86,7 +86,6 @@ public class RequestBeanServiceImpl implements RequestBeanService
             throw new TrackerResponseException(CommonMessageContent.UNSUPPORTED_CLIENT);
         }
         bean.setClient(client);
-
         return bean;
     }
 

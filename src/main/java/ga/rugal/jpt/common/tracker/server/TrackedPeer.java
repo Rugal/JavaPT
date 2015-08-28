@@ -98,10 +98,10 @@ public class TrackedPeer extends Peer
     /**
      * Instantiate a new tracked peer for the given torrent.
      *
-     * @param torrent The torrent this peer exchanges on.
-     * @param ip      The peer's IP address.
-     * @param port    The peer's port.
-     * @param peerIdByte  The byte-encoded peer ID.
+     * @param torrent    The torrent this peer exchanges on.
+     * @param ip         The peer's IP address.
+     * @param port       The peer's port.
+     * @param peerIdByte The byte-encoded peer ID.
      */
     public TrackedPeer(Torrent torrent, String ip, int port, ByteBuffer peerIdByte)
     {
@@ -136,6 +136,7 @@ public class TrackedPeer extends Peer
 
         if (bean.getState() != this.state)
         {
+            //Log state change
             logger.info("Peer {} {} download of {}.", this, bean.getState().name().toLowerCase(), this.torrent);
         }
         this.state = bean.getState();

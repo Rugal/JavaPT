@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService
     public User announce(TrackerUpdateBean bean)
     {
         //logging Client Announce
-        clientAnnounceService.save(bean);
+//        clientAnnounceService.save(bean);
         //check last update for this torrent
         //update user information
         return null;

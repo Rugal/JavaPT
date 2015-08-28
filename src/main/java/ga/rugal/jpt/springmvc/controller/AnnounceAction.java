@@ -10,9 +10,7 @@ import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.server.TrackedPeer;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.common.tracker.server.Tracker;
-import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.RequestBeanService;
-import ga.rugal.jpt.core.service.UserService;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
@@ -56,9 +54,6 @@ public class AnnounceAction
     private Tracker tracker;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private RequestBeanService requestBeanService;
 
     private static final String INFO_HASH = "info_hash";
@@ -81,26 +76,27 @@ public class AnnounceAction
     public void announce(@Valid @ModelAttribute ClientRequestMessageBean bean, @PathVariable("uid") Integer uid,
                          HttpServletRequest request, HttpServletResponse response) throws Exception
     {
+
         bean.setIp(request.getRemoteAddr());
         bean.setInfo_hash(getParamater(request.getQueryString(), INFO_HASH));
         bean.setPeer_id(getParamater(request.getQueryString(), PEER_ID));
         bean.setUserID(uid);
 
+        LOG.trace(CommonLogContent.START_GENERATE);
         TrackerUpdateBean trackerUpdateBean = requestBeanService.generateUpdateBean(bean);
-        //--------After get formated tracker update bean, starts use tracker update bean only-------
-        LOG.debug(CommonLogContent.THE_REQUESTED_INFO,
-                  trackerUpdateBean.getPeerID(),
-                  trackerUpdateBean.getInfoHash()
-        );
+        bean = null;
+        //-------After get formated tracker update bean, starts use tracker update bean only--------
+        LOG.debug(CommonLogContent.THE_REQUESTED_INFO, uid, trackerUpdateBean.getInfoHash());
 
+        //Link user by UID, link torrent by info_hash
+        LOG.trace(CommonLogContent.START_UPDATE, uid);
         // Update the torrent according to the announce event
         TrackedPeer peer = tracker.update(trackerUpdateBean);
-        //Update torrent information in database
-        User user = userService.announce(trackerUpdateBean);
-        //
+
         //Generate response content for normal request
+        LOG.trace(CommonLogContent.MAKE_RESPONSE, uid);
         TrackedTorrent torrent = tracker.get(trackerUpdateBean.getInfoHash());
-        ByteBuffer buffer = this.compactResponse(torrent, torrent.getSomePeers(peer));
+        ByteBuffer buffer = this.compactResponse(torrent, peer);
         //Some setting for normal response
         response.setContentType(MediaType.TEXT_PLAIN_VALUE);
         response.setDateHeader("Date", System.currentTimeMillis());
@@ -144,7 +140,7 @@ public class AnnounceAction
      * @throws java.io.IOException
      * @throws java.io.UnsupportedEncodingException
      */
-    private ByteBuffer compactResponse(TrackedTorrent torrent, List<Peer> peers)
+    private ByteBuffer compactResponse(TrackedTorrent torrent, TrackedPeer peer)
         throws IOException, UnsupportedEncodingException
     {
         Map<String, BEValue> response = new HashMap<>();
@@ -154,19 +150,21 @@ public class AnnounceAction
         response.put("complete", new BEValue(torrent.seeders()));
         response.put("incomplete", new BEValue(torrent.leechers()));
 
+        List<Peer> peers = torrent.getSomePeers(peer);
+
         //peers number might be 0 at the time that this tracker just started
         if (!peers.isEmpty())
         {
             ByteBuffer data = ByteBuffer.allocate(peers.size() * 6);
-            for (Peer peer : peers)
+            for (Peer p : peers)
             {
-                byte[] ip = peer.getRawIp();
+                byte[] ip = p.getRawIp();
                 if (ip == null || ip.length != 4)
                 {
                     continue;
                 }
                 data.put(ip);
-                data.putShort((short) peer.getPort());
+                data.putShort((short) p.getPort());
             }
             response.put("peers", new BEValue(data.array()));
         }

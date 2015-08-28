@@ -23,6 +23,7 @@ import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -254,6 +255,9 @@ public class TrackedTorrent extends Torrent
             default:
                 throw new IllegalArgumentException(CommonMessageContent.BAD_EVENT);
         }
+        logger.debug(MessageFormat.format(CommonLogContent.UPDATE_CONTENT,
+                                          bean.getUser().getUid(), bean.getInfoHash(), bean.getDownloaded(),
+                                          bean.getUploaded(), bean.getLeft(), bean.getIp()));
         peer.update(bean);
         return peer;
     }
