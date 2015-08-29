@@ -8,7 +8,7 @@ import ml.rugal.sshcommon.page.Pagination;
  *
  * @author Rugal Bernstein
  */
-public interface LevelDao
+public interface UserLevelDao
 {
 
     UserLevel deleteById(Integer id);

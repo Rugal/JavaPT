@@ -1,7 +1,7 @@
 package ga.rugal.jpt.core.service.impl;
 
-import ga.rugal.jpt.core.service.LevelService;
-import ga.rugal.jpt.core.dao.LevelDao;
+import ga.rugal.jpt.core.service.UserLevelService;
+import ga.rugal.jpt.core.dao.UserLevelDao;
 import ga.rugal.jpt.core.entity.UserLevel;
 import ml.rugal.sshcommon.hibernate.Updater;
 import ml.rugal.sshcommon.page.Pagination;
@@ -17,13 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class LevelServiceImpl implements LevelService
+public class UserLevelServiceImpl implements UserLevelService
 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LevelServiceImpl.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(UserLevelServiceImpl.class.getName());
 
     @Autowired
-    private LevelDao dao;
+    private UserLevelDao dao;
 
     @Override
     @Transactional(readOnly = true)

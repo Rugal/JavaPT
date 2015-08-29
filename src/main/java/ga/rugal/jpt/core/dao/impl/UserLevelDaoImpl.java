@@ -1,6 +1,6 @@
 package ga.rugal.jpt.core.dao.impl;
 
-import ga.rugal.jpt.core.dao.LevelDao;
+import ga.rugal.jpt.core.dao.UserLevelDao;
 import ga.rugal.jpt.core.entity.UserLevel;
 import ml.rugal.sshcommon.hibernate.HibernateBaseDao;
 import ml.rugal.sshcommon.page.Pagination;
@@ -17,10 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Rugal Bernstein
  */
 @Repository
-public class LevelDaoImpl extends HibernateBaseDao<UserLevel, Integer> implements LevelDao
+public class UserLevelDaoImpl extends HibernateBaseDao<UserLevel, Integer> implements UserLevelDao
 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LevelDaoImpl.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(UserLevelDaoImpl.class.getName());
 
     @Override
     @Transactional(readOnly = true)

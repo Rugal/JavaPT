@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Rugal Bernstein
  */
-public interface LevelService
+public interface UserLevelService
 {
 
     UserLevel deleteById(Integer id);
