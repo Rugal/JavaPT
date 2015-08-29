@@ -50,9 +50,6 @@ public class User implements Serializable
     @Column(name = "download_byte")
     private Long downloadByte = 0l;
 
-    @Column(name = "last_report")
-    private Long lastReport;
-
     @Column
     private Integer credit = 0;
 
@@ -187,16 +184,6 @@ public class User implements Serializable
     public void setDownloadByte(Long downloadByte)
     {
         this.downloadByte = downloadByte;
-    }
-
-    public Long getLastReport()
-    {
-        return lastReport;
-    }
-
-    public void setLastReport(Long lastReport)
-    {
-        this.lastReport = lastReport;
     }
 
     public Integer getCredit()

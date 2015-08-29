@@ -54,13 +54,12 @@ public class RequestBeanServiceImpl implements RequestBeanService
         bean.setUploaded(b.getUploaded());
         bean.setLeft(b.getLeft());
         bean.setIp(b.getIp());
-        bean.setKey(b.getKey());
         bean.setNo_peer_id(b.getNoPeerId());
         bean.setNumwant(b.getNumwant());
         bean.setPort(b.getPort());
         bean.setTrackerid(b.getTrackerid());
         bean.setEvent(RequestEvent.getByName(b.getEvent()));
-        bean.setUid(b.getUid());
+        bean.setKey(b.getKey());
         //special SHA1 process
         try
         {

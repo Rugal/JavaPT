@@ -39,8 +39,8 @@ public class Post
     @Column(length = 2147483647)
     private String content;
 
-    @Column(length = 50)
-    private String torrent;
+    @Column(length = 50, name = "torrent_hash")
+    private String torrentHash;
 
     @Column(name = "post_time")
     private Long postTime;
@@ -51,8 +51,9 @@ public class Post
     @Column
     private Boolean enabled;
 
-    @Column
-    private Boolean visible;
+    @JoinColumn(name = "min_level", referencedColumnName = "lid")
+    @ManyToOne
+    private UserLevel minLevel;
 
     @Transient
     private float rate;
@@ -66,6 +67,9 @@ public class Post
 
     @OneToMany(mappedBy = "pid")
     private transient List<Thread> threadList;
+
+    @OneToMany(mappedBy = "torrent_post")
+    private transient List<ClientAnnounce> clientAnnounceList;
 
     public Post()
     {
@@ -116,14 +120,24 @@ public class Post
         this.content = content;
     }
 
-    public String getTorrent()
+    public List<ClientAnnounce> getClientAnnounceList()
     {
-        return torrent;
+        return clientAnnounceList;
     }
 
-    public void setTorrent(String torrent)
+    public void setClientAnnounceList(List<ClientAnnounce> clientAnnounceList)
     {
-        this.torrent = torrent;
+        this.clientAnnounceList = clientAnnounceList;
+    }
+
+    public String getTorrentHash()
+    {
+        return torrentHash;
+    }
+
+    public void setTorrentHash(String torrentHash)
+    {
+        this.torrentHash = torrentHash;
     }
 
     public Long getPostTime()
@@ -156,14 +170,14 @@ public class Post
         this.enabled = enabled;
     }
 
-    public Boolean getVisible()
+    public UserLevel getMinLevel()
     {
-        return visible;
+        return minLevel;
     }
 
-    public void setVisible(Boolean visible)
+    public void setMinLevel(UserLevel minLevel)
     {
-        this.visible = visible;
+        this.minLevel = minLevel;
     }
 
     public User getUid()

@@ -13,7 +13,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "client_announce", catalog = "postgres", schema = "jpt")
+@Table(name = "client_announce", schema = "jpt")
 public class ClientAnnounce
 {
 
@@ -45,6 +45,10 @@ public class ClientAnnounce
     @JoinColumn(name = "cid", referencedColumnName = "cid")
     @ManyToOne
     private Client cid;
+
+    @JoinColumn(name = "torrent_post", referencedColumnName = "pid")
+    @ManyToOne
+    private Post torrentPost;
 
     public ClientAnnounce()
     {
@@ -123,6 +127,16 @@ public class ClientAnnounce
     public void setLeftByte(Long leftByte)
     {
         this.leftByte = leftByte;
+    }
+
+    public Post getTorrentPost()
+    {
+        return torrentPost;
+    }
+
+    public void setTorrentPost(Post torrentPost)
+    {
+        this.torrentPost = torrentPost;
     }
 
     @Override

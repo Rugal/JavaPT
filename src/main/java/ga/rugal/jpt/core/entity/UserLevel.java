@@ -1,12 +1,14 @@
 package ga.rugal.jpt.core.entity;
 
 import ga.rugal.jpt.common.SystemDefaultProperties;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -33,6 +35,12 @@ public class UserLevel
 
     @Column(length = 50)
     private String name;
+
+    @OneToMany(mappedBy = "min_level")
+    private transient List<Post> postList;
+
+    @Column
+    private String icon;
 
     public UserLevel()
     {
@@ -71,6 +79,26 @@ public class UserLevel
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    public List<Post> getPostList()
+    {
+        return postList;
+    }
+
+    public void setPostList(List<Post> postList)
+    {
+        this.postList = postList;
+    }
+
+    public String getIcon()
+    {
+        return icon;
+    }
+
+    public void setIcon(String icon)
+    {
+        this.icon = icon;
     }
 
     @Override
