@@ -23,4 +23,7 @@ public interface PostDao
     Post save(Post bean);
 
     Post updateByUpdater(Updater<Post> updater);
+
+    @Transactional(readOnly = true)
+    Post getByTorrent(String infoHash);
 }

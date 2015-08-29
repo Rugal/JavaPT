@@ -2,9 +2,13 @@ package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.jpt.core.dao.ClientAnnounceDao;
 import ga.rugal.jpt.core.entity.ClientAnnounce;
+import ga.rugal.jpt.core.entity.Post;
+import ga.rugal.jpt.core.entity.User;
 import ml.rugal.sshcommon.hibernate.HibernateBaseDao;
 import ml.rugal.sshcommon.page.Pagination;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -59,6 +63,18 @@ public class ClientAnnounceDaoImpl extends HibernateBaseDao<ClientAnnounce, Long
     protected Class<ClientAnnounce> getEntityClass()
     {
         return ClientAnnounce.class;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ClientAnnounce findLastAnnounce(User user, Post post)
+    {
+        Criteria crit = createCriteria();
+        crit.add(Restrictions.eq("uid", user));
+        crit.add(Restrictions.eq("torrentPost", post));
+        crit.addOrder(Order.desc("announceTime"));
+        crit.setMaxResults(1);
+        return (ClientAnnounce) crit.list().get(0);
     }
 
 }

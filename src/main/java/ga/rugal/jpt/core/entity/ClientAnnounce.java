@@ -46,7 +46,7 @@ public class ClientAnnounce
     @ManyToOne
     private Client cid;
 
-    @JoinColumn(name = "torrent_post", referencedColumnName = "pid")
+    @JoinColumn(name = "torrent_post", referencedColumnName = "pid", nullable = false)
     @ManyToOne
     private Post torrentPost;
 

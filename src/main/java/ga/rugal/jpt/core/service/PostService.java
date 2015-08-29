@@ -23,4 +23,7 @@ public interface PostService
 
     Post update(Post bean);
 
+    @Transactional(readOnly = true)
+    Post getByTorrent(String infoHash);
+
 }

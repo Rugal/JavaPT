@@ -38,6 +38,13 @@ public class PostDaoImpl extends HibernateBaseDao<Post, Integer> implements Post
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Post getByTorrent(String infoHash)
+    {
+        return this.findUniqueByProperty("torrentHash", infoHash);
+    }
+
+    @Override
     public Post save(Post bean)
     {
         getSession().save(bean);

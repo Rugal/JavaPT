@@ -1,8 +1,8 @@
 package ga.rugal.jpt.core.service.impl;
 
-import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.entity.Post;
+import ga.rugal.jpt.core.service.PostService;
 import ml.rugal.sshcommon.hibernate.Updater;
 import ml.rugal.sshcommon.page.Pagination;
 import org.slf4j.Logger;
@@ -56,6 +56,13 @@ public class PostServiceImpl implements PostService
     {
         Updater<Post> updater = new Updater<>(bean);
         return dao.updateByUpdater(updater);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Post getByTorrent(String infoHash)
+    {
+        return dao.getByTorrent(infoHash);
     }
 
 }

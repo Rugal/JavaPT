@@ -3,7 +3,10 @@ package ga.rugal.jpt.core.service.impl;
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.core.dao.ClientAnnounceDao;
 import ga.rugal.jpt.core.entity.ClientAnnounce;
+import ga.rugal.jpt.core.entity.Post;
+import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.ClientAnnounceService;
+import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.UserService;
 import ml.rugal.sshcommon.hibernate.Updater;
 import ml.rugal.sshcommon.page.Pagination;
@@ -29,6 +32,9 @@ public class ClientAnnounceServiceImpl implements ClientAnnounceService
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PostService postService;
 
     @Override
     @Transactional(readOnly = true)
@@ -63,6 +69,7 @@ public class ClientAnnounceServiceImpl implements ClientAnnounceService
         clientAnnounce.setAnnounceTime(System.currentTimeMillis());
         clientAnnounce.setUid(bean.getUser());
         clientAnnounce.setCid(bean.getClient());
+        clientAnnounce.setTorrentPost(postService.getByTorrent(bean.getInfoHash()));
         return dao.save(clientAnnounce);
     }
 
@@ -82,13 +89,26 @@ public class ClientAnnounceServiceImpl implements ClientAnnounceService
 //        throw new RuntimeException();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void announce(TrackerUpdateBean bean)
     {
         //logging Client Announce
-//        this.save(bean);
+        this.save(bean);
         //check last update for this torrent
         //update user information
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public ClientAnnounce findLastAnnounce(User user, Post post)
+    {
+        return dao.findLastAnnounce(user, post);
     }
 
 }
