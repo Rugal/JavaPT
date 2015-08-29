@@ -57,6 +57,8 @@ public class TrackedTorrent extends Torrent
 
     private int announceInterval;
 
+    private File torrentFile;
+
     /**
      * Peers currently exchanging on this torrent.
      */
@@ -81,6 +83,16 @@ public class TrackedTorrent extends Torrent
     public TrackedTorrent(Torrent torrent) throws IOException
     {
         this(torrent.getEncoded());
+    }
+
+    public File getTorrentFile()
+    {
+        return torrentFile;
+    }
+
+    public void setTorrentFile(File torrentFile)
+    {
+        this.torrentFile = torrentFile;
     }
 
     /**
@@ -316,16 +328,18 @@ public class TrackedTorrent extends Torrent
     /**
      * Load a tracked torrent from the given torrent file.
      *
-     * @param torrent The abstract {@link File} object representing the
+     * @param file The abstract {@link File} object representing the
      * <tt>.torrent</tt> file to load.
      *
      * @return
      *
      * @throws IOException When the torrent file cannot be read.
      */
-    public static TrackedTorrent load(File torrent) throws IOException
+    public static TrackedTorrent load(File file) throws IOException
     {
-        byte[] data = FileUtils.readFileToByteArray(torrent);
-        return new TrackedTorrent(data);
+        byte[] data = FileUtils.readFileToByteArray(file);
+        TrackedTorrent torrent = new TrackedTorrent(data);
+        torrent.setTorrentFile(file);
+        return torrent;
     }
 }

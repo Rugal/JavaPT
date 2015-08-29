@@ -37,7 +37,7 @@ public class ServletContainerInitializer extends AbstractAnnotationConfigDispatc
     {
         return new Class[]
         {
-            ApplicationContext.class
+            ApplicationContext.class, MongoDBContext.class
         };
     }
 

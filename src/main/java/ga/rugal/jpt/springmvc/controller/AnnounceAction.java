@@ -49,7 +49,7 @@ public class AnnounceAction
 
     private static final Logger LOG = LoggerFactory.getLogger(AnnounceAction.class.getName());
 
-    @Autowired
+//    @Autowired
     private Tracker tracker;
 
     @Autowired

@@ -125,7 +125,7 @@ public class ApplicationContext
      * @throws java.io.IOException
      *
      */
-    @Bean(initMethod = "start", destroyMethod = "stop")
+//    @Bean(initMethod = "start", destroyMethod = "stop")
     public Tracker tracker() throws Exception
     {
         try
