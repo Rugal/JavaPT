@@ -1,6 +1,7 @@
 package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.JUnitSpringTestBase;
+import ga.rugal.jpt.TestApplicationContext;
 import ga.rugal.jpt.core.dao.AdminDao;
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.entity.Admin;
@@ -11,11 +12,13 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  *
  * @author Rugal Bernstein
  */
+@ContextConfiguration(classes = TestApplicationContext.class)
 public class AdminDaoImplTest extends JUnitSpringTestBase
 {
 
@@ -25,9 +28,11 @@ public class AdminDaoImplTest extends JUnitSpringTestBase
     @Autowired
     private UserDao userDao;
 
+    @Autowired
     private User user;
 
-    private Admin bean;
+    @Autowired
+    private Admin admin;
 
     public AdminDaoImplTest()
     {
@@ -37,21 +42,8 @@ public class AdminDaoImplTest extends JUnitSpringTestBase
     public void setUp()
     {
         System.out.println("setUp");
-        user = new User();
-        user.setEmail("test@123.com");
-        user.setLastReport(System.currentTimeMillis());
-        user.setPassword("test");
-        user.setRegisterTime(System.currentTimeMillis());
-        user.setStatus(User.Status.DELETING);
-        user.setUsername("test");
         userDao.save(user);
-
-        bean = new Admin();
-        bean.setUid(user);
-        bean.setGrantee(user);
-        bean.setSince(System.currentTimeMillis());
-        bean.setLevel(Admin.Level.ADMIN);
-        adminDao.save(bean);
+        adminDao.save(admin);
     }
 
     @After
@@ -59,7 +51,7 @@ public class AdminDaoImplTest extends JUnitSpringTestBase
     {
         System.out.println("tearDown");
         //order is important
-        adminDao.deleteById(bean.getAid());
+        adminDao.deleteById(admin.getAid());
         userDao.deleteById(user.getUid());
     }
 
@@ -77,8 +69,8 @@ public class AdminDaoImplTest extends JUnitSpringTestBase
     public void testFindById()
     {
         System.out.println("findById");
-        Integer id = bean.getAid();
-        Admin expResult = bean;
+        Integer id = admin.getAid();
+        Admin expResult = admin;
         Admin result = adminDao.getByID(id);
         assertEquals(expResult, result);
     }

@@ -1,6 +1,7 @@
 package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.JUnitSpringTestBase;
+import ga.rugal.jpt.TestApplicationContext;
 import ga.rugal.jpt.core.dao.ClientDao;
 import ga.rugal.jpt.core.entity.Client;
 import ml.rugal.sshcommon.page.Pagination;
@@ -9,35 +10,38 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  *
  * @author Rugal Bernstein
  */
+@ContextConfiguration(classes = TestApplicationContext.class)
 public class ClientDaoImplTest extends JUnitSpringTestBase
 {
 
     @Autowired
     private ClientDao clientDao;
 
-    private Client bean;
+    @Autowired
+    private Client client;
 
     @Before
     public void setUp()
     {
         System.out.println("setUp");
-        bean = new Client();
-        bean.setEnabled(true);
-        bean.setName("transmit");
-        bean.setVersion("*");
-        clientDao.save(bean);
+        client = new Client();
+        client.setEnabled(true);
+        client.setName("transmit");
+        client.setVersion("*");
+        clientDao.save(client);
     }
 
     @After
     public void tearDown()
     {
         System.out.println("tearDown");
-        clientDao.deleteById(bean.getCid());
+        clientDao.deleteById(client.getCid());
     }
 
     @Test
@@ -54,9 +58,9 @@ public class ClientDaoImplTest extends JUnitSpringTestBase
     public void testFindById()
     {
         System.out.println("findById");
-        Integer id = bean.getCid();
+        Integer id = client.getCid();
         Client result = clientDao.getByID(id);
-        Assert.assertEquals(result, bean);
+        Assert.assertEquals(result, client);
     }
 
 }

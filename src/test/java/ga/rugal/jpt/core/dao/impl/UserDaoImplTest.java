@@ -1,6 +1,7 @@
 package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.JUnitSpringTestBase;
+import ga.rugal.jpt.TestApplicationContext;
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.entity.User;
 import ml.rugal.sshcommon.page.Pagination;
@@ -9,17 +10,20 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  *
  * @author Rugal Bernstein
  */
+@ContextConfiguration(classes = TestApplicationContext.class)
 public class UserDaoImplTest extends JUnitSpringTestBase
 {
 
     @Autowired
     private UserDao userDao;
 
+    @Autowired
     private User bean;
 
     public UserDaoImplTest()
@@ -30,13 +34,6 @@ public class UserDaoImplTest extends JUnitSpringTestBase
     public void setUp()
     {
         System.out.println("setUp");
-        bean = new User();
-        bean.setEmail("test@123.com");
-        bean.setLastReport(System.currentTimeMillis());
-        bean.setPassword("test");
-        bean.setRegisterTime(System.currentTimeMillis());
-        bean.setStatus(User.Status.DELETING);
-        bean.setUsername("test");
         userDao.save(bean);
     }
 

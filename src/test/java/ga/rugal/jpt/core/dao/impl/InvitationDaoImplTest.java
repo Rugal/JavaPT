@@ -1,6 +1,7 @@
 package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.JUnitSpringTestBase;
+import ga.rugal.jpt.TestApplicationContext;
 import ga.rugal.jpt.core.dao.InvitationDao;
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.entity.Invitation;
@@ -11,16 +12,20 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  *
  * @author Rugal Bernstein
  */
+@ContextConfiguration(classes = TestApplicationContext.class)
 public class InvitationDaoImplTest extends JUnitSpringTestBase
 {
 
-    private Invitation bean;
+    @Autowired
+    private Invitation invitation;
 
+    @Autowired
     private User user;
 
     @Autowired
@@ -37,19 +42,8 @@ public class InvitationDaoImplTest extends JUnitSpringTestBase
     public void setUp()
     {
         System.out.println("setUp");
-        user = new User();
-        user.setEmail("test@123.com");
-        user.setLastReport(System.currentTimeMillis());
-        user.setPassword("test");
-        user.setRegisterTime(System.currentTimeMillis());
-        user.setStatus(User.Status.DELETING);
-        user.setUsername("test");
         userDao.save(user);
-
-        bean = new Invitation();
-        bean.setIssueTime(System.currentTimeMillis());
-        bean.setUid(user);
-        invitationDao.save(bean);
+        invitationDao.save(invitation);
 
     }
 
@@ -58,7 +52,7 @@ public class InvitationDaoImplTest extends JUnitSpringTestBase
     {
         System.out.println("tearDown");
         //order is important
-        invitationDao.deleteById(bean.getIid());
+        invitationDao.deleteById(invitation.getIid());
         userDao.deleteById(user.getUid());
     }
 
@@ -76,8 +70,8 @@ public class InvitationDaoImplTest extends JUnitSpringTestBase
     public void testGetByID()
     {
         System.out.println("getByID");
-        Integer id = bean.getIid();
-        Invitation expResult = bean;
+        Integer id = invitation.getIid();
+        Invitation expResult = invitation;
         Invitation result = invitationDao.getByID(id);
         assertEquals(expResult, result);
     }

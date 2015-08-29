@@ -1,23 +1,28 @@
 package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.JUnitSpringTestBase;
+import ga.rugal.jpt.TestApplicationContext;
+import ga.rugal.jpt.core.dao.LevelDao;
 import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.dao.PostTagsDao;
 import ga.rugal.jpt.core.dao.TagDao;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.PostTags;
 import ga.rugal.jpt.core.entity.Tag;
+import ga.rugal.jpt.core.entity.UserLevel;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  *
  * @author Rugal Bernstein
  */
+@ContextConfiguration(classes = TestApplicationContext.class)
 public class PostTagsDaoImplTest extends JUnitSpringTestBase
 {
 
@@ -30,10 +35,19 @@ public class PostTagsDaoImplTest extends JUnitSpringTestBase
     @Autowired
     private PostTagsDao postTagsDao;
 
+    @Autowired
+    private LevelDao levelDao;
+
+    @Autowired
+    private UserLevel level;
+
+    @Autowired
     private Post post;
 
+    @Autowired
     private Tag tag;
 
+    @Autowired
     private PostTags postTags;
 
     public PostTagsDaoImplTest()
@@ -44,25 +58,9 @@ public class PostTagsDaoImplTest extends JUnitSpringTestBase
     public void setUp()
     {
         System.out.println("setUp");
-        tag = new Tag();
-        tag.setIcon("icon/test.jpg");
-        tag.setName("Test use only");
+        levelDao.save(level);
         tagDao.save(tag);
-
-        post = new Post();
-        post.setContent("TEST");
-        post.setEnabled(true);
-        post.setPostTime(System.currentTimeMillis());
-        post.setSize(100);
-        post.setTitle("Test title");
-        post.setTorrent("Test torrent.torrent");
-        post.setVisible(true);
-        post.setRate(0);
         postDao.save(post);
-
-        postTags = new PostTags();
-        postTags.setPid(post);
-        postTags.setTid(tag);
         postTagsDao.save(postTags);
     }
 
@@ -74,6 +72,7 @@ public class PostTagsDaoImplTest extends JUnitSpringTestBase
         postTagsDao.deleteById(postTags.getPtid());
         postDao.deleteById(post.getPid());
         tagDao.deleteById(tag.getTid());
+        levelDao.deleteById(level.getLid());
     }
 
     @Test

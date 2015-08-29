@@ -1,6 +1,7 @@
 package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.JUnitSpringTestBase;
+import ga.rugal.jpt.TestApplicationContext;
 import ga.rugal.jpt.core.dao.TagDao;
 import ga.rugal.jpt.core.entity.Tag;
 import ml.rugal.sshcommon.page.Pagination;
@@ -9,17 +10,20 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  *
  * @author Rugal Bernstein
  */
+@ContextConfiguration(classes = TestApplicationContext.class)
 public class TagDaoImplTest extends JUnitSpringTestBase
 {
 
     @Autowired
     private TagDao tagDao;
 
+    @Autowired
     private Tag tag;
 
     public TagDaoImplTest()
@@ -30,9 +34,6 @@ public class TagDaoImplTest extends JUnitSpringTestBase
     public void setUp()
     {
         System.out.println("setUp");
-        tag = new Tag();
-        tag.setIcon("icon/test.jpg");
-        tag.setName("Test use only");
         tagDao.save(tag);
     }
 

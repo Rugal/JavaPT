@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.JUnitSpringTestBase;
+import ga.rugal.jpt.TestApplicationContext;
 import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.dao.ThreadDao;
 import ga.rugal.jpt.core.dao.UserDao;
@@ -18,18 +14,23 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  *
  * @author Rugal Bernstein
  */
+@ContextConfiguration(classes = TestApplicationContext.class)
 public class ThreadDaoImplTest extends JUnitSpringTestBase
 {
 
+    @Autowired
     private Post post;
 
+    @Autowired
     private User user;
 
+    @Autowired
     private Thread bean;
 
     @Autowired
@@ -49,32 +50,8 @@ public class ThreadDaoImplTest extends JUnitSpringTestBase
     public void setUp()
     {
         System.out.println("setUp");
-        user = new User();
-        user.setEmail("test@123.com");
-        user.setLastReport(System.currentTimeMillis());
-        user.setPassword("test");
-        user.setRegisterTime(System.currentTimeMillis());
-        user.setStatus(User.Status.DELETING);
-        user.setUsername("test");
         userDao.save(user);
-
-        post = new Post();
-        post.setContent("TEST");
-        post.setEnabled(true);
-        post.setPostTime(System.currentTimeMillis());
-        post.setSize(100);
-        post.setTitle("Test title");
-        post.setTorrent("Test torrent.torrent");
-        post.setVisible(true);
-//        post.setUid(user);
-        post.setRate(0);
         postDao.save(post);
-
-        bean = new Thread();
-        bean.setContent("TEST CONTENT");
-        bean.setPid(post);
-        bean.setPostTime(System.currentTimeMillis());
-        bean.setUid(user);
         threadDao.save(bean);
     }
 
