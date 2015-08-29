@@ -2,7 +2,7 @@ package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.JUnitSpringTestBase;
 import ga.rugal.jpt.TestApplicationContext;
-import ga.rugal.jpt.core.dao.LevelDao;
+import ga.rugal.jpt.core.dao.UserLevelDao;
 import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.entity.Post;
@@ -34,7 +34,7 @@ public class PostDaoImplTest extends JUnitSpringTestBase
     private UserLevel level;
 
     @Autowired
-    private LevelDao levelDao;
+    private UserLevelDao levelDao;
 
     @Autowired
     private PostDao postDao;

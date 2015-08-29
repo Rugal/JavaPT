@@ -3,7 +3,9 @@ package ga.rugal.jpt.core.dao.impl;
 import ga.rugal.JUnitSpringTestBase;
 import ga.rugal.jpt.TestApplicationContext;
 import ga.rugal.jpt.core.dao.UserDao;
+import ga.rugal.jpt.core.dao.UserLevelDao;
 import ga.rugal.jpt.core.entity.User;
+import ga.rugal.jpt.core.entity.UserLevel;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -21,10 +23,16 @@ public class UserDaoImplTest extends JUnitSpringTestBase
 {
 
     @Autowired
+    private UserLevelDao levelDao;
+
+    @Autowired
     private UserDao userDao;
 
     @Autowired
-    private User bean;
+    private UserLevel level;
+
+    @Autowired
+    private User user;
 
     public UserDaoImplTest()
     {
@@ -34,14 +42,16 @@ public class UserDaoImplTest extends JUnitSpringTestBase
     public void setUp()
     {
         System.out.println("setUp");
-        userDao.save(bean);
+        levelDao.save(level);
+        userDao.save(user);
     }
 
     @After
     public void tearDown()
     {
         System.out.println("tearDown");
-        userDao.deleteById(bean.getUid());
+        userDao.deleteById(user.getUid());
+        levelDao.deleteById(level.getLid());
     }
 
     @Test
@@ -58,8 +68,8 @@ public class UserDaoImplTest extends JUnitSpringTestBase
     public void testFindById()
     {
         System.out.println("findById");
-        Integer id = bean.getUid();
-        User expResult = bean;
+        Integer id = user.getUid();
+        User expResult = user;
         User result = userDao.getByID(id);
         assertEquals(expResult, result);
     }

@@ -4,10 +4,14 @@ import ga.rugal.JUnitSpringTestBase;
 import ga.rugal.jpt.TestApplicationContext;
 import ga.rugal.jpt.core.dao.ClientAnnounceDao;
 import ga.rugal.jpt.core.dao.ClientDao;
+import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.dao.UserDao;
+import ga.rugal.jpt.core.dao.UserLevelDao;
 import ga.rugal.jpt.core.entity.Client;
 import ga.rugal.jpt.core.entity.ClientAnnounce;
+import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
+import ga.rugal.jpt.core.entity.UserLevel;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -34,10 +38,22 @@ public class ClientAnnounceDaoImplTest extends JUnitSpringTestBase
     private ClientAnnounceDao clientAnnounceDao;
 
     @Autowired
+    private PostDao postDao;
+
+    @Autowired
+    private UserLevelDao userLevelDao;
+
+    @Autowired
+    private UserLevel level;
+
+    @Autowired
     private User user;
 
     @Autowired
     private Client client;
+
+    @Autowired
+    private Post post;
 
     @Autowired
     private ClientAnnounce clientAnnounce;
@@ -50,8 +66,10 @@ public class ClientAnnounceDaoImplTest extends JUnitSpringTestBase
     public void setUp()
     {
         System.out.println("setUp");
-        userDao.save(user);
         clientDao.save(client);
+        userLevelDao.save(level);
+        userDao.save(user);
+        postDao.save(post);
         clientAnnounceDao.save(clientAnnounce);
     }
 
@@ -60,7 +78,9 @@ public class ClientAnnounceDaoImplTest extends JUnitSpringTestBase
     {
         System.out.println("tearDown");
         clientAnnounceDao.deleteById(clientAnnounce.getCaid());
+        postDao.deleteById(post.getPid());
         userDao.deleteById(user.getUid());
+        userLevelDao.deleteById(level.getLid());
         clientDao.deleteById(client.getCid());
     }
 

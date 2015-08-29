@@ -62,7 +62,7 @@ public class TestApplicationContext
         bean.setPostTime(System.currentTimeMillis());
         bean.setSize(100);
         bean.setTitle("Test title");
-        bean.setTorrentHash("Test torrent.torrent");
+        bean.setTorrentHash("111111111111");
         bean.setMinLevel(level);
         bean.setUid(user);
         bean.setRate(0);
@@ -133,12 +133,13 @@ public class TestApplicationContext
 
     @Autowired
     @Bean
-    public ClientAnnounce clientAnnounce(User user, Client client)
+    public ClientAnnounce clientAnnounce(User user, Client client, Post post)
     {
         ClientAnnounce bean = new ClientAnnounce();
         bean.setAnnounceTime(System.currentTimeMillis());
         bean.setCid(client);
         bean.setUid(user);
+        bean.setTorrentPost(post);
         return bean;
     }
 

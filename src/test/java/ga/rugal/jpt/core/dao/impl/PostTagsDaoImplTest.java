@@ -2,13 +2,15 @@ package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.JUnitSpringTestBase;
 import ga.rugal.jpt.TestApplicationContext;
-import ga.rugal.jpt.core.dao.LevelDao;
 import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.dao.PostTagsDao;
 import ga.rugal.jpt.core.dao.TagDao;
+import ga.rugal.jpt.core.dao.UserDao;
+import ga.rugal.jpt.core.dao.UserLevelDao;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.PostTags;
 import ga.rugal.jpt.core.entity.Tag;
+import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.entity.UserLevel;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
@@ -30,19 +32,25 @@ public class PostTagsDaoImplTest extends JUnitSpringTestBase
     private TagDao tagDao;
 
     @Autowired
+    private UserDao userDao;
+
+    @Autowired
     private PostDao postDao;
 
     @Autowired
     private PostTagsDao postTagsDao;
 
     @Autowired
-    private LevelDao levelDao;
+    private UserLevelDao levelDao;
 
     @Autowired
     private UserLevel level;
 
     @Autowired
     private Post post;
+
+    @Autowired
+    private User user;
 
     @Autowired
     private Tag tag;
@@ -59,6 +67,7 @@ public class PostTagsDaoImplTest extends JUnitSpringTestBase
     {
         System.out.println("setUp");
         levelDao.save(level);
+        userDao.save(user);
         tagDao.save(tag);
         postDao.save(post);
         postTagsDao.save(postTags);
@@ -72,6 +81,7 @@ public class PostTagsDaoImplTest extends JUnitSpringTestBase
         postTagsDao.deleteById(postTags.getPtid());
         postDao.deleteById(post.getPid());
         tagDao.deleteById(tag.getTid());
+        userDao.deleteById(user.getUid());
         levelDao.deleteById(level.getLid());
     }
 

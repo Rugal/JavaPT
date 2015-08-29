@@ -5,9 +5,11 @@ import ga.rugal.jpt.TestApplicationContext;
 import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.dao.ThreadDao;
 import ga.rugal.jpt.core.dao.UserDao;
+import ga.rugal.jpt.core.dao.UserLevelDao;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
+import ga.rugal.jpt.core.entity.UserLevel;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -31,7 +33,13 @@ public class ThreadDaoImplTest extends JUnitSpringTestBase
     private User user;
 
     @Autowired
-    private Thread bean;
+    private Thread thread;
+
+    @Autowired
+    private UserLevel level;
+
+    @Autowired
+    private UserLevelDao levelDao;
 
     @Autowired
     private PostDao postDao;
@@ -50,9 +58,10 @@ public class ThreadDaoImplTest extends JUnitSpringTestBase
     public void setUp()
     {
         System.out.println("setUp");
+        levelDao.save(level);
         userDao.save(user);
         postDao.save(post);
-        threadDao.save(bean);
+        threadDao.save(thread);
     }
 
     @After
@@ -60,9 +69,10 @@ public class ThreadDaoImplTest extends JUnitSpringTestBase
     {
         System.out.println("tearDown");
         //order is important
-        threadDao.deleteById(bean.getTid());
+        threadDao.deleteById(thread.getTid());
         postDao.deleteById(post.getPid());
         userDao.deleteById(user.getUid());
+        levelDao.deleteById(level.getLid());
     }
 
     @Test
@@ -79,8 +89,8 @@ public class ThreadDaoImplTest extends JUnitSpringTestBase
     public void testGetByID()
     {
         System.out.println("getByID");
-        Integer id = bean.getTid();
-        Thread expResult = bean;
+        Integer id = thread.getTid();
+        Thread expResult = thread;
         Thread result = threadDao.getByID(id);
         assertEquals(expResult, result);
     }
