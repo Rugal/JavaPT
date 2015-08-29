@@ -27,6 +27,19 @@ public interface UserService
 
     User update(User bean);
 
+    /**
+     * Announce a update for user.
+     * <p>
+     * First log this announce.
+     * <p>
+     * Secondly to query get the difference between this update and the most recent one.
+     * <p>
+     * Then to update information in user profile.
+     * <p>
+     * @param bean
+     *             <p>
+     * @return
+     */
     User announce(TrackerUpdateBean bean);
 
 }

@@ -58,7 +58,7 @@ public interface CommonLogContent
     final String SIGNIN = "User [{0}] signin from host [{1}].";
 
     //Announce
-    final String INVALID_FORMAT_UID = "Host [{}] fired invalid format uid";
+    final String INVALID_FORMAT_UID = "Host [{}] fired invalid format of uid";
 
     final String THE_REQUESTED_INFO = "UID [{}] is requesting hash [{}]";
 

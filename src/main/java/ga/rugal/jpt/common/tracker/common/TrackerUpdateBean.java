@@ -3,8 +3,6 @@ package ga.rugal.jpt.common.tracker.common;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
 import ga.rugal.jpt.common.tracker.server.TrackedPeer;
 import ga.rugal.jpt.core.entity.Client;
-import ga.rugal.jpt.core.entity.Client;
-import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.entity.User;
 import java.nio.ByteBuffer;
 
@@ -43,6 +41,8 @@ public class TrackerUpdateBean
 
     private int no_peer_id;
 
+    private int uid;
+
     private String ip;
 
     private int numwant = 50;
@@ -61,6 +61,16 @@ public class TrackerUpdateBean
     public void setEvent(RequestEvent event)
     {
         this.event = event;
+    }
+
+    public int getUid()
+    {
+        return uid;
+    }
+
+    public void setUid(int uid)
+    {
+        this.uid = uid;
     }
 
     public String getCorrupt()

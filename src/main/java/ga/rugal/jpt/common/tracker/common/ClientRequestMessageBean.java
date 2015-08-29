@@ -42,6 +42,9 @@ public class ClientRequestMessageBean
 
     private String ip;
 
+    @NotNull
+    private int uid;
+
     private int numwant = 50;
 
     private String trackerid;
@@ -185,6 +188,16 @@ public class ClientRequestMessageBean
     public void setTrackerid(String trackerid)
     {
         this.trackerid = trackerid;
+    }
+
+    public int getUid()
+    {
+        return uid;
+    }
+
+    public void setUid(int uid)
+    {
+        this.uid = uid;
     }
 
     public String getCorrupt()

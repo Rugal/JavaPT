@@ -30,7 +30,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -70,38 +69,37 @@ public class AnnounceAction
      *
      * @throws java.lang.Exception throw exceptions so that ExceptionHandler could deal with.
      */
-    @RequestMapping(value = "/announce/{uid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/announce", method = RequestMethod.GET)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public void announce(@Valid @ModelAttribute ClientRequestMessageBean bean, @PathVariable("uid") Integer uid,
+    public void announce(@Valid @ModelAttribute ClientRequestMessageBean bean,
                          HttpServletRequest request, HttpServletResponse response) throws Exception
     {
 
         bean.setIp(request.getRemoteAddr());
         bean.setInfo_hash(getParamater(request.getQueryString(), INFO_HASH));
         bean.setPeer_id(getParamater(request.getQueryString(), PEER_ID));
-        bean.setUserID(uid);
 
         LOG.trace(CommonLogContent.START_GENERATE);
         TrackerUpdateBean trackerUpdateBean = requestBeanService.generateUpdateBean(bean);
+        //Set this bean as null deliberately to enforce use trackerUpdateBean object only
         bean = null;
+        //
+        //
         //-------After get formated tracker update bean, starts use tracker update bean only--------
-        LOG.debug(CommonLogContent.THE_REQUESTED_INFO, uid, trackerUpdateBean.getInfoHash());
+        LOG.debug(CommonLogContent.THE_REQUESTED_INFO, trackerUpdateBean.getUid(), trackerUpdateBean.getInfoHash());
 
-        //Link user by UID, link torrent by info_hash
-        LOG.trace(CommonLogContent.START_UPDATE, uid);
+        //TODO Link user by UID, link torrent by info_hash
+        LOG.trace(CommonLogContent.START_UPDATE, trackerUpdateBean.getUid());
         // Update the torrent according to the announce event
         TrackedPeer peer = tracker.update(trackerUpdateBean);
 
         //Generate response content for normal request
-        LOG.trace(CommonLogContent.MAKE_RESPONSE, uid);
+        LOG.trace(CommonLogContent.MAKE_RESPONSE, trackerUpdateBean.getUid());
         TrackedTorrent torrent = tracker.get(trackerUpdateBean.getInfoHash());
         ByteBuffer buffer = this.compactResponse(torrent, peer);
         //Some setting for normal response
-        response.setContentType(MediaType.TEXT_PLAIN_VALUE);
-        response.setDateHeader("Date", System.currentTimeMillis());
-        WritableByteChannel channel = Channels.newChannel(response.getOutputStream());
-        channel.write(buffer);
+        writeBuffer(response, buffer);
     }
 
     /**
@@ -126,6 +124,22 @@ public class AnnounceAction
             }
         }
         return null;
+    }
+
+    /**
+     * For better code reusability, use this small method to wrap buffer writing.
+     * <p>
+     * @param response the response object to write in
+     * @param buffer   content to write into response body
+     * <p>
+     * @throws IOException
+     */
+    private void writeBuffer(HttpServletResponse response, ByteBuffer buffer) throws IOException
+    {
+        response.setContentType(MediaType.TEXT_PLAIN_VALUE);
+        response.setDateHeader("Date", System.currentTimeMillis());
+        WritableByteChannel channel = Channels.newChannel(response.getOutputStream());
+        channel.write(buffer);
     }
 
     /**
@@ -180,16 +194,14 @@ public class AnnounceAction
     @ExceptionHandler(Exception.class)
     public void handleAllException(HttpServletResponse response, Exception ex)
     {
-        response.setContentType(MediaType.TEXT_PLAIN_VALUE);
-        response.setDateHeader("Date", System.currentTimeMillis());
+        LOG.debug(ex.getMessage());
         response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+        Map<String, BEValue> params = new HashMap<>();
         try
         {
-            LOG.debug(ex.getMessage());
-            WritableByteChannel channel = Channels.newChannel(response.getOutputStream());
-            Map<String, BEValue> params = new HashMap<>();
             params.put("failure reason", new BEValue(ex.getMessage(), SystemDefaultProperties.BYTE_ENCODING));
-            channel.write(BEncoder.bencode(params));
+            ByteBuffer buffer = BEncoder.bencode(params);
+            writeBuffer(response, buffer);
         }
         catch (Exception e)
         {

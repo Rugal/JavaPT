@@ -60,6 +60,7 @@ public class RequestBeanServiceImpl implements RequestBeanService
         bean.setPort(b.getPort());
         bean.setTrackerid(b.getTrackerid());
         bean.setEvent(RequestEvent.getByName(b.getEvent()));
+        bean.setUid(b.getUid());
         //special SHA1 process
         try
         {

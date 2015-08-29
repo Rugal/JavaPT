@@ -32,7 +32,7 @@ public class AnnounceInterceptor implements HandlerInterceptor
 
     private static final Logger LOG = LoggerFactory.getLogger(AnnounceInterceptor.class.getName());
 
-    private static final String ANNOUNCE = "/announce/";
+    private static final String UID = "uid";
 
     @Autowired
     private UserService userService;
@@ -41,15 +41,15 @@ public class AnnounceInterceptor implements HandlerInterceptor
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
     {
         LOG.trace(request.getQueryString());
-        int index = request.getRequestURI().indexOf(ANNOUNCE);
-        String uidString = request.getRequestURI().substring(index + ANNOUNCE.length());
+
+        String uidString = request.getParameter(UID);
         if (null == uidString || uidString.isEmpty())
         {
             LOG.debug(CommonLogContent.INVALID_FORMAT_UID, request.getRemoteAddr());
             deniedResponse(request, response, CommonMessageContent.INVALID_UID);
             return false;
         }
-        Integer uid = -1;
+        Integer uid;
         try
         {
             uid = Integer.parseInt(uidString);
