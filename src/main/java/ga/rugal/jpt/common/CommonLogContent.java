@@ -58,7 +58,9 @@ public interface CommonLogContent
     final String SIGNIN = "User [{0}] signin from host [{1}].";
 
     //Announce
-    final String INVALID_FORMAT_UID = "Host [{}] fired invalid format of uid";
+    final String INVALID_UID = "Host [{}] fired invalid format of uid";
+
+    final String INVALID_CREDENTIAL = "Host [{}] fired invalid format of credential";
 
     final String THE_REQUESTED_INFO = "UID [{}] is requesting hash [{}]";
 
@@ -77,5 +79,7 @@ public interface CommonLogContent
     final String START_UPDATE = "Start to update for UID [{}]";
 
     final String MAKE_RESPONSE = "Making HTTP response for uid [{}]";
+
+    final String FRAUD_REQUEST = "IP [{0}] is making fraud request against UID [{1}] with hash [{2}]";
 
 }

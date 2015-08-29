@@ -54,5 +54,7 @@ public interface CommonMessageContent
 
     final String INVALID_UID = "UID format invalid";
 
+    final String INVALID_CREDENTIAL = "Credential format invalid";
+
     final String BAD_EVENT = "Bad client event";
 }

@@ -25,4 +25,6 @@ public interface RequestBeanService
     @Transactional(readOnly = true)
     TrackerUpdateBean generateUpdateBean(ClientRequestMessageBean bean) throws TrackerResponseException;
 
+    String toSHA1(String text);
+
 }

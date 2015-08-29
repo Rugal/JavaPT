@@ -55,15 +55,14 @@ public class AnnounceAction
     @Autowired
     private RequestBeanService requestBeanService;
 
-    private static final String INFO_HASH = "info_hash";
+    public static final String INFO_HASH = "info_hash";
 
-    private static final String PEER_ID = "peer_id";
+    public static final String PEER_ID = "peer_id";
 
     /**
      * Support Azureus-style peer id.
      *
      * @param bean     A JavaBean that includes all required information.
-     * @param uid
      * @param request
      * @param response
      *
@@ -77,25 +76,26 @@ public class AnnounceAction
     {
 
         bean.setIp(request.getRemoteAddr());
-        bean.setInfo_hash(getParamater(request.getQueryString(), INFO_HASH));
-        bean.setPeer_id(getParamater(request.getQueryString(), PEER_ID));
-
+        bean.setInfo_hash(readParameterFromURL(request.getQueryString(), INFO_HASH));
+        bean.setPeer_id(readParameterFromURL(request.getQueryString(), PEER_ID));
+        //TODO passkey = uid:torrent_id -> hash
+        //TODO create table for torrent information
         LOG.trace(CommonLogContent.START_GENERATE);
         TrackerUpdateBean trackerUpdateBean = requestBeanService.generateUpdateBean(bean);
-        //Set this bean as null deliberately to enforce use trackerUpdateBean object only
+        //Set this bean as null deliberately to enforce using trackerUpdateBean object only
         bean = null;
         //
         //
         //-------After get formated tracker update bean, starts use tracker update bean only--------
-        LOG.debug(CommonLogContent.THE_REQUESTED_INFO, trackerUpdateBean.getUid(), trackerUpdateBean.getInfoHash());
+        LOG.debug(CommonLogContent.THE_REQUESTED_INFO, trackerUpdateBean.getUser().getUid(), trackerUpdateBean.getInfoHash());
 
         //TODO Link user by UID, link torrent by info_hash
-        LOG.trace(CommonLogContent.START_UPDATE, trackerUpdateBean.getUid());
+        LOG.trace(CommonLogContent.START_UPDATE, trackerUpdateBean.getUser().getUid());
         // Update the torrent according to the announce event
         TrackedPeer peer = tracker.update(trackerUpdateBean);
 
         //Generate response content for normal request
-        LOG.trace(CommonLogContent.MAKE_RESPONSE, trackerUpdateBean.getUid());
+        LOG.trace(CommonLogContent.MAKE_RESPONSE, trackerUpdateBean.getUser().getUid());
         TrackedTorrent torrent = tracker.get(trackerUpdateBean.getInfoHash());
         ByteBuffer buffer = this.compactResponse(torrent, peer);
         //Some setting for normal response
@@ -113,7 +113,7 @@ public class AnnounceAction
      *             <p>
      * @return
      */
-    private String getParamater(String text, String name)
+    public static String readParameterFromURL(String text, String name)
     {
         for (String pair : text.split("&"))
         {

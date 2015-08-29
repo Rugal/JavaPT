@@ -41,8 +41,6 @@ public class TrackerUpdateBean
 
     private int no_peer_id;
 
-    private int uid;
-
     private String ip;
 
     private int numwant = 50;
@@ -61,16 +59,6 @@ public class TrackerUpdateBean
     public void setEvent(RequestEvent event)
     {
         this.event = event;
-    }
-
-    public int getUid()
-    {
-        return uid;
-    }
-
-    public void setUid(int uid)
-    {
-        this.uid = uid;
     }
 
     public String getCorrupt()

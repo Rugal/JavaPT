@@ -104,4 +104,11 @@ public class ClientAnnounceDaoImplTest extends JUnitSpringTestBase
         assertEquals(expResult, result);
     }
 
+    @Test
+    public void testFindLastAnnounce()
+    {
+        ClientAnnounce ca = clientAnnounceDao.findLastAnnounce(user, post);
+        System.out.println(ca == null);
+    }
+
 }

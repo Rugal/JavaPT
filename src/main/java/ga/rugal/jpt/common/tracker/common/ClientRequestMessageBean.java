@@ -36,14 +36,14 @@ public class ClientRequestMessageBean
 
     private int compact = 1;
 
+    @NotNull
+    private String credential;
+
     private String key;
 
     private int no_peer_id;
 
     private String ip;
-
-    @NotNull
-    private int uid;
 
     private int numwant = 50;
 
@@ -63,6 +63,16 @@ public class ClientRequestMessageBean
     public void setEvent(String event)
     {
         this.event = event;
+    }
+
+    public String getCredential()
+    {
+        return credential;
+    }
+
+    public void setCredential(String credential)
+    {
+        this.credential = credential;
     }
 
     public ByteBuffer getBufferPeerId()
@@ -188,16 +198,6 @@ public class ClientRequestMessageBean
     public void setTrackerid(String trackerid)
     {
         this.trackerid = trackerid;
-    }
-
-    public int getUid()
-    {
-        return uid;
-    }
-
-    public void setUid(int uid)
-    {
-        this.uid = uid;
     }
 
     public String getCorrupt()

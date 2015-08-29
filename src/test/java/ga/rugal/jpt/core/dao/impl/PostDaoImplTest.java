@@ -2,9 +2,9 @@ package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.JUnitSpringTestBase;
 import ga.rugal.jpt.TestApplicationContext;
-import ga.rugal.jpt.core.dao.UserLevelDao;
 import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.dao.UserDao;
+import ga.rugal.jpt.core.dao.UserLevelDao;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.entity.UserLevel;
@@ -12,6 +12,7 @@ import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -66,6 +67,7 @@ public class PostDaoImplTest extends JUnitSpringTestBase
     }
 
     @Test
+//    @Ignore
     public void testGetPage()
     {
         System.out.println("getPage");
@@ -76,6 +78,7 @@ public class PostDaoImplTest extends JUnitSpringTestBase
     }
 
     @Test
+//    @Ignore
     public void testGetByID()
     {
         System.out.println("getByID");
@@ -83,6 +86,30 @@ public class PostDaoImplTest extends JUnitSpringTestBase
         Post expResult = post;
         Post result = postDao.getByID(id);
         assertEquals(expResult, result);
+    }
+
+    @Test
+//    @Ignore
+    public void getByTorrent()
+    {
+        System.out.println("getByTorrent");
+        Post bean = postDao.getByTorrent(post.getTorrentHash());
+        System.out.println(bean.getTitle());
+    }
+
+    @Test
+    @Ignore
+    public void testSave()
+    {
+        Post p = new Post();
+        p = new Post();
+        p.setContent("Test New");
+        p.setEnabled(true);
+        p.setPostTime(System.currentTimeMillis());
+        p.setTitle("Rugal Bernstein");
+        p.setUid(userDao.getByID(1));
+        p.setTorrentHash("5C84616F2E28D03BF9C127D7BCCAA4CF0FD57B43");
+        postDao.save(p);
     }
 
 }

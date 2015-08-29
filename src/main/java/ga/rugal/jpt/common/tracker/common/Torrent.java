@@ -140,11 +140,10 @@ public class Torrent
      */
     public Torrent(byte[] torrent, boolean seeder) throws IOException
     {
-        this.encoded = torrent;
         this.seeder = seeder;
+        this.encoded = torrent;
 
-        this.decoded = BDecoder.bdecode(
-            new ByteArrayInputStream(this.encoded)).getMap();
+        this.decoded = BDecoder.bdecode(new ByteArrayInputStream(this.encoded)).getMap();
 
         this.decoded_info = this.decoded.get("info").getMap();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -644,8 +643,8 @@ public class Torrent
      * @throws java.lang.InterruptedException
      * @throws java.io.IOException
      */
-    public static Torrent create(File parent, List<File> files, URI announce,
-                                 String createdBy) throws InterruptedException, IOException
+    public static Torrent create(File parent, List<File> files, URI announce, String createdBy)
+        throws InterruptedException, IOException
     {
         return Torrent.create(parent, files, SystemDefaultProperties.DEFAULT_PIECE_LENGTH,
                               announce, null, createdBy);
@@ -969,8 +968,8 @@ public class Torrent
      * @param results The list of {@link Future}s that will yield the piece
      *                hashes.
      */
-    private static int accumulateHashes(StringBuilder hashes,
-                                        List<Future<String>> results) throws InterruptedException, IOException
+    private static int accumulateHashes(StringBuilder hashes, List<Future<String>> results)
+        throws InterruptedException, IOException
     {
         try
         {

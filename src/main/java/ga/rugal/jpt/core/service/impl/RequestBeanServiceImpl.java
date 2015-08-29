@@ -125,7 +125,8 @@ public class RequestBeanServiceImpl implements RequestBeanService
      *             <p>
      * @return
      */
-    private String toSHA1(String text)
+    @Override
+    public String toSHA1(String text)
     {
         if (null == text || text.isEmpty())
         {

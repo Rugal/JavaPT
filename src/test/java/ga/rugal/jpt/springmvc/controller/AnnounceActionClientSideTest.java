@@ -40,19 +40,14 @@ public class AnnounceActionClientSideTest extends ControllerClientSideTestBase
     @Ignore
     public void testAnnounce() throws Exception
     {
-        this.mockMvc.perform(get("/announce/1").param("ip", "1.1.1.1")
-            .param("info_hash", "%5c%84ao.%28%d0%3b%f9%c1%27%d7%bc%ca%a4%cf%0f%d5%7bC")
-            .param("peer_id", "-UT3440-%cf%9fg%fa%14Q%c0%afp1%1a%9a")
-            .param("port", "6881")
+        this.mockMvc.perform(get("/announce?info_hash=%5c%84ao.%28%d0%3b%f9%c1%27%d7%bc%ca%a4%cf%0f%d5%7bC&peer_id=-UT3440-%cf%9fg%fa%14Q%c0%afp1%1a%9a&port=6881&uid=1&credential=123456")
+            //            .param("info_hash", "%5c%84ao.%28%d0%3b%f9%c1%27%d7%bc%ca%a4%cf%0f%d5%7bC")
+            //            .param("peer_id", "-UT3440-%cf%9fg%fa%14Q%c0%afp1%1a%9a")
+            //            .param("port", "6881")
+            //            .param("uid", "1").param("credential", "123456")
             .accept(MediaType.TEXT_PLAIN))
             .andDo(print())
             .andExpect(status().isOk());
     }
 
-//    @Test
-//    public void test()
-//    {
-//        String text = "%92%c345%c0%28%15%e4rr%b1y%17%b7%cbs%0a%ef%9a%fc";
-//        System.out.println(toSHA1(text));
-//    }
 }

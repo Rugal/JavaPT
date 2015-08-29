@@ -5,15 +5,22 @@ import ga.rugal.jpt.common.CommonMessageContent;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.bcodec.BEValue;
 import ga.rugal.jpt.common.tracker.bcodec.BEncoder;
+import ga.rugal.jpt.common.tracker.server.TrackerResponseException;
+import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
+import ga.rugal.jpt.core.service.PostService;
+import ga.rugal.jpt.core.service.RequestBeanService;
 import ga.rugal.jpt.core.service.UserService;
+import ga.rugal.jpt.springmvc.controller.AnnounceAction;
 import java.io.IOException;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,22 +39,81 @@ public class AnnounceInterceptor implements HandlerInterceptor
 
     private static final Logger LOG = LoggerFactory.getLogger(AnnounceInterceptor.class.getName());
 
-    private static final String UID = "uid";
-
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PostService postService;
+
+    @Autowired
+    private RequestBeanService requsetBeanService;
+
+    private static final String UID = "uid";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
     {
         LOG.trace(request.getQueryString());
+        //User validation
+        try
+        {
+            userValidation(request);
+        }
+        catch (TrackerResponseException e)
+        {
+            deniedResponse(request, response, e.getMessage());
+            return false;
+        }
+        //Credential validation
+        try
+        {
+            credentialValidation(request);
+        }
+        catch (TrackerResponseException e)
+        {
+            deniedResponse(request, response, e.getMessage());
+            return false;
+        }
+        return true;
+    }
 
+    private void credentialValidation(HttpServletRequest request) throws TrackerResponseException
+    {
+        //Credential validation begin
+        String credential = request.getParameter(SystemDefaultProperties.CREDENTIAL);
+        if (null == credential || credential.isEmpty())
+        {
+            LOG.debug(CommonLogContent.INVALID_CREDENTIAL, request.getRemoteAddr());
+            throw new TrackerResponseException(CommonMessageContent.INVALID_CREDENTIAL);
+        }
+        String infoHash = requsetBeanService.toSHA1(AnnounceAction.readParameterFromURL(
+            request.getQueryString(), AnnounceAction.INFO_HASH));
+        Post post = postService.getByTorrent(infoHash);
+        if (null == post)
+        {
+            throw new TrackerResponseException(CommonMessageContent.INVALID_INFOHASH);
+        }
+        String candidate = request.getParameter(UID) + post.getUid();
+        if (!BCrypt.checkpw(candidate, credential))
+        {//be sure our real credential must be:
+            //uid:pid:salt -> BCrypt
+            LOG.warn(MessageFormat.format(CommonLogContent.FRAUD_REQUEST,
+                                          request.getRemoteAddr(),
+                                          request.getParameter(UID),
+                                          infoHash));
+            throw new TrackerResponseException(CommonMessageContent.INVALID_CREDENTIAL);
+        }
+        //Credential validation completed
+    }
+
+    private User userValidation(HttpServletRequest request) throws TrackerResponseException
+    {
+        //User validation begin
         String uidString = request.getParameter(UID);
         if (null == uidString || uidString.isEmpty())
         {
-            LOG.debug(CommonLogContent.INVALID_FORMAT_UID, request.getRemoteAddr());
-            deniedResponse(request, response, CommonMessageContent.INVALID_UID);
-            return false;
+            LOG.debug(CommonLogContent.INVALID_UID, request.getRemoteAddr());
+            throw new TrackerResponseException(CommonMessageContent.INVALID_UID);
         }
         Integer uid;
         try
@@ -56,17 +122,17 @@ public class AnnounceInterceptor implements HandlerInterceptor
         }
         catch (NumberFormatException e)
         {
-            LOG.debug(CommonLogContent.INVALID_FORMAT_UID, request.getRemoteAddr());
-            deniedResponse(request, response, CommonMessageContent.INVALID_UID);
-            return false;
+            LOG.debug(CommonLogContent.INVALID_UID, request.getRemoteAddr());
+            throw new TrackerResponseException(CommonMessageContent.INVALID_UID);
         }
         User user = userService.getByID(uid);
         if (null == user)
         {
-            LOG.debug(CommonLogContent.INVALID_FORMAT_UID, request.getRemoteAddr());
-            deniedResponse(request, response, CommonMessageContent.USER_NOT_FOUND);
+            LOG.debug(CommonLogContent.INVALID_UID, request.getRemoteAddr());
+            throw new TrackerResponseException(CommonMessageContent.USER_NOT_FOUND);
         }
-        return true;
+        //User validation completed
+        return user;
     }
 
     /**
@@ -97,12 +163,14 @@ public class AnnounceInterceptor implements HandlerInterceptor
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+                           ModelAndView modelAndView) throws Exception
     {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
+                                Exception ex) throws Exception
     {
     }
 
