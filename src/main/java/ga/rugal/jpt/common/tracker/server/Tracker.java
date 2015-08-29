@@ -6,8 +6,7 @@ import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
-import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.service.UserService;
+import ga.rugal.jpt.core.service.ClientAnnounceService;
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -31,7 +30,7 @@ public class Tracker
     private boolean running = false;
 
     @Autowired
-    private UserService userService;
+    private ClientAnnounceService clientAnnounceService;
 
     public synchronized TrackedPeer update(TrackerUpdateBean bean) throws TrackerResponseException, UnsupportedEncodingException
     {
@@ -74,7 +73,7 @@ public class Tracker
         // As state of peer might changes in peer update
         TrackedPeer peer = torrent.update(bean);
         // Update user information in database
-        User user = userService.announce(bean);
+        clientAnnounceService.announce(bean);
 
         return peer;
     }

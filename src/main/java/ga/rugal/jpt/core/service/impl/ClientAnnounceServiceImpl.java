@@ -54,8 +54,7 @@ public class ClientAnnounceServiceImpl implements ClientAnnounceService
 //        return bean;
     }
 
-    @Override
-    public ClientAnnounce save(TrackerUpdateBean bean)
+    private ClientAnnounce save(TrackerUpdateBean bean)
     {
         ClientAnnounce clientAnnounce = new ClientAnnounce();
         clientAnnounce.setDownloadByte(bean.getDownloaded());
@@ -81,6 +80,15 @@ public class ClientAnnounceServiceImpl implements ClientAnnounceService
         return dao.updateByUpdater(updater);
         //-----These comments is here for testing transaction consistency.-------
 //        throw new RuntimeException();
+    }
+
+    @Override
+    public void announce(TrackerUpdateBean bean)
+    {
+        //logging Client Announce
+//        this.save(bean);
+        //check last update for this torrent
+        //update user information
     }
 
 }

@@ -99,7 +99,7 @@ public class AnnounceAction
         TrackedTorrent torrent = tracker.get(trackerUpdateBean.getInfoHash());
         ByteBuffer buffer = this.compactResponse(torrent, peer);
         //Some setting for normal response
-        writeBuffer(response, buffer);
+        this.writeBuffer(response, buffer);
     }
 
     /**

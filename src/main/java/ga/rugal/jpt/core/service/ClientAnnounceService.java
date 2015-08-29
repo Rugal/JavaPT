@@ -24,5 +24,19 @@ public interface ClientAnnounceService
 
     ClientAnnounce update(ClientAnnounce bean);
 
-    ClientAnnounce save(TrackerUpdateBean bean);
+    /**
+     * Announce a update for user.
+     * <p>
+     * First log this announce.
+     * <p>
+     * Secondly to query get the difference between this update and the most recent one.
+     * <p>
+     * Then to update information in user profile.
+     * <p>
+     * @param bean
+     *             <p>
+     * @return
+     */
+    void announce(TrackerUpdateBean bean);
+
 }

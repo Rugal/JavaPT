@@ -1,9 +1,7 @@
 package ga.rugal.jpt.core.service.impl;
 
-import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.service.ClientAnnounceService;
 import ga.rugal.jpt.core.service.UserService;
 import ml.rugal.sshcommon.hibernate.Updater;
 import ml.rugal.sshcommon.page.Pagination;
@@ -26,9 +24,6 @@ public class UserServiceImpl implements UserService
 
     @Autowired
     private UserDao dao;
-
-    @Autowired
-    private ClientAnnounceService clientAnnounceService;
 
     @Override
     @Transactional(readOnly = true)
@@ -68,16 +63,6 @@ public class UserServiceImpl implements UserService
     {
         Updater<User> updater = new Updater<>(bean);
         return dao.updateByUpdater(updater);
-    }
-
-    @Override
-    public User announce(TrackerUpdateBean bean)
-    {
-        //logging Client Announce
-//        clientAnnounceService.save(bean);
-        //check last update for this torrent
-        //update user information
-        return null;
     }
 
 }
