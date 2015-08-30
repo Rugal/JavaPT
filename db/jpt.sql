@@ -82,11 +82,12 @@ ALTER TABLE jpt.client OWNER TO postgres;
 CREATE TABLE client_announce (
     caid bigint NOT NULL,
     announce_time bigint,
-    uid integer,
-    cid integer,
+    uid integer NOT NULL,
+    cid integer NOT NULL,
     download_byte bigint,
     upload_byte bigint,
-    left_byte bigint
+    left_byte bigint,
+    torrent_post integer NOT NULL
 );
 
 
@@ -175,7 +176,8 @@ ALTER SEQUENCE invitation_iid_seq OWNED BY invitation.iid;
 CREATE TABLE level (
     lid integer NOT NULL,
     minimum integer,
-    name character varying(50)
+    name character varying(50),
+    icon character varying(50)
 );
 
 
@@ -208,14 +210,14 @@ ALTER SEQUENCE level_lid_seq OWNED BY level.lid;
 
 CREATE TABLE post (
     pid integer NOT NULL,
-    uid integer,
+    uid integer NOT NULL,
     title character varying(50),
     content text,
-    torrent character varying(50),
+    torrent_hash character varying(50) NOT NULL,
     post_time bigint,
     size integer,
     enabled boolean,
-    visible boolean
+    min_level integer
 );
 
 
@@ -392,7 +394,6 @@ CREATE TABLE "user" (
     email character varying(100),
     upload_byte bigint DEFAULT 0,
     download_byte bigint DEFAULT 0,
-    last_report bigint,
     credit integer DEFAULT 0,
     referee integer,
     register_time bigint,
@@ -515,7 +516,7 @@ COPY admin (aid, uid, grantee, since, level) FROM stdin;
 -- Name: admin_aid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('admin_aid_seq', 16, true);
+SELECT pg_catalog.setval('admin_aid_seq', 20, true);
 
 
 --
@@ -523,9 +524,11 @@ SELECT pg_catalog.setval('admin_aid_seq', 16, true);
 --
 
 COPY client (cid, name, version, enabled, cname) FROM stdin;
-1	Utorrent	*	t	\N
 2	transmit	*	t	\N
 0	*	*	f	*
+1	Utorrent	*	t	UT
+37	transmit	*	t	\N
+38	transmit	*	t	\N
 \.
 
 
@@ -533,7 +536,7 @@ COPY client (cid, name, version, enabled, cname) FROM stdin;
 -- Data for Name: client_announce; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
-COPY client_announce (caid, announce_time, uid, cid, download_byte, upload_byte, left_byte) FROM stdin;
+COPY client_announce (caid, announce_time, uid, cid, download_byte, upload_byte, left_byte, torrent_post) FROM stdin;
 \.
 
 
@@ -541,14 +544,14 @@ COPY client_announce (caid, announce_time, uid, cid, download_byte, upload_byte,
 -- Name: client_announce_caid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('client_announce_caid_seq', 8, true);
+SELECT pg_catalog.setval('client_announce_caid_seq', 30, true);
 
 
 --
 -- Name: client_cid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('client_cid_seq', 18, true);
+SELECT pg_catalog.setval('client_cid_seq', 46, true);
 
 
 --
@@ -563,22 +566,22 @@ COPY invitation (iid, uid, issue_time) FROM stdin;
 -- Name: invitation_iid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('invitation_iid_seq', 6, true);
+SELECT pg_catalog.setval('invitation_iid_seq', 10, true);
 
 
 --
 -- Data for Name: level; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
-COPY level (lid, minimum, name) FROM stdin;
-1	0	Basic
-2	100	Rudimentary
-6	10000	Grand Master
-5	8000	Master
-4	5000	Advanced
-3	1000	Enhanced
-7	100000	Super
-8	500000	Funky
+COPY level (lid, minimum, name, icon) FROM stdin;
+1	0	Basic	\N
+2	100	Rudimentary	\N
+6	10000	Grand Master	\N
+5	8000	Master	\N
+4	5000	Advanced	\N
+3	1000	Enhanced	\N
+7	100000	Super	\N
+8	500000	Funky	\N
 \.
 
 
@@ -586,14 +589,15 @@ COPY level (lid, minimum, name) FROM stdin;
 -- Name: level_lid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('level_lid_seq', 17, true);
+SELECT pg_catalog.setval('level_lid_seq', 65, true);
 
 
 --
 -- Data for Name: post; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
-COPY post (pid, uid, title, content, torrent, post_time, size, enabled, visible) FROM stdin;
+COPY post (pid, uid, title, content, torrent_hash, post_time, size, enabled, min_level) FROM stdin;
+60	1	Rugal Bernstein	Test New	5C84616F2E28D03BF9C127D7BCCAA4CF0FD57B43	1440891470438	\N	t	\N
 \.
 
 
@@ -601,7 +605,7 @@ COPY post (pid, uid, title, content, torrent, post_time, size, enabled, visible)
 -- Name: post_pid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('post_pid_seq', 18, true);
+SELECT pg_catalog.setval('post_pid_seq', 60, true);
 
 
 --
@@ -616,7 +620,7 @@ COPY post_tags (ptid, tid, pid) FROM stdin;
 -- Name: post_tags_ptid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('post_tags_ptid_seq', 6, true);
+SELECT pg_catalog.setval('post_tags_ptid_seq', 8, true);
 
 
 --
@@ -648,6 +652,8 @@ COPY tag (tid, name, icon) FROM stdin;
 3	FLAC	icon/flac.gif
 4	BLUE-RAY	icon/blue-ray.gif
 5	Touchless	icon/touchless.gif
+22	Test use only	icon/test.jpg
+23	Test use only	icon/test.jpg
 \.
 
 
@@ -655,7 +661,7 @@ COPY tag (tid, name, icon) FROM stdin;
 -- Name: tag_tid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tag_tid_seq', 21, true);
+SELECT pg_catalog.setval('tag_tid_seq', 27, true);
 
 
 --
@@ -670,19 +676,26 @@ COPY thread (tid, pid, uid, content, post_time) FROM stdin;
 -- Name: thread_tid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('thread_tid_seq', 6, true);
+SELECT pg_catalog.setval('thread_tid_seq', 12, true);
 
 
 --
 -- Data for Name: user; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
-COPY "user" (uid, password, username, email, upload_byte, download_byte, last_report, credit, referee, register_time, status) FROM stdin;
-1	123456	Rugal	ryujin@163.com	\N	\N	1438837127628	\N	\N	1438837127628	\N
-2	123456	Spooky	null@163.com	\N	\N	1438965572744	\N	\N	1438965572744	0
-3	123456	Tiger	null@123.com	\N	\N	1438965604092	\N	\N	1438965604092	2
-6	test	test	test@123.com	\N	\N	1439782679846	\N	\N	1439782679846	2
-7	test	test	test@123.com	\N	\N	1439782680097	\N	\N	1439782680097	2
+COPY "user" (uid, password, username, email, upload_byte, download_byte, credit, referee, register_time, status) FROM stdin;
+1	123456	Rugal	ryujin@163.com	\N	\N	\N	\N	1438837127628	\N
+2	123456	Spooky	null@163.com	\N	\N	\N	\N	1438965572744	0
+3	123456	Tiger	null@123.com	\N	\N	\N	\N	1438965604092	2
+6	test	test	test@123.com	\N	\N	\N	\N	1439782679846	2
+7	test	test	test@123.com	\N	\N	\N	\N	1439782680097	2
+88	test	test	test@123.com	0	0	0	\N	1440891373806	2
+52	test	test	test@123.com	0	0	0	\N	1440874149741	2
+53	test	test	test@123.com	0	0	0	\N	1440874149741	2
+54	test	test	test@123.com	0	0	0	\N	1440874813218	2
+55	test	test	test@123.com	0	0	0	\N	1440875355953	2
+64	test	test	test@123.com	0	0	0	\N	1440875673708	2
+65	test	test	test@123.com	0	0	0	\N	1440875673708	2
 \.
 
 
@@ -690,7 +703,7 @@ COPY "user" (uid, password, username, email, upload_byte, download_byte, last_re
 -- Name: user_uid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('user_uid_seq', 43, true);
+SELECT pg_catalog.setval('user_uid_seq', 89, true);
 
 
 --
@@ -796,6 +809,13 @@ CREATE UNIQUE INDEX unq_level_minimum ON level USING btree (minimum);
 
 
 --
+-- Name: unq_post_torrent_hash; Type: INDEX; Schema: jpt; Owner: postgres; Tablespace: 
+--
+
+CREATE UNIQUE INDEX unq_post_torrent_hash ON post USING btree (torrent_hash);
+
+
+--
 -- Name: unq_user_email; Type: INDEX; Schema: jpt; Owner: postgres; Tablespace: 
 --
 
@@ -834,6 +854,14 @@ ALTER TABLE ONLY client_announce
 
 
 --
+-- Name: client_announce_torrent_post_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
+--
+
+ALTER TABLE ONLY client_announce
+    ADD CONSTRAINT client_announce_torrent_post_fkey FOREIGN KEY (torrent_post) REFERENCES post(pid);
+
+
+--
 -- Name: client_announce_uid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
@@ -847,6 +875,14 @@ ALTER TABLE ONLY client_announce
 
 ALTER TABLE ONLY invitation
     ADD CONSTRAINT invitation_uid_fkey FOREIGN KEY (uid) REFERENCES "user"(uid);
+
+
+--
+-- Name: post_min_level_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
+--
+
+ALTER TABLE ONLY post
+    ADD CONSTRAINT post_min_level_fkey FOREIGN KEY (min_level) REFERENCES level(lid);
 
 
 --

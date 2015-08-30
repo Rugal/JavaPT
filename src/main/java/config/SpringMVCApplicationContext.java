@@ -91,7 +91,8 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
     @Bean
     public HandlerAdapter handlerAdapter()
     {
-        return new RequestMappingHandlerAdapter();
+        RequestMappingHandlerAdapter adapter = new RequestMappingHandlerAdapter();
+        return adapter;
     }
 
     @Bean
@@ -99,6 +100,8 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
     {
         RequestMappingHandlerMapping mapping = new RequestMappingHandlerMapping();
         mapping.setUseSuffixPatternMatch(false);
+        mapping.setUrlDecode(false);
+        mapping.setAlwaysUseFullPath(true);
         return mapping;
     }
 

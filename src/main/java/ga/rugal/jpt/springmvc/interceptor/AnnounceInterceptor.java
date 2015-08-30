@@ -10,11 +10,12 @@ import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.RequestBeanService;
+import ga.rugal.jpt.core.service.TrackerResponseService;
 import ga.rugal.jpt.core.service.UserService;
 import ga.rugal.jpt.springmvc.controller.AnnounceAction;
+import static ga.rugal.jpt.springmvc.controller.AnnounceAction.readParameterFromURL;
 import java.io.IOException;
-import java.nio.channels.Channels;
-import java.nio.channels.WritableByteChannel;
+import java.nio.ByteBuffer;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +25,6 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -47,6 +47,9 @@ public class AnnounceInterceptor implements HandlerInterceptor
 
     @Autowired
     private RequestBeanService requsetBeanService;
+
+    @Autowired
+    private TrackerResponseService trackerResponseService;
 
     private static final String UID = "uid";
 
@@ -86,8 +89,8 @@ public class AnnounceInterceptor implements HandlerInterceptor
             LOG.debug(CommonLogContent.INVALID_CREDENTIAL, request.getRemoteAddr());
             throw new TrackerResponseException(CommonMessageContent.INVALID_CREDENTIAL);
         }
-        String infoHash = requsetBeanService.toSHA1(AnnounceAction.readParameterFromURL(
-            request.getQueryString(), AnnounceAction.INFO_HASH));
+        String infoHash = requsetBeanService.toSHA1(readParameterFromURL(request.getQueryString(), AnnounceAction.INFO_HASH));
+        LOG.debug(request.getParameter(AnnounceAction.INFO_HASH));
         LOG.debug(infoHash);
         Post post = postService.getByTorrent(infoHash);
         if (null == post)
@@ -148,15 +151,13 @@ public class AnnounceInterceptor implements HandlerInterceptor
      */
     private void deniedResponse(HttpServletRequest request, HttpServletResponse response, String message)
     {
-        response.setContentType(MediaType.TEXT_PLAIN_VALUE);
-        response.setDateHeader("Date", System.currentTimeMillis());
         response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
         try
         {
-            WritableByteChannel channel = Channels.newChannel(response.getOutputStream());
             Map<String, BEValue> params = new HashMap<>();
             params.put("failure reason", new BEValue(message, SystemDefaultProperties.BYTE_ENCODING));
-            channel.write(BEncoder.bencode(params));
+            ByteBuffer buffer = BEncoder.bencode(params);
+            trackerResponseService.writeResponseBuffer(response, buffer);
         }
         catch (IOException ioe)
         {

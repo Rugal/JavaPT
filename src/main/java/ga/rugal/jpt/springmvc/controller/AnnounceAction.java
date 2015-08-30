@@ -1,6 +1,7 @@
 package ga.rugal.jpt.springmvc.controller;
 
 import ga.rugal.jpt.common.CommonLogContent;
+import ga.rugal.jpt.common.CommonMessageContent;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.bcodec.BEValue;
 import ga.rugal.jpt.common.tracker.bcodec.BEncoder;
@@ -10,12 +11,12 @@ import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.server.TrackedPeer;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.common.tracker.server.Tracker;
+import ga.rugal.jpt.common.tracker.server.TrackerResponseException;
 import ga.rugal.jpt.core.service.RequestBeanService;
+import ga.rugal.jpt.core.service.TrackerResponseService;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.WritableByteChannel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -54,6 +54,9 @@ public class AnnounceAction
 
     @Autowired
     private RequestBeanService requestBeanService;
+
+    @Autowired
+    private TrackerResponseService trackerResponseService;
 
     public static final String INFO_HASH = "info_hash";
 
@@ -92,6 +95,11 @@ public class AnnounceAction
         //TODO Link user by UID, link torrent by info_hash
         LOG.trace(CommonLogContent.START_UPDATE, trackerUpdateBean.getUser().getUid());
         // Update the torrent according to the announce event
+        if (null == tracker)
+        {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw new TrackerResponseException(CommonMessageContent.TRACKER_NOT_RUNNING);
+        }
         TrackedPeer peer = tracker.update(trackerUpdateBean);
 
         //Generate response content for normal request
@@ -99,7 +107,8 @@ public class AnnounceAction
         TrackedTorrent torrent = tracker.get(trackerUpdateBean.getInfoHash());
         ByteBuffer buffer = this.compactResponse(torrent, peer);
         //Some setting for normal response
-        this.writeBuffer(response, buffer);
+        response.setStatus(HttpServletResponse.SC_OK);
+        trackerResponseService.writeResponseBuffer(response, buffer);
     }
 
     /**
@@ -124,22 +133,6 @@ public class AnnounceAction
             }
         }
         return null;
-    }
-
-    /**
-     * For better code reusability, use this small method to wrap buffer writing.
-     * <p>
-     * @param response the response object to write in
-     * @param buffer   content to write into response body
-     * <p>
-     * @throws IOException
-     */
-    private void writeBuffer(HttpServletResponse response, ByteBuffer buffer) throws IOException
-    {
-        response.setContentType(MediaType.TEXT_PLAIN_VALUE);
-        response.setDateHeader("Date", System.currentTimeMillis());
-        WritableByteChannel channel = Channels.newChannel(response.getOutputStream());
-        channel.write(buffer);
     }
 
     /**
@@ -194,14 +187,18 @@ public class AnnounceAction
     @ExceptionHandler(Exception.class)
     public void handleAllException(HttpServletResponse response, Exception ex)
     {
-        LOG.debug(ex.getMessage());
-        response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+        LOG.debug(ex.getMessage());// this may just be a format problem. so use debug only
+        if (response.getStatus() == HttpServletResponse.SC_OK)
+        {
+            response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+        }
+
         Map<String, BEValue> params = new HashMap<>();
         try
         {
             params.put("failure reason", new BEValue(ex.getMessage(), SystemDefaultProperties.BYTE_ENCODING));
             ByteBuffer buffer = BEncoder.bencode(params);
-            writeBuffer(response, buffer);
+            trackerResponseService.writeResponseBuffer(response, buffer);
         }
         catch (Exception e)
         {
