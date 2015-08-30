@@ -64,7 +64,7 @@ public class RequestBeanServiceImpl implements RequestBeanService
         try
         {
             //any torrent hash info must be in upper case
-            bean.setInfoHash(toSHA1(b.getInfoHash()).toUpperCase());
+            bean.setInfoHash(toSHA1(b.getInfoHash()));
         }
         catch (RuntimeException e)
         {
@@ -72,7 +72,7 @@ public class RequestBeanServiceImpl implements RequestBeanService
         }
         readPeerID(bean, b.getPeerId());
         //Do database search for user and client
-        User user = userService.getByID(b.getUserID());
+        User user = userService.getByID(b.getUid());
         if (null == user)
         {
             throw new TrackerResponseException(CommonMessageContent.USER_NOT_FOUND);
@@ -145,7 +145,7 @@ public class RequestBeanServiceImpl implements RequestBeanService
                 sb.append(Integer.toHexString(text.charAt(i)));
             }
         }
-        return sb.toString();
+        return sb.toString().toUpperCase();
     }
 
 }

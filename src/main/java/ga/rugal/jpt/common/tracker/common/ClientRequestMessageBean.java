@@ -49,7 +49,7 @@ public class ClientRequestMessageBean
 
     private String trackerid;
 
-    private int userID;
+    private int uid;
 
     public ClientRequestMessageBean()
     {
@@ -220,13 +220,13 @@ public class ClientRequestMessageBean
         this.key = key;
     }
 
-    public int getUserID()
+    public int getUid()
     {
-        return userID;
+        return uid;
     }
 
-    public void setUserID(int userID)
+    public void setUid(int uid)
     {
-        this.userID = userID;
+        this.uid = uid;
     }
 }

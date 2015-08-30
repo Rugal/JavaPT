@@ -88,14 +88,16 @@ public class AnnounceInterceptor implements HandlerInterceptor
         }
         String infoHash = requsetBeanService.toSHA1(AnnounceAction.readParameterFromURL(
             request.getQueryString(), AnnounceAction.INFO_HASH));
+        LOG.debug(infoHash);
         Post post = postService.getByTorrent(infoHash);
         if (null == post)
         {
             throw new TrackerResponseException(CommonMessageContent.INVALID_INFOHASH);
         }
-        String candidate = request.getParameter(UID) + post.getUid();
+        String candidate = request.getParameter(UID) + post.getPid();
         if (!BCrypt.checkpw(candidate, credential))
-        {//be sure our real credential must be:
+        {
+            //be sure our real credential must be:
             //uid:pid:salt -> BCrypt
             LOG.warn(MessageFormat.format(CommonLogContent.FRAUD_REQUEST,
                                           request.getRemoteAddr(),
