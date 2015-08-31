@@ -70,8 +70,14 @@ public class ClientAnnounceDaoImpl extends HibernateBaseDao<ClientAnnounce, Long
     public ClientAnnounce findLastAnnounce(User user, Post post)
     {
         Criteria crit = createCriteria();
-        crit.add(Restrictions.eq("uid", user));
-        crit.add(Restrictions.eq("torrentPost", post));
+        if (null != user)
+        {
+            crit.add(Restrictions.eq("uid", user));
+        }
+        if (null != post)
+        {
+            crit.add(Restrictions.eq("torrentPost", post));
+        }
         crit.addOrder(Order.desc("announceTime"));
         crit.setMaxResults(1);
         return (ClientAnnounce) crit.list().get(0);

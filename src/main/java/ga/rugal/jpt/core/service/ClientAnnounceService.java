@@ -42,14 +42,39 @@ public interface ClientAnnounceService
     ClientAnnounce announce(TrackerUpdateBean bean);
 
     /**
-     * Find the most recent client announce record by user and torrent
+     * Find the most recent client announce record by user and torrent. Either User or Post
+     * parameters or both could be null, that means to nullify their query in SQL.
      * <p>
-     * @param user the user that has reported this announce
-     * @param post the post that related with target torrent
+     * @param user the user that has reported this announce. If null, then ignore user query.
+     * @param post the post that related with target torrent. If null, then ignore post query.
      * <p>
      * @return A client announce object if such record does exist. otherwise return null.
      */
     @Transactional(readOnly = true)
     ClientAnnounce findLastAnnounce(User user, Post post);
+
+    /**
+     * Find the most recent client announce record according to user.
+     * <p>
+     * Null in User parameter makes this method identical to {@link #findLastAnnounce(null, null)}
+     * <p>
+     * @param user the user to be query on.
+     * <p>
+     * @return A client announce object if such record does exist. otherwise return null.
+     */
+    @Transactional(readOnly = true)
+    ClientAnnounce findLastAnnounceByUser(User user);
+
+    /**
+     * Find the most recent client announce record according to torrent.
+     * <p>
+     * Null in Post parameter makes this method identical to {@link #findLastAnnounce(null, null)}
+     * <p>
+     * @param post the post that related with target torrent.
+     * <p>
+     * @return A client announce object if such record does exist. otherwise return null.
+     */
+    @Transactional(readOnly = true)
+    ClientAnnounce findLastAnnounceByTorrent(Post post);
 
 }

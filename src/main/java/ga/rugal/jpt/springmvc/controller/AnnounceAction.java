@@ -87,10 +87,9 @@ public class AnnounceAction
         bean = null;
         //
         //
-        //-------After get formated tracker update bean, start to use tracker update bean only--------
-        LOG.debug(CommonLogContent.THE_REQUESTED_INFO, trackerUpdateBean.getUser().getUid(), trackerUpdateBean.getInfoHash());
-
         LOG.trace(CommonLogContent.START_UPDATE, trackerUpdateBean.getUser().getUid());
+        //-------After get formated tracker update bean, start to use it only--------
+        LOG.debug(CommonLogContent.THE_REQUESTED_INFO, trackerUpdateBean.getUser().getUid(), trackerUpdateBean.getInfoHash());
         // Update the torrent according to the announce event
         if (null == tracker)
         {

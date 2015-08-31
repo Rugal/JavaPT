@@ -121,4 +121,22 @@ public class ClientAnnounceServiceImpl implements ClientAnnounceService
         return dao.findLastAnnounce(user, post);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ClientAnnounce findLastAnnounceByUser(User user)
+    {
+        return this.findLastAnnounce(user, null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ClientAnnounce findLastAnnounceByTorrent(Post post)
+    {
+        return this.findLastAnnounce(null, post);
+    }
+
 }
