@@ -49,7 +49,7 @@ public class AnnounceAction
 
     private static final Logger LOG = LoggerFactory.getLogger(AnnounceAction.class.getName());
 
-//    @Autowired
+    @Autowired
     private Tracker tracker;
 
     @Autowired
@@ -183,7 +183,7 @@ public class AnnounceAction
     @ExceptionHandler(Exception.class)
     public void handleAllException(HttpServletResponse response, Exception ex)
     {
-        LOG.debug(ex.getMessage());// this may just be a format problem. so use debug only
+        LOG.debug(ex.getMessage(), ex);// this may just be a format problem. so use debug only
         if (response.getStatus() == HttpServletResponse.SC_OK)
         {
             response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);

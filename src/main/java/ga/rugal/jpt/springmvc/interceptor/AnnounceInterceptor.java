@@ -94,8 +94,7 @@ public class AnnounceInterceptor implements HandlerInterceptor
             throw new TrackerResponseException(CommonMessageContent.INVALID_CREDENTIAL);
         }
         String infoHash = requsetBeanService.toSHA1(readParameterFromURL(request.getQueryString(), AnnounceAction.INFO_HASH));
-        LOG.debug(request.getParameter(AnnounceAction.INFO_HASH));
-        LOG.debug(infoHash);
+        LOG.trace(infoHash);
         Post post = postService.getByTorrent(infoHash);
         if (null == post)
         {

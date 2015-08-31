@@ -4,6 +4,7 @@ import ga.rugal.jpt.core.dao.ClientAnnounceDao;
 import ga.rugal.jpt.core.entity.ClientAnnounce;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
+import java.util.List;
 import ml.rugal.sshcommon.hibernate.HibernateBaseDao;
 import ml.rugal.sshcommon.page.Pagination;
 import org.hibernate.Criteria;
@@ -80,7 +81,13 @@ public class ClientAnnounceDaoImpl extends HibernateBaseDao<ClientAnnounce, Long
         }
         crit.addOrder(Order.desc("announceTime"));
         crit.setMaxResults(1);
-        return (ClientAnnounce) crit.list().get(0);
+        List<ClientAnnounce> list = crit.list();
+        ClientAnnounce ca = null;
+        if (!list.isEmpty())
+        {
+            ca = list.get(0);
+        }
+        return ca;
     }
 
 }
