@@ -93,12 +93,22 @@ public class ClientAnnounceServiceImpl implements ClientAnnounceService
      * {@inheritDoc}
      */
     @Override
-    public void announce(TrackerUpdateBean bean)
+    public ClientAnnounce announce(TrackerUpdateBean bean)
     {
-        //logging Client Announce
-        this.save(bean);
         //check last update for this torrent
+        ClientAnnounce last = this.findLastAnnounce(bean.getUser(), bean.getPost());
+        //log the most recent Client Announce
+        ClientAnnounce current = this.save(bean);
+        //compute the difference
+        ClientAnnounce diff = new ClientAnnounce();
+        if (null != last)
+        {
+            diff.setDownloadByte(current.getDownloadByte() - last.getDownloadByte());
+            diff.setUploadByte(current.getUploadByte() - last.getUploadByte());
+        }
         //update user information
+        userService.clientAnnounce(bean.getUser(), diff);
+        return current;
     }
 
     /**

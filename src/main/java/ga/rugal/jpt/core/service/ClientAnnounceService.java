@@ -29,15 +29,17 @@ public interface ClientAnnounceService
     /**
      * Announce a update for user.
      * <p>
-     * First log this announce.
+     * First to log this announce.
      * <p>
-     * Secondly to query get the difference between this update and the most recent one.
+     * Secondly query to get the difference between this update and the most recent one.
      * <p>
-     * Then to update information in user profile.
+     * Then to update user profile in db.
      * <p>
      * @param bean
+     *             <p>
+     * @return
      */
-    void announce(TrackerUpdateBean bean);
+    ClientAnnounce announce(TrackerUpdateBean bean);
 
     /**
      * Find the most recent client announce record by user and torrent

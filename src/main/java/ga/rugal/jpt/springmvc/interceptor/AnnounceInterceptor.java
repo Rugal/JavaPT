@@ -30,7 +30,11 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- *
+ * In version 0.1, we just use uid+pid --> BCrypt to represent credential.
+ * <p>
+ * I expect to use uid+pid+salt of a user --> BCrypt in future version
+ * <p>
+ * @since 0.1
  * @author Rugal Bernstein
  */
 @Component
@@ -95,13 +99,13 @@ public class AnnounceInterceptor implements HandlerInterceptor
         Post post = postService.getByTorrent(infoHash);
         if (null == post)
         {
-            throw new TrackerResponseException(CommonMessageContent.INVALID_INFOHASH);
+            throw new TrackerResponseException(CommonMessageContent.TORRENT_NOT_FOUND);
         }
         String candidate = request.getParameter(UID) + post.getPid();
         if (!BCrypt.checkpw(candidate, credential))
         {
             //be sure our real credential must be:
-            //uid:pid:salt -> BCrypt
+            //uid:pid-> BCrypt
             LOG.warn(MessageFormat.format(CommonLogContent.FRAUD_REQUEST,
                                           request.getRemoteAddr(),
                                           request.getParameter(UID),

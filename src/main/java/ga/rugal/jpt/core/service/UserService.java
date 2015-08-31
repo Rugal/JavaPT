@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.service;
 
+import ga.rugal.jpt.core.entity.ClientAnnounce;
 import ga.rugal.jpt.core.entity.User;
 import ml.rugal.sshcommon.page.Pagination;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,5 +26,7 @@ public interface UserService
     User save(User bean);
 
     User update(User bean);
+
+    User clientAnnounce(User bean, ClientAnnounce clientAnnounce);
 
 }

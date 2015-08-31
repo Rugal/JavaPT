@@ -6,8 +6,10 @@ import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
 import ga.rugal.jpt.common.tracker.server.TrackerResponseException;
 import ga.rugal.jpt.core.entity.Client;
+import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.ClientService;
+import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.RequestBeanService;
 import ga.rugal.jpt.core.service.UserService;
 import org.slf4j.Logger;
@@ -36,6 +38,9 @@ public class RequestBeanServiceImpl implements RequestBeanService
     @Autowired
     private ClientService clientService;
 
+    @Autowired
+    private PostService postService;
+
     /**
      * {@inheritDoc }
      * <p>
@@ -60,7 +65,7 @@ public class RequestBeanServiceImpl implements RequestBeanService
         bean.setTrackerid(b.getTrackerid());
         bean.setEvent(RequestEvent.getByName(b.getEvent()));
         bean.setKey(b.getKey());
-        //special SHA1 process
+        //unescape to SHA1 process
         try
         {
             //any torrent hash info must be in upper case
@@ -70,6 +75,14 @@ public class RequestBeanServiceImpl implements RequestBeanService
         {
             throw new TrackerResponseException(CommonMessageContent.INVALID_INFOHASH);
         }
+        //set post by info_hash
+        Post post = postService.getByTorrent(bean.getInfoHash());
+        if (null == post)
+        {
+            throw new TrackerResponseException(CommonMessageContent.TORRENT_NOT_FOUND);
+        }
+        bean.setPost(post);
+        //
         readPeerID(bean, b.getPeerId());
         //Do database search for user and client
         User user = userService.getByID(b.getUid());

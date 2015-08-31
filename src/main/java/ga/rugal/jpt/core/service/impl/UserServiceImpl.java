@@ -1,6 +1,7 @@
 package ga.rugal.jpt.core.service.impl;
 
 import ga.rugal.jpt.core.dao.UserDao;
+import ga.rugal.jpt.core.entity.ClientAnnounce;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.UserService;
 import ml.rugal.sshcommon.hibernate.Updater;
@@ -62,6 +63,18 @@ public class UserServiceImpl implements UserService
     public User update(User bean)
     {
         Updater<User> updater = new Updater<>(bean);
+        return dao.updateByUpdater(updater);
+    }
+
+    @Override
+    public User clientAnnounce(User bean, ClientAnnounce clientAnnounce)
+    {
+        bean.setDownloadByte(bean.getDownloadByte() + clientAnnounce.getDownloadByte());
+        bean.setUploadByte(bean.getUploadByte() + clientAnnounce.getUploadByte());
+        Updater<User> updater = new Updater<>(bean);
+        updater.setUpdateMode(Updater.UpdateMode.MIN);
+        updater.include("uploadByte");
+        updater.include("downloadByte");
         return dao.updateByUpdater(updater);
     }
 

@@ -4,6 +4,7 @@ import ga.rugal.ControllerClientSideTestBase;
 import java.net.URI;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.http.MediaType;
@@ -33,7 +34,7 @@ public class AnnounceActionClientSideTest extends ControllerClientSideTestBase
     }
 
     @Test
-//    @Ignore
+    @Ignore
     public void testAnnounce() throws Exception
     {
 

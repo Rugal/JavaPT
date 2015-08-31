@@ -3,6 +3,7 @@ package ga.rugal.jpt.common.tracker.common;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
 import ga.rugal.jpt.common.tracker.server.TrackedPeer;
 import ga.rugal.jpt.core.entity.Client;
+import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
 import java.nio.ByteBuffer;
 
@@ -50,6 +51,8 @@ public class TrackerUpdateBean
     private User user;
 
     private Client client;
+
+    private Post post;
 
     public RequestEvent getEvent()
     {
@@ -129,6 +132,16 @@ public class TrackerUpdateBean
     public void setRandom(String random)
     {
         this.random = random;
+    }
+
+    public Post getPost()
+    {
+        return post;
+    }
+
+    public void setPost(Post post)
+    {
+        this.post = post;
     }
 
     public int getPort()

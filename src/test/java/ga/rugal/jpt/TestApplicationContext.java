@@ -1,5 +1,7 @@
 package ga.rugal.jpt;
 
+import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
+import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
 import ga.rugal.jpt.core.entity.Admin;
 import ga.rugal.jpt.core.entity.Client;
 import ga.rugal.jpt.core.entity.ClientAnnounce;
@@ -140,6 +142,8 @@ public class TestApplicationContext
         bean.setCid(client);
         bean.setUid(user);
         bean.setTorrentPost(post);
+        bean.setUploadByte(0l);
+        bean.setDownloadByte(0l);
         return bean;
     }
 
@@ -152,6 +156,23 @@ public class TestApplicationContext
         bean.setGrantee(user);
         bean.setSince(System.currentTimeMillis());
         bean.setLevel(Admin.Level.ADMIN);
+        return bean;
+    }
+
+    @Bean
+    @Autowired
+    public TrackerUpdateBean trackerUpdateBean(User user, Post post, Client client)
+    {
+        TrackerUpdateBean bean = new TrackerUpdateBean();
+        bean.setClient(client);
+        bean.setDownloaded(99l);
+        bean.setUploaded(101l);
+        bean.setLeft(100l);
+        bean.setEvent(RequestEvent.STARTED);
+        bean.setInfoHash(post.getTorrentHash());
+        bean.setPost(post);
+        bean.setUser(user);
+
         return bean;
     }
 
