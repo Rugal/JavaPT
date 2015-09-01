@@ -1,7 +1,6 @@
 package ga.rugal.jpt.core.dao.impl;
 
-import ga.rugal.JUnitSpringTestBase;
-import ga.rugal.jpt.TestApplicationContext;
+import ga.rugal.jpt.DBTestBase;
 import ga.rugal.jpt.core.dao.ClientAnnounceDao;
 import ga.rugal.jpt.core.dao.ClientDao;
 import ga.rugal.jpt.core.dao.PostDao;
@@ -18,14 +17,12 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 
 /**
  *
  * @author Rugal Bernstein
  */
-@ContextConfiguration(classes = TestApplicationContext.class)
-public class ClientAnnounceDaoImplTest extends JUnitSpringTestBase
+public class ClientAnnounceDaoImplTest extends DBTestBase
 {
 
     @Autowired

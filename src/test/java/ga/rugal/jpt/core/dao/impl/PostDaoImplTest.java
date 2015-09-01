@@ -1,7 +1,6 @@
 package ga.rugal.jpt.core.dao.impl;
 
-import ga.rugal.JUnitSpringTestBase;
-import ga.rugal.jpt.TestApplicationContext;
+import ga.rugal.jpt.DBTestBase;
 import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.dao.UserLevelDao;
@@ -15,14 +14,12 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 
 /**
  *
  * @author Rugal Bernstein
  */
-@ContextConfiguration(classes = TestApplicationContext.class)
-public class PostDaoImplTest extends JUnitSpringTestBase
+public class PostDaoImplTest extends DBTestBase
 {
 
     @Autowired
@@ -51,9 +48,9 @@ public class PostDaoImplTest extends JUnitSpringTestBase
     public void setUp()
     {
         System.out.println("setUp");
-//        levelDao.save(level);
-//        userDao.save(user);
-//        postDao.save(post);
+        levelDao.save(level);
+        userDao.save(user);
+        postDao.save(post);
     }
 
     @After
@@ -61,13 +58,13 @@ public class PostDaoImplTest extends JUnitSpringTestBase
     {
         System.out.println("tearDown");
         //order is important
-//        postDao.deleteById(post.getPid());
-//        userDao.deleteById(user.getUid());
-//        levelDao.deleteById(level.getLid());
+        postDao.deleteById(post.getPid());
+        userDao.deleteById(user.getUid());
+        levelDao.deleteById(level.getLid());
     }
 
     @Test
-    @Ignore
+//    @Ignore
     public void testGetPage()
     {
         System.out.println("getPage");
@@ -78,7 +75,7 @@ public class PostDaoImplTest extends JUnitSpringTestBase
     }
 
     @Test
-    @Ignore
+//    @Ignore
     public void testGetByID()
     {
         System.out.println("getByID");
@@ -89,7 +86,7 @@ public class PostDaoImplTest extends JUnitSpringTestBase
     }
 
     @Test
-    @Ignore
+//    @Ignore
     public void getByTorrent()
     {
         System.out.println("getByTorrent");
