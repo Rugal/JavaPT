@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 /**
  * Handlers within this class are only accessible by SUPER admin level.
  * <p>
+ * Control tracker server to start or stop by HTTP request.
+ * <p>
  * @author Rugal Bernstein
  */
 @Controller

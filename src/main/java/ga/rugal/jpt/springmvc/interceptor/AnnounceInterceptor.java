@@ -84,6 +84,21 @@ public class AnnounceInterceptor implements HandlerInterceptor
         return true;
     }
 
+    /**
+     * TODO now we have a problem regarding way of getting torrent.
+     * <p>
+     * In {@link AnnounceInterceptor#credentialValidation(javax.servlet.http.HttpServletRequest)} I
+     * use Post.torrentHash as reference key. But in
+     * {@link ga.rugal.jpt.common.tracker.server.Tracker#announce(ga.rugal.jpt.common.tracker.server.TrackedTorrent)}
+     * I use HashMap, in which torrent files are announced ahead, in tracker instead.
+     * <p>
+     * So there must have some inconsistency regarding torrent. Since Posted torrent might not be
+     * announced by Tracker. I must find a consistent way to announce and check torrent.
+     * <p>
+     * @param request
+     *                <p>
+     * @throws TrackerResponseException
+     */
     private void credentialValidation(HttpServletRequest request) throws TrackerResponseException
     {
         //Credential validation begin
