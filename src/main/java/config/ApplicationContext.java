@@ -1,12 +1,7 @@
 package config;
 
 import com.zaxxer.hikari.HikariDataSource;
-import ga.rugal.jpt.common.CommonLogContent;
-import ga.rugal.jpt.common.SystemDefaultProperties;
-import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
-import ga.rugal.jpt.common.tracker.server.Tracker;
 import ga.rugal.jpt.core.entity.PackageInfo;
-import java.io.File;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
@@ -115,44 +110,5 @@ public class ApplicationContext
         return txManager;
     }
 //</editor-fold>
-
-    /**
-     * Create a tracker server in local, with same port to servlet container
-     * Spring will start this tracker after creation.
-     *
-     * @return
-     *
-     * @throws java.io.IOException
-     *
-     */
-    @Bean(initMethod = "start", destroyMethod = "stop")
-    public Tracker tracker() throws Exception
-    {
-        try
-        {
-            Tracker tracker = new Tracker();
-            File folder = new File(SystemDefaultProperties.TORRENT_PATH);
-            LOG.debug(CommonLogContent.OPEN_TORRENT_FOLDER, folder.getAbsolutePath());
-            File[] torrentFiles = folder.listFiles((File dir, String fileName) -> fileName.endsWith(SystemDefaultProperties.TORRENT_SUBFIX));
-            if (null != torrentFiles && torrentFiles.length != 0)
-            {
-                for (File torrentFile : torrentFiles)
-                {
-                    TrackedTorrent torrent = TrackedTorrent.load(torrentFile);
-                    tracker.announce(torrent);
-                }
-                LOG.info(CommonLogContent.TRACKER_CREATED, torrentFiles.length);
-            }
-            else
-            {
-                LOG.info(CommonLogContent.TRACKER_NO_TORRENT);
-            }
-            return tracker;
-        }
-        catch (Exception e)
-        {
-            throw new Exception(CommonLogContent.TRACKER_NOT_CREATED, e);
-        }
-    }
 
 }
