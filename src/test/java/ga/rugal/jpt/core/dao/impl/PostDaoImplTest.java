@@ -1,6 +1,6 @@
 package ga.rugal.jpt.core.dao.impl;
 
-import ga.rugal.jpt.DBTestBase;
+import ga.rugal.DBTestBase;
 import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.dao.UserLevelDao;
@@ -64,7 +64,6 @@ public class PostDaoImplTest extends DBTestBase
     }
 
     @Test
-//    @Ignore
     public void testGetPage()
     {
         System.out.println("getPage");
@@ -75,7 +74,6 @@ public class PostDaoImplTest extends DBTestBase
     }
 
     @Test
-//    @Ignore
     public void testGetByID()
     {
         System.out.println("getByID");
@@ -86,7 +84,6 @@ public class PostDaoImplTest extends DBTestBase
     }
 
     @Test
-//    @Ignore
     public void getByTorrent()
     {
         System.out.println("getByTorrent");

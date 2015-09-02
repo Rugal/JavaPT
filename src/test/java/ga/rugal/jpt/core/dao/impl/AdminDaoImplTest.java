@@ -1,6 +1,6 @@
 package ga.rugal.jpt.core.dao.impl;
 
-import ga.rugal.jpt.DBTestBase;
+import ga.rugal.DBTestBase;
 import ga.rugal.jpt.core.dao.AdminDao;
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.entity.Admin;

@@ -1,6 +1,6 @@
 package ga.rugal.jpt.core.service.impl;
 
-import ga.rugal.jpt.DBTestBase;
+import ga.rugal.DBTestBase;
 import ga.rugal.jpt.core.dao.UserLevelDao;
 import ga.rugal.jpt.core.entity.ClientAnnounce;
 import ga.rugal.jpt.core.entity.User;

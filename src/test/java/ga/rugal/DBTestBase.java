@@ -1,4 +1,4 @@
-package ga.rugal.jpt;
+package ga.rugal;
 
 import ga.JUnitSpringTestBase;
 import org.junit.Before;

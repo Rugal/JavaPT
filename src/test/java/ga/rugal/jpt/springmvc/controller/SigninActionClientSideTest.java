@@ -3,7 +3,6 @@ package ga.rugal.jpt.springmvc.controller;
 import ga.rugal.ControllerClientSideTestBase;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,7 +31,6 @@ public class SigninActionClientSideTest extends ControllerClientSideTestBase
     }
 
     @Test
-    @Ignore
     public void testSignin() throws Exception
     {
         this.mockMvc.perform(post("/signin").header("id", "1").header("credential", "123456")

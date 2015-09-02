@@ -1,6 +1,6 @@
 package ga.rugal.jpt.core.dao.impl;
 
-import ga.rugal.jpt.DBTestBase;
+import ga.rugal.DBTestBase;
 import ga.rugal.jpt.core.dao.ClientAnnounceDao;
 import ga.rugal.jpt.core.dao.ClientDao;
 import ga.rugal.jpt.core.dao.PostDao;
