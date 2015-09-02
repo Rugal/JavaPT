@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,7 +32,7 @@ public class TrackerAction
 
     private static final Logger LOG = LoggerFactory.getLogger(TrackerAction.class.getName());
 
-//    @Autowired
+    @Autowired
     private Tracker tracker;
 
     /**

@@ -2,6 +2,7 @@ package config;
 
 import com.zaxxer.hikari.HikariDataSource;
 import ga.rugal.jpt.core.entity.PackageInfo;
+import ga.rugal.jpt.springmvc.annotation.Exclude;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
@@ -10,7 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
@@ -32,7 +35,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         "classpath:jdbc.properties",
         "classpath:hibernate.properties"
     })
-@ComponentScan(basePackageClasses = ga.PackageInfo.class)
+@ComponentScan(basePackageClasses = ga.rugal.jpt.core.PackageInfo.class, excludeFilters
+               = @Filter(type = FilterType.ANNOTATION, classes = Exclude.class))
 public class ApplicationContext
 {
 
@@ -57,7 +61,6 @@ public class ApplicationContext
 
 //<editor-fold defaultstate="collapsed" desc="HikariCP Datasoure Configuration" >
     @Bean(destroyMethod = "close")
-    @Autowired
     public DataSource dataSource()
     {
         HikariDataSource dataSource = new HikariDataSource();

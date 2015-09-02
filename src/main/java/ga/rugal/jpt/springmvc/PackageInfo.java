@@ -1,4 +1,4 @@
-package ga.rugal.jpt.springmvc.controller;
+package ga.rugal.jpt.springmvc;
 
 /**
  *

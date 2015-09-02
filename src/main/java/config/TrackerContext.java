@@ -4,17 +4,27 @@ import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.common.tracker.server.Tracker;
+import ga.rugal.jpt.springmvc.PackageInfo;
+import ga.rugal.jpt.springmvc.controller.AnnounceAction;
+import ga.rugal.jpt.springmvc.controller.TrackerAction;
 import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 
 /**
  *
  * @author Rugal Bernstein
  */
 @Configuration
+@ComponentScan(basePackageClasses = PackageInfo.class, includeFilters
+               = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes =
+                                       {
+                                           AnnounceAction.class, TrackerAction.class
+    }))
 public class TrackerContext
 {
 

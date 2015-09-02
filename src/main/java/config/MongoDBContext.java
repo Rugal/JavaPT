@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -26,6 +27,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
     {
         "classpath:jdbc.properties"
     })
+@ComponentScan(basePackageClasses = RepositoryPackage.class)
 public class MongoDBContext extends AbstractMongoConfiguration
 {
 
@@ -65,5 +67,4 @@ public class MongoDBContext extends AbstractMongoConfiguration
     {
         return new GridFS(mongo.getDB(this.getDatabaseName()), env.getProperty("mongo.bucket"));
     }
-
 }
