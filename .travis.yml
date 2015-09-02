@@ -7,3 +7,6 @@ services:
 
 addons:
   postgresql: "9.3"
+
+before_script:
+  - psql -f 'db/jpt.sql' -U postgres
