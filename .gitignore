@@ -4,5 +4,4 @@
 .settings
 nb-configuration.xml
 *.swp
-/torrents/
 *.log
