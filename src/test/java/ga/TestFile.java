@@ -1,4 +1,4 @@
-package ga.rugal.jpt;
+package ga;
 
 import java.io.UnsupportedEncodingException;
 import org.junit.Test;

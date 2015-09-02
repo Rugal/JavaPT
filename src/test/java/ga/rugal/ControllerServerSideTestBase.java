@@ -1,5 +1,6 @@
 package ga.rugal;
 
+import ga.JUnitSpringTestBase;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public abstract class ControllerServerSideTestBase extends JUnitSpringTestBase
 {
 
     /**
-     * This is a request handler used to mapping all request into handle ACTION class
+     * This is a request handler used to mapping all request into handle ACTION class.
      */
     @Autowired
     public RequestMappingHandlerAdapter handlerAdapter;

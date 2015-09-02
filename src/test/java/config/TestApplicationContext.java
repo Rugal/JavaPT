@@ -1,7 +1,8 @@
-package ga.rugal.jpt;
+package config;
 
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
+import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.core.entity.Admin;
 import ga.rugal.jpt.core.entity.Client;
 import ga.rugal.jpt.core.entity.ClientAnnounce;
@@ -13,6 +14,8 @@ import ga.rugal.jpt.core.entity.Tag;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.entity.UserLevel;
+import java.io.File;
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -174,6 +177,13 @@ public class TestApplicationContext
         bean.setUser(user);
 
         return bean;
+    }
+
+    @Bean
+    public TrackedTorrent torrent() throws IOException
+    {
+        File file = new File("torrents\\5C84616F2E28D03BF9C127D7BCCAA4CF0FD57B43.torrent");
+        return TrackedTorrent.load(file);
     }
 
 }

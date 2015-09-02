@@ -1,5 +1,6 @@
 package ga.rugal;
 
+import ga.JUnitSpringTestBase;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
