@@ -1,12 +1,14 @@
 package ga.rugal.jpt.core.repository.impl;
 
-import ga.rugal.JUnitSpringTestBase;
+import com.mongodb.gridfs.GridFSDBFile;
+import ga.JUnitSpringTestBase;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -15,13 +17,17 @@ import org.springframework.test.context.ContextConfiguration;
  *
  * @author Rugal Bernstein
  */
-@ContextConfiguration(classes = config.MongoDBContext.class)
+@ContextConfiguration(classes =
+{
+    config.MongoDBContext.class
+})
 public class FileRepositoryImplTest extends JUnitSpringTestBase
 {
 
     @Autowired
     private FileRepositoryImpl repository;
 
+    @Autowired
     private TrackedTorrent torrent;
 
     public FileRepositoryImplTest()
@@ -31,29 +37,40 @@ public class FileRepositoryImplTest extends JUnitSpringTestBase
     @Before
     public void setUp() throws IOException
     {
-        File file = new File("E:\\WorkSpaces\\Coding\\JavaPT\\torrents\\5C84616F2E28D03BF9C127D7BCCAA4CF0FD57B43.torrent");
-        torrent = TrackedTorrent.load(file);
+        System.out.println("saveFile");
+        repository.saveFile(torrent);
     }
 
     @After
     public void tearDown()
     {
-    }
-
-    @Test
-    @Ignore
-    public void testSaveFile() throws Exception
-    {
-        System.out.println("saveFile");
-        repository.saveFile(torrent);
-    }
-
-    @Test
-    @Ignore
-    public void testDeleteFile()
-    {
         System.out.println("deleteFile");
         repository.deleteFile(torrent);
+    }
+
+    @Test
+    public void testGetFile()
+    {
+        System.out.println("getFile");
+        GridFSDBFile result = repository.getFile(torrent);
+        Assert.assertEquals(result.getFilename(), torrent.getHexInfoHash());
+    }
+
+    @Test
+    public void testGetAllFiles() throws IOException
+    {
+        System.out.println("getAll");
+        List<GridFSDBFile> list = repository.getAllFiles();
+        for (GridFSDBFile l : list)
+        {
+            File file = new File(l.getFilename());
+            System.out.println("Before write");
+            System.out.println(file.exists());
+            l.writeTo(file);
+            System.out.println("After write");
+            System.out.println(file.exists());
+            file.delete();
+        }
     }
 
 }
