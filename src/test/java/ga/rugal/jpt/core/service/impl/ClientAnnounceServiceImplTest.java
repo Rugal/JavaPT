@@ -1,7 +1,6 @@
 package ga.rugal.jpt.core.service.impl;
 
-import ga.rugal.JUnitSpringTestBase;
-import ga.rugal.jpt.TestApplicationContext;
+import ga.rugal.jpt.DBTestBase;
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.core.dao.UserLevelDao;
 import ga.rugal.jpt.core.entity.Client;
@@ -17,14 +16,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 
 /**
  *
  * @author Rugal Bernstein
  */
-@ContextConfiguration(classes = TestApplicationContext.class)
-public class ClientAnnounceServiceImplTest extends JUnitSpringTestBase
+public class ClientAnnounceServiceImplTest extends DBTestBase
 {
 
     @Autowired
