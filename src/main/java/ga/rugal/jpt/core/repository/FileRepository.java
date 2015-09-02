@@ -3,6 +3,7 @@ package ga.rugal.jpt.core.repository;
 import com.mongodb.gridfs.GridFSDBFile;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import java.io.IOException;
+import java.util.List;
 
 /**
  *
@@ -15,6 +16,10 @@ public interface FileRepository
 
     GridFSDBFile getFile(TrackedTorrent torrent);
 
+    GridFSDBFile getFile(String hash);
+
     TrackedTorrent saveFile(TrackedTorrent torrent) throws IOException;
+
+    List<GridFSDBFile> getAllFiles();
 
 }
