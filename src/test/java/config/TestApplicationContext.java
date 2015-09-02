@@ -182,7 +182,7 @@ public class TestApplicationContext
     @Bean
     public TrackedTorrent torrent() throws IOException
     {
-        File file = new File("torrents\\5C84616F2E28D03BF9C127D7BCCAA4CF0FD57B43.torrent");
+        File file = new File("torrents").listFiles()[0];
         return TrackedTorrent.load(file);
     }
 
