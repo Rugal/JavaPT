@@ -1,5 +1,6 @@
 package config;
 
+import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
@@ -182,7 +183,7 @@ public class TestApplicationContext
     @Bean
     public TrackedTorrent torrent() throws IOException
     {
-        File file = new File("torrents").listFiles()[0];
+        File file = new File(SystemDefaultProperties.TORRENT_PATH).listFiles()[0];
         return TrackedTorrent.load(file);
     }
 

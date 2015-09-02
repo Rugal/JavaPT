@@ -3,6 +3,7 @@ package ga.rugal.jpt.core.repository.impl;
 import com.mongodb.gridfs.GridFSDBFile;
 import ga.JUnitSpringTestBase;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
+import ga.rugal.jpt.core.repository.FileRepository;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -25,7 +26,7 @@ public class FileRepositoryImplTest extends JUnitSpringTestBase
 {
 
     @Autowired
-    private FileRepositoryImpl repository;
+    private FileRepository repository;
 
     @Autowired
     private TrackedTorrent torrent;
