@@ -2,7 +2,7 @@ package config;
 
 import com.zaxxer.hikari.HikariDataSource;
 import ga.rugal.jpt.core.entity.PackageInfo;
-import ga.rugal.jpt.springmvc.annotation.Exclude;
+import ga.rugal.jpt.springmvc.annotation.MongoDB;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
@@ -35,8 +35,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         "classpath:jdbc.properties",
         "classpath:hibernate.properties"
     })
-@ComponentScan(basePackageClasses = ga.rugal.jpt.core.PackageInfo.class, excludeFilters
-               = @Filter(type = FilterType.ANNOTATION, classes = Exclude.class))
+@ComponentScan(basePackageClasses = ga.rugal.jpt.core.PackageInfo.class,
+               excludeFilters = @Filter(type = FilterType.ANNOTATION, classes = MongoDB.class))
 public class ApplicationContext
 {
 

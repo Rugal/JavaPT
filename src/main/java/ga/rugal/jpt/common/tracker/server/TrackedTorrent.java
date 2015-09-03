@@ -15,12 +15,14 @@
  */
 package ga.rugal.jpt.common.tracker.server;
 
+import com.mongodb.gridfs.GridFSDBFile;
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.common.Peer;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -57,8 +59,6 @@ public class TrackedTorrent extends Torrent
 
     private int announceInterval;
 
-    private File torrentFile;
-
     /**
      * Peers currently exchanging on this torrent.
      */
@@ -83,16 +83,6 @@ public class TrackedTorrent extends Torrent
     public TrackedTorrent(Torrent torrent) throws IOException
     {
         this(torrent.getEncoded());
-    }
-
-    public File getTorrentFile()
-    {
-        return torrentFile;
-    }
-
-    public void setTorrentFile(File torrentFile)
-    {
-        this.torrentFile = torrentFile;
     }
 
     /**
@@ -339,7 +329,24 @@ public class TrackedTorrent extends Torrent
     {
         byte[] data = FileUtils.readFileToByteArray(file);
         TrackedTorrent torrent = new TrackedTorrent(data);
-        torrent.setTorrentFile(file);
+        return torrent;
+    }
+
+    /**
+     * Load a tracked torrent from the given byte array.
+     *
+     * @param dbFile
+     *
+     * @return
+     *
+     * @throws IOException When the torrent file cannot be read.
+     */
+    public static TrackedTorrent load(GridFSDBFile dbFile) throws IOException
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        dbFile.writeTo(baos);
+        byte[] data = baos.toByteArray();
+        TrackedTorrent torrent = new TrackedTorrent(data);
         return torrent;
     }
 }

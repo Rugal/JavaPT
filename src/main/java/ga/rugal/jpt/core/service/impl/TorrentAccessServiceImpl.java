@@ -1,9 +1,10 @@
 package ga.rugal.jpt.core.service.impl;
 
-import ga.rugal.jpt.core.service.TorrentAccessService;
 import com.mongodb.gridfs.GridFSDBFile;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.core.repository.FileRepository;
+import ga.rugal.jpt.core.service.TorrentAccessService;
+import ga.rugal.jpt.springmvc.annotation.MongoDB;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
  * @author Rugal Bernstein
  */
 @Service
+@MongoDB
 public class TorrentAccessServiceImpl implements TorrentAccessService
 {
 

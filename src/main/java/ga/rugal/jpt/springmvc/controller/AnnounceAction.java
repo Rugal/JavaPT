@@ -10,9 +10,10 @@ import ga.rugal.jpt.common.tracker.common.Peer;
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.server.TrackedPeer;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
-import ga.rugal.jpt.common.tracker.server.Tracker;
 import ga.rugal.jpt.common.tracker.server.TrackerResponseException;
+import ga.rugal.jpt.core.service.ClientAnnounceService;
 import ga.rugal.jpt.core.service.RequestBeanService;
+import ga.rugal.jpt.core.service.Tracker;
 import ga.rugal.jpt.core.service.TrackerResponseService;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -58,6 +59,9 @@ public class AnnounceAction
     @Autowired
     private TrackerResponseService trackerResponseService;
 
+    @Autowired
+    private ClientAnnounceService clientAnnounceService;
+
     public static final String INFO_HASH = "info_hash";
 
     public static final String PEER_ID = "peer_id";
@@ -97,7 +101,11 @@ public class AnnounceAction
             throw new TrackerResponseException(CommonMessageContent.TRACKER_NOT_RUNNING);
         }
         TrackedPeer peer = tracker.update(trackerUpdateBean);
-
+        // Update user information in database
+        clientAnnounceService.announce(trackerUpdateBean);
+        //
+        //
+        //
         //Generate response content for normal request
         LOG.trace(CommonLogContent.MAKE_RESPONSE, trackerUpdateBean.getUser().getUid());
         TrackedTorrent torrent = tracker.get(trackerUpdateBean.getInfoHash());

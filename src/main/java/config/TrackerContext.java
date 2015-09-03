@@ -3,7 +3,8 @@ package config;
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
-import ga.rugal.jpt.common.tracker.server.Tracker;
+import ga.rugal.jpt.core.service.Tracker;
+import ga.rugal.jpt.core.service.impl.TrackerImpl;
 import ga.rugal.jpt.springmvc.PackageInfo;
 import ga.rugal.jpt.springmvc.controller.AnnounceAction;
 import ga.rugal.jpt.springmvc.controller.TrackerAction;
@@ -32,7 +33,7 @@ public class TrackerContext
 
     /**
      * Create a tracker server in local, with same port to servlet container
-     * Spring will start this tracker after creation.
+     * Spring will start this tracker after creation of bean.
      *
      * @return
      *
@@ -44,7 +45,7 @@ public class TrackerContext
     {
         try
         {
-            Tracker tracker = new Tracker();
+            TrackerImpl tracker = new TrackerImpl();
             File folder = new File(SystemDefaultProperties.TORRENT_PATH);
             LOG.debug(CommonLogContent.OPEN_TORRENT_FOLDER, folder.getAbsolutePath());
             File[] torrentFiles = folder.listFiles((File dir, String fileName) -> fileName.endsWith(SystemDefaultProperties.TORRENT_SUBFIX));

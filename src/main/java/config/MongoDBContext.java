@@ -4,12 +4,14 @@ import com.mongodb.MongoClient;
 import com.mongodb.gridfs.GridFS;
 import ga.rugal.jpt.core.entity.PackageInfo;
 import ga.rugal.jpt.core.repository.RepositoryPackage;
+import ga.rugal.jpt.springmvc.annotation.MongoDB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
@@ -22,12 +24,11 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
  * @since 0.2
  */
 @Configuration
+@PropertySource("classpath:jdbc.properties")
 @EnableMongoRepositories(basePackageClasses = RepositoryPackage.class)
-@PropertySource(
-    {
-        "classpath:jdbc.properties"
-    })
-@ComponentScan(basePackageClasses = RepositoryPackage.class)
+@ComponentScan(basePackageClasses = ga.rugal.jpt.core.PackageInfo.class,
+               includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = MongoDB.class)
+)
 public class MongoDBContext extends AbstractMongoConfiguration
 {
 

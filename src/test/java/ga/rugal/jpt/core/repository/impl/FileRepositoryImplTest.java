@@ -20,7 +20,7 @@ import org.springframework.test.context.ContextConfiguration;
  */
 @ContextConfiguration(classes =
 {
-    config.MongoDBContext.class
+    config.MongoDBContext.class, config.ApplicationContext.class
 })
 public class FileRepositoryImplTest extends JUnitSpringTestBase
 {
@@ -66,10 +66,10 @@ public class FileRepositoryImplTest extends JUnitSpringTestBase
         {
             File file = new File(l.getFilename());
             System.out.println("Before write");
-            System.out.println(file.exists());
+            Assert.assertFalse(file.exists());
             l.writeTo(file);
             System.out.println("After write");
-            System.out.println(file.exists());
+            Assert.assertTrue(file.exists());
             file.delete();
         }
     }

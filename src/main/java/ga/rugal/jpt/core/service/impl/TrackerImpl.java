@@ -1,27 +1,29 @@
-package ga.rugal.jpt.common.tracker.server;
+package ga.rugal.jpt.core.service.impl;
 
+import ga.rugal.jpt.core.service.Tracker;
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
-import ga.rugal.jpt.core.service.ClientAnnounceService;
+import ga.rugal.jpt.common.tracker.server.TrackedPeer;
+import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
+import ga.rugal.jpt.common.tracker.server.TrackerResponseException;
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  * @author Rugal Bernstein
  */
-public class Tracker
+public class TrackerImpl implements Tracker
 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Tracker.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TrackerImpl.class);
 
     private final ConcurrentMap<String, TrackedTorrent> torrents = new ConcurrentHashMap<>();
 
@@ -29,9 +31,7 @@ public class Tracker
 
     private boolean running = false;
 
-    @Autowired
-    private ClientAnnounceService clientAnnounceService;
-
+    @Override
     public synchronized TrackedPeer update(TrackerUpdateBean bean) throws TrackerResponseException, UnsupportedEncodingException
     {
         if (false == running)
@@ -72,9 +72,6 @@ public class Tracker
         // Must update tracker first then database.
         // As state of peer might changes in peer update
         TrackedPeer peer = torrent.update(bean);
-        // Update user information in database
-        clientAnnounceService.announce(bean);
-
         return peer;
     }
 
@@ -82,11 +79,11 @@ public class Tracker
      * Announce a new torrent on this tracker.
      *
      * <p>
-     * The fact that torrents must be announced here first makes this tracker a
-     * closed BitTorrent tracker: it will only accept clients for torrents it
-     * knows about, and this list of torrents is managed by the program
-     * instrumenting this Tracker class.
-     * </p>
+ The fact that torrents must be announced here first makes this tracker a
+ closed BitTorrent tracker: it will only accept clients for torrents it
+ knows about, and this list of torrents is managed by the program
+ instrumenting this TrackerImpl class.
+ </p>
      *
      * @param torrent The Torrent object to start tracking.
      *
@@ -94,6 +91,7 @@ public class Tracker
      *         different from the supplied Torrent object if the tracker already
      *         contained a torrent with the same hash.
      */
+    @Override
     public synchronized TrackedTorrent announce(TrackedTorrent torrent)
     {
         TrackedTorrent existing = torrents.get(torrent.getHexInfoHash().toUpperCase());
@@ -112,6 +110,7 @@ public class Tracker
      *
      * @param torrent The Torrent object to stop tracking.
      */
+    @Override
     public synchronized void remove(Torrent torrent)
     {
         if (null != torrent && !torrents.containsKey(torrent.getHexInfoHash()))
@@ -121,11 +120,13 @@ public class Tracker
         }
     }
 
+    @Override
     public TrackedTorrent get(String hash)
     {
         return torrents.get(hash);
     }
 
+    @Override
     public boolean containsKey(String hash)
     {
         return torrents.containsKey(hash);
@@ -134,6 +135,7 @@ public class Tracker
     /**
      * Start the tracker thread.
      */
+    @Override
     public void start()
     {
         if (running)
@@ -149,11 +151,13 @@ public class Tracker
 
     }
 
+    @Override
     public boolean isRunning()
     {
         return running;
     }
 
+    @Override
     public void stop()
     {
         if (!running)

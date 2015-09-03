@@ -7,8 +7,8 @@ import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.core.repository.FileRepository;
-import ga.rugal.jpt.springmvc.annotation.Exclude;
-import java.io.FileInputStream;
+import ga.rugal.jpt.springmvc.annotation.MongoDB;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +22,13 @@ import org.springframework.stereotype.Repository;
  * @author Rugal Bernstein
  */
 @Repository
-@Exclude
+@MongoDB
 public class FileRepositoryImpl implements FileRepository
 {
 
     private static final String FILENAME = "filename";
+
+    private static final String MIME = "application/x-bittorrent";
 
     private static final Logger LOG = LoggerFactory.getLogger(FileRepositoryImpl.class.getName());
 
@@ -39,9 +41,9 @@ public class FileRepositoryImpl implements FileRepository
 //        DBObject metaData = new BasicDBObject();
 //        metaData.put("extra1", "anything 1");
 //        metaData.put("extra2", "anything 2");
-        FileInputStream in = new FileInputStream(torrent.getTorrentFile());
-        GridFSInputFile gfsFile = gridFS.createFile(in, torrent.getHexInfoHash(), true);
-        gfsFile.setContentType("application/x-bittorrent");
+        ByteArrayInputStream bais = new ByteArrayInputStream(torrent.getEncoded());
+        GridFSInputFile gfsFile = gridFS.createFile(bais, torrent.getHexInfoHash(), true);
+        gfsFile.setContentType(MIME);
         gfsFile.save();
         return torrent;
     }
