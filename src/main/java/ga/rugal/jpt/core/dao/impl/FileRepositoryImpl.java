@@ -1,4 +1,4 @@
-package ga.rugal.jpt.core.repository.impl;
+package ga.rugal.jpt.core.dao.impl;
 
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -6,7 +6,7 @@ import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
-import ga.rugal.jpt.core.repository.FileRepository;
+import ga.rugal.jpt.core.dao.FileRepository;
 import ga.rugal.jpt.springmvc.annotation.MongoDB;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

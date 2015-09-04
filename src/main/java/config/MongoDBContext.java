@@ -3,7 +3,6 @@ package config;
 import com.mongodb.MongoClient;
 import com.mongodb.gridfs.GridFS;
 import ga.rugal.jpt.core.entity.PackageInfo;
-import ga.rugal.jpt.core.repository.RepositoryPackage;
 import ga.rugal.jpt.springmvc.annotation.MongoDB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +24,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
  */
 @Configuration
 @PropertySource("classpath:jdbc.properties")
-@EnableMongoRepositories(basePackageClasses = RepositoryPackage.class)
+@EnableMongoRepositories(basePackageClasses = ga.rugal.jpt.core.dao.RepositoryPackage.class)
 @ComponentScan(basePackageClasses = ga.rugal.jpt.core.PackageInfo.class,
                includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = MongoDB.class)
 )

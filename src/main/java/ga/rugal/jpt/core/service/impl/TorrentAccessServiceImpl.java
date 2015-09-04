@@ -2,7 +2,7 @@ package ga.rugal.jpt.core.service.impl;
 
 import com.mongodb.gridfs.GridFSDBFile;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
-import ga.rugal.jpt.core.repository.FileRepository;
+import ga.rugal.jpt.core.dao.FileRepository;
 import ga.rugal.jpt.core.service.TorrentAccessService;
 import ga.rugal.jpt.springmvc.annotation.MongoDB;
 import java.io.IOException;

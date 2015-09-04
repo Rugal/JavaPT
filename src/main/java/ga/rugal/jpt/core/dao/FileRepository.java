@@ -1,4 +1,4 @@
-package ga.rugal.jpt.core.repository;
+package ga.rugal.jpt.core.dao;
 
 import com.mongodb.gridfs.GridFSDBFile;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;

@@ -1,4 +1,4 @@
-package ga.rugal.jpt.core.repository;
+package ga.rugal.jpt.core.dao;
 
 /**
  *
