@@ -1,4 +1,4 @@
-package ga.rugal.jpt.core.repository.impl;
+package ga.rugal.jpt.core.dao.impl;
 
 import com.mongodb.gridfs.GridFSDBFile;
 import ga.JUnitSpringTestBase;
