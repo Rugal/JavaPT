@@ -5,7 +5,6 @@ import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.server.TrackedPeer;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.common.tracker.server.TrackerResponseException;
-import java.io.UnsupportedEncodingException;
 
 /**
  *
@@ -52,6 +51,14 @@ public interface Tracker
 
     void stop();
 
-    TrackedPeer update(TrackerUpdateBean bean) throws TrackerResponseException, UnsupportedEncodingException;
+    /**
+     *
+     * @param bean
+     *             <p>
+     * @return
+     *         <p>
+     * @throws TrackerResponseException
+     */
+    TrackedPeer update(TrackerUpdateBean bean) throws TrackerResponseException;
 
 }

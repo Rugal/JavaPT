@@ -1,6 +1,5 @@
 package ga.rugal.jpt.core.service.impl;
 
-import ga.rugal.jpt.core.service.Tracker;
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
 import ga.rugal.jpt.common.SystemDefaultProperties;
@@ -10,7 +9,7 @@ import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
 import ga.rugal.jpt.common.tracker.server.TrackedPeer;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.common.tracker.server.TrackerResponseException;
-import java.io.UnsupportedEncodingException;
+import ga.rugal.jpt.core.service.Tracker;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import org.slf4j.Logger;
@@ -31,8 +30,11 @@ public class TrackerImpl implements Tracker
 
     private boolean running = false;
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
-    public synchronized TrackedPeer update(TrackerUpdateBean bean) throws TrackerResponseException, UnsupportedEncodingException
+    public synchronized TrackedPeer update(TrackerUpdateBean bean) throws TrackerResponseException
     {
         if (false == running)
         {
@@ -52,8 +54,7 @@ public class TrackerImpl implements Tracker
         if (bean.getEvent() != null && torrent.containsKey(bean.getPeerID())
             && RequestEvent.STARTED != bean.getEvent())
         {
-            LOG.debug(CommonLogContent.BAD_EVENT, bean.getUser().getUid(), bean.getEvent().getEventName()
-            );
+            LOG.debug(CommonLogContent.BAD_EVENT, bean.getUser().getUid(), bean.getEvent().getEventName());
             //send error
             throw new TrackerResponseException(CommonMessageContent.BAD_EVENT);
         }
@@ -76,20 +77,7 @@ public class TrackerImpl implements Tracker
     }
 
     /**
-     * Announce a new torrent on this tracker.
-     *
-     * <p>
- The fact that torrents must be announced here first makes this tracker a
- closed BitTorrent tracker: it will only accept clients for torrents it
- knows about, and this list of torrents is managed by the program
- instrumenting this TrackerImpl class.
- </p>
-     *
-     * @param torrent The Torrent object to start tracking.
-     *
-     * @return The torrent object for this torrent on this tracker. This may be
-     *         different from the supplied Torrent object if the tracker already
-     *         contained a torrent with the same hash.
+     * {@inheritDoc }
      */
     @Override
     public synchronized TrackedTorrent announce(TrackedTorrent torrent)
@@ -106,9 +94,7 @@ public class TrackerImpl implements Tracker
     }
 
     /**
-     * Stop announcing the given torrent.
-     *
-     * @param torrent The Torrent object to stop tracking.
+     * {@inheritDoc }
      */
     @Override
     public synchronized void remove(Torrent torrent)
@@ -133,7 +119,7 @@ public class TrackerImpl implements Tracker
     }
 
     /**
-     * Start the tracker thread.
+     * {@inheritDoc }
      */
     @Override
     public void start()
@@ -173,11 +159,11 @@ public class TrackerImpl implements Tracker
     }
 
     /**
-     * The unfresh peer collector thread.
+     * The unfreshed peer collector thread.
      *
      * <p>
      * Every PEER_COLLECTION_FREQUENCY_SECONDS, this thread will collect
-     * unfresh peers from all announced torrents.
+     * unfreshed peers from all announced torrents.
      * </p>
      */
     private class PeerCollectorThread extends Thread

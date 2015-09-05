@@ -42,6 +42,12 @@ public class UserLevel
     @Column
     private String icon;
 
+    @Column(name = "min_upload_byte")
+    private Long minUploadByte;
+
+    @Column(name = "min_download_byte")
+    private Long minDownloadByte;
+
     public UserLevel()
     {
     }
@@ -59,6 +65,26 @@ public class UserLevel
     public void setLid(Integer lid)
     {
         this.lid = lid;
+    }
+
+    public Long getMinUploadByte()
+    {
+        return minUploadByte;
+    }
+
+    public void setMinUploadByte(Long minUploadByte)
+    {
+        this.minUploadByte = minUploadByte;
+    }
+
+    public Long getMinDownloadByte()
+    {
+        return minDownloadByte;
+    }
+
+    public void setMinDownloadByte(Long minDownloadByte)
+    {
+        this.minDownloadByte = minDownloadByte;
     }
 
     public Integer getMinimum()
