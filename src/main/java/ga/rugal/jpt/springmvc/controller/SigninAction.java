@@ -49,7 +49,7 @@ public class SigninAction
         String id = request.getHeader(SystemDefaultProperties.ID);
         SigninLog signinLog = new SigninLog();
         signinLog.setIp(request.getRemoteAddr());
-        signinLog.setUid(userService.getByID(Integer.parseInt(id)));
+        signinLog.setUser(userService.getByID(Integer.parseInt(id)));
         signinLogService.save(signinLog);
         LOG.trace(MessageFormat.format(CommonLogContent.SIGNIN, id, request.getRemoteAddr()));
         return Message.successMessage(CommonMessageContent.SIGNIN, signinLog);

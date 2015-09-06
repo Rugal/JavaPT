@@ -20,6 +20,7 @@ import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -121,6 +122,12 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
 //        registry.addInterceptor(authorityInterceptor).addPathPatterns("/**").excludePathPatterns("/announce");
         registry.addInterceptor(announceInterceptor).addPathPatterns("/announce");
 
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry)
+    {
+        registry.addMapping("/**");
     }
 
 }
