@@ -30,9 +30,9 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * In version 0.1, we just use uid+pid --> BCrypt to represent credential.
+ * In version 0.1, we just use uid+pid with BCrypt to represent credential.
  * <p>
- * I expect to use uid+pid+salt of a user --> BCrypt in future version
+ * I expect to use uid+pid+salt of a user with BCrypt in future version
  * <p>
  * @since 0.1
  * @author Rugal Bernstein

@@ -57,4 +57,13 @@ public interface CommonMessageContent
     final String INVALID_CREDENTIAL = "Credential format invalid";
 
     final String BAD_EVENT = "Bad client event";
+
+    //Post operations
+    final String SAVE_POST = "Post persisted";
+
+    final String DELETE_POST = "Post deleted";
+
+    final String UPDATE_POST = "Post updated";
+
+    final String GET_POST = "Get post";
 }

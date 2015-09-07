@@ -56,7 +56,7 @@ public interface ClientAnnounceService
     /**
      * Find the most recent client announce record according to user.
      * <p>
-     * Null in User parameter makes this method identical to {@link #findLastAnnounce(null, null)}
+     * Null in User parameter makes this method identical to {@code findLastAnnounce(null, null)}
      * <p>
      * @param user the user to be query on.
      * <p>
@@ -68,7 +68,7 @@ public interface ClientAnnounceService
     /**
      * Find the most recent client announce record according to torrent.
      * <p>
-     * Null in Post parameter makes this method identical to {@link #findLastAnnounce(null, null)}
+     * Null in Post parameter makes this method identical to {@code findLastAnnounce(null, null)}
      * <p>
      * @param post the post that related with target torrent.
      * <p>

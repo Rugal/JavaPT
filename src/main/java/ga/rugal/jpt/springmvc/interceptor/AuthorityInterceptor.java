@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -36,9 +37,23 @@ public class AuthorityInterceptor extends BaseInterceptor
 
     private static final Logger LOG = LoggerFactory.getLogger(AuthorityInterceptor.class.getName());
 
-//    @Autowired
+    @Autowired
     private UserService userService;
 
+    /**
+     * This is a pretty simple implementation.<BR>
+     * Some of handlers require specific admin level to invoke. Here this interceptor use annotation
+     * to reflect required level before seeing if this user is qualified.<p>
+     * Hence request can do nothing about the privileges.
+     *
+     * @param request
+     * @param response
+     * @param handler
+     *
+     * @return
+     *
+     * @throws Exception
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
     {

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,9 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
  *
  * A authentication interceptor than authenticate any matched request by some
  * credential. Store username and credential in request header.
- * <p>
- * Please implement your own authentication class to ensure the right method you
- * need to verify access.
  * <p>
  * Useful when implementing Restful API.
  * <p>
@@ -33,9 +31,29 @@ public class AuthenticationInterceptor extends BaseInterceptor
 
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationInterceptor.class.getName());
 
-//    @Autowired
+    @Autowired
     private UserService userService;
 
+    /**
+     * This interceptor do its jos on all handlers except
+     * {@link ga.rugal.jpt.springmvc.controller.AnnounceAction#announce(ga.rugal.jpt.common.tracker.common.ClientRequestMessageBean, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     * } <BR>
+     * Any request that needs authentication must include their
+     * {@link ga.rugal.jpt.common.SystemDefaultProperties#ID} and
+     * {@link ga.rugal.jpt.common.SystemDefaultProperties#CREDENTIAL}
+     * in request header.<p>
+     * Example:<BR>
+     * curl: <BR>
+     * {@code curl -H'id:1' -H'credential:123456'}
+     * <p>
+     * @param request  The request that has id and credential information in header
+     * @param response
+     * @param handler
+     *                 <p>
+     * @return true if id and credential match information inside DB, otherwise return false.
+     * <p>
+     * @throws Exception
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
     {

@@ -37,6 +37,9 @@ public class SigninAction
 
     /**
      * Log sign in action.
+     * <p>
+     * This handler will only log sign in event. The real authentication process is in {@link ga.rugal.jpt.springmvc.interceptor.AuthenticationInterceptor#preHandle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object)
+     * }
      *
      * @param request
      *
