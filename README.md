@@ -18,7 +18,13 @@ A Java based Private Tracker application.
 * Hibernate
 * HikariCP
 * Postgresql
-* MongoDB
 * slf4j
 * GSon
 * BCrypt
+
+
+###Credit
+Even thought this project is not finish yet. Many thanks to the person listed below:
+
+* [XD](https://github.com/myzjutxd) for his nice idea about caching torrents.
+* [HJK](https://github.com/orgs/ZJUT/people/0xHJK) for his concerns about this project

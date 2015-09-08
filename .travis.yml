@@ -2,9 +2,6 @@ language: java
 
 jdk: oraclejdk8
 
-services:
-  - mongodb
-
 addons:
   postgresql: "9.3"
 
