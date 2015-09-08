@@ -184,8 +184,9 @@ public class TestApplicationContext
     @Bean
     public TrackedTorrent torrent() throws IOException
     {
-        File file = new File(SystemDefaultProperties.TORRENT_PATH).listFiles()[0];
-        return TrackedTorrent.load(file);
+        File file = new File(SystemDefaultProperties.TORRENT_PATH).listFiles((File dir, String fileName) -> fileName.startsWith("Junit"))[0];
+        TrackedTorrent torrent = TrackedTorrent.load(file);
+        return torrent;
     }
 
 }

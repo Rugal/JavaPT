@@ -2,9 +2,11 @@ package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.entity.Post;
+import java.util.List;
 import ml.rugal.sshcommon.hibernate.HibernateBaseDao;
 import ml.rugal.sshcommon.page.Pagination;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Projections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -60,6 +62,15 @@ public class PostDaoImpl extends HibernateBaseDao<Post, Integer> implements Post
             getSession().delete(entity);
         }
         return entity;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List getAllTorrentsOnly()
+    {
+        Criteria crit = createCriteria();
+        crit.setProjection(Projections.property("bencode"));
+        return crit.list();
     }
 
     @Override

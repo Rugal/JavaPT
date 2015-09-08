@@ -4,6 +4,7 @@ import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.service.PostService;
+import java.util.List;
 import ml.rugal.sshcommon.hibernate.Updater;
 import ml.rugal.sshcommon.page.Pagination;
 import org.slf4j.Logger;
@@ -71,6 +72,13 @@ public class PostServiceImpl implements PostService
     public Post getByTorrent(String infoHash)
     {
         return dao.getByTorrent(infoHash);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List getAllTorrentsOnly()
+    {
+        return dao.getAllTorrentsOnly();
     }
 
 }

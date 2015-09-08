@@ -37,7 +37,7 @@ public class AnnounceActionClientSideTest extends ControllerClientSideTestBase
     @Test
     public void testAnnounce() throws Exception
     {
-        URI uri = URI.create("/announce?uid=1&credential=$2a$10$Zp8Ge.yzQ7B1rEQR2jjo8.MmZOjIDaHyslqHCnnRrkLYfqgzIRywK&info_hash=%5c%84ao.%28%d0%3b%f9%c1%27%d7%bc%ca%a4%cf%0f%d5%7bC&peer_id=-UT3440-%cf%9f%a0%d5%82%2f%dd%25%8bY%d8%11&port=20443&uploaded=0&downloaded=0&left=2472252877&corrupt=0&key=02182ADA&event=started&numwant=200&compact=1&no_peer_id=1");
+        URI uri = URI.create("/announce?uid=1&info_hash=%5c%84ao.%28%d0%3b%f9%c1%27%d7%bc%ca%a4%cf%0f%d5%7bC&peer_id=-UT3440-%cf%9f%a0%d5%82%2f%dd%25%8bY%d8%11&port=20443&uploaded=0&downloaded=0&left=2472252877&corrupt=0&key=02182ADA&event=started&numwant=200&compact=1&no_peer_id=1&credential=" + getBCrypt());
 
         this.mockMvc.perform(get(uri)
             .accept(MediaType.TEXT_PLAIN))
@@ -45,11 +45,11 @@ public class AnnounceActionClientSideTest extends ControllerClientSideTestBase
             .andExpect(status().isOk());
     }
 
-    @Test
-    public void testBCrypt()
+    public String getBCrypt()
     {
-        String text = "164";
+        String text = "1374";
         String crypted = BCrypt.hashpw(text, BCrypt.gensalt());
         System.out.println(crypted);
+        return crypted;
     }
 }

@@ -1,12 +1,15 @@
 package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.DBTestBase;
+import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.dao.UserLevelDao;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.entity.UserLevel;
+import java.io.File;
+import java.io.IOException;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -64,6 +67,7 @@ public class PostDaoImplTest extends DBTestBase
     }
 
     @Test
+//    @Ignore
     public void testGetPage()
     {
         System.out.println("getPage");
@@ -74,6 +78,7 @@ public class PostDaoImplTest extends DBTestBase
     }
 
     @Test
+//    @Ignore
     public void testGetByID()
     {
         System.out.println("getByID");
@@ -84,6 +89,7 @@ public class PostDaoImplTest extends DBTestBase
     }
 
     @Test
+//    @Ignore
     public void getByTorrent()
     {
         System.out.println("getByTorrent");
@@ -93,15 +99,18 @@ public class PostDaoImplTest extends DBTestBase
 
     @Test
     @Ignore
-    public void testSave()
+    public void testSave() throws IOException
     {
+        TrackedTorrent torrent = TrackedTorrent.load(new File("E:\\WorkSpaces\\Coding\\JavaPT\\torrents\\A12F4E3EFEDC35937670811147A076BC596176CA.torrent"));
+
         Post p = new Post();
-        p.setContent("Test New");
+        p.setContent("Test post 2");
         p.setEnabled(true);
         p.setPostTime(System.currentTimeMillis());
-        p.setTitle("Rugal Bernstein");
+        p.setTitle("Rugal Bernstein Test post 2");
         p.setUid(userDao.getByID(1));
-        p.setInfoHash("5C84616F2E28D03BF9C127D7BCCAA4CF0FD57B43");
+        p.setInfoHash(torrent.getHexInfoHash());
+        p.setBencode(torrent.getEncoded());
         postDao.save(p);
     }
 
