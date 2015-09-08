@@ -3,14 +3,17 @@ package config;
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
+import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.Tracker;
-import ga.rugal.jpt.core.service.impl.TrackerImpl;
 import ga.rugal.jpt.springmvc.PackageInfo;
 import ga.rugal.jpt.springmvc.controller.AnnounceAction;
 import ga.rugal.jpt.springmvc.controller.TrackerAction;
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +34,12 @@ public class TrackerContext
 
     private static final Logger LOG = LoggerFactory.getLogger(TrackerContext.class.getName());
 
+    @Autowired
+    private PostService postService;
+
+    @Autowired
+    private Tracker tracker;
+
     /**
      * Create a tracker server in local, with same port to servlet container
      * Spring will start this tracker after creation of bean.
@@ -45,28 +54,58 @@ public class TrackerContext
     {
         try
         {
-            TrackerImpl tracker = new TrackerImpl();
-            File folder = new File(SystemDefaultProperties.TORRENT_PATH);
-            LOG.debug(CommonLogContent.OPEN_TORRENT_FOLDER, folder.getAbsolutePath());
-            File[] torrentFiles = folder.listFiles((File dir, String fileName) -> fileName.endsWith(SystemDefaultProperties.TORRENT_SUBFIX));
-            if (null != torrentFiles && torrentFiles.length != 0)
+            if (SystemDefaultProperties.TORRENT_FROM_DB)
             {
-                for (File torrentFile : torrentFiles)
-                {
-                    TrackedTorrent torrent = TrackedTorrent.load(torrentFile);
-                    tracker.announce(torrent);
-                }
-                LOG.info(CommonLogContent.TRACKER_CREATED, torrentFiles.length);
+                torrentFromDB(tracker);
             }
             else
             {
-                LOG.info(CommonLogContent.TRACKER_NO_TORRENT);
+                torrentFromFS(tracker);
             }
+
             return tracker;
         }
         catch (Exception e)
         {
             throw new Exception(CommonLogContent.TRACKER_NOT_CREATED, e);
+        }
+    }
+
+    private void torrentFromDB(Tracker tracker) throws IOException
+    {
+        List<Object> list = postService.getAllTorrentsOnly();
+        if (null != list && !list.isEmpty())
+        {
+            for (Object bencode : list)
+            {
+                TrackedTorrent torrent = TrackedTorrent.load((byte[]) bencode);
+                tracker.announce(torrent);
+            }
+            LOG.info(CommonLogContent.TRACKER_CREATED, list.size());
+        }
+        else
+        {
+            LOG.info(CommonLogContent.TRACKER_NO_TORRENT);
+        }
+    }
+
+    private void torrentFromFS(Tracker tracker) throws IOException
+    {
+        File folder = new File(SystemDefaultProperties.TORRENT_PATH);
+        LOG.debug(CommonLogContent.OPEN_TORRENT_FOLDER, folder.getAbsolutePath());
+        File[] torrentFiles = folder.listFiles((File dir, String fileName) -> fileName.endsWith(SystemDefaultProperties.TORRENT_SUBFIX));
+        if (null != torrentFiles && torrentFiles.length != 0)
+        {
+            for (File torrentFile : torrentFiles)
+            {
+                TrackedTorrent torrent = TrackedTorrent.load(torrentFile);
+                tracker.announce(torrent);
+            }
+            LOG.info(CommonLogContent.TRACKER_CREATED, torrentFiles.length);
+        }
+        else
+        {
+            LOG.info(CommonLogContent.TRACKER_NO_TORRENT);
         }
     }
 

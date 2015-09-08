@@ -48,10 +48,10 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
 {
 
-//    @Autowired
+    @Autowired
     private AuthenticationInterceptor authenticationInterceptor;
 
-//    @Autowired
+    @Autowired
     private AuthorityInterceptor authorityInterceptor;
 
     @Autowired
