@@ -2,6 +2,7 @@ package ga.rugal.jpt.springmvc.controller;
 
 import ga.rugal.ControllerClientSideTestBase;
 import ga.rugal.jpt.common.SystemDefaultProperties;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -30,6 +31,7 @@ public class TrackerActionClientSideTest extends ControllerClientSideTestBase
     }
 
     @Test
+    @Ignore
     public void testStop() throws Exception
     {
         this.mockMvc.perform(delete("/tracker").
