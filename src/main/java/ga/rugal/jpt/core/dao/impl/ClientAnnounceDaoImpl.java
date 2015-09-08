@@ -77,7 +77,7 @@ public class ClientAnnounceDaoImpl extends HibernateBaseDao<ClientAnnounce, Long
         }
         if (null != post)
         {
-            crit.add(Restrictions.eq("torrentPost", post));
+            crit.add(Restrictions.eq("pid", post));
         }
         crit.addOrder(Order.desc("announceTime"));
         crit.setMaxResults(1);

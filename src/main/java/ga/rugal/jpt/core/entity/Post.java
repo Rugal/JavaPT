@@ -39,11 +39,14 @@ public class Post
     @Column(length = 2147483647)
     private String content;
 
-    @Column(length = 50, name = "torrent_hash")
-    private String torrentHash;
+    @Column(length = 50, name = "info_hash")
+    private String infoHash;
 
     @Column(name = "post_time")
     private Long postTime;
+
+    @Column(length = 2147483647)
+    private byte[] bencode;
 
     @Column
     private Integer size;
@@ -68,7 +71,7 @@ public class Post
     @OneToMany(mappedBy = "pid")
     private transient List<Thread> threadList;
 
-    @OneToMany(mappedBy = "torrent_post")
+    @OneToMany(mappedBy = "pid")
     private transient List<ClientAnnounce> clientAnnounceList;
 
     public Post()
@@ -120,6 +123,16 @@ public class Post
         this.content = content;
     }
 
+    public byte[] getBencode()
+    {
+        return bencode;
+    }
+
+    public void setBencode(byte[] bencode)
+    {
+        this.bencode = bencode;
+    }
+
     public List<ClientAnnounce> getClientAnnounceList()
     {
         return clientAnnounceList;
@@ -130,14 +143,14 @@ public class Post
         this.clientAnnounceList = clientAnnounceList;
     }
 
-    public String getTorrentHash()
+    public String getInfoHash()
     {
-        return torrentHash;
+        return infoHash;
     }
 
-    public void setTorrentHash(String torrentHash)
+    public void setInfoHash(String infoHash)
     {
-        this.torrentHash = torrentHash;
+        this.infoHash = infoHash;
     }
 
     public Long getPostTime()

@@ -349,4 +349,19 @@ public class TrackedTorrent extends Torrent
         TrackedTorrent torrent = new TrackedTorrent(data);
         return torrent;
     }
+
+    /**
+     * Load a tracked torrent from the given byte array.
+     *
+     * @param data
+     *
+     * @return
+     *
+     * @throws IOException When the torrent file cannot be read.
+     */
+    public static TrackedTorrent load(byte[] data) throws IOException
+    {
+        TrackedTorrent torrent = new TrackedTorrent(data);
+        return torrent;
+    }
 }

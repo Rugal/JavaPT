@@ -87,7 +87,7 @@ public class PostDaoImplTest extends DBTestBase
     public void getByTorrent()
     {
         System.out.println("getByTorrent");
-        Post bean = postDao.getByTorrent(post.getTorrentHash());
+        Post bean = postDao.getByTorrent(post.getInfoHash());
         System.out.println(bean.getTitle());
     }
 
@@ -101,7 +101,7 @@ public class PostDaoImplTest extends DBTestBase
         p.setPostTime(System.currentTimeMillis());
         p.setTitle("Rugal Bernstein");
         p.setUid(userDao.getByID(1));
-        p.setTorrentHash("5C84616F2E28D03BF9C127D7BCCAA4CF0FD57B43");
+        p.setInfoHash("5C84616F2E28D03BF9C127D7BCCAA4CF0FD57B43");
         postDao.save(p);
     }
 

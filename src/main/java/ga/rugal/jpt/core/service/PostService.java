@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.service;
 
+import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.core.entity.Post;
 import ml.rugal.sshcommon.page.Pagination;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,5 +26,7 @@ public interface PostService
 
     @Transactional(readOnly = true)
     Post getByTorrent(String infoHash);
+
+    Post save(Post bean, Torrent torrent);
 
 }

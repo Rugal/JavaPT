@@ -41,7 +41,7 @@ public class PostDaoImpl extends HibernateBaseDao<Post, Integer> implements Post
     @Transactional(readOnly = true)
     public Post getByTorrent(String infoHash)
     {
-        return this.findUniqueByProperty("torrentHash", infoHash);
+        return this.findUniqueByProperty("infoHash", infoHash);
     }
 
     @Override

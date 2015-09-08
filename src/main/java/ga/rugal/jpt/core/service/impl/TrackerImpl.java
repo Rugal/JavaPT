@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Rugal Bernstein
  */
+//@Service
 public class TrackerImpl implements Tracker
 {
 

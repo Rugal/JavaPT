@@ -57,7 +57,7 @@ public interface Tracker
      *             <p>
      * @return
      *         <p>
-     * @throws TrackerResponseException
+     * @throws ga.rugal.jpt.common.tracker.server.TrackerResponseException
      */
     TrackedPeer update(TrackerUpdateBean bean) throws TrackerResponseException;
 

@@ -46,9 +46,9 @@ public class ClientAnnounce
     @ManyToOne
     private Client cid;
 
-    @JoinColumn(name = "torrent_post", referencedColumnName = "pid", nullable = false)
+    @JoinColumn(name = "pid", referencedColumnName = "pid", nullable = false)
     @ManyToOne
-    private Post torrentPost;
+    private Post pid;
 
     public ClientAnnounce()
     {
@@ -129,14 +129,14 @@ public class ClientAnnounce
         this.leftByte = leftByte;
     }
 
-    public Post getTorrentPost()
+    public Post getPid()
     {
-        return torrentPost;
+        return pid;
     }
 
-    public void setTorrentPost(Post torrentPost)
+    public void setPid(Post pid)
     {
-        this.torrentPost = torrentPost;
+        this.pid = pid;
     }
 
     @Override

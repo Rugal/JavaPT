@@ -60,7 +60,7 @@ public class TestApplicationContext
 
     @Bean
     @Autowired
-    public Post post(User user, UserLevel level)
+    public Post post(User user, UserLevel level, TrackedTorrent torrent)
     {
         Post bean = new Post();
         bean.setContent("TEST");
@@ -68,10 +68,11 @@ public class TestApplicationContext
         bean.setPostTime(System.currentTimeMillis());
         bean.setSize(100);
         bean.setTitle("Test title");
-        bean.setTorrentHash("111111111111");
+        bean.setInfoHash(torrent.getHexInfoHash());
         bean.setMinLevel(level);
         bean.setUid(user);
         bean.setRate(0);
+        bean.setBencode(torrent.getEncoded());
         return bean;
     }
 
@@ -145,7 +146,7 @@ public class TestApplicationContext
         bean.setAnnounceTime(System.currentTimeMillis());
         bean.setCid(client);
         bean.setUid(user);
-        bean.setTorrentPost(post);
+        bean.setPid(post);
         bean.setUploadByte(0l);
         bean.setDownloadByte(0l);
         return bean;
@@ -173,7 +174,7 @@ public class TestApplicationContext
         bean.setUploaded(101l);
         bean.setLeft(100l);
         bean.setEvent(RequestEvent.STARTED);
-        bean.setInfoHash(post.getTorrentHash());
+        bean.setInfoHash(post.getInfoHash());
         bean.setPost(post);
         bean.setUser(user);
 

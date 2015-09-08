@@ -87,7 +87,7 @@ CREATE TABLE client_announce (
     download_byte bigint,
     upload_byte bigint,
     left_byte bigint,
-    torrent_post integer NOT NULL
+    tid integer
 );
 
 
@@ -215,11 +215,11 @@ CREATE TABLE post (
     uid integer NOT NULL,
     title character varying(50),
     content text,
-    torrent_hash character varying(50) NOT NULL,
     post_time bigint,
     size integer,
     enabled boolean,
-    min_level integer
+    min_level integer,
+    tid integer
 );
 
 
@@ -386,6 +386,40 @@ ALTER SEQUENCE thread_tid_seq OWNED BY thread.tid;
 
 
 --
+-- Name: torrent; Type: TABLE; Schema: jpt; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE torrent (
+    tid integer NOT NULL,
+    info_hash character varying(50),
+    content text
+);
+
+
+ALTER TABLE jpt.torrent OWNER TO postgres;
+
+--
+-- Name: torrent_tid_seq; Type: SEQUENCE; Schema: jpt; Owner: postgres
+--
+
+CREATE SEQUENCE torrent_tid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE jpt.torrent_tid_seq OWNER TO postgres;
+
+--
+-- Name: torrent_tid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: postgres
+--
+
+ALTER SEQUENCE torrent_tid_seq OWNED BY torrent.tid;
+
+
+--
 -- Name: user; Type: TABLE; Schema: jpt; Owner: postgres; Tablespace: 
 --
 
@@ -497,6 +531,13 @@ ALTER TABLE ONLY thread ALTER COLUMN tid SET DEFAULT nextval('thread_tid_seq'::r
 
 
 --
+-- Name: tid; Type: DEFAULT; Schema: jpt; Owner: postgres
+--
+
+ALTER TABLE ONLY torrent ALTER COLUMN tid SET DEFAULT nextval('torrent_tid_seq'::regclass);
+
+
+--
 -- Name: uid; Type: DEFAULT; Schema: jpt; Owner: postgres
 --
 
@@ -541,27 +582,27 @@ COPY client (cid, name, version, enabled, cname) FROM stdin;
 -- Data for Name: client_announce; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
-COPY client_announce (caid, announce_time, uid, cid, download_byte, upload_byte, left_byte, torrent_post) FROM stdin;
-93	1441227194033	1	1	0	0	2472252877	64
-99	1441227288707	1	1	0	0	2472252877	64
-40	1441043340054	1	1	0	0	2472252877	64
-41	1441043480959	1	1	0	0	2472252877	64
-105	1441228927351	1	1	0	0	2472252877	64
-49	1441153752995	1	1	0	0	2472252877	64
-50	1441153786942	1	1	0	0	2472252877	64
-124	1441244842378	1	1	0	0	2472252877	64
-66	1441223561801	1	1	0	0	2472252877	64
-130	1441245050387	1	1	0	0	2472252877	64
-72	1441223653530	1	1	0	0	2472252877	64
-73	1441223710062	1	1	0	0	2472252877	64
-74	1441224096472	1	1	0	0	2472252877	64
-136	1441245695852	1	1	0	0	2472252877	64
-80	1441224152476	1	1	0	0	2472252877	64
-81	1441224987131	1	1	0	0	2472252877	64
-87	1441226914020	1	1	0	0	2472252877	64
-142	1441245798217	1	1	0	0	2472252877	64
-148	1441245909323	1	1	0	0	2472252877	64
-154	1441388366960	1	1	0	0	2472252877	64
+COPY client_announce (caid, announce_time, uid, cid, download_byte, upload_byte, left_byte, tid) FROM stdin;
+93	1441227194033	1	1	0	0	2472252877	\N
+99	1441227288707	1	1	0	0	2472252877	\N
+40	1441043340054	1	1	0	0	2472252877	\N
+41	1441043480959	1	1	0	0	2472252877	\N
+105	1441228927351	1	1	0	0	2472252877	\N
+49	1441153752995	1	1	0	0	2472252877	\N
+50	1441153786942	1	1	0	0	2472252877	\N
+124	1441244842378	1	1	0	0	2472252877	\N
+66	1441223561801	1	1	0	0	2472252877	\N
+130	1441245050387	1	1	0	0	2472252877	\N
+72	1441223653530	1	1	0	0	2472252877	\N
+73	1441223710062	1	1	0	0	2472252877	\N
+74	1441224096472	1	1	0	0	2472252877	\N
+136	1441245695852	1	1	0	0	2472252877	\N
+80	1441224152476	1	1	0	0	2472252877	\N
+81	1441224987131	1	1	0	0	2472252877	\N
+87	1441226914020	1	1	0	0	2472252877	\N
+142	1441245798217	1	1	0	0	2472252877	\N
+148	1441245909323	1	1	0	0	2472252877	\N
+154	1441388366960	1	1	0	0	2472252877	\N
 \.
 
 
@@ -621,8 +662,8 @@ SELECT pg_catalog.setval('level_lid_seq', 408, true);
 -- Data for Name: post; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
-COPY post (pid, uid, title, content, torrent_hash, post_time, size, enabled, min_level) FROM stdin;
-64	1	Rugal Bernstein	Test New	5C84616F2E28D03BF9C127D7BCCAA4CF0FD57B43	1441042335645	\N	t	\N
+COPY post (pid, uid, title, content, post_time, size, enabled, min_level, tid) FROM stdin;
+64	1	Rugal Bernstein	Test New	1441042335645	\N	t	\N	\N
 \.
 
 
@@ -671,6 +712,27 @@ COPY signin_log (slid, uid, signin_time, ip) FROM stdin;
 16	1	1441245799554	127.0.0.1
 17	1	1441245910937	127.0.0.1
 18	1	1441388368684	127.0.0.1
+19	1	1441519721932	0:0:0:0:0:0:0:1
+20	1	1441519745177	0:0:0:0:0:0:0:1
+21	1	1441519852973	0:0:0:0:0:0:0:1
+22	1	1441519857846	0:0:0:0:0:0:0:1
+23	1	1441519953707	0:0:0:0:0:0:0:1
+24	1	1441566181043	0:0:0:0:0:0:0:1
+25	1	1441566244379	0:0:0:0:0:0:0:1
+26	1	1441566262239	0:0:0:0:0:0:0:1
+27	1	1441566291900	0:0:0:0:0:0:0:1
+28	1	1441566298713	0:0:0:0:0:0:0:1
+29	1	1441566304024	0:0:0:0:0:0:0:1
+30	1	1441566981538	0:0:0:0:0:0:0:1
+31	1	1441566997869	0:0:0:0:0:0:0:1
+32	1	1441567000044	0:0:0:0:0:0:0:1
+33	1	1441567021330	0:0:0:0:0:0:0:1
+34	1	1441567026212	0:0:0:0:0:0:0:1
+35	1	1441567038135	0:0:0:0:0:0:0:1
+36	1	1441567139761	0:0:0:0:0:0:0:1
+37	1	1441567311220	0:0:0:0:0:0:0:1
+38	1	1441567324281	0:0:0:0:0:0:0:1
+39	1	1441567484442	0:0:0:0:0:0:0:1
 \.
 
 
@@ -678,7 +740,7 @@ COPY signin_log (slid, uid, signin_time, ip) FROM stdin;
 -- Name: signin_log_slid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('signin_log_slid_seq', 18, true);
+SELECT pg_catalog.setval('signin_log_slid_seq', 39, true);
 
 
 --
@@ -716,6 +778,21 @@ COPY thread (tid, pid, uid, content, post_time) FROM stdin;
 --
 
 SELECT pg_catalog.setval('thread_tid_seq', 52, true);
+
+
+--
+-- Data for Name: torrent; Type: TABLE DATA; Schema: jpt; Owner: postgres
+--
+
+COPY torrent (tid, info_hash, content) FROM stdin;
+\.
+
+
+--
+-- Name: torrent_tid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
+--
+
+SELECT pg_catalog.setval('torrent_tid_seq', 1, false);
 
 
 --
@@ -819,6 +896,14 @@ ALTER TABLE ONLY thread
 
 
 --
+-- Name: torrent_pkey; Type: CONSTRAINT; Schema: jpt; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY torrent
+    ADD CONSTRAINT torrent_pkey PRIMARY KEY (tid);
+
+
+--
 -- Name: user_pkey; Type: CONSTRAINT; Schema: jpt; Owner: postgres; Tablespace: 
 --
 
@@ -838,13 +923,6 @@ CREATE INDEX unq_client_cname ON client USING btree (cname);
 --
 
 CREATE UNIQUE INDEX unq_level_minimum ON level USING btree (minimum);
-
-
---
--- Name: unq_post_torrent_hash; Type: INDEX; Schema: jpt; Owner: postgres; Tablespace: 
---
-
-CREATE UNIQUE INDEX unq_post_torrent_hash ON post USING btree (torrent_hash);
 
 
 --
@@ -886,11 +964,11 @@ ALTER TABLE ONLY client_announce
 
 
 --
--- Name: client_announce_torrent_post_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
+-- Name: client_announce_tid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY client_announce
-    ADD CONSTRAINT client_announce_torrent_post_fkey FOREIGN KEY (torrent_post) REFERENCES post(pid);
+    ADD CONSTRAINT client_announce_tid_fkey FOREIGN KEY (tid) REFERENCES torrent(tid);
 
 
 --
@@ -931,6 +1009,14 @@ ALTER TABLE ONLY post_tags
 
 ALTER TABLE ONLY post_tags
     ADD CONSTRAINT post_tags_tid_fkey FOREIGN KEY (tid) REFERENCES tag(tid);
+
+
+--
+-- Name: post_tid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
+--
+
+ALTER TABLE ONLY post
+    ADD CONSTRAINT post_tid_fkey FOREIGN KEY (tid) REFERENCES torrent(tid);
 
 
 --

@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.service.impl;
 
+import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.service.PostService;
@@ -42,6 +43,13 @@ public class PostServiceImpl implements PostService
     @Override
     public Post save(Post bean)
     {
+        return dao.save(bean);
+    }
+
+    @Override
+    public Post save(Post bean, Torrent torrent)
+    {
+        bean.setBencode(torrent.getEncoded());
         return dao.save(bean);
     }
 
