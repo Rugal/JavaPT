@@ -80,11 +80,11 @@ public class TestApplicationContext
     public User user()
     {
         User bean = new User();
-        bean.setEmail("test@123.com");
-        bean.setPassword("test");
+        bean.setEmail("testhappy@128.com");
+        bean.setPassword("test123");
         bean.setRegisterTime(System.currentTimeMillis());
-        bean.setStatus(User.Status.DELETING);
-        bean.setUsername("test");
+        bean.setStatus(User.Status.VALID);
+        bean.setUsername("tenjin");
         return bean;
     }
 

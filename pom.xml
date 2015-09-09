@@ -356,11 +356,11 @@
                 <version>2.2</version>
                 <configuration>
                     <url>http://localhost:8080/manager/text</url>
-                    <server>tomcat</server>
+                    <server>TomcatServer</server>
                     <!-- http port -->
                     <port>8080</port>
                     <!-- application path always starts with /-->
-                    <path>/</path>
+                    <path>/jpt</path>
                     <!-- optional path to a context file -->
                     <!--<contextFile>${tomcatContextXml}</contextFile>-->
                     <!-- optional system propoerties you want to add -->
