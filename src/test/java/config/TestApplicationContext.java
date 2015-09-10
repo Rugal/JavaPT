@@ -44,7 +44,7 @@ public class TestApplicationContext
         SigninLog bean = new SigninLog();
         bean.setIp("127.0.0.1");
         bean.setSigninTime(System.currentTimeMillis());
-        bean.setUser(user);
+        bean.setUid(user);
         return bean;
     }
 
@@ -160,7 +160,7 @@ public class TestApplicationContext
         bean.setUid(user);
         bean.setGrantee(user);
         bean.setSince(System.currentTimeMillis());
-        bean.setLevel(Admin.Level.ADMIN);
+        bean.setLevel(Admin.Level.SUPER);
         return bean;
     }
 

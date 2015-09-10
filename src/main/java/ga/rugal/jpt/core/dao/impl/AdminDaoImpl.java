@@ -2,9 +2,12 @@ package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.jpt.core.dao.AdminDao;
 import ga.rugal.jpt.core.entity.Admin;
+import ga.rugal.jpt.core.entity.User;
+import java.util.List;
 import ml.rugal.sshcommon.hibernate.HibernateBaseDao;
 import ml.rugal.sshcommon.page.Pagination;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -35,6 +38,16 @@ public class AdminDaoImpl extends HibernateBaseDao<Admin, Integer> implements Ad
     {
         Admin entity = get(id);
         return entity;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Admin> getByUID(User uid)
+    {
+        Criteria crit = createCriteria();
+        crit.add(Restrictions.eq("uid", uid));
+        List<Admin> list = (List<Admin>) crit.list();
+        return list;
     }
 
     @Override

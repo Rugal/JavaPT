@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.entity;
 
+import com.google.gson.annotations.Expose;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import java.util.List;
 import javax.persistence.Basic;
@@ -28,25 +29,31 @@ public class UserLevel
     @SequenceGenerator(name = sequence_name, sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
+    @Expose
     private Integer lid;
 
     @Column
+    @Expose
     private Integer minimum;
 
     @Column(length = 50)
+    @Expose
     private String name;
 
-    @OneToMany(mappedBy = "min_level")
-    private transient List<Post> postList;
-
     @Column
+    @Expose
     private String icon;
 
     @Column(name = "min_upload_byte")
+    @Expose
     private Long minUploadByte;
 
     @Column(name = "min_download_byte")
+    @Expose
     private Long minDownloadByte;
+
+    @OneToMany(mappedBy = "minLevel")
+    private List<Post> postList;
 
     public UserLevel()
     {

@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @since 0.1
  */
 @Controller
-@RequestMapping(value = "/signin")
 public class SigninAction
 {
 
@@ -46,16 +45,17 @@ public class SigninAction
      * @return
      */
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "/signin", method = RequestMethod.POST)
     public Message signin(HttpServletRequest request)
     {
         String id = request.getHeader(SystemDefaultProperties.ID);
         SigninLog signinLog = new SigninLog();
         signinLog.setIp(request.getRemoteAddr());
-        signinLog.setUser(userService.getByID(Integer.parseInt(id)));
+        signinLog.setUid(userService.getByID(Integer.parseInt(id)));
         signinLogService.save(signinLog);
         LOG.trace(MessageFormat.format(CommonLogContent.SIGNIN, id, request.getRemoteAddr()));
-        return Message.successMessage(CommonMessageContent.SIGNIN, signinLog);
+        Message message = Message.successMessage(CommonMessageContent.SIGNIN, signinLog);
+        return message;
     }
 
 }

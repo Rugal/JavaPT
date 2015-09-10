@@ -5,12 +5,14 @@ import ga.rugal.jpt.common.CommonMessageContent;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.core.entity.Admin;
 import ga.rugal.jpt.core.entity.User;
+import ga.rugal.jpt.core.service.AdminService;
 import ga.rugal.jpt.core.service.UserService;
 import ga.rugal.jpt.springmvc.annotation.Role;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.text.MessageFormat;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,6 +41,9 @@ public class AuthorityInterceptor extends BaseInterceptor
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AdminService adminService;
 
     /**
      * This is a pretty simple implementation.<BR>
@@ -136,7 +141,13 @@ public class AuthorityInterceptor extends BaseInterceptor
             //---------------------
             Set<Admin.Level> ownedLevel = new HashSet<>(5);
             User user = userService.getByID(Integer.parseInt(id));
-            user.getAdminList().stream().forEach((admin) ->
+            List<Admin> admins = adminService.getByUID(user);
+            //Replace user.getAdminList as hibernate lazy loading problem
+            if (null == admins || admins.isEmpty())
+            {
+                return false;
+            }
+            admins.stream().forEach((admin) ->
             {
                 ownedLevel.add(admin.getLevel());
             });
@@ -176,7 +187,6 @@ public class AuthorityInterceptor extends BaseInterceptor
 
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception
     {
-
     }
 
     @Override

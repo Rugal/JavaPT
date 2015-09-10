@@ -1,21 +1,18 @@
 package ga.rugal.jpt.springmvc.controller;
 
-import com.google.gson.Gson;
 import ga.rugal.ControllerClientSideTestBase;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.core.entity.User;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.junit.After;
 import org.junit.Assert;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -27,8 +24,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class UserActionClientSideTest extends ControllerClientSideTestBase
 {
-
-    private final Gson gson = new Gson();
 
     @Autowired
     private User user;
@@ -44,7 +39,7 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
     {
         System.out.println("setUp");
         MvcResult result = testSave();
-        Message message = gson.fromJson(result.getResponse().getContentAsString(), Message.class);
+        Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
         bean = backToObject(message.getData(), User.class);
     }
 
@@ -56,7 +51,6 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
     }
 
     @Test
-    @Ignore
     public void testRegisterUser() throws Exception
     {
         System.out.println("registerUser");
@@ -65,7 +59,7 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
 
     private MvcResult testSave() throws Exception
     {
-        return this.mockMvc.perform(post("/user").content(gson.toJson(user))
+        return this.mockMvc.perform(post("/user").content(GSON.toJson(user))
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
             //            .andDo(print())
@@ -82,12 +76,6 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
             .andExpect(status().isOk());
     }
 
-    private <T> T backToObject(Object data, Class<T> classT)
-    {
-        String json = gson.toJson(data);
-        return gson.fromJson(json, classT);
-    }
-
     @Test
     public void testUpdateUserProfile() throws Exception
     {
@@ -96,28 +84,28 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
         MvcResult result = this.mockMvc.perform(put("/user/" + bean.getUid())
             .header(SystemDefaultProperties.ID, bean.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, bean.getPassword())
-            .content(gson.toJson(bean))
+            .content(GSON.toJson(bean))
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isOk()).andReturn();
-        Message message = gson.fromJson(result.getResponse().getContentAsString(), Message.class);
+        Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
         User beanUpdated = backToObject(message.getData(), User.class);
         Assert.assertNotSame(beanUpdated.getCredit(), user.getCredit());
 
     }
 
     @Test
-    @Ignore
-    public void testRetrieveUserProfile()
+    public void testRetrieveUserProfile() throws Exception
     {
         System.out.println("retrieveUserProfile");
-        Integer id = null;
-        UserAction instance = new UserAction();
-        Message expResult = null;
-        Message result = instance.retrieveUserProfile(id);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
+        this.mockMvc.perform(get("/user/" + bean.getUid())
+            .header(SystemDefaultProperties.ID, bean.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, bean.getPassword())
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk());
     }
 
 }

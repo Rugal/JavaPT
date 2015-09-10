@@ -1,8 +1,7 @@
 package config;
 
+import com.google.gson.GsonBuilder;
 import ga.rugal.jpt.springmvc.PackageInfo;
-import ga.rugal.jpt.springmvc.controller.AnnounceAction;
-import ga.rugal.jpt.springmvc.controller.TrackerAction;
 import ga.rugal.jpt.springmvc.interceptor.AnnounceInterceptor;
 import ga.rugal.jpt.springmvc.interceptor.AuthenticationInterceptor;
 import ga.rugal.jpt.springmvc.interceptor.AuthorityInterceptor;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
@@ -40,11 +38,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackageClasses = PackageInfo.class, excludeFilters
-               = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes =
-                                       {
-                                           AnnounceAction.class, TrackerAction.class
-    }))
+@ComponentScan(basePackageClasses = PackageInfo.class)
 public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
 {
 
@@ -81,6 +75,7 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters)
     {
         GsonHttpMessageConverter messageConverter = new GsonHttpMessageConverter();
+        messageConverter.setGson(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create());
         List<MediaType> supportedMediaTypes = new ArrayList<>();
         supportedMediaTypes.add(MediaType.APPLICATION_JSON);
         messageConverter.setSupportedMediaTypes(supportedMediaTypes);
@@ -118,8 +113,8 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
     public void addInterceptors(InterceptorRegistry registry)
     {
         //This is a very important interceptor for authentication usage
-//        registry.addInterceptor(authenticationInterceptor).addPathPatterns("/**").excludePathPatterns("/announce", "/user");
-//        registry.addInterceptor(authorityInterceptor).addPathPatterns("/**").excludePathPatterns("/announce", "/user");
+        registry.addInterceptor(authenticationInterceptor).addPathPatterns("/**").excludePathPatterns("/announce", "/user");
+        registry.addInterceptor(authorityInterceptor).addPathPatterns("/**").excludePathPatterns("/announce", "/user");
         registry.addInterceptor(announceInterceptor).addPathPatterns("/announce");
 
     }

@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.entity;
 
+import com.google.gson.annotations.Expose;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import java.util.List;
 import javax.persistence.Basic;
@@ -28,16 +29,19 @@ public class Tag
     @SequenceGenerator(name = sequence_name, sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
+    @Expose
     private Integer tid;
 
+    @Expose
     @Column(length = 50)
     private String name;
 
+    @Expose
     @Column(length = 50)
     private String icon;
 
     @OneToMany(mappedBy = "tid")
-    private transient List<PostTags> postTagsList;
+    private List<PostTags> postTagsList;
 
     public Tag()
     {

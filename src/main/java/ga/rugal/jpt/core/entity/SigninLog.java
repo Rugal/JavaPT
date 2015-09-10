@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.entity;
 
+import com.google.gson.annotations.Expose;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -28,17 +29,21 @@ public class SigninLog
     @SequenceGenerator(name = sequence_name, sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
+    @Expose
     private Integer slid;
 
+    @Expose
     @Column(name = "signin_time")
     private Long signinTime;
 
+    @Expose
     @Column(length = 30)
     private String ip;
 
+    @Expose
     @JoinColumn(name = "uid", referencedColumnName = "uid")
     @ManyToOne
-    private User user;
+    private User uid;
 
     public SigninLog()
     {
@@ -79,14 +84,14 @@ public class SigninLog
         this.ip = ip;
     }
 
-    public User getUser()
+    public User getUid()
     {
-        return user;
+        return uid;
     }
 
-    public void setUser(User user)
+    public void setUid(User uid)
     {
-        this.user = user;
+        this.uid = uid;
     }
 
     @Override

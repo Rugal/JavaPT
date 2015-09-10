@@ -1,6 +1,8 @@
 package ga.rugal.jpt.core.dao;
 
 import ga.rugal.jpt.core.entity.Admin;
+import ga.rugal.jpt.core.entity.User;
+import java.util.List;
 import ml.rugal.sshcommon.hibernate.Updater;
 import ml.rugal.sshcommon.page.Pagination;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,4 +25,7 @@ public interface AdminDao
     Admin save(Admin bean);
 
     Admin updateByUpdater(Updater<Admin> updater);
+
+    @Transactional(readOnly = true)
+    List<Admin> getByUID(User uid);
 }

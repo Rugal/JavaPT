@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.entity;
 
+import com.google.gson.annotations.Expose;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -28,12 +29,15 @@ public class PostTags
     @SequenceGenerator(name = sequence_name, sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
+    @Expose
     private Integer ptid;
 
+    @Expose
     @JoinColumn(name = "pid", referencedColumnName = "pid")
     @ManyToOne
     private Post pid;
 
+    @Expose
     @JoinColumn(name = "tid", referencedColumnName = "tid")
     @ManyToOne
     private Tag tid;

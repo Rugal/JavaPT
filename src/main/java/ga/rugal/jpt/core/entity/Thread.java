@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.entity;
 
+import com.google.gson.annotations.Expose;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -28,20 +29,25 @@ public class Thread
     @SequenceGenerator(name = sequence_name, sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
+    @Expose
     private Integer tid;
 
     @Column(length = 2147483647)
+    @Expose
     private String content;
 
     @Column(name = "post_time")
+    @Expose
     private Long postTime;
 
     @JoinColumn(name = "pid", referencedColumnName = "pid")
     @ManyToOne
+    @Expose
     private Post pid;
 
     @JoinColumn(name = "uid", referencedColumnName = "uid")
     @ManyToOne
+    @Expose
     private User uid;
 
     public Thread()

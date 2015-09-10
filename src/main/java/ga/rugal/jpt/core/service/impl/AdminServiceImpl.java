@@ -2,7 +2,9 @@ package ga.rugal.jpt.core.service.impl;
 
 import ga.rugal.jpt.core.dao.AdminDao;
 import ga.rugal.jpt.core.entity.Admin;
+import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.AdminService;
+import java.util.List;
 import ml.rugal.sshcommon.hibernate.Updater;
 import ml.rugal.sshcommon.page.Pagination;
 import org.slf4j.Logger;
@@ -64,6 +66,13 @@ public class AdminServiceImpl implements AdminService
         return dao.updateByUpdater(updater);
         //-----These comments is here for testing transaction consistency.-------
 //        throw new RuntimeException();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Admin> getByUID(User uid)
+    {
+        return dao.getByUID(uid);
     }
 
 }

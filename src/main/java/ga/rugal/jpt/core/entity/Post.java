@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.entity;
 
+import com.google.gson.annotations.Expose;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import java.util.List;
 import javax.persistence.Basic;
@@ -31,17 +32,22 @@ public class Post
     @SequenceGenerator(name = sequence_name, sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
+    @Expose
     private Integer pid;
 
+    @Expose
     @Column(length = 50)
     private String title;
 
+    @Expose
     @Column(length = 2147483647)
     private String content;
 
+    @Expose
     @Column(length = 50, name = "info_hash")
     private String infoHash;
 
+    @Expose
     @Column(name = "post_time")
     private Long postTime;
 
@@ -49,30 +55,35 @@ public class Post
     private byte[] bencode;
 
     @Column
+    @Expose
     private Integer size;
 
     @Column
+    @Expose
     private Boolean enabled;
 
     @JoinColumn(name = "min_level", referencedColumnName = "lid")
     @ManyToOne
+    @Expose
     private UserLevel minLevel;
 
     @Transient
+    @Expose
     private float rate;
 
     @JoinColumn(name = "uid", referencedColumnName = "uid")
     @ManyToOne
+    @Expose
     private User uid;
 
     @OneToMany(mappedBy = "pid")
-    private transient List<PostTags> postTagsList;
+    private List<PostTags> postTagsList;
 
     @OneToMany(mappedBy = "pid")
-    private transient List<Thread> threadList;
+    private List<Thread> threadList;
 
     @OneToMany(mappedBy = "pid")
-    private transient List<ClientAnnounce> clientAnnounceList;
+    private List<ClientAnnounce> clientAnnounceList;
 
     public Post()
     {

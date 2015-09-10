@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.entity;
 
+import com.google.gson.annotations.Expose;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -28,18 +29,23 @@ public class Admin
     @SequenceGenerator(name = sequence_name, sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
+    @Expose
     private Integer aid;
 
+    @Expose
     @Column
     private Long since;
 
+    @Expose
     @Column
     private Level level;
 
+    @Expose
     @JoinColumn(name = "uid", referencedColumnName = "uid")
     @ManyToOne
     private User uid;
 
+    @Expose
     @JoinColumn(name = "grantee", referencedColumnName = "uid")
     @ManyToOne
     private User grantee;

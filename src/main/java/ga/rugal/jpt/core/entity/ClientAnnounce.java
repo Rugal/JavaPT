@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.entity;
 
+import com.google.gson.annotations.Expose;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -24,28 +25,36 @@ public class ClientAnnounce
     @SequenceGenerator(name = sequence_name, sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
+    @Expose
     private Long caid;
 
+    @Expose
     @Column(name = "announce_time")
     private Long announceTime;
 
+    @Expose
     @Column(name = "download_byte")
     private Long downloadByte = 0l;
 
+    @Expose
     @Column(name = "upload_byte")
     private Long uploadByte = 0l;
 
+    @Expose
     @Column(name = "left_byte")
     private Long leftByte = 0l;
 
     @JoinColumn(name = "uid", referencedColumnName = "uid")
     @ManyToOne
+    @Expose
     private User uid;
 
+    @Expose
     @JoinColumn(name = "cid", referencedColumnName = "cid")
     @ManyToOne
     private Client cid;
 
+    @Expose
     @JoinColumn(name = "pid", referencedColumnName = "pid", nullable = false)
     @ManyToOne
     private Post pid;

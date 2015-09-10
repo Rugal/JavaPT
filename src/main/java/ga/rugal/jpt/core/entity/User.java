@@ -1,12 +1,11 @@
 package ga.rugal.jpt.core.entity;
 
+import com.google.gson.annotations.Expose;
 import ga.rugal.jpt.common.SystemDefaultProperties;
-import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  *
@@ -23,7 +24,7 @@ import javax.persistence.Transient;
  */
 @Entity
 @Table(schema = "jpt", name = "user")
-public class User implements Serializable
+public class User
 {
 
     private static final String sequence_name = "user_uid_seq";
@@ -33,32 +34,42 @@ public class User implements Serializable
     @SequenceGenerator(name = sequence_name, sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
+    @Expose
     private Integer uid;
 
+    @Expose
     @Column(length = 100)
     private String password;
 
+    @Expose
     @Column(length = 100)
     private String username;
 
+    @Expose
     @Column(length = 100)
     private String email;
 
+    @Expose
     @Column(name = "upload_byte")
     private Long uploadByte = 0l;
 
+    @Expose
     @Column(name = "download_byte")
     private Long downloadByte = 0l;
 
+    @Expose
     @Column
     private Integer credit = 0;
 
+    @Expose
     @Column(name = "register_time")
     private Long registerTime;
 
+    @Expose
     @Transient
     private UserLevel level;
 
+    @Expose
     @Column
     private Status status;
 
@@ -67,25 +78,26 @@ public class User implements Serializable
     private User referee;
 
     @OneToMany(mappedBy = "uid")
-    private transient List<Post> postList;
+    private List<Post> postList;
 
     @OneToMany(mappedBy = "caid")
-    private transient List<ClientAnnounce> clientAnnouncesList;
+    private List<ClientAnnounce> clientAnnouncesList;
 
-    @OneToMany(mappedBy = "uid", fetch = FetchType.LAZY)
-    private transient List<Admin> adminList;
+    @OneToMany(mappedBy = "uid")
+    @Fetch(FetchMode.SELECT)
+    private List<Admin> adminList;
 
     @OneToMany(mappedBy = "grantee")
-    private transient List<Admin> grantees;
+    private List<Admin> grantees;
 
     @OneToMany(mappedBy = "uid")
-    private transient List<SigninLog> signinLogList;
+    private List<SigninLog> signinLogList;
 
     @OneToMany(mappedBy = "uid")
-    private transient List<Thread> threadList;
+    private List<Thread> threadList;
 
     @OneToMany(mappedBy = "referee")
-    private transient List<User> userList;
+    private List<User> userList;
 
     public User()
     {

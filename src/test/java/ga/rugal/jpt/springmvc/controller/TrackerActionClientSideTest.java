@@ -2,8 +2,16 @@ package ga.rugal.jpt.springmvc.controller;
 
 import ga.rugal.ControllerClientSideTestBase;
 import ga.rugal.jpt.common.SystemDefaultProperties;
-import org.junit.Ignore;
+import ga.rugal.jpt.core.entity.Admin;
+import ga.rugal.jpt.core.entity.User;
+import ga.rugal.jpt.core.entity.UserLevel;
+import ga.rugal.jpt.core.service.AdminService;
+import ga.rugal.jpt.core.service.UserLevelService;
+import ga.rugal.jpt.core.service.UserService;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -19,27 +27,67 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TrackerActionClientSideTest extends ControllerClientSideTestBase
 {
 
-    @Test
-    public void testStart() throws Exception
+    @Autowired
+    private UserLevelService levelService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private AdminService adminService;
+
+    @Autowired
+    private User user;
+
+    @Autowired
+    private UserLevel level;
+
+    @Autowired
+    private Admin admin;
+
+    @Before
+    public void setUp()
     {
-        this.mockMvc.perform(post("/tracker").
-            header(SystemDefaultProperties.ID, "1").
-            header(SystemDefaultProperties.CREDENTIAL, "123456")
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andDo(print());
+        System.out.println("setUp");
+        levelService.save(level);
+        userService.save(user);
+        adminService.save(admin);
+    }
+
+    @After
+    public void tearDown()
+    {
+        System.out.println("tearDown");
+        adminService.deleteById(admin.getAid());
+        userService.deleteById(user.getUid());
+        levelService.deleteById(level.getLid());
     }
 
     @Test
-    @Ignore
-    public void testStop() throws Exception
+    public void testServer() throws Exception
     {
-        this.mockMvc.perform(delete("/tracker").
-            header(SystemDefaultProperties.ID, "1").
-            header(SystemDefaultProperties.CREDENTIAL, "123456")
+        stop();
+        start();
+    }
+
+    private void start() throws Exception
+    {
+        this.mockMvc.perform(post("/tracker")
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
             .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andDo(print());
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+    private void stop() throws Exception
+    {
+        this.mockMvc.perform(delete("/tracker")
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk());
     }
 
 }

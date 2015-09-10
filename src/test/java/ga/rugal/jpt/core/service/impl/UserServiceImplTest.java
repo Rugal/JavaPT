@@ -1,10 +1,10 @@
 package ga.rugal.jpt.core.service.impl;
 
 import ga.rugal.DBTestBase;
-import ga.rugal.jpt.core.dao.UserLevelDao;
 import ga.rugal.jpt.core.entity.ClientAnnounce;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.entity.UserLevel;
+import ga.rugal.jpt.core.service.UserLevelService;
 import ga.rugal.jpt.core.service.UserService;
 import org.junit.After;
 import org.junit.Before;
@@ -19,7 +19,7 @@ public class UserServiceImplTest extends DBTestBase
 {
 
     @Autowired
-    private UserLevelDao levelDao;
+    private UserLevelService levelService;
 
     @Autowired
     private UserService userService;
@@ -38,7 +38,7 @@ public class UserServiceImplTest extends DBTestBase
     public void setUp()
     {
         System.out.println("setUp");
-        levelDao.save(level);
+        levelService.save(level);
         userService.save(user);
     }
 
@@ -47,7 +47,7 @@ public class UserServiceImplTest extends DBTestBase
     {
         System.out.println("tearDown");
         userService.deleteById(user.getUid());
-        levelDao.deleteById(level.getLid());
+        levelService.deleteById(level.getLid());
     }
 
     @Test

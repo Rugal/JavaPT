@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.entity;
 
+import com.google.gson.annotations.Expose;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import java.util.List;
 import javax.persistence.Basic;
@@ -28,22 +29,27 @@ public class Client
     @SequenceGenerator(name = sequence_name, sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
+    @Expose
     private Integer cid;
 
     @Column(length = 50)
+    @Expose
     private String name;
 
+    @Expose
     @Column(length = 10)
     private String version;
 
+    @Expose
     @Column(length = 10)
     private String cname;
 
+    @Expose
     @Column
     private Boolean enabled;
 
     @OneToMany(mappedBy = "caid")
-    private transient List<ClientAnnounce> clientAnnouncesList;
+    private List<ClientAnnounce> clientAnnouncesList;
 
     public Client()
     {

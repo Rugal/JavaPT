@@ -1,6 +1,8 @@
 package ga.rugal.jpt.core.service;
 
 import ga.rugal.jpt.core.entity.Admin;
+import ga.rugal.jpt.core.entity.User;
+import java.util.List;
 import ml.rugal.sshcommon.page.Pagination;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,5 +24,8 @@ public interface AdminService
     Admin save(Admin bean);
 
     Admin update(Admin bean);
+
+    @Transactional(readOnly = true)
+    List<Admin> getByUID(User uid);
 
 }
