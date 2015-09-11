@@ -61,6 +61,7 @@ public class UserAction
         User dbUser = userService.getByID(id);
         if (null != dbUser)
         {
+            bean.setUid(id);
             userService.update(bean);
         }
         /*

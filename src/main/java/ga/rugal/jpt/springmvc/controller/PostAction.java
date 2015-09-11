@@ -1,8 +1,11 @@
 package ga.rugal.jpt.springmvc.controller;
 
 import ga.rugal.jpt.common.CommonMessageContent;
+import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.service.PostService;
+import ga.rugal.jpt.core.service.UserService;
+import javax.servlet.http.HttpServletRequest;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,17 +31,23 @@ public class PostAction
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private UserService userService;
+
     /**
      * Persist a post bean into database.
      *
-     * @param bean post bean resembled from request body.
+     * @param bean    post bean resembled from request body.
+     * @param request
      *
      * @return The persisted post bean.
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
-    public Message registerUser(@RequestBody Post bean)
+    public Message savePost(@RequestBody Post bean, HttpServletRequest request)
     {
+        int id = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
+        bean.setUid(userService.getByID(id));
         postService.save(bean);
         /*
          * Now we need to push message to notify them
@@ -56,11 +65,12 @@ public class PostAction
      */
     @ResponseBody
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public Message updateUserProfile(@PathVariable("id") Integer id, @RequestBody Post bean)
+    public Message updatePost(@PathVariable("id") Integer id, @RequestBody Post bean)
     {
         Post dbPost = postService.getByID(id);
         if (null != dbPost)
         {
+//            bean.setPid(id);
             postService.update(bean);
         }
         /*
@@ -78,7 +88,7 @@ public class PostAction
      */
     @ResponseBody
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public Message deleteUser(@PathVariable("id") Integer id)
+    public Message deletePost(@PathVariable("id") Integer id)
     {
         Post bean = postService.getByID(id);
         if (null != bean)
@@ -97,7 +107,7 @@ public class PostAction
      */
     @ResponseBody
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Message retrieveUserProfile(@PathVariable("id") Integer id)
+    public Message getPost(@PathVariable("id") Integer id)
     {
         Post bean = postService.getByID(id);
         return Message.successMessage(CommonMessageContent.GET_POST, bean);

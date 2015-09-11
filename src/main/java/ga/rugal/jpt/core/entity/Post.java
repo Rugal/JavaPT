@@ -22,7 +22,7 @@ import javax.persistence.Transient;
  */
 @Entity
 @Table(catalog = "postgres", schema = "jpt", name = "post")
-public class Post
+public class Post extends BaseObject<Post>
 {
 
     private static final String sequence_name = "post_pid_seq";
@@ -257,6 +257,12 @@ public class Post
     public String toString()
     {
         return "ga.rugal.jpt.core.entity.Post[ pid=" + pid + " ]";
+    }
+
+    @Override
+    protected Class<Post> getRealClass()
+    {
+        return Post.class;
     }
 
 }

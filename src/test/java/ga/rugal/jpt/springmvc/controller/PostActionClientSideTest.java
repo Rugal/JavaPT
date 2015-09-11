@@ -2,7 +2,11 @@ package ga.rugal.jpt.springmvc.controller;
 
 import ga.rugal.ControllerClientSideTestBase;
 import ga.rugal.jpt.common.SystemDefaultProperties;
+import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
+import ga.rugal.jpt.core.entity.UserLevel;
+import ga.rugal.jpt.core.service.UserLevelService;
+import ga.rugal.jpt.core.service.UserService;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.junit.After;
 import org.junit.Assert;
@@ -22,13 +26,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author Rugal Bernstein
  */
-public class UserActionClientSideTest extends ControllerClientSideTestBase
+public class PostActionClientSideTest extends ControllerClientSideTestBase
 {
+
+    @Autowired
+    private Post post;
 
     @Autowired
     private User user;
 
-    public UserActionClientSideTest()
+    @Autowired
+    private UserLevel level;
+
+    @Autowired
+    private UserLevelService levelService;
+
+    @Autowired
+    private UserService userService;
+
+    public PostActionClientSideTest()
     {
     }
 
@@ -36,36 +52,44 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
     public void setUp() throws Exception
     {
         System.out.println("setUp");
+        levelService.save(level);
+        userService.save(user);
         MvcResult result = testSave();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
-        user = user.backToObject(message.getData());
+        post = post.backToObject(message.getData());
     }
 
     @After
     public void tearDown() throws Exception
     {
         System.out.println("tearDown");
+        //order is important
         testDelete();
+        userService.deleteById(user.getUid());
+        levelService.deleteById(level.getLid());
     }
 
     @Test
-    public void testRegisterUser() throws Exception
+    public void testSavePost() throws Exception
     {
-        System.out.println("registerUser");
-        Assert.assertNotNull(user.getUid());
+        System.out.println("savePost");
+        Assert.assertNotNull(post.getPid());
     }
 
     private MvcResult testSave() throws Exception
     {
-        return this.mockMvc.perform(post("/user").content(GSON.toJson(user))
+        return this.mockMvc.perform(post("/post").content(GSON.toJson(post))
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk()).andReturn();
+            .andExpect(status().isOk())
+            .andReturn();
     }
 
     private void testDelete() throws Exception
     {
-        this.mockMvc.perform(delete("/user/" + user.getUid())
+        this.mockMvc.perform(delete("/post/" + post.getPid())
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
             .accept(MediaType.APPLICATION_JSON))
@@ -73,34 +97,40 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
     }
 
     @Test
-    public void testUpdateUserProfile() throws Exception
+    public void testUpdatePost() throws Exception
     {
-        System.out.println("updateUserProfile");
-        user.setCredit(user.getCredit() + 100);
-        MvcResult result = this.mockMvc.perform(put("/user/" + user.getUid())
+        System.out.println("updatePost");
+        Assert.assertNotNull(post.getPid());
+        post.setEnabled(!post.getEnabled());
+        MvcResult result = this.mockMvc.perform(put("/post/" + post.getPid())
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-            .content(GSON.toJson(user))
+            .content(GSON.toJson(post))
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isOk()).andReturn();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
-        User beanUpdated = user.backToObject(message.getData());
-        Assert.assertEquals(beanUpdated.getCredit(), user.getCredit());
+        Post beanUpdated = post.backToObject(message.getData());
+        Assert.assertEquals(beanUpdated.getEnabled(), post.getEnabled());
     }
 
     @Test
-    public void testRetrieveUserProfile() throws Exception
+    public void testGetPost() throws Exception
     {
-        System.out.println("retrieveUserProfile");
-        this.mockMvc.perform(get("/user/" + user.getUid())
+        System.out.println("getPost");
+        MvcResult result = this.mockMvc.perform(get("/post/" + post.getPid())
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andReturn();
+        Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
+        //special case for this unit test
+        post = new Post().backToObject(message.getData());
+        Assert.assertNotNull(post);
     }
 
 }

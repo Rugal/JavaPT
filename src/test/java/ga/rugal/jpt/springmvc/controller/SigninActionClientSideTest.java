@@ -76,7 +76,6 @@ public class SigninActionClientSideTest extends ControllerClientSideTestBase
             .andExpect(status().isOk())
             .andDo(print())
             .andReturn();
-        System.out.println(result.getResponse().getContentAsString());
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
         //special case for this unit test
         bean = new SigninLog().backToObject(message.getData());
