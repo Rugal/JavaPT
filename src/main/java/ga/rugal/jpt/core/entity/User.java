@@ -24,7 +24,7 @@ import org.hibernate.annotations.FetchMode;
  */
 @Entity
 @Table(schema = "jpt", name = "user")
-public class User
+public class User extends BaseObject<User>
 {
 
     private static final String sequence_name = "user_uid_seq";
@@ -311,6 +311,12 @@ public class User
     public String toString()
     {
         return "ga.rugal.jpt.core.entity.User[ uid=" + uid + " ]";
+    }
+
+    @Override
+    protected Class<User> getRealClass()
+    {
+        return User.class;
     }
 
     public enum Status

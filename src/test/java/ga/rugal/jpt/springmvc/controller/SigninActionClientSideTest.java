@@ -10,6 +10,7 @@ import ga.rugal.jpt.core.service.UserLevelService;
 import ga.rugal.jpt.core.service.UserService;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +78,9 @@ public class SigninActionClientSideTest extends ControllerClientSideTestBase
             .andReturn();
         System.out.println(result.getResponse().getContentAsString());
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
-        bean = backToObject(message.getData(), SigninLog.class);
+        //special case for this unit test
+        bean = new SigninLog().backToObject(message.getData());
+        Assert.assertNotNull(bean);
     }
 
 }

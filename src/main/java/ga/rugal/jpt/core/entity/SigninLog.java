@@ -19,7 +19,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "signin_log", catalog = "postgres", schema = "jpt")
-public class SigninLog
+public class SigninLog extends BaseObject<SigninLog>
 {
 
     private static final String sequence_name = "signin_log_slid_seq";
@@ -117,6 +117,12 @@ public class SigninLog
     public String toString()
     {
         return "ga.rugal.jpt.core.entity.SigninLog[ slid=" + slid + " ]";
+    }
+
+    @Override
+    protected Class<SigninLog> getRealClass()
+    {
+        return SigninLog.class;
     }
 
 }

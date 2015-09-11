@@ -26,12 +26,6 @@ public abstract class ControllerClientSideTestBase extends JUnitSpringTestBase
 
     protected static final Gson GSON = new Gson();
 
-    protected <T> T backToObject(Object data, Class<T> classT)
-    {
-        String json = GSON.toJson(data);
-        return GSON.fromJson(json, classT);
-    }
-
     @Autowired
     public WebApplicationContext wac;
 
