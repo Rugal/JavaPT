@@ -3,8 +3,10 @@ package ga.rugal.jpt.springmvc.controller;
 import ga.rugal.ControllerClientSideTestBase;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.core.entity.Post;
+import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.entity.UserLevel;
+import ga.rugal.jpt.core.service.ThreadService;
 import ga.rugal.jpt.core.service.UserLevelService;
 import ga.rugal.jpt.core.service.UserService;
 import ml.rugal.sshcommon.springmvc.util.Message;
@@ -36,6 +38,9 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     private User user;
 
     @Autowired
+    private Thread thread;
+
+    @Autowired
     private UserLevel level;
 
     @Autowired
@@ -43,6 +48,9 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ThreadService threadService;
 
     public PostActionClientSideTest()
     {
@@ -129,8 +137,27 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
             .andReturn();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
         //special case for this unit test
-        post = new Post().backToObject(message.getData());
+        post = post.backToObject(message.getData());
         Assert.assertNotNull(post);
+    }
+
+    @Test
+    public void saveThread() throws Exception
+    {
+        MvcResult result = this.mockMvc.perform(post("/post/" + post.getPid() + "/thread")
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .content(GSON.toJson(thread))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
+        Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
+        thread = thread.backToObject(message.getData());
+        Assert.assertNotNull(thread);
+        Assert.assertNotNull(thread.getTid());
+        threadService.deleteById(thread.getTid());
     }
 
 }

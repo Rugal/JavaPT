@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.service;
 
+import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.Thread;
 import ml.rugal.sshcommon.page.Pagination;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,7 @@ public interface ThreadService
     Thread getByID(Integer id);
 
     @Transactional(readOnly = true)
-    Pagination getPage(int pageNo, int pageSize);
+    Pagination getPage(Post post, int pageNo, int pageSize);
 
     Thread save(Thread bean);
 

@@ -19,7 +19,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(catalog = "postgres", schema = "jpt", name = "thread")
-public class Thread
+public class Thread extends BaseObject<Thread>
 {
 
     private static final String sequence_name = "thread_tid_seq";
@@ -132,6 +132,12 @@ public class Thread
     public String toString()
     {
         return "ga.rugal.jpt.core.entity.Thread[ tid=" + tid + " ]";
+    }
+
+    @Override
+    protected Class<Thread> getRealClass()
+    {
+        return Thread.class;
     }
 
 }

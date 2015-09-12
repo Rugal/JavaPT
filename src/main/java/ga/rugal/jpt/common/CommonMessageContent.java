@@ -66,4 +66,14 @@ public interface CommonMessageContent
     final String UPDATE_POST = "Post updated";
 
     final String GET_POST = "Get post";
+
+    //Thread operations
+    final String SAVE_THREAD = "Thread persisted";
+
+    final String DELETE_THREAD = "Thread deleted";
+
+    final String UPDATE_THREAD = "Thread updated";
+
+    final String GET_THREAD = "Get thread";
+
 }

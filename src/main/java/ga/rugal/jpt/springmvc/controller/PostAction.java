@@ -3,7 +3,9 @@ package ga.rugal.jpt.springmvc.controller;
 import ga.rugal.jpt.common.CommonMessageContent;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.core.entity.Post;
+import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.service.PostService;
+import ga.rugal.jpt.core.service.ThreadService;
 import ga.rugal.jpt.core.service.UserService;
 import javax.servlet.http.HttpServletRequest;
 import ml.rugal.sshcommon.springmvc.util.Message;
@@ -33,6 +35,9 @@ public class PostAction
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ThreadService threadService;
 
     /**
      * Persist a post bean into database.
@@ -70,7 +75,7 @@ public class PostAction
         Post dbPost = postService.getByID(id);
         if (null != dbPost)
         {
-//            bean.setPid(id);
+            bean.setPid(id);
             postService.update(bean);
         }
         /*
@@ -82,7 +87,7 @@ public class PostAction
     /**
      * DELETE a post record from database.
      *
-     * @param id the target post id.
+     * @param id the target post uid.
      *
      * @return
      */
@@ -112,4 +117,33 @@ public class PostAction
         Post bean = postService.getByID(id);
         return Message.successMessage(CommonMessageContent.GET_POST, bean);
     }
+
+    /**
+     * Persist a thread bean into database.<BR>
+     * Notice a thread must be attached under a post.
+     *
+     * @param pid     the post that this thread will be attached below.
+     * @param bean    thread bean resembled from request body.
+     * @param request contains user information.
+     *
+     * @return The persisted post bean.
+     */
+    @ResponseBody
+    @RequestMapping(value = "/{pid}/thread", method = RequestMethod.POST)
+    public Message saveThread(@PathVariable("pid") Integer pid,
+                              @RequestBody Thread bean,
+                              HttpServletRequest request)
+    {
+        //setting user in Thread
+        int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
+        bean.setUid(userService.getByID(uid));
+        //setting attached post in Thread
+        bean.setPid(postService.getByID(pid));
+        threadService.save(bean);
+        /*
+         * Now we need to push message to notify them
+         */
+        return Message.successMessage(CommonMessageContent.SAVE_THREAD, bean);
+    }
+
 }

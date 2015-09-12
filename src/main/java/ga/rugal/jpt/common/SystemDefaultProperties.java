@@ -48,4 +48,8 @@ public interface SystemDefaultProperties
 
     final int PIECE_HASH_SIZE = 20;
 
+    final String DEFAULT_PAGE_NUMBER = "1";
+
+    final String DEFAULT_PAGE_SIZE = "1";
+
 }
