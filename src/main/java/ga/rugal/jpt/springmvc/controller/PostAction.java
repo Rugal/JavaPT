@@ -8,6 +8,7 @@ import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.ThreadService;
 import ga.rugal.jpt.core.service.UserService;
 import javax.servlet.http.HttpServletRequest;
+import ml.rugal.sshcommon.page.Pagination;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -144,6 +146,28 @@ public class PostAction
          * Now we need to push message to notify them
          */
         return Message.successMessage(CommonMessageContent.SAVE_THREAD, bean);
+    }
+
+    /**
+     * GET threads for a post by page.
+     *
+     * @param pid      primary key of target post.
+     * @param pageSize size of each page. Default with
+     *                 {@link ga.rugal.jpt.common.SystemDefaultProperties.DEFAULT_PAGE_SIZE}
+     * @param pageNo  indicate which page the client needs. Start from 1. Default with
+     *                 {@link ga.rugal.jpt.common.SystemDefaultProperties.DEFAULT_PAGE_NUMBER}
+     *
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/{pid}/thread", method = RequestMethod.GET)
+    public Message getThreadByPost(@PathVariable("pid") Integer pid,
+                                   @RequestParam(required = true, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
+                                   @RequestParam(required = true, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize)
+    {
+        Post post = postService.getByID(pid);
+        Pagination page = threadService.getPage(post, pageNo, pageSize);
+        return Message.successMessage(CommonMessageContent.GET_THREAD, page);
     }
 
 }
