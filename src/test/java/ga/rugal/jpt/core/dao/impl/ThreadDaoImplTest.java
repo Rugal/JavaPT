@@ -76,9 +76,9 @@ public class ThreadDaoImplTest extends DBTestBase
     public void testGetPage()
     {
         System.out.println("getPage");
-        int pageNo = 0;
+        int pageNo = 1;
         int pageSize = 1;
-        Pagination result = threadDao.getPage(pageNo, pageSize);
+        Pagination result = threadDao.getPage(post, pageNo, pageSize);
         System.out.println(result.getList().size());
     }
 
