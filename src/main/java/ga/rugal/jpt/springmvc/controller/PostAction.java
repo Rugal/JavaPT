@@ -154,7 +154,7 @@ public class PostAction
      * @param pid      primary key of target post.
      * @param pageSize size of each page. Default with
      *                 {@link ga.rugal.jpt.common.SystemDefaultProperties.DEFAULT_PAGE_SIZE}
-     * @param pageNo  indicate which page the client needs. Start from 1. Default with
+     * @param pageNo   indicate which page the client needs. Start from 1. Default with
      *                 {@link ga.rugal.jpt.common.SystemDefaultProperties.DEFAULT_PAGE_NUMBER}
      *
      * @return
@@ -162,8 +162,8 @@ public class PostAction
     @ResponseBody
     @RequestMapping(value = "/{pid}/thread", method = RequestMethod.GET)
     public Message getThreadByPost(@PathVariable("pid") Integer pid,
-                                   @RequestParam(required = true, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
-                                   @RequestParam(required = true, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize)
+                                   @RequestParam(name = "pageNo", required = true, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
+                                   @RequestParam(name = "pageSize", required = true, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize)
     {
         Post post = postService.getByID(pid);
         Pagination page = threadService.getPage(post, pageNo, pageSize);

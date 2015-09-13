@@ -19,4 +19,5 @@ public abstract class BaseObject<T>
     }
 
     protected abstract Class<T> getRealClass();
+
 }

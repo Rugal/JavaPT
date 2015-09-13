@@ -3,10 +3,8 @@ package ga.rugal.jpt.springmvc.controller;
 import ga.rugal.ControllerClientSideTestBase;
 import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.core.entity.Post;
-import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.entity.UserLevel;
-import ga.rugal.jpt.core.service.ThreadService;
 import ga.rugal.jpt.core.service.UserLevelService;
 import ga.rugal.jpt.core.service.UserService;
 import ml.rugal.sshcommon.springmvc.util.Message;
@@ -38,9 +36,6 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     private User user;
 
     @Autowired
-    private Thread thread;
-
-    @Autowired
     private UserLevel level;
 
     @Autowired
@@ -48,9 +43,6 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private ThreadService threadService;
 
     public PostActionClientSideTest()
     {
@@ -139,23 +131,6 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
         //special case for this unit test
         post = post.backToObject(message.getData());
         Assert.assertNotNull(post);
-    }
-
-//    @Test
-    public void testGetThreadByPost() throws Exception
-    {
-        System.out.println("getThreadByPost");
-        threadService.save(thread);
-        MvcResult result = this.mockMvc.perform(get("/post/" + post.getPid() + "/thread")
-            .param("pageNo", "1").param("pageSize", "1")
-            .header(SystemDefaultProperties.ID, user.getUid())
-            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON))
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andReturn();
-        Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
     }
 
 }

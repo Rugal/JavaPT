@@ -10,6 +10,8 @@ import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.ThreadService;
 import ga.rugal.jpt.core.service.UserLevelService;
 import ga.rugal.jpt.core.service.UserService;
+import java.util.List;
+import ml.rugal.sshcommon.page.Pagination;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.junit.After;
 import org.junit.Assert;
@@ -150,6 +152,26 @@ public class ThreadActionTest extends ControllerClientSideTestBase
         System.out.println("saveThread");
         Assert.assertNotNull(thread);
         Assert.assertNotNull(thread.getTid());
+    }
+
+    @Test
+    public void testGetThreadByPost() throws Exception
+    {
+        System.out.println("getThreadByPost");
+        MvcResult result = this.mockMvc.perform(get("/post/" + post.getPid() + "/thread")
+            .param("pageNo", "1").param("pageSize", "1")
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
+        Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
+        String json = GSON.toJson(message.getData());
+        Pagination page = GSON.fromJson(json, Pagination.class);
+        System.out.println(page.getTotalCount());
+        List<Thread> list = (List<Thread>) page.getList();
     }
 
 }
