@@ -360,7 +360,7 @@
                     <!-- http port -->
                     <port>8080</port>
                     <!-- application path always starts with /-->
-                    <path>/jpt</path>
+                    <path>/</path>
                     <!-- optional path to a context file -->
                     <!--<contextFile>${tomcatContextXml}</contextFile>-->
                     <!-- optional system propoerties you want to add -->
