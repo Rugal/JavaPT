@@ -2,7 +2,7 @@ package ga.rugal.jpt.springmvc.controller;
 
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
-import ga.rugal.jpt.common.SystemDefaultProperties;
+import config.SystemDefaultProperties;
 import ga.rugal.jpt.core.entity.SigninLog;
 import ga.rugal.jpt.core.service.SigninLogService;
 import ga.rugal.jpt.core.service.UserService;

@@ -1,6 +1,5 @@
 package config;
 
-import ga.rugal.jpt.common.SystemDefaultProperties;
 import javax.servlet.Filter;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;

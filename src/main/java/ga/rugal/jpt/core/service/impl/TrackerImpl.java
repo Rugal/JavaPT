@@ -2,7 +2,7 @@ package ga.rugal.jpt.core.service.impl;
 
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
-import ga.rugal.jpt.common.SystemDefaultProperties;
+import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;

@@ -1,6 +1,5 @@
 package config;
 
-import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;

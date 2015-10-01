@@ -76,4 +76,19 @@ public interface CommonMessageContent
 
     final String GET_THREAD = "Get thread";
 
+    //Tag operations
+    final String SAVE_TAG = "Tag persisted";
+
+    final String DELETE_TAG = "Tag deleted";
+
+    final String UPDATE_TAG = "Tag updated, old tag removed";
+
+    final String TAG_NOT_UPDATED = "Unable to update tag, keep old one";
+
+    final String GET_TAG = "Get tag";
+
+    final String TAG_NOT_SAVED = "Unable to save Tag icon";
+
+    final String TAG_NOT_FOUND = "No such tag found";
+
 }

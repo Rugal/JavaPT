@@ -82,4 +82,7 @@ public interface CommonLogContent
 
     final String FRAUD_REQUEST = "IP [{0}] is making fraud request against UID [{1}] with hash [{2}]";
 
+    //Tag
+    final String TAG_NOT_SAVED = "Unable to save Tag icon";
+
 }

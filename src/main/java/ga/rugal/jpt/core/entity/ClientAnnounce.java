@@ -1,7 +1,7 @@
 package ga.rugal.jpt.core.entity;
 
 import com.google.gson.annotations.Expose;
-import ga.rugal.jpt.common.SystemDefaultProperties;
+import config.SystemDefaultProperties;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;

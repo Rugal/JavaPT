@@ -1,7 +1,7 @@
 package ga.rugal.jpt.springmvc.controller;
 
 import ga.rugal.jpt.common.CommonMessageContent;
-import ga.rugal.jpt.common.SystemDefaultProperties;
+import config.SystemDefaultProperties;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.service.PostService;

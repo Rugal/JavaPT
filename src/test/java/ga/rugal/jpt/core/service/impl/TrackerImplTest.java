@@ -1,7 +1,7 @@
 package ga.rugal.jpt.core.service.impl;
 
 import ga.rugal.DBTestBase;
-import ga.rugal.jpt.common.SystemDefaultProperties;
+import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.server.TrackedPeer;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;

@@ -15,7 +15,7 @@
  */
 package ga.rugal.jpt.common.tracker.server;
 
-import ga.rugal.jpt.common.SystemDefaultProperties;
+import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.bcodec.BEValue;
 import ga.rugal.jpt.common.tracker.common.Peer;
 import ga.rugal.jpt.common.tracker.common.Torrent;

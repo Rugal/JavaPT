@@ -1,4 +1,4 @@
-package ga.rugal.jpt.common;
+package config;
 
 /**
  *
@@ -51,5 +51,7 @@ public interface SystemDefaultProperties
     final String DEFAULT_PAGE_NUMBER = "1";
 
     final String DEFAULT_PAGE_SIZE = "1";
+
+    final String ICON_PATH = "icon";
 
 }

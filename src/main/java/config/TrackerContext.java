@@ -1,7 +1,6 @@
 package config;
 
 import ga.rugal.jpt.common.CommonLogContent;
-import ga.rugal.jpt.common.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.Tracker;

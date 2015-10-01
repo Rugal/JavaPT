@@ -1,7 +1,7 @@
 package ga.rugal.jpt.springmvc.controller;
 
 import ga.rugal.ControllerClientSideTestBase;
-import ga.rugal.jpt.common.SystemDefaultProperties;
+import config.SystemDefaultProperties;
 import ga.rugal.jpt.core.entity.User;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.junit.After;

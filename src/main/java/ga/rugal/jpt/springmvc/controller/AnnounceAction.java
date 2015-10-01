@@ -2,7 +2,7 @@ package ga.rugal.jpt.springmvc.controller;
 
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
-import ga.rugal.jpt.common.SystemDefaultProperties;
+import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.bcodec.BEValue;
 import ga.rugal.jpt.common.tracker.bcodec.BEncoder;
 import ga.rugal.jpt.common.tracker.common.ClientRequestMessageBean;

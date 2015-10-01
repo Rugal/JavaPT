@@ -1,13 +1,12 @@
 package ga.rugal.jpt.springmvc.controller;
 
 import ga.rugal.ControllerClientSideTestBase;
-import ga.rugal.jpt.common.SystemDefaultProperties;
+import config.SystemDefaultProperties;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.entity.UserLevel;
 import ga.rugal.jpt.core.service.PostService;
-import ga.rugal.jpt.core.service.ThreadService;
 import ga.rugal.jpt.core.service.UserLevelService;
 import ga.rugal.jpt.core.service.UserService;
 import java.util.List;
@@ -54,9 +53,6 @@ public class ThreadActionTest extends ControllerClientSideTestBase
 
     @Autowired
     private PostService postService;
-
-    @Autowired
-    private ThreadService threadService;
 
     public ThreadActionTest()
     {

@@ -299,9 +299,7 @@
             <version>2.4</version>
         </dependency>
         <!-- Auto Append -->
-   
     </dependencies>
-    
     <build>
         <plugins>
             <plugin>

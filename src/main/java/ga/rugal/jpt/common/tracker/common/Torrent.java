@@ -15,7 +15,7 @@
  */
 package ga.rugal.jpt.common.tracker.common;
 
-import ga.rugal.jpt.common.SystemDefaultProperties;
+import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.bcodec.BDecoder;
 import ga.rugal.jpt.common.tracker.bcodec.BEValue;
 import ga.rugal.jpt.common.tracker.bcodec.BEncoder;

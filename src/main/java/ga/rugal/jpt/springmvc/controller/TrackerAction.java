@@ -2,7 +2,7 @@ package ga.rugal.jpt.springmvc.controller;
 
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
-import ga.rugal.jpt.common.SystemDefaultProperties;
+import config.SystemDefaultProperties;
 import ga.rugal.jpt.core.entity.Admin;
 import ga.rugal.jpt.core.service.Tracker;
 import ga.rugal.jpt.springmvc.annotation.Role;
