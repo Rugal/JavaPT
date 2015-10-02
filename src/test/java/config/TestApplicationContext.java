@@ -132,7 +132,7 @@ public class TestApplicationContext
     public Tag tag()
     {
         Tag bean = new Tag();
-        bean.setIcon("icon/test.jpg");
+        bean.setIcon("test.ico");
         bean.setName("Test use only");
         return bean;
     }

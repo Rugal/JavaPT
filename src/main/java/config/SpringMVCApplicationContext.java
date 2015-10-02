@@ -74,12 +74,17 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters)
     {
+        converters.add(gsonHttpMessageConverter());
+    }
+
+    private HttpMessageConverter gsonHttpMessageConverter()
+    {
         GsonHttpMessageConverter messageConverter = new GsonHttpMessageConverter();
         messageConverter.setGson(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create());
         List<MediaType> supportedMediaTypes = new ArrayList<>();
         supportedMediaTypes.add(MediaType.APPLICATION_JSON);
         messageConverter.setSupportedMediaTypes(supportedMediaTypes);
-        converters.add(messageConverter);
+        return messageConverter;
     }
 
 //    @Bean

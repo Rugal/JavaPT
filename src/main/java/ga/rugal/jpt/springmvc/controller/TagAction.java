@@ -9,11 +9,14 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,7 +60,8 @@ public class TagAction
         bean.setName(name);
         try
         {
-            this.saveFile(uploadedFile);
+            String filename = this.saveFile(uploadedFile);
+            bean.setIcon(filename);
             tagService.save(bean);
         }
         catch (IOException ex)
@@ -75,7 +79,7 @@ public class TagAction
         return new File(iconFolder, randomName);
     }
 
-    private void saveFile(MultipartFile uploadedFile) throws IOException
+    private String saveFile(MultipartFile uploadedFile) throws IOException
     {
         File file = this.randomFile(uploadedFile.getOriginalFilename());
         try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file)))
@@ -86,6 +90,7 @@ public class TagAction
         {
             throw ex;
         }
+        return file.getName();
     }
 
     /**
@@ -153,6 +158,57 @@ public class TagAction
         if (file.exists())
         {
             file.delete();
+        }
+    }
+
+    /**
+     * GET a tag record from database without its icon file.
+     *
+     * @param id the target Tag tid.
+     *
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public Message getTagBean(@PathVariable("id") Integer id)
+    {
+        Tag bean = tagService.getByID(id);
+        Message message;
+        if (null == bean)
+        {
+            message = Message.failMessage(CommonMessageContent.TAG_NOT_FOUND);
+        }
+        else
+        {
+            message = Message.successMessage(CommonMessageContent.GET_TAG, bean);
+        }
+        return message;
+    }
+
+    /**
+     * GET a tag icon file.
+     *
+     * @param id       the target Tag tid.
+     * @param response
+     *
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/{id}/icon", method = RequestMethod.GET)
+    public Object getTagIcon(@PathVariable("id") Integer id, HttpServletResponse response)
+    {
+        Tag bean = tagService.getByID(id);
+        if (null == bean)
+        {
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            return Message.failMessage(CommonMessageContent.TAG_NOT_FOUND);
+
+        }
+        else
+        {
+            FileSystemResource fsr = new FileSystemResource(new File(iconFolder, bean.getIcon()));
+            response.setContentType(MediaType.IMAGE_GIF_VALUE);
+            return fsr;
         }
     }
 }
