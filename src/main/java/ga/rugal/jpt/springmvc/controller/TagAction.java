@@ -47,18 +47,18 @@ public class TagAction
      * Persist a tag bean into database, meanwhile save its image file into file system.<BR>
      * This method will save image into FS before persist tag bean in database.
      *
-     * @param tagName      indicate the name of this tag icon. Will be displayed in UI.
+     * @param name      indicate the name of this tag icon. Will be displayed in UI.
      * @param uploadedFile the byte stream of the uploaded image file.
      *
      * @return The persisted tag bean or error message if unable to save image file.
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
-    public Message saveTag(@RequestParam(value = "tagName", required = true) String tagName,
+    public Message saveTag(@RequestParam(value = "name", required = true) String name,
                            @RequestParam("file") MultipartFile uploadedFile)
     {
         Tag bean = new Tag();
-        bean.setName(tagName);
+        bean.setName(name);
         try
         {
             String filename = this.saveFile(uploadedFile);
