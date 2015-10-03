@@ -19,7 +19,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(catalog = "postgres", schema = "jpt", name = "tag")
-public class Tag
+public class Tag extends BaseObject<Tag>
 {
 
     private static final String sequence_name = "tag_tid_seq";
@@ -115,6 +115,12 @@ public class Tag
     public String toString()
     {
         return "ga.rugal.jpt.core.entity.Tag[ tid=" + tid + " ]";
+    }
+
+    @Override
+    protected Class<Tag> getRealClass()
+    {
+        return Tag.class;
     }
 
 }
