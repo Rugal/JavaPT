@@ -80,7 +80,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
             .file(mmf)
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-            .param("name", tag.getName())
+            .param("tagName", tag.getName())
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andDo(print())
