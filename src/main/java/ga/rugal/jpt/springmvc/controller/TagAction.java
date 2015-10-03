@@ -9,6 +9,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -42,6 +43,9 @@ public class TagAction
 
     @Autowired
     private TagService tagService;
+
+    @Autowired
+    private ServletContext context;
 
     /**
      * Persist a tag bean into database, meanwhile save its image file into file system.<BR>
@@ -86,7 +90,7 @@ public class TagAction
         try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file)))
         {
             byte[] data = uploadedFile.getBytes();
-            LOG.debug("Length of byte array is " + data.length);
+            LOG.trace("Length of byte array is " + data.length);
             stream.write(data);
         }
         catch (IOException ex)
@@ -201,23 +205,23 @@ public class TagAction
     @ResponseBody
     @RequestMapping(value = "/{id}/icon", method = RequestMethod.GET, produces =
                 {
-                    MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE
+                    MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE,
+                    MediaType.IMAGE_PNG_VALUE, MediaType.APPLICATION_JSON_VALUE
     })
-    public byte[] getTagIcon(@PathVariable("id") Integer id, HttpServletResponse response) throws IOException
+    public Object getTagIcon(@PathVariable("id") Integer id, HttpServletResponse response) throws IOException
     {
         Tag bean = tagService.getByID(id);
         if (null == bean)
         {
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-//            return Message.failMessage(CommonMessageContent.TAG_NOT_FOUND);
-            return null;
+            return Message.failMessage(CommonMessageContent.TAG_NOT_FOUND);
         }
         File iconFile = new File(iconFolder, bean.getIcon());
         if (!iconFile.exists())
         {
             LOG.error(CommonLogContent.TAG_ICON_NOT_FOUND);
-//            return Message.failMessage(CommonMessageContent.TAG_ICON_NOT_FOUND);
-            return null;
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            return Message.failMessage(CommonMessageContent.TAG_ICON_NOT_FOUND);
         }
         byte[] data;
         try
@@ -229,8 +233,8 @@ public class TagAction
             LOG.error("I/O exception occurs when reading icon", ex);
             throw ex;
         }
-        LOG.debug("Length of byte array is " + data.length);
-        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        LOG.trace("Length of byte array is " + data.length);
+        response.setContentType(context.getMimeType(bean.getIcon()));
         response.setContentLength(data.length);
         response.setHeader("Content-Disposition", String.format("inline; filename=\"%s\"", bean.getIcon()));
         return data;
