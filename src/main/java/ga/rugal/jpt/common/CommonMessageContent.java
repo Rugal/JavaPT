@@ -91,4 +91,6 @@ public interface CommonMessageContent
 
     final String TAG_NOT_FOUND = "No such tag found";
 
+    final String TAG_ICON_NOT_FOUND = "No icon found for this tag";
+
 }

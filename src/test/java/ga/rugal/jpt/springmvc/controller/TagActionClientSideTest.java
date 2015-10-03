@@ -9,8 +9,10 @@ import ga.rugal.jpt.core.service.UserLevelService;
 import ga.rugal.jpt.core.service.UserService;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +21,10 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.util.FileCopyUtils;
 
 /**
  *
@@ -83,7 +87,6 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
             .param("name", tag.getName())
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andDo(print())
             .andReturn();
     }
 
@@ -93,14 +96,41 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
             .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andDo(print());
+            .andExpect(status().isOk());
     }
 
     @Test
-    public void test()
+    public void testGetTagBean() throws Exception
     {
+        MvcResult result = this.mockMvc.perform(get("/tag/" + db.getTid())
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
+        Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
+        Tag test = tag.backToObject(message.getData());
+        Assert.assertEquals(db.getIcon(), test.getIcon());
+    }
 
+    @Test
+    public void testGetTagIcon() throws Exception
+    {
+        MvcResult result = this.mockMvc.perform(get("/tag/" + db.getTid() + "/icon")
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .accept(MediaType.APPLICATION_JSON, MediaType.IMAGE_GIF,
+                    MediaType.IMAGE_JPEG, MediaType.IMAGE_PNG))
+            .andExpect(status().isOk())
+            .andReturn();
+        File testIcon = new File(db.getIcon());
+        try (FileOutputStream fos = new FileOutputStream(testIcon))
+        {
+            fos.write(result.getResponse().getContentAsByteArray());
+        }
+        Assert.assertArrayEquals(FileCopyUtils.copyToByteArray(file), FileCopyUtils.copyToByteArray(testIcon));
+        testIcon.delete();
     }
 
 }

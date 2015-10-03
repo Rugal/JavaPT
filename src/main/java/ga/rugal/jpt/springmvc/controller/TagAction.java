@@ -15,9 +15,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,7 +47,7 @@ public class TagAction
      * Persist a tag bean into database, meanwhile save its image file into file system.<BR>
      * This method will save image into FS before persist tag bean in database.
      *
-     * @param name      indicate the name of this tag icon. Will be displayed in UI.
+     * @param name         indicate the name of this tag icon. Will be displayed in UI.
      * @param uploadedFile the byte stream of the uploaded image file.
      *
      * @return The persisted tag bean or error message if unable to save image file.
@@ -85,7 +85,9 @@ public class TagAction
         File file = this.randomFile(uploadedFile.getOriginalFilename());
         try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file)))
         {
-            stream.write(uploadedFile.getBytes());
+            byte[] data = uploadedFile.getBytes();
+            LOG.debug("Length of byte array is " + data.length);
+            stream.write(data);
         }
         catch (IOException ex)
         {
@@ -193,23 +195,44 @@ public class TagAction
      * @param response
      *
      * @return
+     *
+     * @throws java.io.IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/{id}/icon", method = RequestMethod.GET)
-    public Object getTagIcon(@PathVariable("id") Integer id, HttpServletResponse response)
+    @RequestMapping(value = "/{id}/icon", method = RequestMethod.GET, produces =
+                {
+                    MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE
+    })
+    public byte[] getTagIcon(@PathVariable("id") Integer id, HttpServletResponse response) throws IOException
     {
         Tag bean = tagService.getByID(id);
         if (null == bean)
         {
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            return Message.failMessage(CommonMessageContent.TAG_NOT_FOUND);
-
+//            return Message.failMessage(CommonMessageContent.TAG_NOT_FOUND);
+            return null;
         }
-        else
+        File iconFile = new File(iconFolder, bean.getIcon());
+        if (!iconFile.exists())
         {
-            FileSystemResource fsr = new FileSystemResource(new File(iconFolder, bean.getIcon()));
-            response.setContentType(MediaType.IMAGE_GIF_VALUE);
-            return fsr;
+            LOG.error(CommonLogContent.TAG_ICON_NOT_FOUND);
+//            return Message.failMessage(CommonMessageContent.TAG_ICON_NOT_FOUND);
+            return null;
         }
+        byte[] data;
+        try
+        {
+            data = FileCopyUtils.copyToByteArray(iconFile);
+        }
+        catch (IOException ex)
+        {
+            LOG.error("I/O exception occurs when reading icon", ex);
+            throw ex;
+        }
+        LOG.debug("Length of byte array is " + data.length);
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        response.setContentLength(data.length);
+        response.setHeader("Content-Disposition", String.format("inline; filename=\"%s\"", bean.getIcon()));
+        return data;
     }
 }

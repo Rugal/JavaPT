@@ -85,4 +85,6 @@ public interface CommonLogContent
     //Tag
     final String TAG_NOT_SAVED = "Unable to save Tag icon";
 
+    final String TAG_ICON_NOT_FOUND = "No icon found for this tag";
+
 }

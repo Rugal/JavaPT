@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -75,6 +76,19 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters)
     {
         converters.add(gsonHttpMessageConverter());
+        converters.add(byteArrayHttpMessageConverter());
+
+    }
+
+    private HttpMessageConverter byteArrayHttpMessageConverter()
+    {
+        ByteArrayHttpMessageConverter messageConverter = new ByteArrayHttpMessageConverter();
+        List<MediaType> supportedMediaTypes = new ArrayList<>();
+        supportedMediaTypes.add(MediaType.IMAGE_GIF);
+        supportedMediaTypes.add(MediaType.IMAGE_JPEG);
+        supportedMediaTypes.add(MediaType.IMAGE_PNG);
+        messageConverter.setSupportedMediaTypes(supportedMediaTypes);
+        return messageConverter;
     }
 
     private HttpMessageConverter gsonHttpMessageConverter()
