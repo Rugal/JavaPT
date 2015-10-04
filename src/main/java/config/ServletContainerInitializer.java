@@ -92,5 +92,4 @@ public class ServletContainerInitializer extends AbstractAnnotationConfigDispatc
     {
         return new HiddenHttpMethodFilter();
     }
-
 }

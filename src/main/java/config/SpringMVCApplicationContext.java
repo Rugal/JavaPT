@@ -5,6 +5,7 @@ import ga.rugal.jpt.springmvc.PackageInfo;
 import ga.rugal.jpt.springmvc.interceptor.AnnounceInterceptor;
 import ga.rugal.jpt.springmvc.interceptor.AuthenticationInterceptor;
 import ga.rugal.jpt.springmvc.interceptor.AuthorityInterceptor;
+import ga.rugal.jpt.springmvc.multipart.ExtendedMultipartResolver;
 import java.util.ArrayList;
 import java.util.List;
 import ml.rugal.sshcommon.springmvc.method.annotation.FormModelMethodArgumentResolver;
@@ -17,6 +18,7 @@ import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -142,6 +144,14 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
     public void addCorsMappings(CorsRegistry registry)
     {
         registry.addMapping("/**");
+    }
+
+    @Bean
+    public MultipartResolver multipartResolver()
+    {
+        ExtendedMultipartResolver cmr = new ExtendedMultipartResolver();
+        cmr.setMaxUploadSize(9999999);
+        return cmr;
     }
 
 }

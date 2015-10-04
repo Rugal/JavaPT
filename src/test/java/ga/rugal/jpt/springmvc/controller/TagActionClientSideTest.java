@@ -10,6 +10,9 @@ import ga.rugal.jpt.core.service.UserService;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.junit.After;
 import org.junit.Assert;
@@ -22,6 +25,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.util.FileCopyUtils;
@@ -33,8 +37,10 @@ import org.springframework.util.FileCopyUtils;
 public class TagActionClientSideTest extends ControllerClientSideTestBase
 {
 
+    //the icon file for convenience
     private File file;
 
+    //the file in server
     private Tag db;
 
     @Autowired
@@ -87,6 +93,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
             .param("name", tag.getName())
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
+            //            .andDo(print())
             .andReturn();
     }
 
@@ -147,6 +154,31 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
         }
         Assert.assertArrayEquals(FileCopyUtils.copyToByteArray(file), FileCopyUtils.copyToByteArray(testIcon));
         testIcon.delete();
+    }
+
+    @Test
+    public void testUpdateTag() throws IOException, Exception
+    {
+        System.out.println("UpdateTag");
+        FileInputStream fis = new FileInputStream(file);
+        MockMultipartFile multipartFile = new MockMultipartFile("file", fis);
+        Map<String, String> contentTypeParams = new HashMap<>();
+        //The boundary parameter is important!
+        contentTypeParams.put("boundary", "RugalBernstein");
+        MediaType mediaType = new MediaType("multipart", "form-data", contentTypeParams);
+        MvcResult result = this.mockMvc.perform(put("/tag/" + db.getTid())
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .param("name", db.getName() + "Updated")
+            .content(multipartFile.getBytes())
+            .contentType(mediaType)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andDo(print())
+            .andReturn();
+        Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
+        Tag updated = tag.backToObject(message.getData());
+        Assert.assertEquals(db.getName() + "Updated", updated.getName());
     }
 
 }
