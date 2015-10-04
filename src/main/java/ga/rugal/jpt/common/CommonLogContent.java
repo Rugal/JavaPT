@@ -87,4 +87,8 @@ public interface CommonLogContent
 
     final String TAG_ICON_NOT_FOUND = "No icon found for this tag";
 
+    final String ERROR_READ_TAG = "I/O exception occurs when reading icon";
+
+    final String ERROR_WRITE_TAG = "I/O exception occurs when writing icon";
+
 }

@@ -93,4 +93,6 @@ public interface CommonMessageContent
 
     final String TAG_ICON_NOT_FOUND = "No icon found for this tag";
 
+    final String TAG_NOT_READ = "Unable to read tag icon";
+
 }

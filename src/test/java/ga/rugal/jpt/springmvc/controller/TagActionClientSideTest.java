@@ -99,7 +99,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
             .andExpect(status().isOk());
     }
 
-//    @Test
+    @Test
     public void testGetTagBean() throws Exception
     {
         System.out.println("getTagBean");
@@ -116,13 +116,28 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
     }
 
     @Test
+    public void testGetMissedTagIcon() throws Exception
+    {
+        System.out.println("getMissedTagIcon");
+        this.mockMvc.perform(get("/tag/" + 0 + "/icon")
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .accept(MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE,
+                    MediaType.IMAGE_PNG_VALUE, MediaType.APPLICATION_JSON_VALUE
+            ))
+            .andExpect(status().isOk())
+            .andDo(print());
+    }
+
+    @Test
     public void testGetTagIcon() throws Exception
     {
         System.out.println("getTagIcon");
         MvcResult result = this.mockMvc.perform(get("/tag/" + db.getTid() + "/icon")
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-            .accept(MediaType.IMAGE_GIF, MediaType.IMAGE_JPEG, MediaType.IMAGE_PNG, MediaType.APPLICATION_JSON))
+            .accept(MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE,
+                    MediaType.IMAGE_PNG_VALUE, MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andReturn();
         File testIcon = new File(db.getIcon());

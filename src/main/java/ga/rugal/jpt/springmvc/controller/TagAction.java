@@ -77,13 +77,34 @@ public class TagAction
         return Message.successMessage(CommonMessageContent.SAVE_TAG, bean);
     }
 
+    /**
+     * Generate random unique name for saving a icon file.<BR>
+     * The length of the random name before extension could be determined by a system default
+     * property.<BR>
+     * Beware that the icon file is always store under
+     * {@link config.SystemDefaultProperties#ICON_PATH}
+     *
+     * @param filename This is the file name that client send to us.
+     *
+     * @return
+     */
     private File randomFile(String filename)
     {
         String ext = filename.substring(filename.lastIndexOf(".") + 1);
-        String randomName = String.format("%s.%s", RandomStringUtils.randomAlphanumeric(5), ext);
+        String randomName = String.format("%s.%s", RandomStringUtils.randomAlphanumeric(6), ext);
         return new File(iconFolder, randomName);
     }
 
+    /**
+     * Do the file saving action in real. First is to generate a random file in case of name
+     * collision. Second thing is to write data byte into output stream.
+     *
+     * @param uploadedFile
+     *
+     * @return
+     *
+     * @throws IOException
+     */
     private String saveFile(MultipartFile uploadedFile) throws IOException
     {
         File file = this.randomFile(uploadedFile.getOriginalFilename());
@@ -106,36 +127,42 @@ public class TagAction
      *
      * @param id           primary key of target Tag tid.
      * @param name         new name if exists
-     * @param uploadedFile new image file uploaded. Must present.
+     * @param uploadedFile new image file to update if exists.
      *
      * @return
+     *
      */
     @ResponseBody
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public Message updateTag(@PathVariable("id") Integer id,
-                             @RequestParam(required = false) String name,
-                             @RequestParam("file") MultipartFile uploadedFile)
+                             @RequestParam(value = "name", required = false) String name,
+                             @RequestParam(value = "file", required = false) MultipartFile uploadedFile)
     {
         Tag dbTag = tagService.getByID(id);
         if (null == dbTag)
         {
             return Message.failMessage(CommonMessageContent.TAG_NOT_FOUND);
         }
-        if (null == name)
+        if (null != name)
         {
-            name = dbTag.getName();
+            dbTag.setName(name);
         }
-        Message message = this.saveTag(name, uploadedFile);
-        if (message.getStatus().equals(Message.FAIL))
+        if (null != uploadedFile)
         {
-            message.setMessage(CommonMessageContent.TAG_NOT_UPDATED);
+            try
+            {
+                String newFileName = saveFile(uploadedFile);
+                dbTag.setIcon(newFileName);
+                deleteFile(dbTag.getIcon());
+            }
+            catch (IOException ex)
+            {
+                LOG.error(CommonLogContent.ERROR_WRITE_TAG, ex);
+                return Message.failMessage(CommonMessageContent.TAG_NOT_UPDATED);
+            }
         }
-        else
-        {
-            this.deleteTag(id);
-            message.setMessage(CommonMessageContent.UPDATE_TAG);
-        }
-        return message;
+        tagService.update(dbTag);
+        return Message.successMessage(CommonMessageContent.UPDATE_TAG, dbTag);
     }
 
     /**
@@ -159,6 +186,11 @@ public class TagAction
         return Message.successMessage(CommonMessageContent.DELETE_TAG, bean);
     }
 
+    /**
+     * Delete a file if exists.
+     *
+     * @param filename
+     */
     private void deleteFile(String filename)
     {
         File file = new File(iconFolder, filename);
@@ -198,17 +230,13 @@ public class TagAction
      * @param id       the target Tag tid.
      * @param response
      *
-     * @return
+     * @return Give Message object in JSON format if any exception occurs; otherwise, return the
+     *         icon data in byte array format.
      *
-     * @throws java.io.IOException
      */
     @ResponseBody
-    @RequestMapping(value = "/{id}/icon", method = RequestMethod.GET, produces =
-                {
-                    MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE,
-                    MediaType.IMAGE_PNG_VALUE, MediaType.APPLICATION_JSON_VALUE
-    })
-    public Object getTagIcon(@PathVariable("id") Integer id, HttpServletResponse response) throws IOException
+    @RequestMapping(value = "/{id}/icon", method = RequestMethod.GET)
+    public Object getTagIcon(@PathVariable("id") Integer id, HttpServletResponse response)
     {
         Tag bean = tagService.getByID(id);
         if (null == bean)
@@ -230,13 +258,14 @@ public class TagAction
         }
         catch (IOException ex)
         {
-            LOG.error("I/O exception occurs when reading icon", ex);
-            throw ex;
+            LOG.error(CommonLogContent.ERROR_READ_TAG, ex);
+            return Message.failMessage(CommonMessageContent.TAG_NOT_READ);
         }
         LOG.trace("Length of byte array is " + data.length);
         response.setContentType(context.getMimeType(bean.getIcon()));
         response.setContentLength(data.length);
-        response.setHeader("Content-Disposition", String.format("inline; filename=\"%s\"", bean.getIcon()));
+        //The code below is for in browser displaying
+//        response.setHeader("Content-Disposition", String.format("inline; filename=\"%s\"", bean.getIcon()));
         return data;
     }
 }
