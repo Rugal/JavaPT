@@ -147,7 +147,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
                     MediaType.IMAGE_PNG_VALUE, MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andReturn();
-        File testIcon = new File(db.getIcon());
+        File testIcon = new File(tag.getIcon());
         try (FileOutputStream fos = new FileOutputStream(testIcon))
         {
             fos.write(result.getResponse().getContentAsByteArray());
