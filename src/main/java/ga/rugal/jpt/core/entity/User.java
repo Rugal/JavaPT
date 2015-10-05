@@ -87,8 +87,8 @@ public class User extends BaseObject<User>
     @Fetch(FetchMode.SELECT)
     private List<Admin> adminList;
 
-    @OneToMany(mappedBy = "grantee")
-    private List<Admin> grantees;
+    @OneToMany(mappedBy = "granter")
+    private List<Admin> granters;
 
     @OneToMany(mappedBy = "uid")
     private List<SigninLog> signinLogList;
@@ -138,14 +138,14 @@ public class User extends BaseObject<User>
         this.username = username;
     }
 
-    public List<Admin> getGrantees()
+    public List<Admin> getGranters()
     {
-        return grantees;
+        return granters;
     }
 
-    public void setGrantees(List<Admin> grantees)
+    public void setGranters(List<Admin> granters)
     {
-        this.grantees = grantees;
+        this.granters = granters;
     }
 
     public List<ClientAnnounce> getClientAnnouncesList()

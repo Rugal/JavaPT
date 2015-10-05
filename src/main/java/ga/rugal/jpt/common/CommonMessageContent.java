@@ -101,4 +101,11 @@ public interface CommonMessageContent
 
     final String TAG_NOT_READ = "Unable to read tag icon";
 
+    //Admin
+    final String GRANTEE_NOT_FOUND = "Grantee not found";
+
+    final String ADMIN_LEVEL_NOT_FOUND = "Admin level mismatched";
+
+    final String GRANT_DONE = "Admin grant successfully";
+
 }

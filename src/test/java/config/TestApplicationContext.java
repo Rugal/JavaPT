@@ -157,7 +157,7 @@ public class TestApplicationContext
     {
         Admin bean = new Admin();
         bean.setUid(user);
-        bean.setGrantee(user);
+        bean.setGranter(user);
         bean.setSince(System.currentTimeMillis());
         bean.setLevel(Admin.Level.SUPER);
         return bean;

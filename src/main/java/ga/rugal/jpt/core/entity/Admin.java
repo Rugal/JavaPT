@@ -46,9 +46,9 @@ public class Admin
     private User uid;
 
     @Expose
-    @JoinColumn(name = "grantee", referencedColumnName = "uid")
+    @JoinColumn(name = "granter", referencedColumnName = "uid")
     @ManyToOne
-    private User grantee;
+    private User granter;
 
     public Admin()
     {
@@ -99,14 +99,14 @@ public class Admin
         this.uid = uid;
     }
 
-    public User getGrantee()
+    public User getGranter()
     {
-        return grantee;
+        return granter;
     }
 
-    public void setGrantee(User grantee)
+    public void setGranter(User granter)
     {
-        this.grantee = grantee;
+        this.granter = granter;
     }
 
     @Override

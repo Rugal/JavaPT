@@ -44,6 +44,7 @@ public class AdminServiceImpl implements AdminService
     @Override
     public Admin save(Admin bean)
     {
+        bean.setSince(System.currentTimeMillis());
         return dao.save(bean);
         //-----These comments is here for testing transaction consistency.-------
 //        dao.save(bean);

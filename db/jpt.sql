@@ -31,7 +31,7 @@ SET default_with_oids = false;
 CREATE TABLE admin (
     aid integer NOT NULL,
     uid integer,
-    grantee integer,
+    granter integer,
     since bigint,
     level integer
 );
@@ -508,7 +508,7 @@ ALTER TABLE ONLY "user" ALTER COLUMN uid SET DEFAULT nextval('user_uid_seq'::reg
 -- Data for Name: admin; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
-COPY admin (aid, uid, grantee, since, level) FROM stdin;
+COPY admin (aid, uid, granter, since, level) FROM stdin;
 8	1	\N	1439004612212	4
 9	6	6	1439782679993	3
 10	7	7	1439782680104	3
@@ -519,7 +519,7 @@ COPY admin (aid, uid, grantee, since, level) FROM stdin;
 -- Name: admin_aid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('admin_aid_seq', 86, true);
+SELECT pg_catalog.setval('admin_aid_seq', 194, true);
 
 
 --
@@ -530,23 +530,6 @@ COPY client (cid, name, version, enabled, cname) FROM stdin;
 2	transmit	*	t	\N
 0	*	*	f	*
 1	Utorrent	*	t	UT
-37	transmit	*	t	\N
-38	transmit	*	t	\N
-47	transmit	*	t	\N
-48	transmit	*	t	\N
-49	transmit	*	t	\N
-223	transmit	*	t	\N
-224	transmit	*	t	\N
-225	transmit	*	t	\N
-228	transmit	*	t	\N
-229	transmit	*	t	\N
-230	transmit	*	t	\N
-231	transmit	*	t	\N
-234	transmit	*	t	\N
-235	transmit	*	t	\N
-236	transmit	*	t	\N
-237	transmit	*	t	\N
-240	transmit	*	t	\N
 \.
 
 
@@ -555,32 +538,6 @@ COPY client (cid, name, version, enabled, cname) FROM stdin;
 --
 
 COPY client_announce (caid, announce_time, uid, cid, download_byte, upload_byte, left_byte, pid) FROM stdin;
-93	1441227194033	1	1	0	0	2472252877	\N
-99	1441227288707	1	1	0	0	2472252877	\N
-40	1441043340054	1	1	0	0	2472252877	\N
-41	1441043480959	1	1	0	0	2472252877	\N
-105	1441228927351	1	1	0	0	2472252877	\N
-49	1441153752995	1	1	0	0	2472252877	\N
-50	1441153786942	1	1	0	0	2472252877	\N
-124	1441244842378	1	1	0	0	2472252877	\N
-66	1441223561801	1	1	0	0	2472252877	\N
-191	1441680039690	1	1	0	0	2472252877	374
-192	1441680079913	1	1	0	0	2472252877	374
-130	1441245050387	1	1	0	0	2472252877	\N
-193	1441680209821	1	1	0	0	2472252877	374
-72	1441223653530	1	1	0	0	2472252877	\N
-73	1441223710062	1	1	0	0	2472252877	\N
-74	1441224096472	1	1	0	0	2472252877	\N
-194	1441680266334	1	1	0	0	2472252877	374
-136	1441245695852	1	1	0	0	2472252877	\N
-80	1441224152476	1	1	0	0	2472252877	\N
-81	1441224987131	1	1	0	0	2472252877	\N
-200	1441683550193	1	1	0	0	2472252877	374
-87	1441226914020	1	1	0	0	2472252877	\N
-142	1441245798217	1	1	0	0	2472252877	\N
-206	1441683580750	1	1	0	0	2472252877	374
-148	1441245909323	1	1	0	0	2472252877	\N
-154	1441388366960	1	1	0	0	2472252877	\N
 \.
 
 
@@ -588,14 +545,14 @@ COPY client_announce (caid, announce_time, uid, cid, download_byte, upload_byte,
 -- Name: client_announce_caid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('client_announce_caid_seq', 206, true);
+SELECT pg_catalog.setval('client_announce_caid_seq', 388, true);
 
 
 --
 -- Name: client_cid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('client_cid_seq', 252, true);
+SELECT pg_catalog.setval('client_cid_seq', 444, true);
 
 
 --
@@ -610,7 +567,7 @@ COPY invitation (iid, uid, issue_time) FROM stdin;
 -- Name: invitation_iid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('invitation_iid_seq', 74, true);
+SELECT pg_catalog.setval('invitation_iid_seq', 138, true);
 
 
 --
@@ -633,7 +590,7 @@ COPY level (lid, minimum, name, icon, min_upload_byte, min_download_byte) FROM s
 -- Name: level_lid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('level_lid_seq', 655, true);
+SELECT pg_catalog.setval('level_lid_seq', 1647, true);
 
 
 --
@@ -650,7 +607,7 @@ COPY post (pid, uid, title, content, post_time, size, enabled, min_level, info_h
 -- Name: post_pid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('post_pid_seq', 402, true);
+SELECT pg_catalog.setval('post_pid_seq', 942, true);
 
 
 --
@@ -665,7 +622,7 @@ COPY post_tags (ptid, tid, pid) FROM stdin;
 -- Name: post_tags_ptid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('post_tags_ptid_seq', 66, true);
+SELECT pg_catalog.setval('post_tags_ptid_seq', 126, true);
 
 
 --
@@ -673,55 +630,6 @@ SELECT pg_catalog.setval('post_tags_ptid_seq', 66, true);
 --
 
 COPY signin_log (slid, uid, signin_time, ip) FROM stdin;
-1	1	1440306141926	127.0.0.1
-2	1	1440348326046	0:0:0:0:0:0:0:1
-3	1	1440348329480	0:0:0:0:0:0:0:1
-4	1	1440348353474	127.0.0.1
-5	1	1441153322547	127.0.0.1
-6	1	1441223992446	127.0.0.1
-7	1	1441224098222	127.0.0.1
-8	1	1441224153685	127.0.0.1
-9	1	1441226915477	127.0.0.1
-10	1	1441227195469	127.0.0.1
-11	1	1441227289925	127.0.0.1
-12	1	1441228928655	127.0.0.1
-13	1	1441244844518	127.0.0.1
-14	1	1441245051738	127.0.0.1
-15	1	1441245697207	127.0.0.1
-16	1	1441245799554	127.0.0.1
-17	1	1441245910937	127.0.0.1
-18	1	1441388368684	127.0.0.1
-19	1	1441519721932	0:0:0:0:0:0:0:1
-20	1	1441519745177	0:0:0:0:0:0:0:1
-21	1	1441519852973	0:0:0:0:0:0:0:1
-22	1	1441519857846	0:0:0:0:0:0:0:1
-23	1	1441519953707	0:0:0:0:0:0:0:1
-24	1	1441566181043	0:0:0:0:0:0:0:1
-25	1	1441566244379	0:0:0:0:0:0:0:1
-26	1	1441566262239	0:0:0:0:0:0:0:1
-27	1	1441566291900	0:0:0:0:0:0:0:1
-28	1	1441566298713	0:0:0:0:0:0:0:1
-29	1	1441566304024	0:0:0:0:0:0:0:1
-30	1	1441566981538	0:0:0:0:0:0:0:1
-31	1	1441566997869	0:0:0:0:0:0:0:1
-32	1	1441567000044	0:0:0:0:0:0:0:1
-33	1	1441567021330	0:0:0:0:0:0:0:1
-34	1	1441567026212	0:0:0:0:0:0:0:1
-35	1	1441567038135	0:0:0:0:0:0:0:1
-36	1	1441567139761	0:0:0:0:0:0:0:1
-37	1	1441567311220	0:0:0:0:0:0:0:1
-38	1	1441567324281	0:0:0:0:0:0:0:1
-39	1	1441567484442	0:0:0:0:0:0:0:1
-40	1	1441672430191	127.0.0.1
-42	1	1441676361353	127.0.0.1
-43	1	1441676513682	127.0.0.1
-44	1	1441676779497	127.0.0.1
-45	1	1441676849762	127.0.0.1
-46	1	1441680081565	127.0.0.1
-47	1	1441680138946	127.0.0.1
-48	1	1441680211521	127.0.0.1
-49	1	1441683551670	127.0.0.1
-50	1	1441683582978	127.0.0.1
 \.
 
 
@@ -729,7 +637,7 @@ COPY signin_log (slid, uid, signin_time, ip) FROM stdin;
 -- Name: signin_log_slid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('signin_log_slid_seq', 50, true);
+SELECT pg_catalog.setval('signin_log_slid_seq', 100, true);
 
 
 --
@@ -742,8 +650,7 @@ COPY tag (tid, name, icon) FROM stdin;
 3	FLAC	icon/flac.gif
 4	BLUE-RAY	icon/blue-ray.gif
 5	Touchless	icon/touchless.gif
-22	Test use only	icon/test.jpg
-23	Test use only	icon/test.jpg
+282	Test use only	dGX6f.ico
 \.
 
 
@@ -751,7 +658,7 @@ COPY tag (tid, name, icon) FROM stdin;
 -- Name: tag_tid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tag_tid_seq', 155, true);
+SELECT pg_catalog.setval('tag_tid_seq', 375, true);
 
 
 --
@@ -766,7 +673,7 @@ COPY thread (tid, pid, uid, content, post_time) FROM stdin;
 -- Name: thread_tid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('thread_tid_seq', 70, true);
+SELECT pg_catalog.setval('thread_tid_seq', 213, true);
 
 
 --
@@ -779,9 +686,6 @@ COPY "user" (uid, password, username, email, upload_byte, download_byte, credit,
 3	123456	Tiger	null@123.com	0	0	0	\N	1438965604092	2
 6	test	test	test@123.com	0	0	0	\N	1439782679846	2
 7	test	test	test@123.com	0	0	0	\N	1439782680097	2
-600	test	test	test@123.com	0	0	0	\N	1441680261694	2
-605	test	test	test@123.com	0	0	0	\N	1441680300157	2
-610	test	test	test@123.com	0	0	0	\N	1441682893511	2
 \.
 
 
@@ -789,7 +693,7 @@ COPY "user" (uid, password, username, email, upload_byte, download_byte, credit,
 -- Name: user_uid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('user_uid_seq', 650, true);
+SELECT pg_catalog.setval('user_uid_seq', 1723, true);
 
 
 --
@@ -920,7 +824,7 @@ CREATE INDEX unq_user_username ON "user" USING btree (username);
 --
 
 ALTER TABLE ONLY admin
-    ADD CONSTRAINT admin_grantee_fkey FOREIGN KEY (grantee) REFERENCES "user"(uid);
+    ADD CONSTRAINT admin_grantee_fkey FOREIGN KEY (granter) REFERENCES "user"(uid);
 
 
 --
