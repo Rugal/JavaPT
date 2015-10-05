@@ -108,4 +108,8 @@ public interface CommonMessageContent
 
     final String GRANT_DONE = "Admin grant successfully";
 
+    final String REVOKE_DONE = "Admin revoke successfully";
+
+    final String ADMIN_NOT_FOUND = "Admin not found";
+
 }

@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,7 +48,7 @@ public class AdminAction
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
-    public Message addAdmin(@RequestParam("uid") Integer uid, @RequestParam("role") String role, HttpServletRequest request)
+    public Message grant(@RequestParam("uid") Integer uid, @RequestParam("role") String role, HttpServletRequest request)
     {
         User grantee = userService.getByID(uid);
         if (null == grantee)
@@ -57,7 +58,8 @@ public class AdminAction
         Admin.Level level;
         try
         {
-            //TODO need proper role judgement, like the role to be granted can not surpass the one that granter has.
+            //TODO need proper role judgement, check if the operator is eligible to grant role
+            //like the role to be granted can not surpass the one that granter has.
             level = Admin.Level.valueOf(role);
         }
         catch (Exception e)
@@ -73,5 +75,28 @@ public class AdminAction
         admin.setUid(grantee);
         adminService.save(admin);
         return Message.successMessage(CommonMessageContent.GRANT_DONE, admin);
+    }
+
+    /**
+     * Revoke a admin role from a user.
+     *
+     * @param aid     The admin entry to be deleted.
+     * @param request Get grantee user from.
+     *
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/{aid}", method = RequestMethod.DELETE)
+    public Message grant(@PathVariable("aid") Integer aid, HttpServletRequest request)
+    {
+        Admin admin = adminService.getByID(aid);
+        if (null == admin)
+        {
+            return Message.failMessage(CommonMessageContent.ADMIN_NOT_FOUND);
+        }
+        //TODO time to check if the operator is eligible to revoke the admin
+
+        adminService.deleteById(admin.getAid());
+        return Message.successMessage(CommonMessageContent.REVOKE_DONE, admin);
     }
 }
