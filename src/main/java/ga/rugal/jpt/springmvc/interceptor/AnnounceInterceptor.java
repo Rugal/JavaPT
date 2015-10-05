@@ -1,8 +1,8 @@
 package ga.rugal.jpt.springmvc.interceptor;
 
+import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
-import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.bcodec.BEValue;
 import ga.rugal.jpt.common.tracker.bcodec.BEncoder;
 import ga.rugal.jpt.common.tracker.server.TrackerResponseException;
@@ -85,15 +85,8 @@ public class AnnounceInterceptor implements HandlerInterceptor
     }
 
     /**
-     * TODO now we have a problem regarding way of getting torrent.
-     * <p>
-     * In {@link AnnounceInterceptor#credentialValidation(javax.servlet.http.HttpServletRequest)} I
-     * use Post.torrentHash as reference key. But in
-     * {@link ga.rugal.jpt.common.tracker.server.Tracker#announce(ga.rugal.jpt.common.tracker.server.TrackedTorrent)}
-     * I use HashMap, in which torrent files are announced ahead, in tracker instead.
-     * <p>
-     * So there must have some inconsistency regarding torrent. Since Posted torrent might not be
-     * announced by Tracker. I must find a consistent way to announce and check torrent.
+     * I decided to use torrent information in "post" table as the primary storage. Because any post
+     * must have its related torrent file.
      * <p>
      * @param request
      *                <p>
