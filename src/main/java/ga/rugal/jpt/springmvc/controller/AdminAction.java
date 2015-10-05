@@ -19,8 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * Managing class about the tag.<BR>
- * Beware that the parameter name for uploading file is "file".
+ * Administrator management class. Grant/Revoke admin role to a existing user.
  *
  * @author Rugal Bernstein
  */
@@ -48,7 +47,7 @@ public class AdminAction
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
-    public Message grant(@RequestParam("uid") Integer uid, @RequestParam("role") String role, HttpServletRequest request)
+    public Message grant(@RequestParam("grantee") Integer uid, @RequestParam("role") String role, HttpServletRequest request)
     {
         User grantee = userService.getByID(uid);
         if (null == grantee)
@@ -58,7 +57,7 @@ public class AdminAction
         Admin.Level level;
         try
         {
-            //TODO need proper role judgement, check if the operator is eligible to grant role
+            //TODO need proper role judgement, check if the granter is eligible to grant such admin role.
             //like the role to be granted can not surpass the one that granter has.
             level = Admin.Level.valueOf(role);
         }
@@ -94,7 +93,7 @@ public class AdminAction
         {
             return Message.failMessage(CommonMessageContent.ADMIN_NOT_FOUND);
         }
-        //TODO time to check if the operator is eligible to revoke the admin
+        //TODO time to check if the granter is eligible to revoke the admin
 
         adminService.deleteById(admin.getAid());
         return Message.successMessage(CommonMessageContent.REVOKE_DONE, admin);

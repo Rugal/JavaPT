@@ -75,7 +75,7 @@ public class TestApplicationContext
         return bean;
     }
 
-    @Bean
+    @Bean(name = "user")
     public User user()
     {
         User bean = new User();
@@ -84,6 +84,18 @@ public class TestApplicationContext
         bean.setRegisterTime(System.currentTimeMillis());
         bean.setStatus(User.Status.VALID);
         bean.setUsername("tenjin");
+        return bean;
+    }
+
+    @Bean(name = "grantee")
+    public User grantee()
+    {
+        User bean = new User();
+        bean.setEmail("grantee@123.com");
+        bean.setPassword("IamGrantee");
+        bean.setRegisterTime(System.currentTimeMillis());
+        bean.setStatus(User.Status.VALID);
+        bean.setUsername("Grantee");
         return bean;
     }
 

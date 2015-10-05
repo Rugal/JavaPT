@@ -19,7 +19,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(catalog = "postgres", schema = "jpt", name = "admin")
-public class Admin
+public class Admin extends BaseObject<Admin>
 {
 
     private static final String sequence_name = "admin_aid_seq";
@@ -132,6 +132,12 @@ public class Admin
     public String toString()
     {
         return "ga.rugal.jpt.core.entity.Admin[ aid=" + aid + " ]";
+    }
+
+    @Override
+    protected Class<Admin> getRealClass()
+    {
+        return Admin.class;
     }
 
     public enum Level
