@@ -40,9 +40,6 @@ public class UserAction
     public Message registerUser(@RequestBody User bean)
     {
         userService.save(bean);
-        /*
-         * Now we need to push message to notify them
-         */
         return Message.successMessage(CommonMessageContent.SAVE_USER, bean);
     }
 
@@ -59,15 +56,18 @@ public class UserAction
     public Message updateUserProfile(@PathVariable("id") Integer id, @RequestBody User bean)
     {
         User dbUser = userService.getByID(id);
+        Message message;
         if (null != dbUser)
         {
             bean.setUid(id);
             userService.update(bean);
+            message = Message.successMessage(CommonMessageContent.UPDATE_USER, bean);
         }
-        /*
-         * Here we need to push message to client
-         */
-        return Message.successMessage(CommonMessageContent.UPDATE_USER, bean);
+        else
+        {
+            message = Message.failMessage(CommonMessageContent.USER_NOT_FOUND);
+        }
+        return message;
     }
 
     /**
@@ -82,11 +82,17 @@ public class UserAction
     public Message deleteUser(@PathVariable("id") Integer id)
     {
         User bean = userService.getByID(id);
+        Message message;
         if (null != bean)
         {
             userService.deleteById(id);
+            message = Message.successMessage(CommonMessageContent.UPDATE_USER, bean);
         }
-        return Message.successMessage(CommonMessageContent.DELETE_USER, bean);
+        else
+        {
+            message = Message.failMessage(CommonMessageContent.USER_NOT_FOUND);
+        }
+        return message;
     }
 
     /**
@@ -101,6 +107,15 @@ public class UserAction
     public Message retrieveUserProfile(@PathVariable("id") Integer id)
     {
         User bean = userService.getByID(id);
-        return Message.successMessage(CommonMessageContent.GET_USER, bean);
+        Message message;
+        if (null != bean)
+        {
+            message = Message.successMessage(CommonMessageContent.GET_USER, bean);
+        }
+        else
+        {
+            message = Message.failMessage(CommonMessageContent.USER_NOT_FOUND);
+        }
+        return message;
     }
 }

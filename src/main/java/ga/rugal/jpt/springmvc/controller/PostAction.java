@@ -1,7 +1,7 @@
 package ga.rugal.jpt.springmvc.controller;
 
-import ga.rugal.jpt.common.CommonMessageContent;
 import config.SystemDefaultProperties;
+import ga.rugal.jpt.common.CommonMessageContent;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.service.PostService;
@@ -56,9 +56,6 @@ public class PostAction
         int id = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
         bean.setUid(userService.getByID(id));
         postService.save(bean);
-        /*
-         * Now we need to push message to notify them
-         */
         return Message.successMessage(CommonMessageContent.SAVE_POST, bean);
     }
 
@@ -75,15 +72,18 @@ public class PostAction
     public Message updatePost(@PathVariable("id") Integer id, @RequestBody Post bean)
     {
         Post dbPost = postService.getByID(id);
+        Message message;
         if (null != dbPost)
         {
             bean.setPid(id);
             postService.update(bean);
+            message = Message.successMessage(CommonMessageContent.UPDATE_POST, bean);
         }
-        /*
-         * Here we need to push message to client
-         */
-        return Message.successMessage(CommonMessageContent.UPDATE_POST, bean);
+        else
+        {
+            message = Message.failMessage(CommonMessageContent.POST_NOT_FOUND);
+        }
+        return message;
     }
 
     /**
@@ -98,11 +98,17 @@ public class PostAction
     public Message deletePost(@PathVariable("id") Integer id)
     {
         Post bean = postService.getByID(id);
+        Message message;
         if (null != bean)
         {
             postService.deleteById(id);
+            message = Message.successMessage(CommonMessageContent.DELETE_POST, bean);
         }
-        return Message.successMessage(CommonMessageContent.DELETE_POST, bean);
+        else
+        {
+            message = Message.failMessage(CommonMessageContent.POST_NOT_FOUND);
+        }
+        return message;
     }
 
     /**
@@ -117,7 +123,16 @@ public class PostAction
     public Message getPost(@PathVariable("id") Integer id)
     {
         Post bean = postService.getByID(id);
-        return Message.successMessage(CommonMessageContent.GET_POST, bean);
+        Message message;
+        if (null != bean)
+        {
+            message = Message.successMessage(CommonMessageContent.GET_POST, bean);
+        }
+        else
+        {
+            message = Message.failMessage(CommonMessageContent.POST_NOT_FOUND);
+        }
+        return message;
     }
 
     /**
@@ -142,9 +157,6 @@ public class PostAction
         //setting attached post in Thread
         bean.setPid(postService.getByID(pid));
         threadService.save(bean);
-        /*
-         * Now we need to push message to notify them
-         */
         return Message.successMessage(CommonMessageContent.SAVE_THREAD, bean);
     }
 
@@ -167,7 +179,15 @@ public class PostAction
     {
         Post post = postService.getByID(pid);
         Pagination page = threadService.getPage(post, pageNo, pageSize);
-        return Message.successMessage(CommonMessageContent.GET_THREAD, page);
+        if (page.getTotalCount() > 0)
+        {
+            return Message.successMessage(CommonMessageContent.GET_THREAD, page);
+        }
+        else
+        {
+            return Message.failMessage(CommonMessageContent.THREADS_NOT_FOUND);
+        }
+
     }
 
 }

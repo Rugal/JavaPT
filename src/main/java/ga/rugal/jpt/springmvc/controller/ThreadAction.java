@@ -41,45 +41,66 @@ public class ThreadAction
     public Message updateThread(@PathVariable("tid") Integer tid, @RequestBody Thread bean)
     {
         Thread dbThread = threadService.getByID(tid);
+        Message message;
         if (null != dbThread)
         {
             bean.setTid(tid);
             threadService.update(bean);
+            message = Message.successMessage(CommonMessageContent.UPDATE_THREAD, bean);
         }
-        /*
-         * Here we need to push message to client
-         */
-        return Message.successMessage(CommonMessageContent.UPDATE_THREAD, bean);
+        else
+        {
+            message = Message.failMessage(CommonMessageContent.THREAD_NOT_FOUND);
+        }
+        return message;
     }
 
     /**
      * DELETE a thread record from database.
      *
-     * @param id the target thread id.
+     * @param tid the target thread tid.
      *
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public Message deleteThread(@PathVariable("id") Integer id)
+    @RequestMapping(value = "/{tid}", method = RequestMethod.DELETE)
+    public Message deleteThread(@PathVariable("tid") Integer tid)
     {
-        Thread bean = threadService.deleteById(id);
-        return Message.successMessage(CommonMessageContent.DELETE_THREAD, bean);
+        Thread bean = threadService.deleteById(tid);
+        Message message;
+        if (null != bean)
+        {
+            message = Message.successMessage(CommonMessageContent.DELETE_THREAD, bean);
+        }
+        else
+        {
+            message = Message.failMessage(CommonMessageContent.THREAD_NOT_FOUND);
+        }
+        return message;
     }
 
     /**
      * GET a thread from database.
      *
-     * @param id primary key of target thread.
+     * @param tid primary key of target thread.
      *
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Message getThread(@PathVariable("id") Integer id)
+    @RequestMapping(value = "/{tid}", method = RequestMethod.GET)
+    public Message getThread(@PathVariable("tid") Integer tid)
     {
-        Thread bean = threadService.getByID(id);
-        return Message.successMessage(CommonMessageContent.GET_POST, bean);
+        Thread bean = threadService.getByID(tid);
+        Message message;
+        if (null != bean)
+        {
+            message = Message.successMessage(CommonMessageContent.GET_THREAD, bean);
+        }
+        else
+        {
+            message = Message.failMessage(CommonMessageContent.THREAD_NOT_FOUND);
+        }
+        return message;
     }
 
 }

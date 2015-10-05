@@ -67,6 +67,8 @@ public interface CommonMessageContent
 
     final String GET_POST = "Get post";
 
+    final String POST_NOT_FOUND = "No such post found";
+
     //Thread operations
     final String SAVE_THREAD = "Thread persisted";
 
@@ -75,6 +77,10 @@ public interface CommonMessageContent
     final String UPDATE_THREAD = "Thread updated";
 
     final String GET_THREAD = "Get thread";
+
+    final String THREADS_NOT_FOUND = "No threads found for target post";
+
+    final String THREAD_NOT_FOUND = "No such thread found";
 
     //Tag operations
     final String SAVE_TAG = "Tag persisted";
