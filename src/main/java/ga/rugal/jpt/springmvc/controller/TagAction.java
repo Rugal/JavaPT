@@ -9,6 +9,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import ml.rugal.sshcommon.springmvc.util.Message;
@@ -268,4 +269,30 @@ public class TagAction
 //        response.setHeader("Content-Disposition", String.format("inline; filename=\"%s\"", bean.getIcon()));
         return data;
     }
+
+    /**
+     * Find tags by their name. Because the total tags wight not be very big, I design this method
+     * to do full table scan.
+     *
+     * @param partialName partial name of the tag you need.
+     *
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET)
+    public Message findTagByName(@RequestParam(name = "name") String partialName)
+    {
+        List<Tag> list = tagService.findByName(partialName);
+        Message message;
+        if (null == list || list.isEmpty())
+        {
+            message = Message.failMessage(CommonMessageContent.TAG_NOT_FOUND);
+        }
+        else
+        {
+            message = Message.successMessage(CommonMessageContent.GET_TAG, list);
+        }
+        return message;
+    }
+
 }

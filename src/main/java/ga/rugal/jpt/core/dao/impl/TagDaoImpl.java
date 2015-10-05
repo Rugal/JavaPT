@@ -2,6 +2,7 @@ package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.jpt.core.dao.TagDao;
 import ga.rugal.jpt.core.entity.Tag;
+import java.util.List;
 import ml.rugal.sshcommon.hibernate.HibernateBaseDao;
 import ml.rugal.sshcommon.page.Pagination;
 import org.hibernate.Criteria;
@@ -27,6 +28,13 @@ public class TagDaoImpl extends HibernateBaseDao<Tag, Integer> implements TagDao
         Criteria crit = createCriteria();
         Pagination page = findByCriteria(crit, pageNo, pageSize);
         return page;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Tag> findByName(String partialName)
+    {
+        List<Tag> list = super.findByPropertyVague("name", partialName);
+        return list;
     }
 
     @Override

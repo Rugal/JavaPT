@@ -36,7 +36,6 @@ public class Tag extends BaseObject<Tag>
     @Column(length = 50)
     private String name;
 
-    @Expose
     @Column(length = 50)
     private String icon;
 

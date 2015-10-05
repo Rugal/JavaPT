@@ -1,8 +1,9 @@
 package ga.rugal.jpt.core.service.impl;
 
-import ga.rugal.jpt.core.service.TagService;
 import ga.rugal.jpt.core.dao.TagDao;
 import ga.rugal.jpt.core.entity.Tag;
+import ga.rugal.jpt.core.service.TagService;
+import java.util.List;
 import ml.rugal.sshcommon.hibernate.Updater;
 import ml.rugal.sshcommon.page.Pagination;
 import org.slf4j.Logger;
@@ -56,6 +57,13 @@ public class TagServiceImpl implements TagService
     {
         Updater<Tag> updater = new Updater<>(bean);
         return dao.updateByUpdater(updater);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Tag> findByName(String partialName)
+    {
+        return dao.findByName(partialName);
     }
 
 }
