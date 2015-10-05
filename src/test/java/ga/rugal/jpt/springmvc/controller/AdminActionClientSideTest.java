@@ -31,7 +31,6 @@ public class AdminActionClientSideTest extends ControllerClientSideTestBase
     @Resource(name = "user")
     private User granter;
 
-    @Resource(name = "grantee")
     private User grantee;
 
     @Autowired
@@ -41,10 +40,22 @@ public class AdminActionClientSideTest extends ControllerClientSideTestBase
     {
     }
 
+    private User grantee()
+    {
+        User bean = new User();
+        bean.setEmail("grantee@123.com");
+        bean.setPassword("IamGrantee");
+        bean.setRegisterTime(System.currentTimeMillis());
+        bean.setStatus(User.Status.VALID);
+        bean.setUsername("Grantee");
+        return bean;
+    }
+
     @Before
     public void setUp() throws Exception
     {
         System.out.println("setUp");
+        grantee = grantee();
         userService.save(granter);
         userService.save(grantee);
         MvcResult result = testGrant();

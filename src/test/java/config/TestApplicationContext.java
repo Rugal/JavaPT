@@ -87,18 +87,6 @@ public class TestApplicationContext
         return bean;
     }
 
-    @Bean(name = "grantee")
-    public User grantee()
-    {
-        User bean = new User();
-        bean.setEmail("grantee@123.com");
-        bean.setPassword("IamGrantee");
-        bean.setRegisterTime(System.currentTimeMillis());
-        bean.setStatus(User.Status.VALID);
-        bean.setUsername("Grantee");
-        return bean;
-    }
-
     @Autowired
     @Bean
     public PostTags postTags(Post post, Tag tag)
