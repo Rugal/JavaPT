@@ -16,7 +16,7 @@ SET client_min_messages = warning;
 CREATE SCHEMA jpt;
 
 
--- ALTER SCHEMA jpt OWNER TO postgres;
+ALTER SCHEMA jpt OWNER TO postgres;
 
 SET search_path = jpt, pg_catalog;
 
