@@ -1,6 +1,6 @@
 # JavaPT
 
-[![Build Status](https://travis-ci.org/Rugal/JavaPT.svg?branch=master)](https://travis-ci.org/Rugal/JavaPT)  
+[![Build Status](https://travis-ci.org/Rugal/JavaPT.svg?branch=master)](https://travis-ci.org/Rugal/JavaPT)  [![Circle CI](https://circleci.com/gh/Rugal/JavaPT/tree/master.svg?style=svg)](https://circleci.com/gh/Rugal/JavaPT/tree/master)
 
 A Java based Private Tracker application.
 
