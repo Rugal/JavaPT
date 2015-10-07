@@ -5,5 +5,5 @@ machine:
 database:
   override:
     # replace CircleCI's generated database.yml
-    - cp main/resources/jdbc_circleci.properties main/resources/jdbc.properties
+    - cp src/main/resources/jdbc_circleci.properties src/main/resources/jdbc.properties
     - psql -f 'db/jpt.sql' -U ubuntu
