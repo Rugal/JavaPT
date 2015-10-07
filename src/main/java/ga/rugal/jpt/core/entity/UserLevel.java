@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * @author Rugal Bernstein
  */
 @Entity
-@Table(catalog = "postgres", schema = "jpt", name = "level")
+@Table(schema = "jpt", name = "level")
 public class UserLevel
 {
 

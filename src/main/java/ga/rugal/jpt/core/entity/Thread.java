@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * @author Rugal Bernstein
  */
 @Entity
-@Table(catalog = "postgres", schema = "jpt", name = "thread")
+@Table(schema = "jpt", name = "thread")
 public class Thread extends BaseObject<Thread>
 {
 

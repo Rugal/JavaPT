@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * @author Rugal Bernstein
  */
 @Entity
-@Table(catalog = "postgres", schema = "jpt", name = "invitation")
+@Table(schema = "jpt", name = "invitation")
 public class Invitation
 {
 

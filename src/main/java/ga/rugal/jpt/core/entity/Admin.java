@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * @author Rugal Bernstein
  */
 @Entity
-@Table(catalog = "postgres", schema = "jpt", name = "admin")
+@Table(schema = "jpt", name = "admin")
 public class Admin extends BaseObject<Admin>
 {
 

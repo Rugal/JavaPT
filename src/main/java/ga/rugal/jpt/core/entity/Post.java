@@ -21,7 +21,7 @@ import javax.persistence.Transient;
  * @author Rugal Bernstein
  */
 @Entity
-@Table(catalog = "postgres", schema = "jpt", name = "post")
+@Table(schema = "jpt", name = "post")
 public class Post extends BaseObject<Post>
 {
 

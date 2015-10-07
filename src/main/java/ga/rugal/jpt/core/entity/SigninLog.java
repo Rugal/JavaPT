@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * @author Rugal Bernstein
  */
 @Entity
-@Table(name = "signin_log", catalog = "postgres", schema = "jpt")
+@Table(name = "signin_log", schema = "jpt")
 public class SigninLog extends BaseObject<SigninLog>
 {
 
