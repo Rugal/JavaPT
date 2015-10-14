@@ -91,4 +91,6 @@ public interface CommonLogContent
 
     final String ERROR_WRITE_TAG = "I/O exception occurs when writing icon";
 
+    final String IMAGE_LENGTH = "Length of byte array is {}";
+
 }

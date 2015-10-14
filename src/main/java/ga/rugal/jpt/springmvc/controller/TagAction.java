@@ -262,11 +262,11 @@ public class TagAction
             LOG.error(CommonLogContent.ERROR_READ_TAG, ex);
             return Message.failMessage(CommonMessageContent.TAG_NOT_READ);
         }
-        LOG.trace("Length of byte array is " + data.length);
+        LOG.trace(CommonLogContent.IMAGE_LENGTH, data.length);
         response.setContentType(context.getMimeType(bean.getIcon()));
         response.setContentLength(data.length);
         //The code below is for in browser displaying
-//        response.setHeader("Content-Disposition", String.format("inline; filename=\"%s\"", bean.getIcon()));
+        //response.setHeader("Content-Disposition", String.format("inline; filename=\"%s\"", bean.getIcon()));
         return data;
     }
 
