@@ -39,7 +39,7 @@ public class Invitation
     @Expose
     @JoinColumn(name = "uid", referencedColumnName = "uid")
     @ManyToOne
-    private User uid;
+    private User user;
 
     public Invitation()
     {
@@ -65,14 +65,14 @@ public class Invitation
         this.issueTime = issueTime;
     }
 
-    public User getUid()
+    public User getUser()
     {
-        return uid;
+        return user;
     }
 
-    public void setUid(User uid)
+    public void setUser(User user)
     {
-        this.uid = uid;
+        this.user = user;
     }
 
     @Override

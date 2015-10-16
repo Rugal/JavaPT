@@ -42,10 +42,10 @@ public class AdminDaoImpl extends HibernateBaseDao<Admin, Integer> implements Ad
 
     @Override
     @Transactional(readOnly = true)
-    public List<Admin> getByUID(User uid)
+    public List<Admin> getByUID(User user)
     {
         Criteria crit = createCriteria();
-        crit.add(Restrictions.eq("uid", uid));
+        crit.add(Restrictions.eq("user", user));
         List<Admin> list = (List<Admin>) crit.list();
         return list;
     }

@@ -47,17 +47,17 @@ public class ClientAnnounce
     @JoinColumn(name = "uid", referencedColumnName = "uid")
     @ManyToOne
     @Expose
-    private User uid;
+    private User user;
 
     @Expose
     @JoinColumn(name = "cid", referencedColumnName = "cid")
     @ManyToOne
-    private Client cid;
+    private Client client;
 
     @Expose
     @JoinColumn(name = "pid", referencedColumnName = "pid", nullable = false)
     @ManyToOne
-    private Post pid;
+    private Post post;
 
     public ClientAnnounce()
     {
@@ -88,24 +88,24 @@ public class ClientAnnounce
         this.announceTime = announceTime;
     }
 
-    public User getUid()
+    public User getUser()
     {
-        return uid;
+        return user;
     }
 
-    public void setUid(User uid)
+    public void setUser(User user)
     {
-        this.uid = uid;
+        this.user = user;
     }
 
-    public Client getCid()
+    public Client getClient()
     {
-        return cid;
+        return client;
     }
 
-    public void setCid(Client cid)
+    public void setClient(Client client)
     {
-        this.cid = cid;
+        this.client = client;
     }
 
     public Long getDownloadByte()
@@ -138,14 +138,14 @@ public class ClientAnnounce
         this.leftByte = leftByte;
     }
 
-    public Post getPid()
+    public Post getPost()
     {
-        return pid;
+        return post;
     }
 
-    public void setPid(Post pid)
+    public void setPost(Post post)
     {
-        this.pid = pid;
+        this.post = post;
     }
 
     @Override

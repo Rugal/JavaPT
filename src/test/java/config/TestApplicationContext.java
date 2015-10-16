@@ -53,7 +53,7 @@ public class TestApplicationContext
     {
         Invitation bean = new Invitation();
         bean.setIssueTime(System.currentTimeMillis());
-        bean.setUid(user);
+        bean.setUser(user);
         return bean;
     }
 
@@ -69,7 +69,7 @@ public class TestApplicationContext
         bean.setTitle("Test title");
         bean.setInfoHash(torrent.getHexInfoHash());
         bean.setMinLevel(level);
-        bean.setUid(user);
+        bean.setAuthor(user);
         bean.setRate(0);
         bean.setBencode(torrent.getEncoded());
         return bean;
@@ -92,8 +92,8 @@ public class TestApplicationContext
     public PostTags postTags(Post post, Tag tag)
     {
         PostTags postTags = new PostTags();
-        postTags.setPid(post);
-        postTags.setTid(tag);
+        postTags.setPost(post);
+        postTags.setTag(tag);
         return postTags;
     }
 
@@ -113,9 +113,9 @@ public class TestApplicationContext
     {
         Thread bean = new Thread();
         bean.setContent("TEST CONTENT");
-        bean.setPid(post);
+        bean.setPost(post);
         bean.setPostTime(System.currentTimeMillis());
-        bean.setUid(user);
+        bean.setReplyer(user);
         return bean;
     }
 
@@ -143,9 +143,9 @@ public class TestApplicationContext
     {
         ClientAnnounce bean = new ClientAnnounce();
         bean.setAnnounceTime(System.currentTimeMillis());
-        bean.setCid(client);
-        bean.setUid(user);
-        bean.setPid(post);
+        bean.setClient(client);
+        bean.setUser(user);
+        bean.setPost(post);
         bean.setUploadByte(0l);
         bean.setDownloadByte(0l);
         return bean;
@@ -156,7 +156,7 @@ public class TestApplicationContext
     public Admin admin(User user)
     {
         Admin bean = new Admin();
-        bean.setUid(user);
+        bean.setUser(user);
         bean.setGranter(user);
         bean.setSince(System.currentTimeMillis());
         bean.setLevel(Admin.Level.SUPER);

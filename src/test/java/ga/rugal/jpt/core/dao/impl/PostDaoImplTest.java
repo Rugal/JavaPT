@@ -108,7 +108,7 @@ public class PostDaoImplTest extends DBTestBase
         p.setEnabled(true);
         p.setPostTime(System.currentTimeMillis());
         p.setTitle("Rugal Bernstein Test post 2");
-        p.setUid(userDao.getByID(1));
+        p.setAuthor(userDao.getByID(1));
         p.setInfoHash(torrent.getHexInfoHash());
         p.setBencode(torrent.getEncoded());
         postDao.save(p);

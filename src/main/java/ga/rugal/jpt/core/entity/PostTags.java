@@ -35,12 +35,12 @@ public class PostTags
     @Expose
     @JoinColumn(name = "pid", referencedColumnName = "pid")
     @ManyToOne
-    private Post pid;
+    private Post post;
 
     @Expose
     @JoinColumn(name = "tid", referencedColumnName = "tid")
     @ManyToOne
-    private Tag tid;
+    private Tag tag;
 
     public PostTags()
     {
@@ -61,24 +61,24 @@ public class PostTags
         this.ptid = ptid;
     }
 
-    public Post getPid()
+    public Post getPost()
     {
-        return pid;
+        return post;
     }
 
-    public void setPid(Post pid)
+    public void setPost(Post post)
     {
-        this.pid = pid;
+        this.post = post;
     }
 
-    public Tag getTid()
+    public Tag getTag()
     {
-        return tid;
+        return tag;
     }
 
-    public void setTid(Tag tid)
+    public void setTag(Tag tag)
     {
-        this.tid = tid;
+        this.tag = tag;
     }
 
     @Override

@@ -54,7 +54,7 @@ public class PostAction
     public Message savePost(@RequestBody Post bean, HttpServletRequest request)
     {
         int id = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
-        bean.setUid(userService.getByID(id));
+        bean.setAuthor(userService.getByID(id));
         postService.save(bean);
         return Message.successMessage(CommonMessageContent.SAVE_POST, bean);
     }
@@ -153,9 +153,9 @@ public class PostAction
     {
         //setting user in Thread
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
-        bean.setUid(userService.getByID(uid));
+        bean.setReplyer(userService.getByID(uid));
         //setting attached post in Thread
-        bean.setPid(postService.getByID(pid));
+        bean.setPost(postService.getByID(pid));
         threadService.save(bean);
         return Message.successMessage(CommonMessageContent.SAVE_THREAD, bean);
     }

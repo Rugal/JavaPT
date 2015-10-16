@@ -48,7 +48,7 @@ public class Client
     @Column
     private Boolean enabled;
 
-    @OneToMany(mappedBy = "caid")
+    @OneToMany(mappedBy = "client")
     private List<ClientAnnounce> clientAnnouncesList;
 
     public Client()

@@ -71,7 +71,7 @@ public class AdminAction
         Admin admin = new Admin();
         admin.setGranter(granter);
         admin.setLevel(level);
-        admin.setUid(grantee);
+        admin.setUser(grantee);
         adminService.save(admin);
         return Message.successMessage(CommonMessageContent.GRANT_DONE, admin);
     }

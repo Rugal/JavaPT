@@ -39,7 +39,7 @@ public class Tag extends BaseObject<Tag>
     @Column(length = 50)
     private String icon;
 
-    @OneToMany(mappedBy = "tid")
+    @OneToMany(mappedBy = "tag")
     private List<PostTags> postTagsList;
 
     public Tag()

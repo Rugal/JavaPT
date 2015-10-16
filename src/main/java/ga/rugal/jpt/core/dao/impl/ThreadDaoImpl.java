@@ -27,7 +27,7 @@ public class ThreadDaoImpl extends HibernateBaseDao<Thread, Integer> implements 
     public Pagination getPage(Post post, int pageNo, int pageSize)
     {
         Criteria crit = createCriteria();
-        crit.add(Restrictions.eq("pid", post));
+        crit.add(Restrictions.eq("post", post));
         Pagination page = findByCriteria(crit, pageNo, pageSize);
         return page;
     }

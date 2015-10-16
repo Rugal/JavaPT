@@ -77,13 +77,13 @@ public class User extends BaseObject<User>
     @ManyToOne
     private User referee;
 
-    @OneToMany(mappedBy = "uid")
+    @OneToMany(mappedBy = "author")
     private List<Post> postList;
 
-    @OneToMany(mappedBy = "caid")
+    @OneToMany(mappedBy = "user")
     private List<ClientAnnounce> clientAnnouncesList;
 
-    @OneToMany(mappedBy = "uid")
+    @OneToMany(mappedBy = "user")
     @Fetch(FetchMode.SELECT)
     private List<Admin> adminList;
 
@@ -93,7 +93,7 @@ public class User extends BaseObject<User>
     @OneToMany(mappedBy = "uid")
     private List<SigninLog> signinLogList;
 
-    @OneToMany(mappedBy = "uid")
+    @OneToMany(mappedBy = "replyer")
     private List<Thread> threadList;
 
     @OneToMany(mappedBy = "referee")

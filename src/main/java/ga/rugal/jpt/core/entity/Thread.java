@@ -40,15 +40,19 @@ public class Thread extends BaseObject<Thread>
     @Expose
     private Long postTime;
 
+    @Column(name = "rate")
+    @Expose
+    private Integer rate;
+
     @JoinColumn(name = "pid", referencedColumnName = "pid")
     @ManyToOne
     @Expose
-    private Post pid;
+    private Post post;
 
     @JoinColumn(name = "uid", referencedColumnName = "uid")
     @ManyToOne
     @Expose
-    private User uid;
+    private User replyer;
 
     public Thread()
     {
@@ -89,24 +93,34 @@ public class Thread extends BaseObject<Thread>
         this.postTime = postTime;
     }
 
-    public Post getPid()
+    public Integer getRate()
     {
-        return pid;
+        return rate;
     }
 
-    public void setPid(Post pid)
+    public void setRate(Integer rate)
     {
-        this.pid = pid;
+        this.rate = rate;
     }
 
-    public User getUid()
+    public Post getPost()
     {
-        return uid;
+        return post;
     }
 
-    public void setUid(User uid)
+    public void setPost(Post post)
     {
-        this.uid = uid;
+        this.post = post;
+    }
+
+    public User getReplyer()
+    {
+        return replyer;
+    }
+
+    public void setReplyer(User replyer)
+    {
+        this.replyer = replyer;
     }
 
     @Override

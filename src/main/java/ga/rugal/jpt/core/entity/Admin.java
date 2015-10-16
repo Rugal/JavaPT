@@ -43,7 +43,7 @@ public class Admin extends BaseObject<Admin>
     @Expose
     @JoinColumn(name = "uid", referencedColumnName = "uid")
     @ManyToOne
-    private User uid;
+    private User user;
 
     @Expose
     @JoinColumn(name = "granter", referencedColumnName = "uid")
@@ -89,14 +89,14 @@ public class Admin extends BaseObject<Admin>
         this.level = level;
     }
 
-    public User getUid()
+    public User getUser()
     {
-        return uid;
+        return user;
     }
 
-    public void setUid(User uid)
+    public void setUser(User user)
     {
-        this.uid = uid;
+        this.user = user;
     }
 
     public User getGranter()

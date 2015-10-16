@@ -73,11 +73,11 @@ public class ClientAnnounceDaoImpl extends HibernateBaseDao<ClientAnnounce, Long
         Criteria crit = createCriteria();
         if (null != user)
         {
-            crit.add(Restrictions.eq("uid", user));
+            crit.add(Restrictions.eq("user", user));
         }
         if (null != post)
         {
-            crit.add(Restrictions.eq("pid", post));
+            crit.add(Restrictions.eq("post", post));
         }
         crit.addOrder(Order.desc("announceTime"));
         crit.setMaxResults(1);

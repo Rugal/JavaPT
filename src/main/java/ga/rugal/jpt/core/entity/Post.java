@@ -74,15 +74,15 @@ public class Post extends BaseObject<Post>
     @JoinColumn(name = "uid", referencedColumnName = "uid")
     @ManyToOne
     @Expose
-    private User uid;
+    private User author;
 
-    @OneToMany(mappedBy = "pid")
+    @OneToMany(mappedBy = "post")
     private List<PostTags> postTagsList;
 
-    @OneToMany(mappedBy = "pid")
+    @OneToMany(mappedBy = "post")
     private List<Thread> threadList;
 
-    @OneToMany(mappedBy = "pid")
+    @OneToMany(mappedBy = "post")
     private List<ClientAnnounce> clientAnnounceList;
 
     public Post()
@@ -204,14 +204,14 @@ public class Post extends BaseObject<Post>
         this.minLevel = minLevel;
     }
 
-    public User getUid()
+    public User getAuthor()
     {
-        return uid;
+        return author;
     }
 
-    public void setUid(User uid)
+    public void setAuthor(User author)
     {
-        this.uid = uid;
+        this.author = author;
     }
 
     public List<PostTags> getPostTagsList()

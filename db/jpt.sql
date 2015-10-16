@@ -359,7 +359,8 @@ CREATE TABLE thread (
     pid integer,
     uid integer,
     content text,
-    post_time bigint
+    post_time bigint,
+    rate integer
 );
 
 
@@ -519,7 +520,7 @@ COPY admin (aid, uid, granter, since, level) FROM stdin;
 -- Name: admin_aid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('admin_aid_seq', 194, true);
+SELECT pg_catalog.setval('admin_aid_seq', 233, true);
 
 
 --
@@ -538,6 +539,15 @@ COPY client (cid, name, version, enabled, cname) FROM stdin;
 --
 
 COPY client_announce (caid, announce_time, uid, cid, download_byte, upload_byte, left_byte, pid) FROM stdin;
+394	1444015062859	1	1	0	0	2472252877	374
+400	1444078848678	1	1	0	0	2472252877	374
+406	1444079351676	1	1	0	0	2472252877	374
+412	1444088632190	1	1	0	0	2472252877	374
+418	1444753052131	1	1	0	0	2472252877	374
+424	1444755303127	1	1	0	0	2472252877	374
+430	1444791197173	1	1	0	0	2472252877	374
+436	1444791562846	1	1	0	0	2472252877	374
+442	1444796014986	1	1	0	0	2472252877	374
 \.
 
 
@@ -545,14 +555,14 @@ COPY client_announce (caid, announce_time, uid, cid, download_byte, upload_byte,
 -- Name: client_announce_caid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('client_announce_caid_seq', 388, true);
+SELECT pg_catalog.setval('client_announce_caid_seq', 442, true);
 
 
 --
 -- Name: client_cid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('client_cid_seq', 444, true);
+SELECT pg_catalog.setval('client_cid_seq', 498, true);
 
 
 --
@@ -567,7 +577,7 @@ COPY invitation (iid, uid, issue_time) FROM stdin;
 -- Name: invitation_iid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('invitation_iid_seq', 138, true);
+SELECT pg_catalog.setval('invitation_iid_seq', 156, true);
 
 
 --
@@ -590,7 +600,7 @@ COPY level (lid, minimum, name, icon, min_upload_byte, min_download_byte) FROM s
 -- Name: level_lid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('level_lid_seq', 1647, true);
+SELECT pg_catalog.setval('level_lid_seq', 1935, true);
 
 
 --
@@ -607,7 +617,7 @@ COPY post (pid, uid, title, content, post_time, size, enabled, min_level, info_h
 -- Name: post_pid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('post_pid_seq', 942, true);
+SELECT pg_catalog.setval('post_pid_seq', 1117, true);
 
 
 --
@@ -622,7 +632,7 @@ COPY post_tags (ptid, tid, pid) FROM stdin;
 -- Name: post_tags_ptid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('post_tags_ptid_seq', 126, true);
+SELECT pg_catalog.setval('post_tags_ptid_seq', 144, true);
 
 
 --
@@ -637,7 +647,7 @@ COPY signin_log (slid, uid, signin_time, ip) FROM stdin;
 -- Name: signin_log_slid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('signin_log_slid_seq', 100, true);
+SELECT pg_catalog.setval('signin_log_slid_seq', 109, true);
 
 
 --
@@ -658,14 +668,14 @@ COPY tag (tid, name, icon) FROM stdin;
 -- Name: tag_tid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tag_tid_seq', 375, true);
+SELECT pg_catalog.setval('tag_tid_seq', 460, true);
 
 
 --
 -- Data for Name: thread; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
-COPY thread (tid, pid, uid, content, post_time) FROM stdin;
+COPY thread (tid, pid, uid, content, post_time, rate) FROM stdin;
 \.
 
 
@@ -673,7 +683,7 @@ COPY thread (tid, pid, uid, content, post_time) FROM stdin;
 -- Name: thread_tid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('thread_tid_seq', 213, true);
+SELECT pg_catalog.setval('thread_tid_seq', 271, true);
 
 
 --
@@ -693,7 +703,7 @@ COPY "user" (uid, password, username, email, upload_byte, download_byte, credit,
 -- Name: user_uid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('user_uid_seq', 1723, true);
+SELECT pg_catalog.setval('user_uid_seq', 2081, true);
 
 
 --
