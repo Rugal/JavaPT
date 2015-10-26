@@ -48,7 +48,7 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
         testDelete();
     }
 
-    @Test
+//    @Test
     public void testRegisterUser() throws Exception
     {
         System.out.println("registerUser");
@@ -72,7 +72,7 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
             .andExpect(status().isOk());
     }
 
-    @Test
+//    @Test
     public void testUpdateUserProfile() throws Exception
     {
         System.out.println("updateUserProfile");
@@ -90,7 +90,7 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
         Assert.assertEquals(beanUpdated.getCredit(), user.getCredit());
     }
 
-    @Test
+//    @Test
     public void testRetrieveUserProfile() throws Exception
     {
         System.out.println("retrieveUserProfile");
@@ -101,6 +101,56 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
             .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testIsUsernameAvailable() throws Exception
+    {
+        System.out.println("isUsernameAvailable");
+        MvcResult result;
+        Message message;
+        result = this.mockMvc.perform(get("/user")
+            .param("username", user.getUsername())
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk()).andReturn();
+        message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
+        Assert.assertEquals(Message.FAIL, message.getStatus());
+        //
+        result = this.mockMvc.perform(get("/user")
+            .param("username", user.getUsername() + 1)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk()).andReturn();
+        message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
+        Assert.assertEquals(Message.SUCCESS, message.getStatus());
+    }
+
+//    @Test
+    public void testIsEmailAvailable() throws Exception
+    {
+        System.out.println("isEmailAvailable");
+        MvcResult result;
+        Message message;
+        result = this.mockMvc.perform(get("/user")
+            .param("email", user.getEmail())
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk()).andReturn();
+        message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
+        Assert.assertEquals(Message.FAIL, message.getStatus());
+        //
+        result = this.mockMvc.perform(get("/user")
+            .param("email", user.getEmail() + "1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk()).andReturn();
+        message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
+        Assert.assertEquals(Message.SUCCESS, message.getStatus());
     }
 
 }
