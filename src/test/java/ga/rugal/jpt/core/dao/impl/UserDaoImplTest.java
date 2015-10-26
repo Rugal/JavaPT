@@ -71,4 +71,23 @@ public class UserDaoImplTest extends DBTestBase
         assertEquals(expResult, result);
     }
 
+    @Test
+    public void testIsEmailAvailable()
+    {
+        System.out.println("isEmailAvailable");
+        String email = user.getEmail();
+        boolean expResult = false;
+        boolean result = userDao.isEmailAvailable(email);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testIsUsernameAvailable()
+    {
+        System.out.println("isUsernameAvailable");
+        String username = user.getUsername();
+        boolean expResult = false;
+        boolean result = userDao.isUserNameAvailable(username);
+        assertEquals(expResult, result);
+    }
 }

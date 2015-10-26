@@ -37,8 +37,8 @@ public class User extends BaseObject<User>
     @Expose
     private Integer uid;
 
-    @Expose
     @Column(length = 100)
+    @Expose
     private String password;
 
     @Expose

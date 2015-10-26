@@ -12,6 +12,26 @@ import org.springframework.transaction.annotation.Transactional;
 public interface UserService
 {
 
+    /**
+     * See if given email address is usable in DB, i.e. it can used for registration.
+     *
+     * @param email
+     *
+     * @return true if it does available.
+     */
+    @Transactional(readOnly = true)
+    boolean isEmailAvailable(String email);
+
+    /**
+     * See if given username is usable in DB, i.e. there is no confliction.
+     *
+     * @param username
+     *
+     * @return true if it does available.
+     */
+    @Transactional(readOnly = true)
+    boolean isUserNameAvailable(String username);
+
     User deleteById(Integer id);
 
     @Transactional(readOnly = true)

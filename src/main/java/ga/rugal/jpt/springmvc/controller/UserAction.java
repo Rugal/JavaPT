@@ -1,7 +1,10 @@
 package ga.rugal.jpt.springmvc.controller;
 
+import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
+import ga.rugal.jpt.core.entity.Invitation;
 import ga.rugal.jpt.core.entity.User;
+import ga.rugal.jpt.core.service.InvitationService;
 import ga.rugal.jpt.core.service.UserService;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.slf4j.Logger;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -28,8 +32,46 @@ public class UserAction
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private InvitationService invitationService;
+
     /**
-     * Persist a user bean into database.
+     * Register a new user by invitation code.<BR>
+     * Usually, new user registration should go through this method.
+     *
+     * @param bean       user bean resembled from request body.
+     * @param refereeUID The user who invite.
+     * @param code       The invitation code.
+     *
+     * @return The persisted user bean.
+     */
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, params =
+                {
+                    "referee", "code"
+    })
+    public Message registerUser(@RequestBody User bean,
+                                @RequestParam(value = "referee", required = true) Integer refereeUID,
+                                @RequestParam(value = "code", required = true) Integer code)
+    {
+        //Get invitation code from DB
+        Invitation invitation = invitationService.getByID(code);
+        User referee = invitation.getUser();
+        //verify ownership of invitation code
+        if (!referee.getUid().equals(refereeUID))
+        {
+            return Message.failMessage(CommonMessageContent.INVALID_INVITATION);
+        }
+        bean.setReferee(bean);
+        userService.save(bean);
+        LOG.info(CommonLogContent.USE_INVITATION_CODE, invitation.getIid(), bean.getUid());
+        invitationService.deleteById(invitation.getIid());
+        return Message.successMessage(CommonMessageContent.SAVE_USER, bean);
+    }
+
+    /**
+     * This method will be used only in open registration, which means, no invitation code is
+     * required.
      *
      * @param bean user bean resembled from request body.
      *

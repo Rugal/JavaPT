@@ -7,6 +7,9 @@ package ga.rugal.jpt.common;
 public interface CommonLogContent
 {
 
+    //User
+    final String USE_INVITATION_CODE = "Invitation code [{}] used for inviting user [{}]";
+
     //Access authentication
     final String USER_TRY_ACCESS = "User [{0}] is trying to access [{1}] from host [{2}]";
 

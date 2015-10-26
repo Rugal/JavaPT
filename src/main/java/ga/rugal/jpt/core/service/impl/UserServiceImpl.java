@@ -26,6 +26,26 @@ public class UserServiceImpl implements UserService
     @Autowired
     private UserDao dao;
 
+    /**
+     * {@inheritDoc }
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public boolean isEmailAvailable(String email)
+    {
+        return dao.isEmailAvailable(email);
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public boolean isUserNameAvailable(String username)
+    {
+        return dao.isUserNameAvailable(username);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public Pagination getPage(int pageNo, int pageSize)

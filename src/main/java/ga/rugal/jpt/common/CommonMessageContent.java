@@ -13,6 +13,8 @@ public interface CommonMessageContent
     //User operation
     final String SAVE_USER = "User registered";
 
+    final String INVALID_INVITATION = "Invalid invitation code";
+
     final String UPDATE_USER = "User profile updated";
 
     final String DELETE_USER = "User deleted";

@@ -41,6 +41,26 @@ public class UserDaoImpl extends HibernateBaseDao<User, Integer> implements User
         return entity;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isEmailAvailable(String email)
+    {
+        return super.countByProperty("email", email) == 0;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isUserNameAvailable(String username)
+    {
+        return super.countByProperty("username", username) == 0;
+    }
+
     @Override
     @Transactional(readOnly = true)
     public boolean authenticateUser(Integer uid, String password)
