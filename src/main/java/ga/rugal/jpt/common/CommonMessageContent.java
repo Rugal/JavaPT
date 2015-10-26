@@ -21,6 +21,14 @@ public interface CommonMessageContent
 
     final String GET_USER = "Get user profile";
 
+    final String EMAIL_AVAILABLE = "Request email is available";
+
+    final String EMAIL_UNAVAILABLE = "Request email is unavailable";
+
+    final String USERNAME_AVAILABLE = "Request username is available";
+
+    final String USERNAME_UNAVAILABLE = "Request username is unavailable";
+
     //Authentication and Authorization
     final String ACCESS_FORBIDDEN = "Unmatched combination of username and credential";
 

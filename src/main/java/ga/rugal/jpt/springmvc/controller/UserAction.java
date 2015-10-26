@@ -160,4 +160,50 @@ public class UserAction
         }
         return message;
     }
+
+    /**
+     * See if the given email is available for registration.
+     *
+     * @param email
+     *
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, params = "email")
+    public Message isEmailAvailable(@RequestParam(value = "email", required = true) String email)
+    {
+        Message message;
+        if (userService.isEmailAvailable(email))
+        {
+            message = Message.successMessage(CommonMessageContent.EMAIL_AVAILABLE, null);
+        }
+        else
+        {
+            message = Message.failMessage(CommonMessageContent.EMAIL_UNAVAILABLE);
+        }
+        return message;
+    }
+
+    /**
+     * See if the given username is available for registration.
+     *
+     * @param username
+     *
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, params = "username")
+    public Message isUsernameAvailable(@RequestParam(value = "username", required = true) String username)
+    {
+        Message message;
+        if (userService.isUserNameAvailable(username))
+        {
+            message = Message.successMessage(CommonMessageContent.USERNAME_AVAILABLE, null);
+        }
+        else
+        {
+            message = Message.failMessage(CommonMessageContent.USERNAME_UNAVAILABLE);
+        }
+        return message;
+    }
 }
