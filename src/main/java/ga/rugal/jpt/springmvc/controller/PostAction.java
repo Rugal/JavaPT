@@ -1,12 +1,16 @@
 package ga.rugal.jpt.springmvc.controller;
 
 import config.SystemDefaultProperties;
+import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
+import ga.rugal.jpt.common.tracker.common.Torrent;
+import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.ThreadService;
 import ga.rugal.jpt.core.service.UserService;
+import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import ml.rugal.sshcommon.page.Pagination;
 import ml.rugal.sshcommon.springmvc.util.Message;
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -78,8 +83,7 @@ public class PostAction
             bean.setPid(id);
             postService.update(bean);
             message = Message.successMessage(CommonMessageContent.UPDATE_POST, bean);
-        }
-        else
+        } else
         {
             message = Message.failMessage(CommonMessageContent.POST_NOT_FOUND);
         }
@@ -103,11 +107,11 @@ public class PostAction
         {
             postService.deleteById(id);
             message = Message.successMessage(CommonMessageContent.DELETE_POST, bean);
-        }
-        else
+        } else
         {
             message = Message.failMessage(CommonMessageContent.POST_NOT_FOUND);
         }
+        //TODO We also need to delete related threads
         return message;
     }
 
@@ -127,8 +131,7 @@ public class PostAction
         if (null != bean)
         {
             message = Message.successMessage(CommonMessageContent.GET_POST, bean);
-        }
-        else
+        } else
         {
             message = Message.failMessage(CommonMessageContent.POST_NOT_FOUND);
         }
@@ -161,6 +164,52 @@ public class PostAction
     }
 
     /**
+     * Upload an BitTorrent file that includes meta-info of a torrent. <BR> A post could only have
+     * one torrent file, and it is read only. No one could update a uploaded torrent, unless they
+     * delete and re-post a new version.
+     *
+     * @param pid      the post that this torrent file will be attached with.
+     * @param metainfo thread bean resembled from request body.
+     * @param request
+     *
+     * @return The persisted post bean.
+     */
+    @ResponseBody
+    @RequestMapping(value = "/{pid}/metainfo", method = RequestMethod.POST)
+    public Message uploadMetainfo(@PathVariable("pid") Integer pid,
+                                  @RequestParam(value = "file") MultipartFile metainfo,
+                                  HttpServletRequest request)
+    {
+        //permission verification
+        Post post = postService.getByID(pid);
+        if (null == post)
+        {
+            return Message.failMessage(CommonMessageContent.POST_NOT_FOUND);
+        }
+        if (null != post.getBencode())
+        {
+            return Message.failMessage(CommonMessageContent.TORRENT_EXISTS);
+        }
+        //file content verification
+        try
+        {
+            Torrent torrent = TrackedTorrent.load(metainfo.getBytes());
+            //Now torrent bytes has been verified
+            post.setBencode(torrent.getEncoded());
+            //Updates database bencode field
+            postService.update(post);
+        }
+        catch (IOException ex)
+        {
+            return Message.failMessage(CommonMessageContent.ERROR_READ_TORRENT);
+        }
+        //database update
+        LOG.info(CommonLogContent.TORRENT_UPLOADED, post.getPid(),
+                 request.getParameter(SystemDefaultProperties.ID));
+        return Message.successMessage(CommonMessageContent.TORRENT_UPLOADED, null);
+    }
+
+    /**
      * GET threads for a post by page.
      *
      * @param pid      primary key of target post.
@@ -182,8 +231,7 @@ public class PostAction
         if (page.getTotalCount() > 0)
         {
             return Message.successMessage(CommonMessageContent.GET_THREAD, page);
-        }
-        else
+        } else
         {
             return Message.failMessage(CommonMessageContent.THREADS_NOT_FOUND);
         }

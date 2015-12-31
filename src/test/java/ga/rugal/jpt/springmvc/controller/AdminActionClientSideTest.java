@@ -75,24 +75,24 @@ public class AdminActionClientSideTest extends ControllerClientSideTestBase
     private MvcResult testGrant() throws Exception
     {
         return this.mockMvc.perform(post("/admin")
-            .param("grantee", "" + grantee.getUid())
-            .param("role", Admin.Level.INSPECTOR.name())
-            .header(SystemDefaultProperties.ID, granter.getUid())
-            .header(SystemDefaultProperties.CREDENTIAL, granter.getPassword())
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON))
-            .andDo(print())
-            .andExpect(status().isOk()).andReturn();
+                .param("grantee", "" + grantee.getUid())
+                .param("role", Admin.Level.INSPECTOR.name())
+                .header(SystemDefaultProperties.ID, granter.getUid())
+                .header(SystemDefaultProperties.CREDENTIAL, granter.getPassword())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk()).andReturn();
     }
 
     private void testRevoke() throws Exception
     {
         this.mockMvc.perform(delete("/admin/" + admin.getAid())
-            .header(SystemDefaultProperties.ID, granter.getUid())
-            .header(SystemDefaultProperties.CREDENTIAL, granter.getPassword())
-            .accept(MediaType.APPLICATION_JSON))
-            .andDo(print())
-            .andExpect(status().isOk());
+                .header(SystemDefaultProperties.ID, granter.getUid())
+                .header(SystemDefaultProperties.CREDENTIAL, granter.getPassword())
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test

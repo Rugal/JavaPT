@@ -29,8 +29,8 @@ import java.util.Set;
  * B-encoding encoder.
  *
  * <p>
- * This class provides utility methods to encode objects and
- * {@link BEValue}s to B-encoding into a provided output stream.
+ * This class provides utility methods to encode objects and {@link BEValue}s to B-encoding into a
+ * provided output stream.
  * </p>
  *
  * <p>
@@ -54,27 +54,22 @@ public class BEncoder
         if (o instanceof String)
         {
             bencode((String) o, out);
-        }
-        else if (o instanceof byte[])
+        } else if (o instanceof byte[])
         {
             bencode((byte[]) o, out);
-        }
-        else if (o instanceof Number)
+        } else if (o instanceof Number)
         {
             bencode((Number) o, out);
-        }
-        else if (o instanceof List)
+        } else if (o instanceof List)
         {
             bencode((List<BEValue>) o, out);
-        }
-        else if (o instanceof Map)
+        } else if (o instanceof Map)
         {
             bencode((Map<String, BEValue>) o, out);
-        }
-        else
+        } else
         {
             throw new IllegalArgumentException("Cannot bencode: "
-                + o.getClass());
+                                               + o.getClass());
         }
     }
 
@@ -93,7 +88,7 @@ public class BEncoder
     }
 
     public static void bencode(List<BEValue> l, OutputStream out)
-        throws IOException
+            throws IOException
     {
         out.write('l');
         for (BEValue value : l)
@@ -111,28 +106,24 @@ public class BEncoder
         out.write(bs);
     }
 
-    public static void bencode(Map<String, BEValue> m, OutputStream out)
-        throws IOException
+    public static void bencode(Map<String, BEValue> m, OutputStream out) throws IOException
     {
         out.write('d');
-
         // Keys must be sorted.
         Set<String> s = m.keySet();
         List<String> l = new ArrayList<>(s);
         Collections.sort(l);
-
         for (String key : l)
         {
             Object value = m.get(key);
             bencode(key, out);
             bencode(value, out);
         }
-
         out.write('e');
     }
 
     public static ByteBuffer bencode(Map<String, BEValue> m)
-        throws IOException
+            throws IOException
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         BEncoder.bencode(m, baos);

@@ -71,7 +71,7 @@ public class TestApplicationContext
         bean.setMinLevel(level);
         bean.setAuthor(user);
         bean.setRate(0);
-        bean.setBencode(torrent.getEncoded());
+//        bean.setBencode(torrent.getEncoded());
         return bean;
     }
 
@@ -181,11 +181,18 @@ public class TestApplicationContext
     }
 
     @Bean
-    public TrackedTorrent torrent() throws IOException
+    @Autowired
+    public TrackedTorrent torrent(File testTorrentFile) throws IOException
+    {
+        TrackedTorrent torrent = TrackedTorrent.load(testTorrentFile);
+        return torrent;
+    }
+
+    @Bean
+    public File testTorrentFile()
     {
         File file = new File(SystemDefaultProperties.TORRENT_PATH).listFiles((File dir, String fileName) -> fileName.startsWith("Junit"))[0];
-        TrackedTorrent torrent = TrackedTorrent.load(file);
-        return torrent;
+        return file;
     }
 
 }

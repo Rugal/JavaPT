@@ -87,23 +87,23 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
     {
         MockMultipartFile mmf = new MockMultipartFile("file", file.getName(), "multipart/form-data", new FileInputStream(file));
         return this.mockMvc.perform(fileUpload("/tag")
-            .file(mmf)
-            .header(SystemDefaultProperties.ID, user.getUid())
-            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-            .param("name", tag.getName())
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            //            .andDo(print())
-            .andReturn();
+                .file(mmf)
+                .header(SystemDefaultProperties.ID, user.getUid())
+                .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+                .param("name", tag.getName())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
     }
 
     private void deleteTag() throws Exception
     {
         this.mockMvc.perform(delete("/tag/" + db.getTid())
-            .header(SystemDefaultProperties.ID, user.getUid())
-            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
+                .header(SystemDefaultProperties.ID, user.getUid())
+                .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -111,12 +111,12 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
     {
         System.out.println("getTagBean");
         MvcResult result = this.mockMvc.perform(get("/tag/" + db.getTid())
-            .header(SystemDefaultProperties.ID, user.getUid())
-            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-            .accept(MediaType.APPLICATION_JSON))
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andReturn();
+                .header(SystemDefaultProperties.ID, user.getUid())
+                .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
         Tag test = tag.backToObject(message.getData());
         Assert.assertEquals(db.getIcon(), test.getIcon());
@@ -127,13 +127,13 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
     {
         System.out.println("getMissedTagIcon");
         this.mockMvc.perform(get("/tag/" + 0 + "/icon")
-            .header(SystemDefaultProperties.ID, user.getUid())
-            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-            .accept(MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE,
-                    MediaType.IMAGE_PNG_VALUE, MediaType.APPLICATION_JSON_VALUE
-            ))
-            .andExpect(status().isOk())
-            .andDo(print());
+                .header(SystemDefaultProperties.ID, user.getUid())
+                .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+                .accept(MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE,
+                        MediaType.IMAGE_PNG_VALUE, MediaType.APPLICATION_JSON_VALUE
+                ))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
     @Test
@@ -141,12 +141,12 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
     {
         System.out.println("getTagIcon");
         MvcResult result = this.mockMvc.perform(get("/tag/" + db.getTid() + "/icon")
-            .header(SystemDefaultProperties.ID, user.getUid())
-            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-            .accept(MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE,
-                    MediaType.IMAGE_PNG_VALUE, MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(status().isOk())
-            .andReturn();
+                .header(SystemDefaultProperties.ID, user.getUid())
+                .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+                .accept(MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE,
+                        MediaType.IMAGE_PNG_VALUE, MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andReturn();
         File testIcon = new File(tag.getIcon());
         try (FileOutputStream fos = new FileOutputStream(testIcon))
         {
@@ -167,15 +167,15 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
         contentTypeParams.put("boundary", "RugalBernstein");
         MediaType mediaType = new MediaType("multipart", "form-data", contentTypeParams);
         MvcResult result = this.mockMvc.perform(put("/tag/" + db.getTid())
-            .header(SystemDefaultProperties.ID, user.getUid())
-            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-            .param("name", db.getName() + "Updated")
-            .content(multipartFile.getBytes())
-            .contentType(mediaType)
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andDo(print())
-            .andReturn();
+                .header(SystemDefaultProperties.ID, user.getUid())
+                .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+                .param("name", db.getName() + "Updated")
+                .content(multipartFile.getBytes())
+                .contentType(mediaType)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
         Tag updated = tag.backToObject(message.getData());
         Assert.assertEquals(db.getName() + "Updated", updated.getName());

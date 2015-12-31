@@ -2,8 +2,7 @@ package ga.rugal.jpt.common;
 
 /**
  *
- * This interface contain most of referred message content used in
- * {@code Message} feedback.
+ * This interface contain most of referred message content used in {@code Message} feedback.
  *
  * @author Rugal Bernstein
  */
@@ -49,6 +48,12 @@ public interface CommonMessageContent
 
     //Torrents
     final String TORRENT_NOT_FOUND = "The request torrent not found";
+
+    final String ERROR_READ_TORRENT = "Error reading torrent metainfo";
+
+    final String TORRENT_EXISTS = "Please re-post new one as bencode already exists";
+
+    final String TORRENT_UPLOADED = "Torrent file uploaded";
 
     //Signin
     final String SIGNIN = "Signin recorded";

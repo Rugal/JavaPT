@@ -1,8 +1,8 @@
 package ga.rugal.jpt.core.service.impl;
 
+import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
-import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
@@ -48,11 +48,13 @@ public class TrackerImpl implements Tracker
             throw new TrackerResponseException(CommonMessageContent.TORRENT_NOT_FOUND);
         }
         TrackedTorrent torrent = this.torrents.get(bean.getInfoHash());
-        // If an event other than 'started' is specified and we also haven't
-        // seen the peer on this torrent before, something went wrong. A
-        // previous 'started' announce request should have been made by the
-        // client that would have had us register that peer on the torrent this
-        // request refers to.
+        /*
+         If an event other than 'started' is specified and we also haven't
+         seen the peer on this torrent before, something went wrong. A
+         previous 'started' announce request should have been made by the
+         client that would have had us register that peer on the torrent this
+         request refers to.
+         */
         if (bean.getEvent() != null && torrent.containsKey(bean.getPeerID())
             && RequestEvent.STARTED != bean.getEvent())
         {
@@ -60,20 +62,23 @@ public class TrackerImpl implements Tracker
             //send error
             throw new TrackerResponseException(CommonMessageContent.BAD_EVENT);
         }
-        // When no event is specified, it's a periodic update while the client
-        // is operating. If we don't have a peer for this announce, it means
-        // the tracker restarted while the client was running. Consider this
-        // announce request as a 'started' event.
-        if ((bean.getEvent() == null || RequestEvent.NONE == bean.getEvent())
+        /*
+         When no event is specified, it's a periodic update while the client
+         is operating. If we don't have a peer for this announce, it means
+         the tracker restarted while the client was running. Consider this
+         announce request as a 'started' event.
+         */
+        if ((null == bean.getEvent() || RequestEvent.NONE == bean.getEvent())
             && torrent.containsKey(bean.getPeerID()))
         {
             bean.setEvent(RequestEvent.STARTED);
         }
-
-        // Update the torrent according to the announce event
-        // Going to update a peer of a swarm of a torrent
-        // Must update tracker first then database.
-        // As state of peer might changes in peer update
+        /*
+         Update the torrent according to the announce event
+         Going to update a peer of a swarm of a torrent
+         Must update tracker first then database.
+         As state of peer might changes in peer update
+         */
         TrackedPeer peer = torrent.update(bean);
         return peer;
     }
@@ -164,8 +169,8 @@ public class TrackerImpl implements Tracker
      * The unfreshed peer collector thread.
      *
      * <p>
-     * Every PEER_COLLECTION_FREQUENCY_SECONDS, this thread will collect
-     * unfreshed peers from all announced torrents.
+     * Every PEER_COLLECTION_FREQUENCY_SECONDS, this thread will collect unfreshed peers from all
+     * announced torrents.
      * </p>
      */
     private class PeerCollectorThread extends Thread

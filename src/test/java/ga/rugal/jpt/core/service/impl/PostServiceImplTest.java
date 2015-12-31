@@ -41,6 +41,9 @@ public class PostServiceImplTest extends DBTestBase
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private TrackedTorrent torrent;
+
     public PostServiceImplTest()
     {
     }
@@ -51,6 +54,7 @@ public class PostServiceImplTest extends DBTestBase
         System.out.println("setUp");
         levelService.save(level);
         userService.save(user);
+        post.setBencode(torrent.getEncoded());
         postService.save(post);
     }
 
@@ -59,6 +63,7 @@ public class PostServiceImplTest extends DBTestBase
     {
         System.out.println("tearDown");
         //order is important
+        post.setBencode(null);
         postService.deleteById(post.getPid());
         userService.deleteById(user.getUid());
         levelService.deleteById(level.getLid());

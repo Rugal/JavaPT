@@ -1,5 +1,6 @@
 package ga.rugal.jpt.core.service.impl;
 
+import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.core.service.TrackerResponseService;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -36,7 +37,7 @@ public class TrackerResponseServiceImpl implements TrackerResponseService
         }
         catch (IOException ex)
         {
-            LOG.error("Exception occurs when writing bytes into response", ex);
+            LOG.error(CommonLogContent.ERROR_WRITING_RESPONSE, ex);
             throw ex;
         }
 

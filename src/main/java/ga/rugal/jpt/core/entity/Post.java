@@ -52,6 +52,7 @@ public class Post extends BaseObject<Post>
     private Long postTime;
 
     @Column(length = 2147483647)
+    @Expose
     private byte[] bencode;
 
     @Column

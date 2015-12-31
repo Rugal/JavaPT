@@ -47,12 +47,16 @@ public interface CommonLogContent
 
     final String COLLECT_PEERS = "Collecting peers";
 
+    final String ERROR_WRITING_RESPONSE = "Exception occurs when writing bytes into response";
+
     //Torrent
     final String TORRENT_ANNOUNCED = "Torrent [{}] already announced with hash {}.";
 
     final String TORRENT_NEW = "New torrent [{}] registered with hash {}.";
 
     final String TORRENT_DELETE = "Torrent [{}] with hash {} is deleted.";
+
+    final String TORRENT_UPLOADED = "Torrent file for post [{}] has been uploaded by user [{}]";
 
     //Peer
     final String STALE_PEERS = "Collecting stale peer {}:";
@@ -95,5 +99,4 @@ public interface CommonLogContent
     final String ERROR_WRITE_TAG = "I/O exception occurs when writing icon";
 
     final String IMAGE_LENGTH = "Length of byte array is {}";
-
 }

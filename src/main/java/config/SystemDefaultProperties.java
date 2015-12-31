@@ -54,4 +54,6 @@ public interface SystemDefaultProperties
 
     final String ICON_PATH = "icon";
 
+    final String ANNOUNCE_TEMPLATE = "http://localhost:8080/announce?uid=%s&credential=%s";
+
 }

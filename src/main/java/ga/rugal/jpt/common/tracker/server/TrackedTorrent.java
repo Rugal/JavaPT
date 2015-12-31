@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
 public class TrackedTorrent extends Torrent
 {
 
-    private static final Logger logger = LoggerFactory.getLogger(TrackedTorrent.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TrackedTorrent.class);
 
     private int answerPeers;
 
@@ -255,7 +255,7 @@ public class TrackedTorrent extends Torrent
             default:
                 throw new IllegalArgumentException(CommonMessageContent.BAD_EVENT);
         }
-        logger.debug(MessageFormat.format(CommonLogContent.UPDATE_CONTENT,
+        LOG.debug(MessageFormat.format(CommonLogContent.UPDATE_CONTENT,
                                           bean.getUser().getUid(), bean.getInfoHash(), bean.getDownloaded(),
                                           bean.getUploaded(), bean.getLeft(), bean.getIp()));
         peer.update(bean);
@@ -287,7 +287,7 @@ public class TrackedTorrent extends Torrent
                 || (candidate.looksLike(peer)
                 && !candidate.equals(peer)))
             {
-                logger.debug(CommonLogContent.STALE_PEERS, candidate);
+                LOG.debug(CommonLogContent.STALE_PEERS, candidate);
                 this.peers.remove(candidate.getHexPeerId());
                 continue;
             }
@@ -299,7 +299,7 @@ public class TrackedTorrent extends Torrent
             // Collect unfresh peers, and obviously don't serve them as well.
             if (!candidate.isFresh())
             {
-                logger.debug(CommonLogContent.STALE_PEERS, candidate.getHexPeerId());
+                LOG.debug(CommonLogContent.STALE_PEERS, candidate.getHexPeerId());
                 this.peers.remove(candidate.getHexPeerId());
                 continue;
             }

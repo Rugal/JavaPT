@@ -1,8 +1,8 @@
 package ga.rugal.jpt.springmvc.controller;
 
+import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
-import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.bcodec.BEValue;
 import ga.rugal.jpt.common.tracker.bcodec.BEncoder;
 import ga.rugal.jpt.common.tracker.common.ClientRequestMessageBean;
@@ -122,8 +122,7 @@ public class AnnounceAction
      * performance leak point.
      * <p>
      * @param text
-     * @param name
-     *             <p>
+     * @param name <p>
      * @return
      */
     public static String readParameterFromURL(String text, String name)
@@ -142,7 +141,7 @@ public class AnnounceAction
     /**
      * Craft a compact normal announce response message from torrent and peers.
      * <p>
-     * Notice the peers field are compacted only in 0.1 version.
+     * Notice the peers field is only in compacted in 0.1 version.
      *
      * <p>
      *
@@ -152,7 +151,7 @@ public class AnnounceAction
      * @throws java.io.UnsupportedEncodingException
      */
     private ByteBuffer compactResponse(TrackedTorrent torrent, TrackedPeer peer)
-        throws IOException, UnsupportedEncodingException
+            throws IOException, UnsupportedEncodingException
     {
         Map<String, BEValue> response = new HashMap<>();
         response.put("interval", new BEValue(torrent.getAnnounceInterval()));
@@ -209,5 +208,4 @@ public class AnnounceAction
             LOG.error(e.getMessage(), e);
         }
     }
-
 }

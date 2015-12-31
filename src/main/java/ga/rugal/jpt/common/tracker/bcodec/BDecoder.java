@@ -31,9 +31,8 @@ import org.apache.commons.io.input.AutoCloseInputStream;
  * B-encoding decoder.
  *
  * <p>
- * A b-encoded byte stream can represent byte arrays, numbers, lists and maps
- * (dictionaries). This class implements a decoder of such streams into
- * {@link BEValue}s.
+ * A b-encoded byte stream can represent byte arrays, numbers, lists and maps (dictionaries). This
+ * class implements a decoder of such streams into {@link BEValue}s.
  * </p>
  *
  * <p>
@@ -78,14 +77,13 @@ public class BDecoder
      * Decode a B-encoded stream.
      *
      * <p>
-     * Automatically instantiates a new BDecoder for the provided input stream
-     * and decodes its root member.
+     * Automatically instantiates a new BDecoder for the provided input stream and decodes its root
+     * member.
      * </p>
      *
      * @param in The input stream to read from.
      * <p>
-     * @return
-     *         <p>
+     * @return <p>
      * @throws java.io.IOException
      */
     public static BEValue bdecode(InputStream in) throws IOException
@@ -97,29 +95,28 @@ public class BDecoder
      * Decode a B-encoded byte buffer.
      *
      * <p>
-     * Automatically instantiates a new BDecoder for the provided buffer and
-     * decodes its root member.
+     * Automatically instantiates a new BDecoder for the provided buffer and decodes its root
+     * member.
      * </p>
      *
      * @param data The {@link ByteBuffer} to read from.
      * <p>
-     * @return
-     *         <p>
+     * @return <p>
      * @throws java.io.IOException
      */
     public static BEValue bdecode(ByteBuffer data) throws IOException
     {
         return BDecoder.bdecode(new AutoCloseInputStream(
-            new ByteArrayInputStream(data.array())));
+                new ByteArrayInputStream(data.array())));
     }
 
     /**
-     * Returns what the next b-encoded object will be on the stream or -1
-     * when the end of stream has been reached.
+     * Returns what the next b-encoded object will be on the stream or -1 when the end of stream has
+     * been reached.
      *
      * <p>
-     * Can return something unexpected (not '0' .. '9', 'i', 'l' or 'd') when
-     * the stream isn't b-encoded.
+     * Can return something unexpected (not '0' .. '9', 'i', 'l' or 'd') when the stream isn't
+     * b-encoded.
      * </p>
      *
      * This might or might not read one extra byte from the stream.
@@ -134,12 +131,10 @@ public class BDecoder
     }
 
     /**
-     * Gets the next indicator and returns either null when the stream
-     * has ended or b-decodes the rest of the stream and returns the
-     * appropriate BEValue encoded object.
+     * Gets the next indicator and returns either null when the stream has ended or b-decodes the
+     * rest of the stream and returns the appropriate BEValue encoded object.
      * <p>
-     * @return
-     *         <p>
+     * @return <p>
      * @throws java.io.IOException
      */
     public BEValue bdecode() throws IOException
@@ -152,31 +147,25 @@ public class BDecoder
         if (this.indicator >= '0' && this.indicator <= '9')
         {
             return this.bdecodeBytes();
-        }
-        else if (this.indicator == 'i')
+        } else if (this.indicator == 'i')
         {
             return this.bdecodeNumber();
-        }
-        else if (this.indicator == 'l')
+        } else if (this.indicator == 'l')
         {
             return this.bdecodeList();
-        }
-        else if (this.indicator == 'd')
+        } else if (this.indicator == 'd')
         {
             return this.bdecodeMap();
-        }
-        else
+        } else
         {
-            throw new InvalidBEncodingException("Unknown indicator '" + this.indicator + "'");
+            throw new InvalidBEncodingException(String.format("Unknown indicator '%d'", this.indicator));
         }
     }
 
     /**
-     * Returns the next b-encoded value on the stream and makes sure it is a
-     * byte array.
+     * Returns the next b-encoded value on the stream and makes sure it is a byte array.
      *
-     * @return
-     *         <p>
+     * @return <p>
      * @throws InvalidBEncodingException If it is not a b-encoded byte array.
      */
     public BEValue bdecodeBytes() throws IOException
@@ -185,8 +174,7 @@ public class BDecoder
         int num = c - '0';
         if (num < 0 || num > 9)
         {
-            throw new InvalidBEncodingException("Number expected, not '"
-                + (char) c + "'");
+            throw new InvalidBEncodingException(String.format("Number expected, not '%c'", (char) c));
         }
         this.indicator = 0;
 
@@ -202,19 +190,16 @@ public class BDecoder
 
         if (c != ':')
         {
-            throw new InvalidBEncodingException("Colon expected, not '"
-                + (char) c + "'");
+            throw new InvalidBEncodingException(String.format("Colon expected, not '%c'", (char) c));
         }
 
         return new BEValue(read(num));
     }
 
     /**
-     * Returns the next b-encoded value on the stream and makes sure it is a
-     * number.
+     * Returns the next b-encoded value on the stream and makes sure it is a number.
      *
-     * @return
-     *         <p>
+     * @return <p>
      * @throws InvalidBEncodingException If it is not a number.
      */
     public BEValue bdecodeNumber() throws IOException
@@ -223,7 +208,7 @@ public class BDecoder
         if (c != 'i')
         {
             throw new InvalidBEncodingException("Expected 'i', not '"
-                + (char) c + "'");
+                                                + (char) c + "'");
         }
         this.indicator = 0;
 
@@ -234,11 +219,10 @@ public class BDecoder
             if (c == 'e')
             {
                 return new BEValue(BigInteger.ZERO);
-            }
-            else
+            } else
             {
                 throw new InvalidBEncodingException("'e' expected after zero,"
-                    + " not '" + (char) c + "'");
+                                                    + " not '" + (char) c + "'");
             }
         }
 
@@ -260,7 +244,7 @@ public class BDecoder
         if (c < '1' || c > '9')
         {
             throw new InvalidBEncodingException("Invalid Integer start '"
-                + (char) c + "'");
+                                                + (char) c + "'");
         }
         chars[off] = (char) c;
         off++;
@@ -285,11 +269,9 @@ public class BDecoder
     }
 
     /**
-     * Returns the next b-encoded value on the stream and makes sure it is a
-     * list.
+     * Returns the next b-encoded value on the stream and makes sure it is a list.
      *
-     * @return
-     *         <p>
+     * @return <p>
      * @throws InvalidBEncodingException If it is not a list.
      */
     public BEValue bdecodeList() throws IOException
@@ -298,7 +280,7 @@ public class BDecoder
         if (c != 'l')
         {
             throw new InvalidBEncodingException("Expected 'l', not '"
-                + (char) c + "'");
+                                                + (char) c + "'");
         }
         this.indicator = 0;
 
@@ -315,11 +297,9 @@ public class BDecoder
     }
 
     /**
-     * Returns the next b-encoded value on the stream and makes sure it is a
-     * map (dictionary).
+     * Returns the next b-encoded value on the stream and makes sure it is a map (dictionary).
      *
-     * @return
-     *         <p>
+     * @return <p>
      * @throws InvalidBEncodingException If it is not a map.
      */
     public BEValue bdecodeMap() throws IOException
@@ -328,7 +308,7 @@ public class BDecoder
         if (c != 'd')
         {
             throw new InvalidBEncodingException("Expected 'd', not '"
-                + (char) c + "'");
+                                                + (char) c + "'");
         }
         this.indicator = 0;
 
@@ -367,10 +347,10 @@ public class BDecoder
     /**
      * Returns a byte[] containing length valid bytes starting at offset zero.
      *
-     * @throws EOFException If InputStream.read() returned -1 before all
-     *                      requested bytes could be read. Note that the byte[] returned might be
-     *                      bigger then requested but will only contain length valid bytes. The
-     *                      returned byte[] will be reused when this method is called again.
+     * @throws EOFException If InputStream.read() returned -1 before all requested bytes could be
+     *                      read. Note that the byte[] returned might be bigger then requested but
+     *                      will only contain length valid bytes. The returned byte[] will be reused
+     *                      when this method is called again.
      */
     private byte[] read(int length) throws IOException
     {
