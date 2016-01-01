@@ -9,7 +9,7 @@ import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**
- * This is servlet initializer class replace for web.xml file.
+ * This is Servlet initializer class replace for web.xml file.
  *
  * @author Rugal Bernstein
  * @since 0.6

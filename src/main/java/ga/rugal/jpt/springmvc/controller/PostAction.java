@@ -99,9 +99,9 @@ public class PostAction
     }
 
     /**
-     * DELETE a post record from database.
+     * DELETE a post record and its corresponding threads from database.
      *
-     * @param id the target post uid.
+     * @param id the target post id.
      *
      * @return
      */
@@ -114,12 +114,16 @@ public class PostAction
         if (null != bean)
         {
             postService.deleteById(id);
+            threadService.getByPID(bean).stream().forEach((t) ->
+                    {
+                        threadService.deleteById(t.getTid());
+                    });
+            LOG.info(String.format(CommonLogContent.POST_DELETE, bean.getPid()));
             message = Message.successMessage(CommonMessageContent.DELETE_POST, bean);
         } else
         {
             message = Message.failMessage(CommonMessageContent.POST_NOT_FOUND);
         }
-        //TODO We also need to delete related threads
         return message;
     }
 
@@ -253,8 +257,11 @@ public class PostAction
             origin.put("announce", value);
 
             data = BEncoder.bencode(origin).array();
+            //content type is x-bittorrent
+            //through byte array message converter
             response.setContentType("application/x-bittorrent");
             response.setContentLength(data.length);
+            //for browser downloading behavior
             response.setHeader("Content-Disposition",
                                String.format("fragment; filename=\"%s.torrent\"",
                                              post.getInfoHash()));

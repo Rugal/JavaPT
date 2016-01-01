@@ -4,6 +4,7 @@ import ga.rugal.jpt.core.dao.ThreadDao;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.service.ThreadService;
+import java.util.List;
 import ml.rugal.sshcommon.hibernate.Updater;
 import ml.rugal.sshcommon.page.Pagination;
 import org.slf4j.Logger;
@@ -32,6 +33,13 @@ public class ThreadServiceImpl implements ThreadService
     )
     {
         return dao.getPage(post, pageNo, pageSize);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Thread> getByPID(Post post)
+    {
+        return dao.getByPID(post);
     }
 
     @Override

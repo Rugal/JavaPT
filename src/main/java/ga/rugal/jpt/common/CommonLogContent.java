@@ -99,4 +99,7 @@ public interface CommonLogContent
     final String ERROR_WRITE_TAG = "I/O exception occurs when writing icon";
 
     final String IMAGE_LENGTH = "Length of byte array is {}";
+
+    //Post
+    final String POST_DELETE = "Post [%s] and its attached threads have been deleted";
 }
