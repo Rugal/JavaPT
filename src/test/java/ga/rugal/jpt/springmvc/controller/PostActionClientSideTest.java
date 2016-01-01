@@ -2,9 +2,12 @@ package ga.rugal.jpt.springmvc.controller;
 
 import config.SystemDefaultProperties;
 import ga.rugal.ControllerClientSideTestBase;
+import ga.rugal.jpt.common.tracker.common.Torrent;
+import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.entity.UserLevel;
+import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.UserLevelService;
 import ga.rugal.jpt.core.service.UserService;
 import java.io.File;
@@ -37,6 +40,9 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     private File testTorrentFile;
 
     @Autowired
+    private TrackedTorrent torrent;
+
+    @Autowired
     private Post post;
 
     @Autowired
@@ -50,6 +56,9 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PostService postService;
 
     public PostActionClientSideTest()
     {
@@ -160,4 +169,44 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
         Assert.assertEquals(Message.SUCCESS, message.getStatus());
     }
 
+    @Test
+    public void testDownloadMetainfo() throws Exception
+    {
+        System.out.println("downloadMetainfo");
+        Assert.assertNotNull(post.getPid());
+        post.setBencode(torrent.getEncoded());
+        postService.update(post);
+        MvcResult result = this.mockMvc.perform(get("/post/" + post.getPid() + "/metainfo")
+                .header(SystemDefaultProperties.ID, user.getUid())
+                .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+                .accept(new String[]
+                {
+                    "application/x-bittorrent", MediaType.APPLICATION_JSON_VALUE
+        }))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Torrent temp = TrackedTorrent.load(result.getResponse().getContentAsByteArray());
+        Assert.assertEquals(torrent.getDecodedInfo().get("name").getString(),
+                            temp.getDecodedInfo().get("name").getString());
+    }
+
+    @Test
+    public void testMissDownloadMetainfo() throws Exception
+    {
+        System.out.println("downloadMetainfo");
+        MvcResult result = this.mockMvc.perform(get("/post/0/metainfo")
+                .header(SystemDefaultProperties.ID, user.getUid())
+                .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+                .accept(new String[]
+                {
+                    "application/x-bittorrent", MediaType.APPLICATION_JSON_VALUE
+        }))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+        Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
+        Assert.assertEquals(Message.FAIL, message.getStatus());
+    }
 }

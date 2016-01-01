@@ -379,6 +379,11 @@ public class Torrent
         return filenames;
     }
 
+    public Map<String, BEValue> getDecoded()
+    {
+        return decoded;
+    }
+
     /**
      * Tells whether this torrent is multi-file or not.
      * <p>

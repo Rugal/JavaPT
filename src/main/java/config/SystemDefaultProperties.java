@@ -56,4 +56,6 @@ public interface SystemDefaultProperties
 
     final String ANNOUNCE_TEMPLATE = "http://localhost:8080/announce?uid=%s&credential=%s";
 
+    final String UID = "uid";
+
 }

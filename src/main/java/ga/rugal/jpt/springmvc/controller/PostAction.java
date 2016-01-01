@@ -3,6 +3,9 @@ package ga.rugal.jpt.springmvc.controller;
 import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
+import ga.rugal.jpt.common.tracker.bcodec.BDecoder;
+import ga.rugal.jpt.common.tracker.bcodec.BEValue;
+import ga.rugal.jpt.common.tracker.bcodec.BEncoder;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.core.entity.Post;
@@ -10,13 +13,18 @@ import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.ThreadService;
 import ga.rugal.jpt.core.service.UserService;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import ml.rugal.sshcommon.page.Pagination;
 import ml.rugal.sshcommon.springmvc.util.Message;
+import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -207,6 +215,66 @@ public class PostAction
         LOG.info(CommonLogContent.TORRENT_UPLOADED, post.getPid(),
                  request.getParameter(SystemDefaultProperties.ID));
         return Message.successMessage(CommonMessageContent.TORRENT_UPLOADED, null);
+    }
+
+    /**
+     * Get an BitTorrent file that includes meta-info of a torrent.
+     *
+     * @param pid      the post that this torrent file will be attached with.
+     * @param request
+     * @param response
+     *
+     * @return The BitTorrent file byte array
+     */
+    @ResponseBody
+    @RequestMapping(value = "/{pid}/metainfo", method = RequestMethod.GET)
+    public Object downloadMetainfo(@PathVariable("pid") Integer pid,
+                                   HttpServletRequest request,
+                                   HttpServletResponse response)
+    {
+        //check metainfo
+        Post post = postService.getByID(pid);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        if (null == post)
+        {
+            return Message.failMessage(CommonMessageContent.POST_NOT_FOUND);
+        }
+        if (null == post.getBencode())
+        {
+            return Message.failMessage(CommonMessageContent.TORRENT_NOT_EXISTS);
+        }
+        //announce URL conversion
+        byte[] data;
+        try
+        {
+            Map<String, BEValue> origin = BDecoder.bdecode(new ByteArrayInputStream(post.getBencode())).getMap();
+
+            BEValue value = new BEValue(this.wrapAnnounceURL(post, request));
+            origin.put("announce", value);
+
+            data = BEncoder.bencode(origin).array();
+            response.setContentType("application/x-bittorrent");
+            response.setContentLength(data.length);
+            response.setHeader("Content-Disposition",
+                               String.format("fragment; filename=\"%s.torrent\"",
+                                             post.getInfoHash()));
+        }
+        catch (IOException ex)
+        {
+            return Message.failMessage(CommonMessageContent.ERROR_READ_TORRENT);
+        }
+        //send byte array
+        return data;
+    }
+
+    private String wrapAnnounceURL(Post post, HttpServletRequest request)
+    {
+        String text = request.getParameter(SystemDefaultProperties.ID) + post.getPid();
+        String crypted = BCrypt.hashpw(text, BCrypt.gensalt());
+        String url = String.format(SystemDefaultProperties.ANNOUNCE_TEMPLATE,
+                                   request.getParameter(SystemDefaultProperties.ID),
+                                   crypted);
+        return url;
     }
 
     /**

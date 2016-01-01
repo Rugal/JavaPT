@@ -89,6 +89,8 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
         supportedMediaTypes.add(MediaType.IMAGE_GIF);
         supportedMediaTypes.add(MediaType.IMAGE_JPEG);
         supportedMediaTypes.add(MediaType.IMAGE_PNG);
+        supportedMediaTypes.add(MediaType.valueOf("application/x-bittorrent"));
+//        supportedMediaTypes.add(MediaType.ALL);
         messageConverter.setSupportedMediaTypes(supportedMediaTypes);
         return messageConverter;
     }

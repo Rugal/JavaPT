@@ -53,6 +53,8 @@ public interface CommonMessageContent
 
     final String TORRENT_EXISTS = "Please re-post new one as bencode already exists";
 
+    final String TORRENT_NOT_EXISTS = "Torrent file not exists";
+
     final String TORRENT_UPLOADED = "Torrent file uploaded";
 
     //Signin

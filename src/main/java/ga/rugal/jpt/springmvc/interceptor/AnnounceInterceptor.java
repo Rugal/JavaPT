@@ -55,8 +55,6 @@ public class AnnounceInterceptor implements HandlerInterceptor
     @Autowired
     private TrackerResponseService trackerResponseService;
 
-    private static final String UID = "uid";
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
     {
@@ -88,8 +86,7 @@ public class AnnounceInterceptor implements HandlerInterceptor
      * I decided to use torrent information in "post" table as the primary storage. Because any post
      * must have its related torrent file.
      * <p>
-     * @param request
-     *                <p>
+     * @param request <p>
      * @throws TrackerResponseException
      */
     private void credentialValidation(HttpServletRequest request) throws TrackerResponseException
@@ -108,14 +105,14 @@ public class AnnounceInterceptor implements HandlerInterceptor
         {
             throw new TrackerResponseException(CommonMessageContent.TORRENT_NOT_FOUND);
         }
-        String candidate = request.getParameter(UID) + post.getPid();
+        String candidate = request.getParameter(SystemDefaultProperties.UID) + post.getPid();
         if (!BCrypt.checkpw(candidate, credential))
         {
             //be sure our real credential must be:
             //uid:pid-> BCrypt
             LOG.warn(MessageFormat.format(CommonLogContent.FRAUD_REQUEST,
                                           request.getRemoteAddr(),
-                                          request.getParameter(UID),
+                                          request.getParameter(SystemDefaultProperties.UID),
                                           infoHash));
             throw new TrackerResponseException(CommonMessageContent.INVALID_CREDENTIAL);
         }
@@ -125,7 +122,7 @@ public class AnnounceInterceptor implements HandlerInterceptor
     private User userValidation(HttpServletRequest request) throws TrackerResponseException
     {
         //User validation begin
-        String uidString = request.getParameter(UID);
+        String uidString = request.getParameter(SystemDefaultProperties.UID);
         if (null == uidString || uidString.isEmpty())
         {
             LOG.debug(CommonLogContent.INVALID_UID, request.getRemoteAddr());
@@ -153,8 +150,8 @@ public class AnnounceInterceptor implements HandlerInterceptor
 
     /**
      * This method is just for generating a response with forbidden content.<BR>
-     * May throw IOException inside because unable to get response body writer,
-     * but this version will shelter it.
+     * May throw IOException inside because unable to get response body writer, but this version
+     * will shelter it.
      *
      *
      * @param response The response corresponding to the request.

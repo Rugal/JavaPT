@@ -38,7 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class TagAction
 {
 
-    private static final File iconFolder = new File(SystemDefaultProperties.ICON_PATH);
+    private static final File ICON_FOLDER = new File(SystemDefaultProperties.ICON_PATH);
 
     private static final Logger LOG = LoggerFactory.getLogger(TagAction.class.getName());
 
@@ -93,7 +93,7 @@ public class TagAction
     {
         String ext = filename.substring(filename.lastIndexOf(".") + 1);
         String randomName = String.format("%s.%s", RandomStringUtils.randomAlphanumeric(6), ext);
-        return new File(iconFolder, randomName);
+        return new File(ICON_FOLDER, randomName);
     }
 
     /**
@@ -194,7 +194,7 @@ public class TagAction
      */
     private void deleteFile(String filename)
     {
-        File file = new File(iconFolder, filename);
+        File file = new File(ICON_FOLDER, filename);
         if (file.exists())
         {
             file.delete();
@@ -217,8 +217,7 @@ public class TagAction
         if (null == bean)
         {
             message = Message.failMessage(CommonMessageContent.TAG_NOT_FOUND);
-        }
-        else
+        } else
         {
             message = Message.successMessage(CommonMessageContent.GET_TAG, bean);
         }
@@ -240,16 +239,15 @@ public class TagAction
     public Object getTagIcon(@PathVariable("id") Integer id, HttpServletResponse response)
     {
         Tag bean = tagService.getByID(id);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         if (null == bean)
         {
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             return Message.failMessage(CommonMessageContent.TAG_NOT_FOUND);
         }
-        File iconFile = new File(iconFolder, bean.getIcon());
+        File iconFile = new File(ICON_FOLDER, bean.getIcon());
         if (!iconFile.exists())
         {
             LOG.error(CommonLogContent.TAG_ICON_NOT_FOUND);
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             return Message.failMessage(CommonMessageContent.TAG_ICON_NOT_FOUND);
         }
         byte[] data;
@@ -287,8 +285,7 @@ public class TagAction
         if (null == list || list.isEmpty())
         {
             message = Message.failMessage(CommonMessageContent.TAG_NOT_FOUND);
-        }
-        else
+        } else
         {
             message = Message.successMessage(CommonMessageContent.GET_TAG, list);
         }
