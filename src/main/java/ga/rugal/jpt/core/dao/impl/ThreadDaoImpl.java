@@ -51,6 +51,7 @@ public class ThreadDaoImpl extends HibernateBaseDao<Thread, Integer> implements 
     @Override
     public Thread save(Thread bean)
     {
+        bean.setPostTime(System.currentTimeMillis());
         getSession().save(bean);
         return bean;
     }

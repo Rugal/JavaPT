@@ -50,12 +50,14 @@ public interface SystemDefaultProperties
 
     final String DEFAULT_PAGE_NUMBER = "1";
 
-    final String DEFAULT_PAGE_SIZE = "1";
+    final String DEFAULT_PAGE_SIZE = "5";
 
     final String ICON_PATH = "icon";
 
     final String ANNOUNCE_TEMPLATE = "http://localhost:8080/announce?uid=%s&credential=%s";
 
     final String UID = "uid";
+
+    final String BITTORRENT_MIME = "application/x-bittorrent";
 
 }

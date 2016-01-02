@@ -49,6 +49,7 @@ public class PostDaoImpl extends HibernateBaseDao<Post, Integer> implements Post
     @Override
     public Post save(Post bean)
     {
+        bean.setPostTime(System.currentTimeMillis());
         getSession().save(bean);
         return bean;
     }

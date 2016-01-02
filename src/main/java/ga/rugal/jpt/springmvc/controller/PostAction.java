@@ -55,6 +55,33 @@ public class PostAction
     private ThreadService threadService;
 
     /**
+     * GET a post from database.
+     *
+     * @param pageNo
+     * @param pid      primary key of target post.
+     * @param pageSize
+     *
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET)
+    public Message getPostByPage(@RequestParam(name = "pageNo", required = true,
+                                               defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
+                                 @RequestParam(name = "pageSize", required = true,
+                                               defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize)
+    {
+        //TODO ignore content of each post so as to reduce data transportation
+        Pagination page = postService.getPage(pageNo, pageSize);
+        if (page.getTotalCount() > 0)
+        {
+            return Message.successMessage(CommonMessageContent.GET_POST, page);
+        } else
+        {
+            return Message.failMessage(CommonMessageContent.POST_NOT_FOUND);
+        }
+    }
+
+    /**
      * Persist a post bean into database.
      *
      * @param bean    post bean resembled from request body.
@@ -75,20 +102,21 @@ public class PostAction
     /**
      * Update a post bean.
      *
-     * @param id   primary key of target post.
+     * @param pid  primary key of target post.
      * @param bean the newer version of post bean
      *
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public Message updatePost(@PathVariable("id") Integer id, @RequestBody Post bean)
+    @RequestMapping(value = "/{pid}", method = RequestMethod.PUT)
+    public Message updatePost(@PathVariable("pid") Integer pid, @RequestBody Post bean)
     {
-        Post dbPost = postService.getByID(id);
+        //TODO only author and administrators have permission to update
+        Post dbPost = postService.getByID(pid);
         Message message;
         if (null != dbPost)
         {
-            bean.setPid(id);
+            bean.setPid(pid);
             postService.update(bean);
             message = Message.successMessage(CommonMessageContent.UPDATE_POST, bean);
         } else
@@ -101,19 +129,20 @@ public class PostAction
     /**
      * DELETE a post record and its corresponding threads from database.
      *
-     * @param id the target post id.
+     * @param pid the target post id.
      *
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public Message deletePost(@PathVariable("id") Integer id)
+    @RequestMapping(value = "/{pid}", method = RequestMethod.DELETE)
+    public Message deletePost(@PathVariable("pid") Integer pid)
     {
-        Post bean = postService.getByID(id);
+        //TODO only author and administrators have permission to delete
+        Post bean = postService.getByID(pid);
         Message message;
         if (null != bean)
         {
-            postService.deleteById(id);
+            postService.deleteById(pid);
             threadService.getByPID(bean).stream().forEach((t) ->
                     {
                         threadService.deleteById(t.getTid());
@@ -130,15 +159,15 @@ public class PostAction
     /**
      * GET a post from database.
      *
-     * @param id primary key of target post.
+     * @param pid primary key of target post.
      *
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Message getPost(@PathVariable("id") Integer id)
+    @RequestMapping(value = "/{pid}", method = RequestMethod.GET)
+    public Message getPost(@PathVariable("pid") Integer pid)
     {
-        Post bean = postService.getByID(id);
+        Post bean = postService.getByID(pid);
         Message message;
         if (null != bean)
         {
@@ -202,6 +231,7 @@ public class PostAction
         {
             return Message.failMessage(CommonMessageContent.TORRENT_EXISTS);
         }
+        //TODO check if current user is the author of this post
         //file content verification
         try
         {
@@ -247,6 +277,7 @@ public class PostAction
         {
             return Message.failMessage(CommonMessageContent.TORRENT_NOT_EXISTS);
         }
+        //TODO user minimum level check
         //announce URL conversion
         byte[] data;
         try
@@ -259,11 +290,11 @@ public class PostAction
             data = BEncoder.bencode(origin).array();
             //content type is x-bittorrent
             //through byte array message converter
-            response.setContentType("application/x-bittorrent");
+            response.setContentType(SystemDefaultProperties.BITTORRENT_MIME);
             response.setContentLength(data.length);
             //for browser downloading behavior
             response.setHeader("Content-Disposition",
-                               String.format("fragment; filename=\"%s.torrent\"",
+                               String.format("attachment; filename=%s.torrent;",
                                              post.getInfoHash()));
         }
         catch (IOException ex)
@@ -298,8 +329,10 @@ public class PostAction
     @ResponseBody
     @RequestMapping(value = "/{pid}/thread", method = RequestMethod.GET)
     public Message getThreadByPost(@PathVariable("pid") Integer pid,
-                                   @RequestParam(name = "pageNo", required = true, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
-                                   @RequestParam(name = "pageSize", required = true, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize)
+                                   @RequestParam(name = "pageNo", required = true,
+                                                 defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
+                                   @RequestParam(name = "pageSize", required = true,
+                                                 defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize)
     {
         Post post = postService.getByID(pid);
         Pagination page = threadService.getPage(post, pageNo, pageSize);
@@ -310,7 +343,6 @@ public class PostAction
         {
             return Message.failMessage(CommonMessageContent.THREADS_NOT_FOUND);
         }
-
     }
 
 }
