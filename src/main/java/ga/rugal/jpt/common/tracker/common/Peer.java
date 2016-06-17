@@ -23,8 +23,8 @@ import java.nio.ByteBuffer;
  * A basic BitTorrent peer.
  *
  * <p>
- * This class is meant to be a common base for the tracker and client, which
- * would presumably subclass it to extend its functionality and fields.
+ * This class is meant to be a common base for the tracker and client, which would presumably
+ * subclass it to extend its functionality and fields.
  * </p>
  *
  * @author mpetazzoni
@@ -119,8 +119,7 @@ public class Peer
         {
             this.peerId = peerId;
             this.hexPeerId = Torrent.byteArrayToHexString(peerId.array());
-        }
-        else
+        } else
         {
             this.peerId = null;
             this.hexPeerId = null;
@@ -218,8 +217,7 @@ public class Peer
         if (this.hasPeerId())
         {
             s.append(this.hexPeerId.substring(this.hexPeerId.length() - 6));
-        }
-        else
+        } else
         {
             s.append("?");
         }
@@ -233,8 +231,8 @@ public class Peer
     }
 
     /**
-     * Tells if two peers seem to look alike (i.e. they have the same IP, port
-     * and peer ID if they have one).
+     * Tells if two peers seem to look alike (i.e. they have the same IP, port and peer ID if they
+     * have one).
      *
      * @param other
      *
@@ -248,8 +246,8 @@ public class Peer
         }
 
         return this.hostId.equals(other.hostId)
-            && (this.hasPeerId()
-                ? this.hexPeerId.equals(other.hexPeerId)
-                : true);
+               && (this.hasPeerId()
+                   ? this.hexPeerId.equals(other.hexPeerId)
+                   : true);
     }
 }

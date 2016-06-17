@@ -1,8 +1,8 @@
 package ga.rugal.jpt.springmvc.controller;
 
+import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
-import config.SystemDefaultProperties;
 import ga.rugal.jpt.core.entity.Admin;
 import ga.rugal.jpt.core.service.Tracker;
 import ga.rugal.jpt.springmvc.annotation.Role;
@@ -38,8 +38,7 @@ public class TrackerAction
     /**
      * Start tracker service only by a super administrator.
      *
-     * @param request
-     *                <p>
+     * @param request <p>
      * @return
      *
      */
@@ -51,8 +50,7 @@ public class TrackerAction
         if (tracker.isRunning())
         {
             message = Message.failMessage(CommonMessageContent.TRACKER_RUNNING);
-        }
-        else
+        } else
         {
             try
             {
@@ -74,8 +72,7 @@ public class TrackerAction
      * Stop the tracker server if possible.
      *
      *
-     * @param request
-     *                <p>
+     * @param request <p>
      * @return
      */
     @ResponseBody
@@ -86,8 +83,7 @@ public class TrackerAction
         if (!tracker.isRunning())
         {
             message = Message.failMessage(CommonMessageContent.TRACKER_NOT_RUNNING);
-        }
-        else
+        } else
         {
             try
             {

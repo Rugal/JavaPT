@@ -3,9 +3,7 @@ package ga.rugal.jpt.core.service.impl;
 import ga.rugal.jpt.core.dao.TagDao;
 import ga.rugal.jpt.core.entity.Tag;
 import ga.rugal.jpt.core.service.TagService;
-import java.util.List;
 import ml.rugal.sshcommon.hibernate.Updater;
-import ml.rugal.sshcommon.page.Pagination;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,29 +25,9 @@ public class TagServiceImpl implements TagService
     private TagDao dao;
 
     @Override
-    @Transactional(readOnly = true)
-    public Pagination getPage(int pageNo, int pageSize)
+    public TagDao getDAO()
     {
-        return dao.getPage(pageNo, pageSize);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Tag getByID(Integer id)
-    {
-        return dao.getByID(id);
-    }
-
-    @Override
-    public Tag save(Tag bean)
-    {
-        return dao.save(bean);
-    }
-
-    @Override
-    public Tag deleteById(Integer id)
-    {
-        return dao.deleteById(id);
+        return this.dao;
     }
 
     @Override
@@ -58,12 +36,4 @@ public class TagServiceImpl implements TagService
         Updater<Tag> updater = new Updater<>(bean);
         return dao.updateByUpdater(updater);
     }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Tag> findByName(String partialName)
-    {
-        return dao.findByName(partialName);
-    }
-
 }

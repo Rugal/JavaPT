@@ -49,7 +49,7 @@ public class AdminAction
     @RequestMapping(method = RequestMethod.POST)
     public Message grant(@RequestParam("grantee") Integer uid, @RequestParam("role") String role, HttpServletRequest request)
     {
-        User grantee = userService.getByID(uid);
+        User grantee = userService.getDAO().getByID(uid);
         if (null == grantee)
         {
             return Message.failMessage(CommonMessageContent.GRANTEE_NOT_FOUND);
@@ -67,12 +67,12 @@ public class AdminAction
         }
         //Get granter information
         String granterID = request.getHeader(SystemDefaultProperties.ID);
-        User granter = userService.getByID(Integer.parseInt(granterID));
+        User granter = userService.getDAO().getByID(Integer.parseInt(granterID));
         Admin admin = new Admin();
         admin.setGranter(granter);
         admin.setLevel(level);
         admin.setUser(grantee);
-        adminService.save(admin);
+        adminService.getDAO().save(admin);
         return Message.successMessage(CommonMessageContent.GRANT_DONE, admin);
     }
 
@@ -86,16 +86,16 @@ public class AdminAction
      */
     @ResponseBody
     @RequestMapping(value = "/{aid}", method = RequestMethod.DELETE)
-    public Message grant(@PathVariable("aid") Integer aid, HttpServletRequest request)
+    public Message revoke(@PathVariable("aid") Integer aid, HttpServletRequest request)
     {
-        Admin admin = adminService.getByID(aid);
+        Admin admin = adminService.getDAO().getByID(aid);
         if (null == admin)
         {
             return Message.failMessage(CommonMessageContent.ADMIN_NOT_FOUND);
         }
         //TODO time to check if the granter is eligible to revoke the admin
 
-        adminService.deleteById(admin.getAid());
+        adminService.getDAO().deleteById(admin.getAid());
         return Message.successMessage(CommonMessageContent.REVOKE_DONE, admin);
     }
 }

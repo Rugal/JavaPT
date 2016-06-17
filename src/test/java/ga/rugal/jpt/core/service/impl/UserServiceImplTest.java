@@ -30,14 +30,14 @@ public class UserServiceImplTest extends DBTestBase
     public void setUp()
     {
         System.out.println("setUp");
-        userService.save(user);
+        userService.getDAO().save(user);
     }
 
     @After
     public void tearDown()
     {
         System.out.println("tearDown");
-        userService.deleteById(user.getUid());
+        userService.getDAO().deleteById(user.getUid());
     }
 
     @Test

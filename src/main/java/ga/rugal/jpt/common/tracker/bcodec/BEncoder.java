@@ -54,22 +54,34 @@ public class BEncoder
         if (o instanceof String)
         {
             bencode((String) o, out);
-        } else if (o instanceof byte[])
-        {
-            bencode((byte[]) o, out);
-        } else if (o instanceof Number)
-        {
-            bencode((Number) o, out);
-        } else if (o instanceof List)
-        {
-            bencode((List<BEValue>) o, out);
-        } else if (o instanceof Map)
-        {
-            bencode((Map<String, BEValue>) o, out);
         } else
         {
-            throw new IllegalArgumentException("Cannot bencode: "
-                                               + o.getClass());
+            if (o instanceof byte[])
+            {
+                bencode((byte[]) o, out);
+            } else
+            {
+                if (o instanceof Number)
+                {
+                    bencode((Number) o, out);
+                } else
+                {
+                    if (o instanceof List)
+                    {
+                        bencode((List<BEValue>) o, out);
+                    } else
+                    {
+                        if (o instanceof Map)
+                        {
+                            bencode((Map<String, BEValue>) o, out);
+                        } else
+                        {
+                            throw new IllegalArgumentException("Cannot bencode: "
+                                                               + o.getClass());
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -88,7 +100,7 @@ public class BEncoder
     }
 
     public static void bencode(List<BEValue> l, OutputStream out)
-            throws IOException
+        throws IOException
     {
         out.write('l');
         for (BEValue value : l)
@@ -123,7 +135,7 @@ public class BEncoder
     }
 
     public static ByteBuffer bencode(Map<String, BEValue> m)
-            throws IOException
+        throws IOException
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         BEncoder.bencode(m, baos);

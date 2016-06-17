@@ -1,11 +1,12 @@
 package ga.rugal.jpt.springmvc.controller;
 
-import ga.rugal.jpt.common.CommonLogContent;
+import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.CommonMessageContent;
-import ga.rugal.jpt.core.entity.Invitation;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.InvitationService;
 import ga.rugal.jpt.core.service.UserService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,54 +36,57 @@ public class UserAction
     @Autowired
     private InvitationService invitationService;
 
+    //Create new UID with invitation
+    //Register User with UID
+    //User Profile Operation
     /**
-     * Register a new user by invitation code.<BR>
-     * Usually, new user registration should go through this method.
+     * DELETE a user record from database.
      *
-     * @param bean       user bean resembled from request body.
-     * @param refereeUID The user who invite.
-     * @param code       The invitation code.
+     * @param id       the target user id.
+     * @param request
+     * @param response
      *
-     * @return The persisted user bean.
      */
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, params =
-                {
-                    "referee", "code"
-    })
-    public Message registerUser(@RequestBody User bean,
-                                @RequestParam(value = "referee", required = true) Integer refereeUID,
-                                @RequestParam(value = "code", required = true) Integer code)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public void deregisterUser(@PathVariable("id") Integer id, HttpServletRequest request, HttpServletResponse response)
     {
-        //Get invitation code from DB
-        Invitation invitation = invitationService.getByID(code);
-        User referee = invitation.getUser();
-        //verify ownership of invitation code
-        if (!referee.getUid().equals(refereeUID))
+        if (!request.getHeader(SystemDefaultProperties.ID).equals("" + id))
         {
-            return Message.failMessage(CommonMessageContent.INVALID_INVITATION);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
-        bean.setReferee(bean);
-        userService.save(bean);
-        LOG.info(CommonLogContent.USE_INVITATION_CODE, invitation.getIid(), bean.getUid());
-        invitationService.deleteById(invitation.getIid());
-        return Message.successMessage(CommonMessageContent.SAVE_USER, bean);
+        User bean = userService.getDAO().getByID(id);
+        if (null != bean)
+        {
+            userService.getDAO().deleteById(id);
+            bean.setStatus(User.Status.DELETING);
+        } else
+        {
+        }
     }
 
     /**
-     * This method will be used only in open registration, which means, no invitation code is
-     * required.
+     * GET a user record from database.
      *
-     * @param bean user bean resembled from request body.
+     * @param id primary key of target user.
      *
-     * @return The persisted user bean.
+     * @return
      */
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST)
-    public Message registerUser(@RequestBody User bean)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public Message getUserProfile(@PathVariable("id") Integer id)
     {
-        userService.save(bean);
-        return Message.successMessage(CommonMessageContent.SAVE_USER, bean);
+        User bean = userService.getDAO().getByID(id);
+        Message message;
+        if (null != bean)
+        {
+            message = Message.successMessage(CommonMessageContent.GET_USER, bean);
+        } else
+        {
+            message = Message.failMessage(CommonMessageContent.USER_NOT_FOUND);
+        }
+        return message;
     }
 
     /**
@@ -97,70 +101,21 @@ public class UserAction
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public Message updateUserProfile(@PathVariable("id") Integer id, @RequestBody User bean)
     {
-        User dbUser = userService.getByID(id);
+        User dbUser = userService.getDAO().getByID(id);
         Message message;
         if (null != dbUser)
         {
             bean.setUid(id);
             userService.update(bean);
             message = Message.successMessage(CommonMessageContent.UPDATE_USER, bean);
-        }
-        else
+        } else
         {
             message = Message.failMessage(CommonMessageContent.USER_NOT_FOUND);
         }
         return message;
     }
 
-    /**
-     * DELETE a user record from database.
-     *
-     * @param id the target user id.
-     *
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public Message deleteUser(@PathVariable("id") Integer id)
-    {
-        User bean = userService.getByID(id);
-        Message message;
-        if (null != bean)
-        {
-            userService.deleteById(id);
-            message = Message.successMessage(CommonMessageContent.UPDATE_USER, bean);
-        }
-        else
-        {
-            message = Message.failMessage(CommonMessageContent.USER_NOT_FOUND);
-        }
-        return message;
-    }
-
-    /**
-     * GET a user record from database.
-     *
-     * @param id primary key of target user.
-     *
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Message retrieveUserProfile(@PathVariable("id") Integer id)
-    {
-        User bean = userService.getByID(id);
-        Message message;
-        if (null != bean)
-        {
-            message = Message.successMessage(CommonMessageContent.GET_USER, bean);
-        }
-        else
-        {
-            message = Message.failMessage(CommonMessageContent.USER_NOT_FOUND);
-        }
-        return message;
-    }
-
+    //Search User
     /**
      * See if the given email is available for registration.
      *
@@ -173,11 +128,10 @@ public class UserAction
     public Message isEmailAvailable(@RequestParam(value = "email", required = true) String email)
     {
         Message message;
-        if (userService.isEmailAvailable(email))
+        if (userService.getDAO().isEmailAvailable(email))
         {
             message = Message.successMessage(CommonMessageContent.EMAIL_AVAILABLE, null);
-        }
-        else
+        } else
         {
             message = Message.failMessage(CommonMessageContent.EMAIL_UNAVAILABLE);
         }
@@ -196,11 +150,10 @@ public class UserAction
     public Message isUsernameAvailable(@RequestParam(value = "username", required = true) String username)
     {
         Message message;
-        if (userService.isUserNameAvailable(username))
+        if (userService.getDAO().isUserNameAvailable(username))
         {
             message = Message.successMessage(CommonMessageContent.USERNAME_AVAILABLE, null);
-        }
-        else
+        } else
         {
             message = Message.failMessage(CommonMessageContent.USERNAME_UNAVAILABLE);
         }

@@ -68,7 +68,7 @@ public class TagAction
         {
             String filename = this.saveFile(uploadedFile);
             bean.setIcon(filename);
-            tagService.save(bean);
+            tagService.getDAO().save(bean);
         }
         catch (IOException ex)
         {
@@ -139,7 +139,7 @@ public class TagAction
                              @RequestParam(value = "name", required = false) String name,
                              @RequestParam(value = "file", required = false) MultipartFile uploadedFile)
     {
-        Tag dbTag = tagService.getByID(id);
+        Tag dbTag = tagService.getDAO().getByID(id);
         if (null == dbTag)
         {
             return Message.failMessage(CommonMessageContent.TAG_NOT_FOUND);
@@ -177,13 +177,13 @@ public class TagAction
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public Message deleteTag(@PathVariable("id") Integer id)
     {
-        Tag bean = tagService.getByID(id);
+        Tag bean = tagService.getDAO().getByID(id);
         if (null == bean)
         {
             return Message.failMessage(CommonMessageContent.TAG_NOT_FOUND);
         }
         this.deleteFile(bean.getIcon());
-        tagService.deleteById(id);
+        tagService.getDAO().deleteById(id);
         return Message.successMessage(CommonMessageContent.DELETE_TAG, bean);
     }
 
@@ -212,7 +212,7 @@ public class TagAction
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Message getTagBean(@PathVariable("id") Integer id)
     {
-        Tag bean = tagService.getByID(id);
+        Tag bean = tagService.getDAO().getByID(id);
         Message message;
         if (null == bean)
         {
@@ -238,7 +238,7 @@ public class TagAction
     @RequestMapping(value = "/{id}/icon", method = RequestMethod.GET)
     public Object getTagIcon(@PathVariable("id") Integer id, HttpServletResponse response)
     {
-        Tag bean = tagService.getByID(id);
+        Tag bean = tagService.getDAO().getByID(id);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         if (null == bean)
         {
@@ -280,7 +280,7 @@ public class TagAction
     @RequestMapping(method = RequestMethod.GET)
     public Message findTagByName(@RequestParam(name = "name") String partialName)
     {
-        List<Tag> list = tagService.findByName(partialName);
+        List<Tag> list = tagService.getDAO().findByName(partialName);
         Message message;
         if (null == list || list.isEmpty())
         {

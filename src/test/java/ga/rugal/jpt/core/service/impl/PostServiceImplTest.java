@@ -52,10 +52,10 @@ public class PostServiceImplTest extends DBTestBase
     public void setUp()
     {
         System.out.println("setUp");
-        levelService.save(level);
-        userService.save(user);
+        levelService.getDAO().save(level);
+        userService.getDAO().save(user);
         post.setBencode(torrent.getEncoded());
-        postService.save(post);
+        postService.getDAO().save(post);
     }
 
     @After
@@ -64,16 +64,16 @@ public class PostServiceImplTest extends DBTestBase
         System.out.println("tearDown");
         //order is important
         post.setBencode(null);
-        postService.deleteById(post.getPid());
-        userService.deleteById(user.getUid());
-        levelService.deleteById(level.getLid());
+        postService.getDAO().deleteById(post.getPid());
+        userService.getDAO().deleteById(user.getUid());
+        levelService.getDAO().deleteById(level.getLid());
     }
 
     @Test
     public void testTorrentSave() throws IOException
     {
         System.out.println("Save with Torrent");
-        Post bean = postService.getByTorrent(post.getInfoHash());
+        Post bean = postService.getDAO().getByTorrent(post.getInfoHash());
         Torrent result = TrackedTorrent.load(bean.getBencode());
         Assert.assertEquals(result.getHexInfoHash(), post.getInfoHash());
     }

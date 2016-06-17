@@ -1,7 +1,7 @@
 package ga.rugal.jpt.springmvc.controller;
 
-import ga.rugal.ControllerClientSideTestBase;
 import config.SystemDefaultProperties;
+import ga.rugal.ControllerClientSideTestBase;
 import ga.rugal.jpt.core.entity.SigninLog;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.entity.UserLevel;
@@ -52,17 +52,17 @@ public class SigninActionClientSideTest extends ControllerClientSideTestBase
     public void setUp()
     {
         System.out.println("setUp");
-        levelService.save(level);
-        userService.save(user);
+        levelService.getDAO().save(level);
+        userService.getDAO().save(user);
     }
 
     @After
     public void tearDown()
     {
         System.out.println("tearDown");
-        signinLogService.deleteById(bean.getSlid());
-        userService.deleteById(user.getUid());
-        levelService.deleteById(level.getLid());
+        signinLogService.getDAO().deleteById(bean.getSlid());
+        userService.getDAO().deleteById(user.getUid());
+        levelService.getDAO().deleteById(level.getLid());
     }
 
     @Test

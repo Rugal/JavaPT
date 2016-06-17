@@ -100,7 +100,7 @@ public class AnnounceInterceptor implements HandlerInterceptor
         }
         String infoHash = requsetBeanService.toSHA1(readParameterFromURL(request.getQueryString(), AnnounceAction.INFO_HASH));
         LOG.trace(infoHash);
-        Post post = postService.getByTorrent(infoHash);
+        Post post = postService.getDAO().getByTorrent(infoHash);
         if (null == post)
         {
             throw new TrackerResponseException(CommonMessageContent.TORRENT_NOT_FOUND);
@@ -138,7 +138,7 @@ public class AnnounceInterceptor implements HandlerInterceptor
             LOG.debug(CommonLogContent.INVALID_UID, request.getRemoteAddr());
             throw new TrackerResponseException(CommonMessageContent.INVALID_UID);
         }
-        User user = userService.getByID(uid);
+        User user = userService.getDAO().getByID(uid);
         if (null == user)
         {
             LOG.debug(CommonLogContent.INVALID_UID, request.getRemoteAddr());

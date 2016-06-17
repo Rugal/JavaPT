@@ -13,13 +13,11 @@ public interface RequestBeanService
 {
 
     /**
-     * Extract tracker update information from client request message.
-     * Prepare this information bean for future tracker updating.
+     * Extract tracker update information from client request message. Prepare this information bean
+     * for future tracker updating.
      *
-     * @param bean
-     *             <p>
-     * @return
-     *         <p>
+     * @param bean <p>
+     * @return <p>
      * @throws TrackerResponseException
      */
     @Transactional(readOnly = true)

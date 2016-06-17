@@ -68,8 +68,8 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     public void setUp() throws Exception
     {
         System.out.println("setUp");
-        levelService.save(level);
-        userService.save(user);
+        levelService.getDAO().save(level);
+        userService.getDAO().save(user);
         MvcResult result = testSave();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
         post = post.backToObject(message.getData());
@@ -81,8 +81,8 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
         System.out.println("tearDown");
         //order is important
         testDelete();
-        userService.deleteById(user.getUid());
-        levelService.deleteById(level.getLid());
+        userService.getDAO().deleteById(user.getUid());
+        levelService.getDAO().deleteById(level.getLid());
     }
 
     @Test
@@ -95,21 +95,21 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     private MvcResult testSave() throws Exception
     {
         return this.mockMvc.perform(post("/post").content(GSON.toJson(post))
-                .header(SystemDefaultProperties.ID, user.getUid())
-                .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
     }
 
     private void testDelete() throws Exception
     {
         this.mockMvc.perform(delete("/post/" + post.getPid())
-                .header(SystemDefaultProperties.ID, user.getUid())
-                .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
     }
 
     @Test
@@ -119,13 +119,13 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
         Assert.assertNotNull(post.getPid());
         post.setEnabled(!post.getEnabled());
         MvcResult result = this.mockMvc.perform(put("/post/" + post.getPid())
-                .header(SystemDefaultProperties.ID, user.getUid())
-                .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-                .content(GSON.toJson(post))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk()).andReturn();
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .content(GSON.toJson(post))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk()).andReturn();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
         Post beanUpdated = post.backToObject(message.getData());
         Assert.assertEquals(beanUpdated.getEnabled(), post.getEnabled());
@@ -136,13 +136,13 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     {
         System.out.println("getPost");
         MvcResult result = this.mockMvc.perform(get("/post/" + post.getPid())
-                .header(SystemDefaultProperties.ID, user.getUid())
-                .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
         //special case for this unit test
         post = post.backToObject(message.getData());
@@ -158,13 +158,13 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
         MockMultipartFile mmf = new MockMultipartFile("file", testTorrentFile.getName(),
                                                       "multipart/form-data", new FileInputStream(testTorrentFile));
         MvcResult result = this.mockMvc.perform(fileUpload("/post/" + post.getPid() + "/metainfo")
-                .file(mmf)
-                .header(SystemDefaultProperties.ID, user.getUid())
-                .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
+            .file(mmf)
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
         Assert.assertEquals(Message.SUCCESS, message.getStatus());
     }
@@ -177,15 +177,15 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
         post.setBencode(torrent.getEncoded());
         postService.update(post);
         MvcResult result = this.mockMvc.perform(get("/post/" + post.getPid() + "/metainfo")
-                .header(SystemDefaultProperties.ID, user.getUid())
-                .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-                .accept(new String[]
-                {
-                    "application/x-bittorrent", MediaType.APPLICATION_JSON_VALUE
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .accept(new String[]
+            {
+                "application/x-bittorrent", MediaType.APPLICATION_JSON_VALUE
         }))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
 
         Torrent temp = TrackedTorrent.load(result.getResponse().getContentAsByteArray());
         Assert.assertEquals(torrent.getDecodedInfo().get("name").getString(),
@@ -197,15 +197,15 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     {
         System.out.println("downloadMetainfo");
         MvcResult result = this.mockMvc.perform(get("/post/0/metainfo")
-                .header(SystemDefaultProperties.ID, user.getUid())
-                .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-                .accept(new String[]
-                {
-                    "application/x-bittorrent", MediaType.APPLICATION_JSON_VALUE
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .accept(new String[]
+            {
+                "application/x-bittorrent", MediaType.APPLICATION_JSON_VALUE
         }))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
         Assert.assertEquals(Message.FAIL, message.getStatus());
     }

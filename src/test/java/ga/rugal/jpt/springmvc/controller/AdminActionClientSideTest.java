@@ -56,8 +56,8 @@ public class AdminActionClientSideTest extends ControllerClientSideTestBase
     {
         System.out.println("setUp");
         grantee = grantee();
-        userService.save(granter);
-        userService.save(grantee);
+        userService.getDAO().save(granter);
+        userService.getDAO().save(grantee);
         MvcResult result = testGrant();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
         admin = new Admin().backToObject(message.getData());
@@ -68,31 +68,31 @@ public class AdminActionClientSideTest extends ControllerClientSideTestBase
     {
         System.out.println("tearDown");
         testRevoke();
-        userService.deleteById(grantee.getUid());
-        userService.deleteById(granter.getUid());
+        userService.getDAO().deleteById(grantee.getUid());
+        userService.getDAO().deleteById(granter.getUid());
     }
 
     private MvcResult testGrant() throws Exception
     {
         return this.mockMvc.perform(post("/admin")
-                .param("grantee", "" + grantee.getUid())
-                .param("role", Admin.Level.INSPECTOR.name())
-                .header(SystemDefaultProperties.ID, granter.getUid())
-                .header(SystemDefaultProperties.CREDENTIAL, granter.getPassword())
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk()).andReturn();
+            .param("grantee", "" + grantee.getUid())
+            .param("role", Admin.Level.INSPECTOR.name())
+            .header(SystemDefaultProperties.ID, granter.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, granter.getPassword())
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk()).andReturn();
     }
 
     private void testRevoke() throws Exception
     {
         this.mockMvc.perform(delete("/admin/" + admin.getAid())
-                .header(SystemDefaultProperties.ID, granter.getUid())
-                .header(SystemDefaultProperties.CREDENTIAL, granter.getPassword())
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
+            .header(SystemDefaultProperties.ID, granter.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, granter.getPassword())
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk());
     }
 
     @Test

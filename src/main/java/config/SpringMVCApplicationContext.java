@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
@@ -70,16 +71,15 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer)
     {
         configurer.favorPathExtension(false).favorParameter(false);
-        configurer.defaultContentType(MediaType.APPLICATION_JSON);
-        configurer.mediaType("json", MediaType.APPLICATION_JSON);
+        configurer.defaultContentType(MediaType.TEXT_PLAIN);
     }
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters)
     {
+        converters.add(new StringHttpMessageConverter());
         converters.add(gsonHttpMessageConverter());
         converters.add(byteArrayHttpMessageConverter());
-
     }
 
     private HttpMessageConverter byteArrayHttpMessageConverter()

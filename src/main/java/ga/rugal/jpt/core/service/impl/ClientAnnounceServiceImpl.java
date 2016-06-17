@@ -69,7 +69,7 @@ public class ClientAnnounceServiceImpl implements ClientAnnounceService
         clientAnnounce.setAnnounceTime(System.currentTimeMillis());
         clientAnnounce.setUser(bean.getUser());
         clientAnnounce.setClient(bean.getClient());
-        clientAnnounce.setPost(postService.getByTorrent(bean.getInfoHash()));
+        clientAnnounce.setPost(postService.getDAO().getByTorrent(bean.getInfoHash()));
         return dao.save(clientAnnounce);
     }
 

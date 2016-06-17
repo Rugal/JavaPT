@@ -32,17 +32,15 @@ import org.slf4j.LoggerFactory;
  * A BitTorrent tracker peer.
  *
  * <p>
- * Represents a peer exchanging on a given torrent. In this implementation,
- * we don't really care about the status of the peers and how much they
- * have downloaded / exchanged because we are not a torrent exchange and
- * don't need to keep track of what peers are doing while they're
- * downloading. We only care about when they start, and when they are done.
+ * Represents a peer exchanging on a given torrent. In this implementation, we don't really care
+ * about the status of the peers and how much they have downloaded / exchanged because we are not a
+ * torrent exchange and don't need to keep track of what peers are doing while they're downloading.
+ * We only care about when they start, and when they are done.
  * </p>
  *
  * <p>
- * We also never expire peers automatically. Unless peers send a STOPPED
- * announce request, they remain as long as the torrent object they are a
- * part of.
+ * We also never expire peers automatically. Unless peers send a STOPPED announce request, they
+ * remain as long as the torrent object they are a part of.
  * </p>
  */
 public class TrackedPeer extends Peer
@@ -62,24 +60,20 @@ public class TrackedPeer extends Peer
      * Represents the state of a peer exchanging on this torrent.
      *
      * <p>
-     * Peers can be in the STARTED state, meaning they have announced
-     * themselves to us and are eventually exchanging data with other peers.
-     * Note that a peer starting with a completed file will also be in the
-     * started state and will never notify as being in the completed state.
-     * This information can be inferred from the fact that the peer reports 0
-     * bytes left to download.
+     * Peers can be in the STARTED state, meaning they have announced themselves to us and are
+     * eventually exchanging data with other peers. Note that a peer starting with a completed file
+     * will also be in the started state and will never notify as being in the completed state. This
+     * information can be inferred from the fact that the peer reports 0 bytes left to download.
      * </p>
      *
      * <p>
-     * Peers enter the COMPLETED state when they announce they have entirely
-     * downloaded the file. As stated above, we may also elect them for this
-     * state if they report 0 bytes left to download.
+     * Peers enter the COMPLETED state when they announce they have entirely downloaded the file. As
+     * stated above, we may also elect them for this state if they report 0 bytes left to download.
      * </p>
      *
      * <p>
-     * Peers enter the STOPPED state very briefly before being removed. We
-     * still pass them to the STOPPED state in case someone else kept a
-     * reference on them.
+     * Peers enter the STOPPED state very briefly before being removed. We still pass them to the
+     * STOPPED state in case someone else kept a reference on them.
      * </p>
      */
     public enum PeerState
@@ -121,8 +115,8 @@ public class TrackedPeer extends Peer
      * Update this peer's state and information.
      *
      * <p>
-     * <b>Note:</b> if the peer reports 0 bytes left to download, its state will
-     * be automatically be set to COMPLETED.
+     * <b>Note:</b> if the peer reports 0 bytes left to download, its state will be automatically be
+     * set to COMPLETED.
      * </p>
      *
      * @param bean
@@ -147,8 +141,7 @@ public class TrackedPeer extends Peer
     }
 
     /**
-     * Tells whether this peer has completed its download and can thus be
-     * considered a seeder.
+     * Tells whether this peer has completed its download and can thus be considered a seeder.
      *
      * @return
      */
@@ -178,8 +171,8 @@ public class TrackedPeer extends Peer
     }
 
     /**
-     * Returns how many bytes the peer reported it needs to retrieve before
-     * its download is complete.
+     * Returns how many bytes the peer reported it needs to retrieve before its download is
+     * complete.
      *
      * @return
      */
@@ -192,8 +185,7 @@ public class TrackedPeer extends Peer
      * Tells whether this peer has checked in with the tracker recently.
      *
      * <p>
-     * Non-fresh peers are automatically terminated and collected by the
-     * Tracker.
+     * Non-fresh peers are automatically terminated and collected by the Tracker.
      * </p>
      *
      * @return
@@ -201,16 +193,15 @@ public class TrackedPeer extends Peer
     public boolean isFresh()
     {
         return (this.lastAnnounce != null
-            && (this.lastAnnounce.getTime() + (SystemDefaultProperties.FRESH_TIME_SECONDS * 1000)
-            > new Date().getTime()));
+                && (this.lastAnnounce.getTime() + (SystemDefaultProperties.FRESH_TIME_SECONDS * 1000)
+                    > new Date().getTime()));
     }
 
     /**
-     * Returns a BEValue representing this peer for inclusion in an
-     * announce reply from the tracker.
+     * Returns a BEValue representing this peer for inclusion in an announce reply from the tracker.
      *
-     * The returned BEValue is a dictionary containing the peer ID (in its
-     * original byte-encoded form), the peer's IP and the peer's port.
+     * The returned BEValue is a dictionary containing the peer ID (in its original byte-encoded
+     * form), the peer's IP and the peer's port.
      *
      * @return
      *

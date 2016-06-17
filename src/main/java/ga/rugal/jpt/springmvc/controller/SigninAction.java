@@ -1,8 +1,8 @@
 package ga.rugal.jpt.springmvc.controller;
 
+import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
-import config.SystemDefaultProperties;
 import ga.rugal.jpt.core.entity.SigninLog;
 import ga.rugal.jpt.core.service.SigninLogService;
 import ga.rugal.jpt.core.service.UserService;
@@ -51,11 +51,10 @@ public class SigninAction
         String id = request.getHeader(SystemDefaultProperties.ID);
         SigninLog signinLog = new SigninLog();
         signinLog.setIp(request.getRemoteAddr());
-        signinLog.setUid(userService.getByID(Integer.parseInt(id)));
-        signinLogService.save(signinLog);
+        signinLog.setUid(userService.getDAO().getByID(Integer.parseInt(id)));
+        signinLogService.getDAO().save(signinLog);
         LOG.trace(MessageFormat.format(CommonLogContent.SIGNIN, id, request.getRemoteAddr()));
         Message message = Message.successMessage(CommonMessageContent.SIGNIN, signinLog);
         return message;
     }
-
 }

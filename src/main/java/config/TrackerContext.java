@@ -24,10 +24,11 @@ import org.springframework.context.annotation.FilterType;
  */
 @Configuration
 @ComponentScan(basePackageClasses = PackageInfo.class, includeFilters
-               = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes =
-                                       {
-                                           AnnounceAction.class, TrackerAction.class
-    }))
+                                                       = @ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE, classes =
+        {
+            AnnounceAction.class, TrackerAction.class
+        }))
 public class TrackerContext
 {
 
@@ -40,8 +41,8 @@ public class TrackerContext
     private Tracker tracker;
 
     /**
-     * Create a tracker server in local, with same port to servlet container
-     * Spring will start this tracker after creation of bean.
+     * Create a tracker server in local, with same port to servlet container Spring will start this
+     * tracker after creation of bean.
      *
      * @return
      *
@@ -56,8 +57,7 @@ public class TrackerContext
             if (SystemDefaultProperties.TORRENT_FROM_DB)
             {
                 torrentFromDB(tracker);
-            }
-            else
+            } else
             {
                 torrentFromFS(tracker);
             }
@@ -72,7 +72,7 @@ public class TrackerContext
 
     private void torrentFromDB(Tracker tracker) throws IOException
     {
-        List<Object> list = postService.getAllTorrentsOnly();
+        List<Object> list = postService.getDAO().getAllTorrentsOnly();
         if (null != list && !list.isEmpty())
         {
             for (Object bencode : list)
@@ -81,8 +81,7 @@ public class TrackerContext
                 tracker.announce(torrent);
             }
             LOG.info(CommonLogContent.TRACKER_CREATED, list.size());
-        }
-        else
+        } else
         {
             LOG.info(CommonLogContent.TRACKER_NO_TORRENT);
         }
@@ -101,8 +100,7 @@ public class TrackerContext
                 tracker.announce(torrent);
             }
             LOG.info(CommonLogContent.TRACKER_CREATED, torrentFiles.length);
-        }
-        else
+        } else
         {
             LOG.info(CommonLogContent.TRACKER_NO_TORRENT);
         }

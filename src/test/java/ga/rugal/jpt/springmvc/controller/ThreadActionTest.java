@@ -1,7 +1,7 @@
 package ga.rugal.jpt.springmvc.controller;
 
-import ga.rugal.ControllerClientSideTestBase;
 import config.SystemDefaultProperties;
+import ga.rugal.ControllerClientSideTestBase;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
@@ -62,9 +62,9 @@ public class ThreadActionTest extends ControllerClientSideTestBase
     public void setUp() throws Exception
     {
         System.out.println("setUp");
-        levelService.save(level);
-        userService.save(user);
-        postService.save(post);
+        levelService.getDAO().save(level);
+        userService.getDAO().save(user);
+        postService.getDAO().save(post);
         //saving thread by HTTP request
         MvcResult result = testSave();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
@@ -77,9 +77,9 @@ public class ThreadActionTest extends ControllerClientSideTestBase
         System.out.println("tearDown");
         //order is important
         testDelete();
-        postService.deleteById(post.getPid());
-        userService.deleteById(user.getUid());
-        levelService.deleteById(level.getLid());
+        postService.getDAO().deleteById(post.getPid());
+        userService.getDAO().deleteById(user.getUid());
+        levelService.getDAO().deleteById(level.getLid());
     }
 
     @Test

@@ -88,5 +88,5 @@ public class PostDaoImpl extends HibernateBaseDao<Post, Integer> implements Post
     .setResultTransformer(Transformers.aliasToBean(User.class));
 
   	List<User> list = cr.list();
-    */
+     */
 }

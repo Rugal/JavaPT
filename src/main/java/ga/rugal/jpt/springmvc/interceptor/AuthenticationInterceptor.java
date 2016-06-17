@@ -1,25 +1,22 @@
 package ga.rugal.jpt.springmvc.interceptor;
 
-import ga.rugal.jpt.common.CommonLogContent;
-import ga.rugal.jpt.common.CommonMessageContent;
 import config.SystemDefaultProperties;
+import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.core.service.UserService;
 import java.io.IOException;
 import java.text.MessageFormat;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import ml.rugal.sshcommon.springmvc.util.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
  *
- * A authentication interceptor than authenticate any matched request by some
- * credential. Store username and credential in request header.
+ * A authentication interceptor than authenticate any matched request by some credential. Store
+ * username and credential in request header.
  * <p>
  * Useful when implementing Restful API.
  * <p>
@@ -35,21 +32,18 @@ public class AuthenticationInterceptor extends BaseInterceptor
     private UserService userService;
 
     /**
-     * This interceptor do its jos on all handlers except
-     * {@link ga.rugal.jpt.springmvc.controller.AnnounceAction#announce(ga.rugal.jpt.common.tracker.common.ClientRequestMessageBean, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     * This interceptor do its jos on all handlers except null null null null null null null null
+     * null null null     {@link ga.rugal.jpt.springmvc.controller.AnnounceAction#announce(ga.rugal.jpt.common.tracker.common.ClientRequestMessageBean, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      * } <BR>
      * Any request that needs authentication must include their
      * {@link ga.rugal.jpt.common.SystemDefaultProperties#ID} and
-     * {@link ga.rugal.jpt.common.SystemDefaultProperties#CREDENTIAL}
-     * in request header.<p>
+     * {@link ga.rugal.jpt.common.SystemDefaultProperties#CREDENTIAL} in request header.<p>
      * Example:<BR>
-     * curl: <BR>
-     * {@code curl -H'id:1' -H'credential:123456'}
+     * curl: <BR> {@code curl -H'id:1' -H'credential:123456'}
      * <p>
      * @param request  The request that has id and credential information in header
      * @param response
-     * @param handler
-     *                 <p>
+     * @param handler  <p>
      * @return true if id and credential match information inside DB, otherwise return false.
      * <p>
      * @throws Exception
@@ -79,8 +73,8 @@ public class AuthenticationInterceptor extends BaseInterceptor
 
     /**
      * This method is just for generating a response with forbidden content.<BR>
-     * May throw IOException inside because unable to get response body writer,
-     * but this version will shelter it.
+     * May throw IOException inside because unable to get response body writer, but this version
+     * will shelter it.
      *
      *
      * @param response The response corresponding to the request.
@@ -90,34 +84,31 @@ public class AuthenticationInterceptor extends BaseInterceptor
     {
         try
         {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.getWriter().print(gson.toJson(Message.failMessage(CommonMessageContent.ACCESS_FORBIDDEN)));
-
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().flush();
+//            response.setContentType(MediaType.TEXT_PLAIN_VALUE);
+//            response.getWriter().print(CommonMessageContent.ACCESS_FORBIDDEN);
         }
         catch (IOException e)
         {
             LOG.error("Unable to get response writer", e);
         }
-
     }
 
     /**
-     * This method used put authentication.
-     * If you need to check with database, please modify code.
+     * This method used put authentication. If you need to check with database, please modify code.
      *
      * @param username   user ID
      * @param credential user password
      *
-     * @return true if this user and credential meet requirement, otherwise
-     *         return false
+     * @return true if this user and credential meet requirement, otherwise return false
      */
     private boolean isAuthenticatedUser(String id, String credential)
     {
         boolean isAuthenticated = false;
         try
         {
-            isAuthenticated = userService.authenticateUser(Integer.parseInt(id), credential);
+            isAuthenticated = userService.getDAO().authenticateUser(Integer.parseInt(id), credential);
         }
         catch (Exception e)
         {

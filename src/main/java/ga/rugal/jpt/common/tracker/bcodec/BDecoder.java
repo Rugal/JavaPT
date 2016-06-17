@@ -107,7 +107,7 @@ public class BDecoder
     public static BEValue bdecode(ByteBuffer data) throws IOException
     {
         return BDecoder.bdecode(new AutoCloseInputStream(
-                new ByteArrayInputStream(data.array())));
+            new ByteArrayInputStream(data.array())));
     }
 
     /**
@@ -147,18 +147,27 @@ public class BDecoder
         if (this.indicator >= '0' && this.indicator <= '9')
         {
             return this.bdecodeBytes();
-        } else if (this.indicator == 'i')
-        {
-            return this.bdecodeNumber();
-        } else if (this.indicator == 'l')
-        {
-            return this.bdecodeList();
-        } else if (this.indicator == 'd')
-        {
-            return this.bdecodeMap();
         } else
         {
-            throw new InvalidBEncodingException(String.format("Unknown indicator '%d'", this.indicator));
+            if (this.indicator == 'i')
+            {
+                return this.bdecodeNumber();
+            } else
+            {
+                if (this.indicator == 'l')
+                {
+                    return this.bdecodeList();
+                } else
+                {
+                    if (this.indicator == 'd')
+                    {
+                        return this.bdecodeMap();
+                    } else
+                    {
+                        throw new InvalidBEncodingException(String.format("Unknown indicator '%d'", this.indicator));
+                    }
+                }
+            }
         }
     }
 

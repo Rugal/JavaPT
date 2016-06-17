@@ -35,8 +35,7 @@ public interface ClientAnnounceService
      * <p>
      * Then to update user profile in db.
      * <p>
-     * @param bean
-     *             <p>
+     * @param bean <p>
      * @return
      */
     ClientAnnounce announce(TrackerUpdateBean bean);

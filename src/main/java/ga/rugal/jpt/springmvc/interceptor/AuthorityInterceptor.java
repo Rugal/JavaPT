@@ -1,8 +1,8 @@
 package ga.rugal.jpt.springmvc.interceptor;
 
+import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
-import config.SystemDefaultProperties;
 import ga.rugal.jpt.core.entity.Admin;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.AdminService;
@@ -74,8 +74,7 @@ public class AuthorityInterceptor extends BaseInterceptor
             LOG.debug(MessageFormat.format(CommonLogContent.USER_ROLE_SUCCEEDED,
                                            id,
                                            getHandlerFullName(hm)));
-        }
-        else
+        } else
         {
             status = false;
             deniedResponse(response);
@@ -94,8 +93,8 @@ public class AuthorityInterceptor extends BaseInterceptor
 
     /**
      * This method is just for generating a response with forbidden content.<BR>
-     * May throw IOException inside because unable to get response body writer,
-     * but this version will shelter it.
+     * May throw IOException inside because unable to get response body writer, but this version
+     * will shelter it.
      *
      *
      * @param response The response corresponding to the request.
@@ -119,9 +118,8 @@ public class AuthorityInterceptor extends BaseInterceptor
 
     /**
      * check roles of this user and required role of handler.<BR>
-     * If this handler require no role, treat this as Permit all.
-     * Otherwise, check user role. Only accessible if this user contain specific role that defined
-     * in {@code Role} annotation
+     * If this handler require no role, treat this as Permit all. Otherwise, check user role. Only
+     * accessible if this user contain specific role that defined in {@code Role} annotation
      *
      * @param id
      * @param hm
@@ -140,17 +138,17 @@ public class AuthorityInterceptor extends BaseInterceptor
             value = false;
             //---------------------
             Set<Admin.Level> ownedLevel = new HashSet<>(5);
-            User user = userService.getByID(Integer.parseInt(id));
-            List<Admin> admins = adminService.getByUID(user);
+            User user = userService.getDAO().getByID(Integer.parseInt(id));
+            List<Admin> admins = adminService.getDAO().getByUID(user);
             //Replace user.getAdminList as hibernate lazy loading problem
             if (null == admins || admins.isEmpty())
             {
                 return false;
             }
             admins.stream().forEach((admin) ->
-            {
-                ownedLevel.add(admin.getLevel());
-            });
+                {
+                    ownedLevel.add(admin.getLevel());
+                });
 
             for (Admin.Level requiredLevel : r.value())
             {
@@ -166,9 +164,8 @@ public class AuthorityInterceptor extends BaseInterceptor
     }
 
     /**
-     * Get annotation for current handler method.
-     * From method level if defined, otherwise
-     * From class level if defined.
+     * Get annotation for current handler method. From method level if defined, otherwise From class
+     * level if defined.
      *
      * @param <A>
      * @param hm
@@ -184,7 +181,6 @@ public class AuthorityInterceptor extends BaseInterceptor
     }
 
     @Override
-
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception
     {
     }

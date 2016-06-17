@@ -1,10 +1,9 @@
 package ga.rugal.jpt.core.service.impl;
 
-import ga.rugal.jpt.core.service.PostTagsService;
 import ga.rugal.jpt.core.dao.PostTagsDao;
 import ga.rugal.jpt.core.entity.PostTags;
+import ga.rugal.jpt.core.service.PostTagsService;
 import ml.rugal.sshcommon.hibernate.Updater;
-import ml.rugal.sshcommon.page.Pagination;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,29 +25,9 @@ public class PostTagsServiceImpl implements PostTagsService
     private PostTagsDao dao;
 
     @Override
-    @Transactional(readOnly = true)
-    public Pagination getPage(int pageNo, int pageSize)
+    public PostTagsDao getDAO()
     {
-        return dao.getPage(pageNo, pageSize);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public PostTags getByID(Integer id)
-    {
-        return dao.getByID(id);
-    }
-
-    @Override
-    public PostTags save(PostTags bean)
-    {
-        return dao.save(bean);
-    }
-
-    @Override
-    public PostTags deleteById(Integer id)
-    {
-        return dao.deleteById(id);
+        return this.dao;
     }
 
     @Override
@@ -57,5 +36,4 @@ public class PostTagsServiceImpl implements PostTagsService
         Updater<PostTags> updater = new Updater<>(bean);
         return dao.updateByUpdater(updater);
     }
-
 }

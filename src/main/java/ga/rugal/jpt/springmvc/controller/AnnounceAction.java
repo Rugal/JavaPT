@@ -151,7 +151,7 @@ public class AnnounceAction
      * @throws java.io.UnsupportedEncodingException
      */
     private ByteBuffer compactResponse(TrackedTorrent torrent, TrackedPeer peer)
-            throws IOException, UnsupportedEncodingException
+        throws IOException, UnsupportedEncodingException
     {
         Map<String, BEValue> response = new HashMap<>();
         response.put("interval", new BEValue(torrent.getAnnounceInterval()));

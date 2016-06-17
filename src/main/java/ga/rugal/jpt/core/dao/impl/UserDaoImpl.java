@@ -8,7 +8,8 @@ import ml.rugal.sshcommon.hibernate.HibernateBaseDao;
 import ml.rugal.sshcommon.page.Pagination;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
-import org.hibernate.Query;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -65,12 +66,16 @@ public class UserDaoImpl extends HibernateBaseDao<User, Integer> implements User
     @Transactional(readOnly = true)
     public boolean authenticateUser(Integer uid, String password)
     {
-
-        String hql = "SELECT count(1) FROM User bean WHERE bean.uid=:uid AND bean.password=:password";
-        Query query = getSession().createQuery(hql);
-        query.setParameter("uid", uid);
-        query.setParameter("password", password);
-        return ((Number) query.iterate().next()).intValue() == 1;
+        Criteria criteria = createCriteria();
+        criteria.add(Restrictions.eq("uid", uid));
+        criteria.add(Restrictions.eq("password", password));
+        criteria.setProjection(Projections.count("uid"));
+        return ((Number) criteria.uniqueResult()).intValue() == 1;
+//        String hql = "SELECT count(1) FROM User bean WHERE bean.uid=:uid AND bean.password=:password";
+//        Query query = getSession().createQuery(hql);
+//        query.setParameter("uid", uid);
+//        query.setParameter("password", password);
+//        return ((Number) query.iterate().next()).intValue() == 1;
     }
 
     public List<Object> getList(String ip, Integer userId)

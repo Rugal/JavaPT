@@ -7,8 +7,8 @@ import java.util.List;
  * Base interface for announce response messages.
  *
  * <p>
- * This interface must be implemented by all subtypes of announce response
- * messages for the various tracker protocols.
+ * This interface must be implemented by all subtypes of announce response messages for the various
+ * tracker protocols.
  * </p>
  *
  * @author mpetazzoni

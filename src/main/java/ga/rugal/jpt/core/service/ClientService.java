@@ -30,8 +30,7 @@ public interface ClientService
      * not try to find parent client if unable to find exact one.
      * <p>
      * @param cname
-     * @param version
-     *                <p>
+     * @param version <p>
      * @return null if unable to find the exact client software.
      */
     @Transactional(readOnly = true)
@@ -46,8 +45,7 @@ public interface ClientService
      * If still unable to find, this method will get the default client to see the global setting.
      * <p>
      * @param cname
-     * @param version
-     *                <p>
+     * @param version <p>
      * @return This method will always return a client, either exact one if could find, or the
      *         parent level one.
      */

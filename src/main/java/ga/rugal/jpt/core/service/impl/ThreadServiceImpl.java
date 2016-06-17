@@ -1,12 +1,9 @@
 package ga.rugal.jpt.core.service.impl;
 
 import ga.rugal.jpt.core.dao.ThreadDao;
-import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.service.ThreadService;
-import java.util.List;
 import ml.rugal.sshcommon.hibernate.Updater;
-import ml.rugal.sshcommon.page.Pagination;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,37 +25,9 @@ public class ThreadServiceImpl implements ThreadService
     private ThreadDao dao;
 
     @Override
-    @Transactional(readOnly = true)
-    public Pagination getPage(Post post, int pageNo, int pageSize
-    )
+    public ThreadDao getDAO()
     {
-        return dao.getPage(post, pageNo, pageSize);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Thread> getByPID(Post post)
-    {
-        return dao.getByPID(post);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Thread getByID(Integer id)
-    {
-        return dao.getByID(id);
-    }
-
-    @Override
-    public Thread save(Thread bean)
-    {
-        return dao.save(bean);
-    }
-
-    @Override
-    public Thread deleteById(Integer id)
-    {
-        return dao.deleteById(id);
+        return this.dao;
     }
 
     @Override
@@ -67,5 +36,4 @@ public class ThreadServiceImpl implements ThreadService
         Updater<Thread> updater = new Updater<>(bean);
         return dao.updateByUpdater(updater);
     }
-
 }

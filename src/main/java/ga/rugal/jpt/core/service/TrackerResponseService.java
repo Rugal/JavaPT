@@ -17,10 +17,8 @@ public interface TrackerResponseService
      * For better code reusability, use this small method to wrap buffer writing.
      * <p>
      * @param response
-     * @param buffer
-     *                 <p>
-     * @throws java.io.IOException when unable to write byte
-     *                             into response channel.
+     * @param buffer   <p>
+     * @throws java.io.IOException when unable to write byte into response channel.
      */
     void writeResponseBuffer(HttpServletResponse response, ByteBuffer buffer) throws IOException;
 

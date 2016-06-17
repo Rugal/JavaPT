@@ -44,8 +44,7 @@ public class RequestBeanServiceImpl implements RequestBeanService
     /**
      * {@inheritDoc }
      * <p>
-     * @param b
-     *          <p>
+     * @param b <p>
      * @throws ga.rugal.jpt.common.tracker.server.TrackerResponseException
      */
     @Override
@@ -76,7 +75,7 @@ public class RequestBeanServiceImpl implements RequestBeanService
             throw new TrackerResponseException(CommonMessageContent.INVALID_INFOHASH);
         }
         //set post by info_hash
-        Post post = postService.getByTorrent(bean.getInfoHash());
+        Post post = postService.getDAO().getByTorrent(bean.getInfoHash());
         if (null == post)
         {
             throw new TrackerResponseException(CommonMessageContent.TORRENT_NOT_FOUND);
@@ -85,7 +84,7 @@ public class RequestBeanServiceImpl implements RequestBeanService
         //
         readPeerID(bean, b.getPeerId());
         //Do database search for user and client
-        User user = userService.getByID(b.getUid());
+        User user = userService.getDAO().getByID(b.getUid());
         if (null == user)
         {
             throw new TrackerResponseException(CommonMessageContent.USER_NOT_FOUND);
@@ -107,8 +106,7 @@ public class RequestBeanServiceImpl implements RequestBeanService
      * those data into TrackerUpdateBean.
      * <p>
      * @param bean
-     * @param peerID
-     *               <p>
+     * @param peerID <p>
      * @throws TrackerResponseException
      */
     private void readPeerID(TrackerUpdateBean bean, String peerID) throws TrackerResponseException
@@ -125,17 +123,16 @@ public class RequestBeanServiceImpl implements RequestBeanService
     }
 
     /**
-     * Convert a Percent-encoded string into a SHA1 string.
-     * It is not functional to use {@link javax.servlet.ServletRequest#getParameter} since the
-     * percent-encoded info_hash and peer_id will be decoded by Springmvc.
+     * Convert a Percent-encoded string into a SHA1 string. It is not functional to use
+     * {@link javax.servlet.ServletRequest#getParameter} since the percent-encoded info_hash and
+     * peer_id will be decoded by Springmvc.
      * <p>
      * Refer to
      * http://stackoverflow.com/questions/5637268/how-do-you-decode-info-hash-information-from-tracker-announce-request
      * <p>
      * http://www.asciitable.com/
      * <p>
-     * @param text
-     *             <p>
+     * @param text <p>
      * @return
      */
     @Override
@@ -152,8 +149,7 @@ public class RequestBeanServiceImpl implements RequestBeanService
             {
                 sb.append(text.substring(i + 1, i + 3));
                 i += 2;
-            }
-            else
+            } else
             {
                 sb.append(Integer.toHexString(text.charAt(i)));
             }

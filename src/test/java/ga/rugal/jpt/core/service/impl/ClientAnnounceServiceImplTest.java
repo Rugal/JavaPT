@@ -67,8 +67,8 @@ public class ClientAnnounceServiceImplTest extends DBTestBase
         System.out.println("setUp");
         clientService.save(client);
         levelDao.save(level);
-        userService.save(user);
-        postService.save(post);
+        userService.getDAO().save(user);
+        postService.getDAO().save(post);
         clientAnnounceService.save(clientAnnounce);
     }
 
@@ -77,8 +77,8 @@ public class ClientAnnounceServiceImplTest extends DBTestBase
     {
         System.out.println("tearDown");
         clientAnnounceService.deleteById(clientAnnounce.getCaid());
-        postService.deleteById(post.getPid());
-        userService.deleteById(user.getUid());
+        postService.getDAO().deleteById(post.getPid());
+        userService.getDAO().deleteById(user.getUid());
         levelDao.deleteById(level.getLid());
         clientService.deleteById(client.getCid());
     }
@@ -88,12 +88,12 @@ public class ClientAnnounceServiceImplTest extends DBTestBase
     {
         System.out.println("announce");
         TrackerUpdateBean bean = trackerUpdateBean;
-        User before = userService.getByID(user.getUid());
+        User before = userService.getDAO().getByID(user.getUid());
         System.out.println(before.getDownloadByte());
         System.out.println(before.getUploadByte());
         ClientAnnounce newer = clientAnnounceService.announce(bean);
 
-        User after = userService.getByID(user.getUid());
+        User after = userService.getDAO().getByID(user.getUid());
         System.out.println(after.getDownloadByte());
         System.out.println(after.getUploadByte());
 

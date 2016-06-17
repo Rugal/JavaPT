@@ -66,12 +66,12 @@ public class PostAction
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET)
     public Message getPostByPage(@RequestParam(name = "pageNo", required = true,
-                                               defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
+        defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
                                  @RequestParam(name = "pageSize", required = true,
-                                               defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize)
+                                     defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize)
     {
         //TODO ignore content of each post so as to reduce data transportation
-        Pagination page = postService.getPage(pageNo, pageSize);
+        Pagination page = postService.getDAO().getPage(pageNo, pageSize);
         if (page.getTotalCount() > 0)
         {
             return Message.successMessage(CommonMessageContent.GET_POST, page);
@@ -94,8 +94,8 @@ public class PostAction
     public Message savePost(@RequestBody Post bean, HttpServletRequest request)
     {
         int id = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
-        bean.setAuthor(userService.getByID(id));
-        postService.save(bean);
+        bean.setAuthor(userService.getDAO().getByID(id));
+        postService.getDAO().save(bean);
         return Message.successMessage(CommonMessageContent.SAVE_POST, bean);
     }
 
@@ -112,7 +112,7 @@ public class PostAction
     public Message updatePost(@PathVariable("pid") Integer pid, @RequestBody Post bean)
     {
         //TODO only author and administrators have permission to update
-        Post dbPost = postService.getByID(pid);
+        Post dbPost = postService.getDAO().getByID(pid);
         Message message;
         if (null != dbPost)
         {
@@ -138,15 +138,15 @@ public class PostAction
     public Message deletePost(@PathVariable("pid") Integer pid)
     {
         //TODO only author and administrators have permission to delete
-        Post bean = postService.getByID(pid);
+        Post bean = postService.getDAO().getByID(pid);
         Message message;
         if (null != bean)
         {
-            postService.deleteById(pid);
-            threadService.getByPID(bean).stream().forEach((t) ->
-                    {
-                        threadService.deleteById(t.getTid());
-                    });
+            postService.getDAO().deleteById(pid);
+            threadService.getDAO().getByPID(bean).stream().forEach((t) ->
+                {
+                    threadService.getDAO().deleteById(t.getTid());
+                });
             LOG.info(String.format(CommonLogContent.POST_DELETE, bean.getPid()));
             message = Message.successMessage(CommonMessageContent.DELETE_POST, bean);
         } else
@@ -167,7 +167,7 @@ public class PostAction
     @RequestMapping(value = "/{pid}", method = RequestMethod.GET)
     public Message getPost(@PathVariable("pid") Integer pid)
     {
-        Post bean = postService.getByID(pid);
+        Post bean = postService.getDAO().getByID(pid);
         Message message;
         if (null != bean)
         {
@@ -197,10 +197,10 @@ public class PostAction
     {
         //setting user in Thread
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
-        bean.setReplyer(userService.getByID(uid));
+        bean.setReplyer(userService.getDAO().getByID(uid));
         //setting attached post in Thread
-        bean.setPost(postService.getByID(pid));
-        threadService.save(bean);
+        bean.setPost(postService.getDAO().getByID(pid));
+        threadService.getDAO().save(bean);
         return Message.successMessage(CommonMessageContent.SAVE_THREAD, bean);
     }
 
@@ -222,7 +222,7 @@ public class PostAction
                                   HttpServletRequest request)
     {
         //permission verification
-        Post post = postService.getByID(pid);
+        Post post = postService.getDAO().getByID(pid);
         if (null == post)
         {
             return Message.failMessage(CommonMessageContent.POST_NOT_FOUND);
@@ -267,7 +267,7 @@ public class PostAction
                                    HttpServletResponse response)
     {
         //check metainfo
-        Post post = postService.getByID(pid);
+        Post post = postService.getDAO().getByID(pid);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         if (null == post)
         {
@@ -330,12 +330,12 @@ public class PostAction
     @RequestMapping(value = "/{pid}/thread", method = RequestMethod.GET)
     public Message getThreadByPost(@PathVariable("pid") Integer pid,
                                    @RequestParam(name = "pageNo", required = true,
-                                                 defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
+                                       defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
                                    @RequestParam(name = "pageSize", required = true,
-                                                 defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize)
+                                       defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize)
     {
-        Post post = postService.getByID(pid);
-        Pagination page = threadService.getPage(post, pageNo, pageSize);
+        Post post = postService.getDAO().getByID(pid);
+        Pagination page = threadService.getDAO().getPage(post, pageNo, pageSize);
         if (page.getTotalCount() > 0)
         {
             return Message.successMessage(CommonMessageContent.GET_THREAD, page);

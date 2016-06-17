@@ -15,9 +15,9 @@
  */
 package ga.rugal.jpt.common.tracker.server;
 
+import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
-import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.common.Peer;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
@@ -35,14 +35,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Tracked torrents are torrent for which we don't expect to have data files
- * for.
+ * Tracked torrents are torrent for which we don't expect to have data files for.
  *
  * <p>
- * {@link TrackedTorrent} objects are used by the BitTorrent tracker to
- * represent a torrent that is announced by the tracker. As such, it is not
- * expected to point to any valid local data like. It also contains some
- * additional information used by the tracker to keep track of which peers
+ * {@link TrackedTorrent} objects are used by the BitTorrent tracker to represent a torrent that is
+ * announced by the tracker. As such, it is not expected to point to any valid local data like. It
+ * also contains some additional information used by the tracker to keep track of which peers
  * exchange on it, etc.
  * </p>
  *
@@ -67,8 +65,8 @@ public class TrackedTorrent extends Torrent
      *
      * @param torrent The meta-info byte data.
      *
-     * @throws IOException When the info dictionary can't be
-     *                     encoded and hashed back to create the torrent's SHA-1 hash.
+     * @throws IOException When the info dictionary can't be encoded and hashed back to create the
+     *                     torrent's SHA-1 hash.
      */
     public TrackedTorrent(byte[] torrent) throws IOException
     {
@@ -133,8 +131,7 @@ public class TrackedTorrent extends Torrent
     }
 
     /**
-     * Count the number of seeders (peers in the COMPLETED state) on this
-     * torrent.
+     * Count the number of seeders (peers in the COMPLETED state) on this torrent.
      *
      * @return
      */
@@ -173,8 +170,8 @@ public class TrackedTorrent extends Torrent
      * Remove unfresh peers from this torrent.
      *
      * <p>
-     * Collect and remove all non-fresh peers from this torrent. This is
-     * usually called by the periodic peer collector of the BitTorrent tracker.
+     * Collect and remove all non-fresh peers from this torrent. This is usually called by the
+     * periodic peer collector of the BitTorrent tracker.
      * </p>
      */
     public void collectUnfreshPeers()
@@ -220,8 +217,8 @@ public class TrackedTorrent extends Torrent
      * <p>
      * Then update the status of the tracked peer for future usage.
      * <p>
-     * This will automatically create a new peer on a 'started' announce event,
-     * and remove the peer on a 'stopped' announce event.
+     * This will automatically create a new peer on a 'started' announce event, and remove the peer
+     * on a 'stopped' announce event.
      * </p>
      *
      * @param bean
@@ -256,18 +253,17 @@ public class TrackedTorrent extends Torrent
                 throw new IllegalArgumentException(CommonMessageContent.BAD_EVENT);
         }
         LOG.debug(MessageFormat.format(CommonLogContent.UPDATE_CONTENT,
-                                          bean.getUser().getUid(), bean.getInfoHash(), bean.getDownloaded(),
-                                          bean.getUploaded(), bean.getLeft(), bean.getIp()));
+                                       bean.getUser().getUid(), bean.getInfoHash(), bean.getDownloaded(),
+                                       bean.getUploaded(), bean.getLeft(), bean.getIp()));
         peer.update(bean);
         return peer;
     }
 
     /**
-     * Get a list of peers we can return in an announce response for this
-     * torrent.
+     * Get a list of peers we can return in an announce response for this torrent.
      *
-     * @param peer The peer making the request, so we can exclude it from the
-     *             list of returned peers.
+     * @param peer The peer making the request, so we can exclude it from the list of returned
+     *             peers.
      *
      * @return A list of peers we can include in an announce response.
      */
@@ -285,7 +281,7 @@ public class TrackedTorrent extends Torrent
             // Collect unfresh peers, and obviously don't serve them as well.
             if (!candidate.isFresh()
                 || (candidate.looksLike(peer)
-                && !candidate.equals(peer)))
+                    && !candidate.equals(peer)))
             {
                 LOG.debug(CommonLogContent.STALE_PEERS, candidate);
                 this.peers.remove(candidate.getHexPeerId());

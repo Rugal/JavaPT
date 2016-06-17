@@ -4,8 +4,8 @@ package ga.rugal.jpt.common.tracker.common.protocol;
  * Base interface for announce request messages.
  *
  * <p>
- * This interface must be implemented by all subtypes of announce request
- * messages for the various tracker protocols.
+ * This interface must be implemented by all subtypes of announce request messages for the various
+ * tracker protocols.
  * </p>
  *
  * @author mpetazzoni

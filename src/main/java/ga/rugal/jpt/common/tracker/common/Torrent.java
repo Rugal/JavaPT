@@ -213,15 +213,18 @@ public class Torrent
                         this.trackers.add(tier);
                     }
                 }
-            } else if (this.decoded.containsKey("announce"))
+            } else
             {
-                URI tracker = new URI(this.decoded.get("announce").getString());
-                this.allTrackers.add(tracker);
+                if (this.decoded.containsKey("announce"))
+                {
+                    URI tracker = new URI(this.decoded.get("announce").getString());
+                    this.allTrackers.add(tracker);
 
-                // Build a single-tier announce list.
-                List<URI> tier = new ArrayList<>();
-                tier.add(tracker);
-                this.trackers.add(tier);
+                    // Build a single-tier announce list.
+                    List<URI> tier = new ArrayList<>();
+                    tier.add(tracker);
+                    this.trackers.add(tier);
+                }
             }
         }
         catch (URISyntaxException use)
@@ -230,14 +233,14 @@ public class Torrent
         }
 
         this.creationDate = this.decoded.containsKey("creation date")
-                ? new Date(this.decoded.get("creation date").getLong() * 1000)
-                : null;
+            ? new Date(this.decoded.get("creation date").getLong() * 1000)
+            : null;
         this.comment = this.decoded.containsKey("comment")
-                ? this.decoded.get("comment").getString()
-                : null;
+            ? this.decoded.get("comment").getString()
+            : null;
         this.createdBy = this.decoded.containsKey("created by")
-                ? this.decoded.get("created by").getString()
-                : null;
+            ? this.decoded.get("created by").getString()
+            : null;
         this.name = this.decoded_info.get("name").getString();
         this.pieceLength = this.decoded_info.get("piece length").getInt();
 
@@ -253,24 +256,25 @@ public class Torrent
                 for (BEValue pathElement : fileInfo.get("path").getList())
                 {
                     path.append(File.separator)
-                            .append(pathElement.getString());
+                        .append(pathElement.getString());
                 }
                 this.files.add(new TorrentFile(
-                        new File(this.name, path.toString()),
-                        fileInfo.get("length").getLong()));
+                    new File(this.name, path.toString()),
+                    fileInfo.get("length").getLong()));
             }
         } else
         {
             // For single-file torrents, the name of the torrent is
             // directly the name of the file.
             this.files.add(new TorrentFile(
-                    new File(this.name),
-                    this.decoded_info.get("length").getLong()));
+                new File(this.name),
+                this.decoded_info.get("length").getLong()));
         }
 
         // Calculate the total size of this torrent from its files' sizes.
         long fileSize = 0;
-        fileSize = this.files.stream().map((file) -> file.size).reduce(fileSize, (accumulator, _item) -> accumulator + _item);
+        fileSize = this.files.stream().map((file) -> file.size).reduce(fileSize, (accumulator,
+                                                                                    _item) -> accumulator + _item);
         this.size = fileSize;
 
         LOG.info("{}-file torrent information:", this.isMultifile() ? "Multi" : "Single");
@@ -629,7 +633,7 @@ public class Torrent
      * @throws java.io.IOException
      */
     public static Torrent create(File source, URI announce, String createdBy)
-            throws InterruptedException, IOException
+        throws InterruptedException, IOException
     {
         return Torrent.create(source, null, SystemDefaultProperties.DEFAULT_PIECE_LENGTH,
                               announce, null, createdBy);
@@ -655,7 +659,7 @@ public class Torrent
      * @throws java.io.IOException
      */
     public static Torrent create(File parent, List<File> files, URI announce, String createdBy)
-            throws InterruptedException, IOException
+        throws InterruptedException, IOException
     {
         return Torrent.create(parent, files, SystemDefaultProperties.DEFAULT_PIECE_LENGTH,
                               announce, null, createdBy);
@@ -707,7 +711,7 @@ public class Torrent
      */
     public static Torrent create(File source, List<File> files, int pieceLength,
                                  List<List<URI>> announceList, String createdBy)
-            throws InterruptedException, IOException
+        throws InterruptedException, IOException
     {
         return Torrent.create(source, files, pieceLength,
                               null, announceList, createdBy);
@@ -731,7 +735,7 @@ public class Torrent
      */
     private static Torrent create(File parent, List<File> files, int pieceLength,
                                   URI announce, List<List<URI>> announceList, String createdBy)
-            throws InterruptedException, IOException
+        throws InterruptedException, IOException
     {
         if (files == null || files.isEmpty())
         {
@@ -857,7 +861,7 @@ public class Torrent
      * @param file The file to hash.
      */
     private static String hashFile(File file, int pieceLenght)
-            throws InterruptedException, IOException
+        throws InterruptedException, IOException
     {
         return Torrent.hashFiles(Arrays.asList(new File[]
         {
@@ -866,7 +870,7 @@ public class Torrent
     }
 
     private static String hashFiles(List<File> files, int pieceLenght)
-            throws InterruptedException, IOException
+        throws InterruptedException, IOException
     {
         int threads = getHashingThreadsCount();
         ExecutorService executor = Executors.newFixedThreadPool(threads);
@@ -886,7 +890,7 @@ public class Torrent
                          file.getName(),
                          threads,
                          (int) (Math.ceil(
-                                 (double) file.length() / pieceLenght))
+                                (double) file.length() / pieceLenght))
                      });
 
             length += file.length();
@@ -944,7 +948,7 @@ public class Torrent
         long elapsed = System.nanoTime() - start;
 
         int expectedPieces = (int) (Math.ceil(
-                (double) length / pieceLenght));
+                                    (double) length / pieceLenght));
         LOG.info("Hashed {} file(s) ({} bytes) in {} pieces ({} expected) in {}ms.",
                  new Object[]
                  {
@@ -965,7 +969,7 @@ public class Torrent
      * @param results The list of {@link Future}s that will yield the piece hashes.
      */
     private static int accumulateHashes(StringBuilder hashes, List<Future<String>> results)
-            throws InterruptedException, IOException
+        throws InterruptedException, IOException
     {
         try
         {

@@ -40,15 +40,14 @@ public class ThreadAction
     @RequestMapping(value = "/{tid}", method = RequestMethod.PUT)
     public Message updateThread(@PathVariable("tid") Integer tid, @RequestBody Thread bean)
     {
-        Thread dbThread = threadService.getByID(tid);
+        Thread dbThread = threadService.getDAO().getByID(tid);
         Message message;
         if (null != dbThread)
         {
             bean.setTid(tid);
             threadService.update(bean);
             message = Message.successMessage(CommonMessageContent.UPDATE_THREAD, bean);
-        }
-        else
+        } else
         {
             message = Message.failMessage(CommonMessageContent.THREAD_NOT_FOUND);
         }
@@ -66,13 +65,12 @@ public class ThreadAction
     @RequestMapping(value = "/{tid}", method = RequestMethod.DELETE)
     public Message deleteThread(@PathVariable("tid") Integer tid)
     {
-        Thread bean = threadService.deleteById(tid);
+        Thread bean = threadService.getDAO().deleteById(tid);
         Message message;
         if (null != bean)
         {
             message = Message.successMessage(CommonMessageContent.DELETE_THREAD, bean);
-        }
-        else
+        } else
         {
             message = Message.failMessage(CommonMessageContent.THREAD_NOT_FOUND);
         }
@@ -90,13 +88,12 @@ public class ThreadAction
     @RequestMapping(value = "/{tid}", method = RequestMethod.GET)
     public Message getThread(@PathVariable("tid") Integer tid)
     {
-        Thread bean = threadService.getByID(tid);
+        Thread bean = threadService.getDAO().getByID(tid);
         Message message;
         if (null != bean)
         {
             message = Message.successMessage(CommonMessageContent.GET_THREAD, bean);
-        }
-        else
+        } else
         {
             message = Message.failMessage(CommonMessageContent.THREAD_NOT_FOUND);
         }
