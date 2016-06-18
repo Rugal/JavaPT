@@ -133,7 +133,7 @@ public class PostAction
         //------------Permission check---------------
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
         User user = userService.getDAO().getByID(uid);
-        if (this.isAccessible(user, dbPost))
+        if (!this.isAccessible(user, dbPost))
         {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
@@ -167,8 +167,7 @@ public class PostAction
      */
     private boolean isAccessible(User user, Post post)
     {
-        return !this.isAuthorOf(user, post) && !adminService.meetAdminLevels(user, Admin.Level.ADMIN);
-
+        return this.isAuthorOf(user, post) || adminService.meetAdminLevels(user, Admin.Level.ADMIN);
     }
 
     /**
@@ -193,7 +192,7 @@ public class PostAction
         //------------Permission check---------------
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
         User user = userService.getDAO().getByID(uid);
-        if (this.isAccessible(user, bean))
+        if (!this.isAccessible(user, bean))
         {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
@@ -224,31 +223,7 @@ public class PostAction
         return bean;
     }
 
-    /**
-     * Persist a thread bean into database.<BR>
-     * Notice a thread must be attached under a post.
-     *
-     * @param pid     the post that this thread will be attached below.
-     * @param bean    thread bean resembled from request body.
-     * @param request contains user information.
-     *
-     * @return The persisted post bean.
-     */
-    @ResponseBody
-    @RequestMapping(value = "/{pid}/thread", method = RequestMethod.POST)
-    public Message saveThread(@PathVariable("pid") Integer pid,
-                              @RequestBody Thread bean,
-                              HttpServletRequest request)
-    {
-        //setting user in Thread
-        int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
-        bean.setReplyer(userService.getDAO().getByID(uid));
-        //setting attached post in Thread
-        bean.setPost(postService.getDAO().getByID(pid));
-        threadService.getDAO().save(bean);
-        return Message.successMessage(CommonMessageContent.SAVE_THREAD, bean);
-    }
-
+    //-------------------------Torrent File Operation-----------------------
     /**
      * Upload an BitTorrent file that includes meta-info of a torrent. <BR> A post could only have
      * one torrent file, and it is read only. No one could update a uploaded torrent, unless they
@@ -257,43 +232,48 @@ public class PostAction
      * @param pid      the post that this torrent file will be attached with.
      * @param metainfo thread bean resembled from request body.
      * @param request
+     * @param response
      *
      * @return The persisted post bean.
      */
     @ResponseBody
     @RequestMapping(value = "/{pid}/metainfo", method = RequestMethod.POST)
-    public Message uploadMetainfo(@PathVariable("pid") Integer pid,
-                                  @RequestParam(value = "file") MultipartFile metainfo,
-                                  HttpServletRequest request)
+    public void uploadMetainfo(@PathVariable("pid") Integer pid,
+                               @RequestParam(value = "file") MultipartFile metainfo,
+                               HttpServletRequest request, HttpServletResponse response)
     {
-        //permission verification
+        //-------------Existence check---------------
         Post post = postService.getDAO().getByID(pid);
         if (null == post)
         {
-            return Message.failMessage(CommonMessageContent.POST_NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
         }
-        if (null != post.getBencode())
+        //------------Permission check---------------
+
+        int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
+        User user = userService.getDAO().getByID(uid);
+        if (!this.isAccessible(user, post))
         {
-            return Message.failMessage(CommonMessageContent.TORRENT_EXISTS);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
-        //TODO check if current user is the author of this post
         //file content verification
         try
         {
             Torrent torrent = TrackedTorrent.load(metainfo.getBytes());
             //Now torrent bytes has been verified
             post.setBencode(torrent.getEncoded());
-            //Updates database bencode field
+            //database update
             postService.update(post);
+            response.setStatus(HttpServletResponse.SC_ACCEPTED);
         }
         catch (IOException ex)
         {
-            return Message.failMessage(CommonMessageContent.ERROR_READ_TORRENT);
+            response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
         }
-        //database update
         LOG.info(CommonLogContent.TORRENT_UPLOADED, post.getPid(),
                  request.getParameter(SystemDefaultProperties.ID));
-        return Message.successMessage(CommonMessageContent.TORRENT_UPLOADED, null);
     }
 
     /**
@@ -358,6 +338,32 @@ public class PostAction
                                    request.getParameter(SystemDefaultProperties.ID),
                                    crypted);
         return url;
+    }
+
+    //-----------------------Post related Threads-------------------------
+    /**
+     * Persist a thread bean into database.<BR>
+     * Notice a thread must be attached under a post.
+     *
+     * @param pid     the post that this thread will be attached below.
+     * @param bean    thread bean resembled from request body.
+     * @param request contains user information.
+     *
+     * @return The persisted post bean.
+     */
+    @ResponseBody
+    @RequestMapping(value = "/{pid}/thread", method = RequestMethod.POST)
+    public Message saveThread(@PathVariable("pid") Integer pid,
+                              @RequestBody Thread bean,
+                              HttpServletRequest request)
+    {
+        //setting user in Thread
+        int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
+        bean.setReplyer(userService.getDAO().getByID(uid));
+        //setting attached post in Thread
+        bean.setPost(postService.getDAO().getByID(pid));
+        threadService.getDAO().save(bean);
+        return Message.successMessage(CommonMessageContent.SAVE_THREAD, bean);
     }
 
     /**

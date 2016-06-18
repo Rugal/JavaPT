@@ -6,6 +6,7 @@ import ga.rugal.jpt.core.entity.Admin;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.AdminService;
 import ga.rugal.jpt.core.service.UserService;
+import ga.rugal.jpt.springmvc.annotation.Role;
 import javax.servlet.http.HttpServletRequest;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.slf4j.Logger;
@@ -25,6 +26,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping(value = "/admin")
+@Role(
+    value =
+    {
+        Admin.Level.ADMIN, Admin.Level.SUPER
+    })
 public class AdminAction
 {
 
