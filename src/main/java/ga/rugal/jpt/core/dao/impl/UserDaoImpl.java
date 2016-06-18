@@ -47,9 +47,9 @@ public class UserDaoImpl extends HibernateBaseDao<User, Integer> implements User
      */
     @Override
     @Transactional(readOnly = true)
-    public boolean isEmailAvailable(String email)
+    public List<User> findUserByName(String username)
     {
-        return super.countByProperty("email", email) == 0;
+        return super.findByPropertyVague("username", username);
     }
 
     /**
@@ -57,9 +57,9 @@ public class UserDaoImpl extends HibernateBaseDao<User, Integer> implements User
      */
     @Override
     @Transactional(readOnly = true)
-    public boolean isUserNameAvailable(String username)
+    public User getUserByEmail(String email)
     {
-        return super.countByProperty("username", username) == 0;
+        return super.findUniqueByProperty("email", email);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import config.SystemDefaultProperties;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -78,7 +79,7 @@ public class Post extends BaseObject<Post>
     @Expose
     private User author;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<PostTags> postTagsList;
 
     @OneToMany(mappedBy = "post")

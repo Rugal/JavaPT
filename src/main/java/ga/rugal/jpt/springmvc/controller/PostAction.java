@@ -8,8 +8,11 @@ import ga.rugal.jpt.common.tracker.bcodec.BEValue;
 import ga.rugal.jpt.common.tracker.bcodec.BEncoder;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
+import ga.rugal.jpt.core.entity.Admin;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.Thread;
+import ga.rugal.jpt.core.entity.User;
+import ga.rugal.jpt.core.service.AdminService;
 import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.ThreadService;
 import ga.rugal.jpt.core.service.UserService;
@@ -52,25 +55,27 @@ public class PostAction
     private UserService userService;
 
     @Autowired
+    private AdminService adminService;
+
+    @Autowired
     private ThreadService threadService;
 
     /**
      * GET a post from database.
      *
      * @param pageNo
-     * @param pid      primary key of target post.
      * @param pageSize
      *
      * @return
      */
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET)
-    public Message getPostByPage(@RequestParam(name = "pageNo", required = true,
+    //    @RequestMapping(method = RequestMethod.GET)
+    public Message getPage(@RequestParam(name = "pageNo", required = true,
         defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
-                                 @RequestParam(name = "pageSize", required = true,
-                                     defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize)
+                           @RequestParam(name = "pageSize", required = true,
+                               defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize)
     {
-        //TODO ignore content of each post so as to reduce data transportation
+        //TODO ignore content of each post so as to reduce data transmission
         Pagination page = postService.getDAO().getPage(pageNo, pageSize);
         if (page.getTotalCount() > 0)
         {
@@ -81,102 +86,142 @@ public class PostAction
         }
     }
 
+    //--------------------------------Add Post-----------------------------------
     /**
      * Persist a post bean into database.
      *
-     * @param bean    post bean resembled from request body.
+     * @param bean     post bean resembled from request body.
      * @param request
+     * @param response
      *
      * @return The persisted post bean.
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
-    public Message savePost(@RequestBody Post bean, HttpServletRequest request)
+    public Object save(@RequestBody Post bean, HttpServletRequest request,
+                       HttpServletResponse response)
     {
         int id = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
         bean.setAuthor(userService.getDAO().getByID(id));
         postService.getDAO().save(bean);
-        return Message.successMessage(CommonMessageContent.SAVE_POST, bean);
+        response.setStatus(HttpServletResponse.SC_CREATED);
+        return bean.getPid();
     }
 
+    //----------------------------Post Operation---------------------------------
     /**
-     * Update a post bean.
+     * Update a post bean.<BR>
+     * Only qualified user could update post. User can update all fields except <code>PID</code>.
      *
-     * @param pid  primary key of target post.
-     * @param bean the newer version of post bean
-     *
-     * @return
+     * @param pid      primary key of target post.
+     * @param bean     the newer version of post bean
+     * @param request
+     * @param response
      */
     @ResponseBody
     @RequestMapping(value = "/{pid}", method = RequestMethod.PUT)
-    public Message updatePost(@PathVariable("pid") Integer pid, @RequestBody Post bean)
+    public void update(@PathVariable("pid") Integer pid, @RequestBody Post bean,
+                       HttpServletRequest request, HttpServletResponse response)
     {
-        //TODO only author and administrators have permission to update
+        //-------------Existence check---------------
         Post dbPost = postService.getDAO().getByID(pid);
-        Message message;
-        if (null != dbPost)
+        if (null == dbPost)
         {
-            bean.setPid(pid);
-            postService.update(bean);
-            message = Message.successMessage(CommonMessageContent.UPDATE_POST, bean);
-        } else
-        {
-            message = Message.failMessage(CommonMessageContent.POST_NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
         }
-        return message;
+        //------------Permission check---------------
+        int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
+        User user = userService.getDAO().getByID(uid);
+        if (this.isAccessible(user, dbPost))
+        {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        //------------------Update-------------------
+        bean.setPid(pid);//In case of malformed bean
+        postService.update(bean);
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     /**
-     * DELETE a post record and its corresponding threads from database.
+     * Tell if given user is the author of the post.
      *
-     * @param pid the target post id.
+     * @param post
+     * @param user
      *
      * @return
      */
-    @ResponseBody
-    @RequestMapping(value = "/{pid}", method = RequestMethod.DELETE)
-    public Message deletePost(@PathVariable("pid") Integer pid)
+    private boolean isAuthorOf(User user, Post post)
     {
-        //TODO only author and administrators have permission to delete
-        Post bean = postService.getDAO().getByID(pid);
-        Message message;
-        if (null != bean)
-        {
-            postService.getDAO().deleteById(pid);
-            threadService.getDAO().getByPID(bean).stream().forEach((t) ->
-                {
-                    threadService.getDAO().deleteById(t.getTid());
-                });
-            LOG.info(String.format(CommonLogContent.POST_DELETE, bean.getPid()));
-            message = Message.successMessage(CommonMessageContent.DELETE_POST, bean);
-        } else
-        {
-            message = Message.failMessage(CommonMessageContent.POST_NOT_FOUND);
-        }
-        return message;
+        return post.getAuthor().equals(user);
     }
 
     /**
-     * GET a post from database.
+     * Tell if the given user has sufficient privilege to do operation.
      *
-     * @param pid primary key of target post.
+     * @param user The given user
+     * @param post The target post to be operated
+     *
+     * @return
+     */
+    private boolean isAccessible(User user, Post post)
+    {
+        return !this.isAuthorOf(user, post) && !adminService.meetAdminLevels(user, Admin.Level.ADMIN);
+
+    }
+
+    /**
+     * Delete a post and its corresponding threads from database.
+     *
+     * @param pid      the target post id.
+     * @param request
+     * @param response
+     */
+    @ResponseBody
+    @RequestMapping(value = "/{pid}", method = RequestMethod.DELETE)
+    public void deletePost(@PathVariable("pid") Integer pid, HttpServletRequest request,
+                           HttpServletResponse response)
+    {
+        //-------------Existence check---------------
+        Post bean = postService.getDAO().getByID(pid);
+        if (null == bean)
+        {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        //------------Permission check---------------
+        int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
+        User user = userService.getDAO().getByID(uid);
+        if (this.isAccessible(user, bean))
+        {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        postService.getDAO().deleteById(pid);
+        response.setStatus(HttpServletResponse.SC_ACCEPTED);
+    }
+
+    /**
+     * Get a post from database.
+     *
+     * @param pid      primary key of target post.
+     * @param response
      *
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/{pid}", method = RequestMethod.GET)
-    public Message getPost(@PathVariable("pid") Integer pid)
+    public Object get(@PathVariable("pid") Integer pid, HttpServletResponse response)
     {
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         Post bean = postService.getDAO().getByID(pid);
-        Message message;
         if (null != bean)
         {
-            message = Message.successMessage(CommonMessageContent.GET_POST, bean);
-        } else
-        {
-            message = Message.failMessage(CommonMessageContent.POST_NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         }
-        return message;
+        return bean;
     }
 
     /**

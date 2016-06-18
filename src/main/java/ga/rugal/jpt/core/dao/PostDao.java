@@ -30,4 +30,5 @@ public interface PostDao
 
     @Transactional(readOnly = true)
     List getAllTorrentsOnly();
+
 }

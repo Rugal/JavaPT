@@ -5,8 +5,10 @@ import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.dao.UserLevelDao;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.entity.UserLevel;
+import java.util.List;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
+import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,22 +74,20 @@ public class UserDaoImplTest extends DBTestBase
     }
 
     @Test
-    public void testIsEmailAvailable()
+    public void testGetByEmail()
     {
-        System.out.println("isEmailAvailable");
+        System.out.println("getByEmail");
         String email = user.getEmail();
-        boolean expResult = false;
-        boolean result = userDao.isEmailAvailable(email);
-        assertEquals(expResult, result);
+        User dbUser = userDao.getUserByEmail(email);
+        Assert.assertEquals(user, dbUser);
     }
 
     @Test
-    public void testIsUsernameAvailable()
+    public void testFindByName()
     {
-        System.out.println("isUsernameAvailable");
+        System.out.println("findByName");
         String username = user.getUsername();
-        boolean expResult = false;
-        boolean result = userDao.isUserNameAvailable(username);
-        assertEquals(expResult, result);
+        List<User> list = userDao.findUserByName(username);
+        Assert.assertEquals(1, list.size());
     }
 }

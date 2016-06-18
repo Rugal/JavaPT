@@ -1,16 +1,16 @@
 package ga.rugal.jpt.springmvc.controller;
 
 import config.SystemDefaultProperties;
-import ga.rugal.jpt.common.CommonMessageContent;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.InvitationService;
 import ga.rugal.jpt.core.service.UserService;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import ml.rugal.sshcommon.springmvc.util.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,9 +38,12 @@ public class UserAction
 
     //Create new UID with invitation
     //Register User with UID
-    //User Profile Operation
+    //--------------------------User Profile Operation-----------------------------
     /**
-     * DELETE a user record from database.
+     * De-registration will not delete user profile in database, but set its status as un-loginable.
+     * <BR>
+     * Just like updating user, only <code>uid</code> in URL will be operated, authentication fields
+     * are just for user identity verification.
      *
      * @param id       the target user id.
      * @param request
@@ -49,7 +52,7 @@ public class UserAction
      */
     @ResponseBody
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void deregisterUser(@PathVariable("id") Integer id, HttpServletRequest request, HttpServletResponse response)
+    public void deregister(@PathVariable("id") Integer id, HttpServletRequest request, HttpServletResponse response)
     {
         if (!request.getHeader(SystemDefaultProperties.ID).equals("" + id))
         {
@@ -57,106 +60,109 @@ public class UserAction
             return;
         }
         User bean = userService.getDAO().getByID(id);
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         if (null != bean)
         {
-            userService.getDAO().deleteById(id);
             bean.setStatus(User.Status.DELETING);
-        } else
-        {
+            userService.update(bean);
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         }
     }
 
     /**
      * GET a user record from database.
      *
-     * @param id primary key of target user.
+     * @param id       primary key of target user.
+     * @param response
      *
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Message getUserProfile(@PathVariable("id") Integer id)
+    public Object get(@PathVariable("id") Integer id, HttpServletResponse response)
     {
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         User bean = userService.getDAO().getByID(id);
-        Message message;
         if (null != bean)
         {
-            message = Message.successMessage(CommonMessageContent.GET_USER, bean);
-        } else
-        {
-            message = Message.failMessage(CommonMessageContent.USER_NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         }
-        return message;
+        return bean;
     }
 
     /**
-     * Update a user bean.
+     * Update some fields of a user profile.
      *
-     * @param id   primary key of target user.
-     * @param bean the newer user bean
-     *
-     * @return
+     * @param id       primary key of target user.
+     * @param bean     the newer user bean
+     * @param request
+     * @param response
      */
     @ResponseBody
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public Message updateUserProfile(@PathVariable("id") Integer id, @RequestBody User bean)
+    public void update(@PathVariable("id") Integer id, @RequestBody User bean,
+                       HttpServletRequest request, HttpServletResponse response)
     {
+        if (!request.getHeader(SystemDefaultProperties.ID).equals("" + id))
+        {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         User dbUser = userService.getDAO().getByID(id);
-        Message message;
         if (null != dbUser)
         {
             bean.setUid(id);
             userService.update(bean);
-            message = Message.successMessage(CommonMessageContent.UPDATE_USER, bean);
-        } else
-        {
-            message = Message.failMessage(CommonMessageContent.USER_NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         }
-        return message;
     }
 
-    //Search User
+    //---------------------------------Search User----------------------------------
     /**
-     * See if the given email is available for registration.
+     * Get the user with email address.
      *
      * @param email
+     * @param response
      *
      * @return
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, params = "email")
-    public Message isEmailAvailable(@RequestParam(value = "email", required = true) String email)
+    public Object getByEmail(@RequestParam(value = "email", required = true) String email,
+                             HttpServletResponse response)
     {
-        Message message;
-        if (userService.getDAO().isEmailAvailable(email))
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        User user = userService.getDAO().getUserByEmail(email);
+        if (null != user)
         {
-            message = Message.successMessage(CommonMessageContent.EMAIL_AVAILABLE, null);
-        } else
-        {
-            message = Message.failMessage(CommonMessageContent.EMAIL_UNAVAILABLE);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setStatus(HttpServletResponse.SC_OK);
         }
-        return message;
+        return user;
     }
 
     /**
-     * See if the given username is available for registration.
+     * Search for users that contains name in their username field
      *
      * @param username
+     * @param response
      *
      * @return
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, params = "username")
-    public Message isUsernameAvailable(@RequestParam(value = "username", required = true) String username)
+    public Object findByName(@RequestParam(value = "username", required = true) String username,
+                             HttpServletResponse response)
     {
-        Message message;
-        if (userService.getDAO().isUserNameAvailable(username))
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        List<User> users = userService.getDAO().findUserByName(username);
+        if (null != users)
         {
-            message = Message.successMessage(CommonMessageContent.USERNAME_AVAILABLE, null);
-        } else
-        {
-            message = Message.failMessage(CommonMessageContent.USERNAME_UNAVAILABLE);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setStatus(HttpServletResponse.SC_OK);
         }
-        return message;
+        return users;
     }
 }

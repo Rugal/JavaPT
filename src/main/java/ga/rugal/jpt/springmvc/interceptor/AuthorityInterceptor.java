@@ -65,14 +65,12 @@ public class AuthorityInterceptor extends BaseInterceptor
 
         String id = request.getHeader(SystemDefaultProperties.ID);
         HandlerMethod hm = (HandlerMethod) handler;
-        LOG.debug(MessageFormat.format(CommonLogContent.USER_ROLE_ACCESS,
-                                       id,
+        LOG.debug(MessageFormat.format(CommonLogContent.USER_ROLE_ACCESS, id,
                                        getHandlerFullName(hm)));
         boolean status = true;
         if (isAccessible(id, hm))
         {
-            LOG.debug(MessageFormat.format(CommonLogContent.USER_ROLE_SUCCEEDED,
-                                           id,
+            LOG.debug(MessageFormat.format(CommonLogContent.USER_ROLE_SUCCEEDED, id,
                                            getHandlerFullName(hm)));
         } else
         {
