@@ -3,7 +3,6 @@ package ga.rugal.jpt.springmvc.interceptor;
 import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.CommonMessageContent;
-import ga.rugal.jpt.core.entity.Admin;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.AdminService;
 import ga.rugal.jpt.core.service.UserService;
@@ -11,9 +10,6 @@ import ga.rugal.jpt.springmvc.annotation.Role;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.text.MessageFormat;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import ml.rugal.sshcommon.springmvc.util.Message;
@@ -132,31 +128,8 @@ public class AuthorityInterceptor extends BaseInterceptor
         //-------------------
         if (null != r)
         {
-            //Deny access by default if without any required role
-            value = false;
-            //---------------------
-            Set<Admin.Level> ownedLevel = new HashSet<>(5);
             User user = userService.getDAO().getByID(Integer.parseInt(id));
-            List<Admin> admins = adminService.getDAO().getByUID(user);
-            //Replace user.getAdminList as hibernate lazy loading problem
-            if (null == admins || admins.isEmpty())
-            {
-                return false;
-            }
-            admins.stream().forEach((admin) ->
-                {
-                    ownedLevel.add(admin.getLevel());
-                });
-
-            for (Admin.Level requiredLevel : r.value())
-            {
-                if (ownedLevel.contains(requiredLevel))
-                {
-                    //If match any role
-                    value = true;
-                    break;
-                }
-            }
+            value = adminService.meetAdminLevels(user, r.value());
         }
         return value;
     }
