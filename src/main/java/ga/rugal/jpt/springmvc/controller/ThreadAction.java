@@ -38,7 +38,7 @@ public class ThreadAction
      */
     @ResponseBody
     @RequestMapping(value = "/{tid}", method = RequestMethod.PUT)
-    public Message updateThread(@PathVariable("tid") Integer tid, @RequestBody Thread bean)
+    public Message update(@PathVariable("tid") Integer tid, @RequestBody Thread bean)
     {
         Thread dbThread = threadService.getDAO().getByID(tid);
         Message message;
@@ -63,7 +63,7 @@ public class ThreadAction
      */
     @ResponseBody
     @RequestMapping(value = "/{tid}", method = RequestMethod.DELETE)
-    public Message deleteThread(@PathVariable("tid") Integer tid)
+    public Message delete(@PathVariable("tid") Integer tid)
     {
         Thread bean = threadService.getDAO().deleteById(tid);
         Message message;
@@ -86,7 +86,7 @@ public class ThreadAction
      */
     @ResponseBody
     @RequestMapping(value = "/{tid}", method = RequestMethod.GET)
-    public Message getThread(@PathVariable("tid") Integer tid)
+    public Message get(@PathVariable("tid") Integer tid)
     {
         Thread bean = threadService.getDAO().getByID(tid);
         Message message;

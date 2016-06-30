@@ -347,28 +347,37 @@ public class PostAction
 
     //-----------------------Post related Threads-------------------------
     /**
-     * Persist a thread bean into database.<BR>
-     * Notice a thread must be attached under a post.
+     * Persist a thread bean into database. Notice a thread must be attached under a post.<BR>
+     * All users are allowed to view the post and thread content, but users that do not reach
+     * minimum level requirement will not able to download torrent files and the data files
      *
-     * @param pid     the post that this thread will be attached below.
-     * @param bean    thread bean resembled from request body.
-     * @param request contains user information.
+     * @param pid      the post that this thread will be attached below.
+     * @param bean     thread bean resembled from request body.
+     * @param request  contains user information.
+     * @param response
      *
      * @return The persisted post bean.
      */
     @ResponseBody
     @RequestMapping(value = "/{pid}/thread", method = RequestMethod.POST)
-    public Message saveThread(@PathVariable("pid") Integer pid,
-                              @RequestBody Thread bean,
-                              HttpServletRequest request)
+    public Object saveThread(@PathVariable("pid") Integer pid, @RequestBody Thread bean,
+                             HttpServletRequest request, HttpServletResponse response)
     {
+        //-------------Existence check---------------
+        Post post = postService.getDAO().getByID(pid);
+        if (null == post)
+        {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return null;
+        }
         //setting user in Thread
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
         bean.setReplyer(userService.getDAO().getByID(uid));
         //setting attached post in Thread
         bean.setPost(postService.getDAO().getByID(pid));
         threadService.getDAO().save(bean);
-        return Message.successMessage(CommonMessageContent.SAVE_THREAD, bean);
+        response.setStatus(HttpServletResponse.SC_CREATED);
+        return bean.getTid();
     }
 
     /**
@@ -390,6 +399,7 @@ public class PostAction
                                    @RequestParam(name = "pageSize", required = true,
                                        defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize)
     {
+        //TODO should this method ever be exist?
         Post post = postService.getDAO().getByID(pid);
         Pagination page = threadService.getDAO().getPage(post, pageNo, pageSize);
         if (page.getTotalCount() > 0)
