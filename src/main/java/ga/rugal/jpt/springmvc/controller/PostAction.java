@@ -291,20 +291,25 @@ public class PostAction
                                    HttpServletRequest request,
                                    HttpServletResponse response)
     {
-        //check metainfo
+        //-------------Existence check---------------
         Post post = postService.getDAO().getByID(pid);
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         if (null == post)
         {
-            return Message.failMessage(CommonMessageContent.POST_NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return null;
         }
-        if (null == post.getBencode())
+        //------------Permission check---------------
+
+        int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
+        User user = userService.getDAO().getByID(uid);
+        if (!this.isAccessible(user, post))
         {
-            return Message.failMessage(CommonMessageContent.TORRENT_NOT_EXISTS);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return null;
         }
-        //TODO user minimum level check
-        //announce URL conversion
-        byte[] data;
+
+        //--------------Announce URL conversion---------------
+        byte[] data = null;
         try
         {
             Map<String, BEValue> origin = BDecoder.bdecode(new ByteArrayInputStream(post.getBencode())).getMap();
@@ -324,7 +329,7 @@ public class PostAction
         }
         catch (IOException ex)
         {
-            return Message.failMessage(CommonMessageContent.ERROR_READ_TORRENT);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
         //send byte array
         return data;
