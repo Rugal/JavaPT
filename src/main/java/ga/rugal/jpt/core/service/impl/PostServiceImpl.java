@@ -44,4 +44,5 @@ public class PostServiceImpl implements PostService
         Updater<Post> updater = new Updater<>(bean);
         return dao.updateByUpdater(updater);
     }
+
 }

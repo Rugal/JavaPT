@@ -268,4 +268,41 @@ public class Post extends BaseObject<Post>
         return Post.class;
     }
 
+    /**
+     * If the given user could read this object.
+     *
+     * @param user
+     *
+     * @return
+     */
+    public boolean canRead(User user)
+    {
+        //------------This user is author or  reaches minimum level-------------
+        if (this.getAuthor().equals(user) || user.getLevel().compareTo(this.getMinLevel()) >= 0)
+        {
+            return true;
+        }
+        List<Admin> admins = user.getAdminList();
+        return admins.stream().anyMatch((admin) -> (admin.getLevel() == Admin.Level.INSPECTOR));
+    }
+
+    /**
+     * If the given user could write/delete this object.
+     *
+     * @param user
+     *
+     * @return
+     */
+    public boolean canWrite(User user)
+    {
+        //------------This user is author-------------
+        if (this.getAuthor().equals(user))
+        {
+            return true;
+        }
+        List<Admin> admins = user.getAdminList();
+        //----------This user is admin with sufficient privilege-------------
+        return admins.stream().anyMatch((admin) -> (admin.getLevel() == Admin.Level.ADMIN));
+    }
+
 }

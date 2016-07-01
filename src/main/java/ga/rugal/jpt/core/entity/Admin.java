@@ -144,7 +144,14 @@ public class Admin extends BaseObject<Admin>
     public enum Level
     {
 
-        UPLOADER, INSPECTOR, MONITOR, ADMIN, SUPER;
+        //User who can create new post to candidate list and add torront for it
+        UPLOADER,
+        //User who can inspect new post and publish them to the tracker
+        INSPECTOR,
+        //User who can access and modify any post
+        ADMIN,
+        //User who can shutdown the whole site
+        SUPER;
     }
 
 }

@@ -2,6 +2,7 @@ package ga.rugal.jpt.core.entity;
 
 import com.google.gson.annotations.Expose;
 import config.SystemDefaultProperties;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -155,4 +156,34 @@ public class Thread extends BaseObject<Thread>
         return Thread.class;
     }
 
+    /**
+     * If the given user could read this object.
+     *
+     * @param user
+     *
+     * @return
+     */
+    public boolean canRead(User user)
+    {
+        return true;
+    }
+
+    /**
+     * If the given user could write/delete this object.
+     *
+     * @param user
+     *
+     * @return
+     */
+    public boolean canWrite(User user)
+    {
+        //------------This user is author-------------
+        if (this.getReplyer().equals(user))
+        {
+            return true;
+        }
+        List<Admin> admins = user.getAdminList();
+        //----------This user is admin with sufficient privilege-------------
+        return admins.stream().anyMatch((admin) -> (admin.getLevel() == Admin.Level.ADMIN));
+    }
 }

@@ -8,7 +8,6 @@ import ga.rugal.jpt.common.tracker.bcodec.BEValue;
 import ga.rugal.jpt.common.tracker.bcodec.BEncoder;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
-import ga.rugal.jpt.core.entity.Admin;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
@@ -133,7 +132,7 @@ public class PostAction
         //------------Permission check---------------
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
         User user = userService.getDAO().getByID(uid);
-        if (!this.isAccessible(user, dbPost))
+        if (!dbPost.canWrite(user))
         {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
@@ -142,32 +141,6 @@ public class PostAction
         bean.setPid(pid);//In case of malformed bean
         postService.update(bean);
         response.setStatus(HttpServletResponse.SC_OK);
-    }
-
-    /**
-     * Tell if given user is the author of the post.
-     *
-     * @param post
-     * @param user
-     *
-     * @return
-     */
-    private boolean isAuthorOf(User user, Post post)
-    {
-        return post.getAuthor().equals(user);
-    }
-
-    /**
-     * Tell if the given user has sufficient privilege to do operation.
-     *
-     * @param user The given user
-     * @param post The target post to be operated
-     *
-     * @return
-     */
-    private boolean isAccessible(User user, Post post)
-    {
-        return this.isAuthorOf(user, post) || adminService.meetAdminLevels(user, Admin.Level.ADMIN);
     }
 
     /**
@@ -192,7 +165,7 @@ public class PostAction
         //------------Permission check---------------
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
         User user = userService.getDAO().getByID(uid);
-        if (!this.isAccessible(user, bean))
+        if (!bean.canWrite(user))
         {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
@@ -253,7 +226,7 @@ public class PostAction
 
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
         User user = userService.getDAO().getByID(uid);
-        if (!this.isAccessible(user, post))
+        if (!post.canWrite(user))
         {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
@@ -302,7 +275,7 @@ public class PostAction
 
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
         User user = userService.getDAO().getByID(uid);
-        if (!this.isAccessible(user, post))
+        if (!post.canRead(user))
         {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return null;

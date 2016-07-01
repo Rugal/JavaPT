@@ -19,7 +19,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(schema = "jpt", name = "level")
-public class UserLevel
+public class UserLevel implements Comparable<UserLevel>
 {
 
     private static final String sequence_name = "level_lid_seq";
@@ -158,6 +158,12 @@ public class UserLevel
     public String toString()
     {
         return "ga.rugal.jpt.core.entity.Level[ lid=" + lid + " ]";
+    }
+
+    @Override
+    public int compareTo(UserLevel o)
+    {
+        return this.lid - o.lid;
     }
 
 }
