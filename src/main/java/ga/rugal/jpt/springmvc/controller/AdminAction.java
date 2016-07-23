@@ -8,9 +8,8 @@ import ga.rugal.jpt.core.service.AdminService;
 import ga.rugal.jpt.core.service.UserService;
 import ga.rugal.jpt.springmvc.annotation.Role;
 import javax.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.springmvc.util.Message;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  *
  * @author Rugal Bernstein
  */
+@Slf4j
 @Controller
 @RequestMapping(value = "/admin")
 @Role(
@@ -33,8 +33,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
     })
 public class AdminAction
 {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AdminAction.class.getName());
 
     @Autowired
     private UserService userService;
@@ -55,7 +53,7 @@ public class AdminAction
     @RequestMapping(method = RequestMethod.POST)
     public Message grant(@RequestParam("grantee") Integer uid, @RequestParam("role") String role, HttpServletRequest request)
     {
-        User grantee = userService.getDAO().getByID(uid);
+        User grantee = userService.getDAO().get(uid);
         if (null == grantee)
         {
             return Message.failMessage(CommonMessageContent.GRANTEE_NOT_FOUND);
@@ -73,7 +71,7 @@ public class AdminAction
         }
         //Get granter information
         String granterID = request.getHeader(SystemDefaultProperties.ID);
-        User granter = userService.getDAO().getByID(Integer.parseInt(granterID));
+        User granter = userService.getDAO().get(Integer.parseInt(granterID));
         Admin admin = new Admin();
         admin.setGranter(granter);
         admin.setLevel(level);
@@ -94,14 +92,14 @@ public class AdminAction
     @RequestMapping(value = "/{aid}", method = RequestMethod.DELETE)
     public Message revoke(@PathVariable("aid") Integer aid, HttpServletRequest request)
     {
-        Admin admin = adminService.getDAO().getByID(aid);
+        Admin admin = adminService.getDAO().get(aid);
         if (null == admin)
         {
             return Message.failMessage(CommonMessageContent.ADMIN_NOT_FOUND);
         }
         //TODO time to check if the granter is eligible to revoke the admin
 
-        adminService.getDAO().deleteById(admin.getAid());
+        adminService.getDAO().delete(admin);
         return Message.successMessage(CommonMessageContent.REVOKE_DONE, admin);
     }
 }

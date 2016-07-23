@@ -13,19 +13,25 @@ import org.springframework.transaction.annotation.Transactional;
 public interface UserDao
 {
 
-    User deleteById(Integer id);
+    User delete(User bean);
 
-    @Transactional(readOnly = true)
-    User getByID(Integer id);
+    User get(Integer id);
 
-    @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);
 
     User save(User bean);
 
     User updateByUpdater(Updater<User> updater);
 
-    boolean authenticateUser(Integer uid, String password);
+    /**
+     * Verify user credential.
+     *
+     * @param uid
+     * @param password
+     *
+     * @return
+     */
+    boolean authenticate(Integer uid, String password);
 
     /**
      * Get user with related email address.
@@ -35,7 +41,7 @@ public interface UserDao
      * @return
      */
     @Transactional(readOnly = true)
-    public User getUserByEmail(String email);
+    User getByEmail(String email);
 
     /**
      * Find user by part of name.
@@ -45,5 +51,5 @@ public interface UserDao
      * @return
      */
     @Transactional(readOnly = true)
-    public List<User> findUserByName(String username);
+    List<User> findByName(String username);
 }

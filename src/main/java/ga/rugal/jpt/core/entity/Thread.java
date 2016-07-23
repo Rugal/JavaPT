@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  *
@@ -20,15 +22,17 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(schema = "jpt", name = "thread")
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class Thread extends BaseObject<Thread>
 {
 
-    private static final String sequence_name = "thread_tid_seq";
+    private static final String SEQUENCE_NAME = "thread_tid_seq";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = sequence_name)
-    @SequenceGenerator(name = sequence_name,
-        sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQUENCE_NAME)
+    @SequenceGenerator(name = SEQUENCE_NAME,
+        sequenceName = SystemDefaultProperties.SCHEMA + SEQUENCE_NAME, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     @Expose
@@ -55,100 +59,6 @@ public class Thread extends BaseObject<Thread>
     @ManyToOne
     @Expose
     private User replyer;
-
-    public Thread()
-    {
-    }
-
-    public Thread(Integer tid)
-    {
-        this.tid = tid;
-    }
-
-    public Integer getTid()
-    {
-        return tid;
-    }
-
-    public void setTid(Integer tid)
-    {
-        this.tid = tid;
-    }
-
-    public String getContent()
-    {
-        return content;
-    }
-
-    public void setContent(String content)
-    {
-        this.content = content;
-    }
-
-    public Long getPostTime()
-    {
-        return postTime;
-    }
-
-    public void setPostTime(Long postTime)
-    {
-        this.postTime = postTime;
-    }
-
-    public Integer getRate()
-    {
-        return rate;
-    }
-
-    public void setRate(Integer rate)
-    {
-        this.rate = rate;
-    }
-
-    public Post getPost()
-    {
-        return post;
-    }
-
-    public void setPost(Post post)
-    {
-        this.post = post;
-    }
-
-    public User getReplyer()
-    {
-        return replyer;
-    }
-
-    public void setReplyer(User replyer)
-    {
-        this.replyer = replyer;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int hash = 0;
-        hash += (tid != null ? tid.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object)
-    {
-        if (!(object instanceof Thread))
-        {
-            return false;
-        }
-        Thread other = (Thread) object;
-        return !((this.tid == null && other.tid != null) || (this.tid != null && !this.tid.equals(other.tid)));
-    }
-
-    @Override
-    public String toString()
-    {
-        return "ga.rugal.jpt.core.entity.Thread[ tid=" + tid + " ]";
-    }
 
     @Override
     protected Class<Thread> getRealClass()

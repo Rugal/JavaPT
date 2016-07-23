@@ -79,8 +79,8 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
     {
         System.out.println("tearDown");
         deleteTag();
-        userService.getDAO().deleteById(user.getUid());
-        levelService.getDAO().deleteById(level.getLid());
+        userService.getDAO().delete(user);
+        levelService.getDAO().delete(level);
     }
 
     private MvcResult saveTag() throws Exception

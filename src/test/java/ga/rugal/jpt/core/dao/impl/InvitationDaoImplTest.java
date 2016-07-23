@@ -49,8 +49,8 @@ public class InvitationDaoImplTest extends DBTestBase
     {
         System.out.println("tearDown");
         //order is important
-        invitationDao.deleteById(invitation.getIid());
-        userDao.deleteById(user.getUid());
+        invitationDao.delete(invitation);
+        userDao.delete(user);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class InvitationDaoImplTest extends DBTestBase
         System.out.println("getByID");
         Integer id = invitation.getIid();
         Invitation expResult = invitation;
-        Invitation result = invitationDao.getByID(id);
+        Invitation result = invitationDao.get(id);
         assertEquals(expResult, result);
     }
 

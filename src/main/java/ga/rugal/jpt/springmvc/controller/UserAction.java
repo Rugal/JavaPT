@@ -7,8 +7,7 @@ import ga.rugal.jpt.core.service.UserService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -23,12 +22,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
  *
  * @author Rugal Bernstein
  */
+@Slf4j
 @Controller
 @RequestMapping(value = "/user")
 public class UserAction
 {
-
-    private static final Logger LOG = LoggerFactory.getLogger(UserAction.class.getName());
 
     @Autowired
     private UserService userService;
@@ -59,7 +57,7 @@ public class UserAction
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        User bean = userService.getDAO().getByID(id);
+        User bean = userService.getDAO().get(id);
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         if (null != bean)
         {
@@ -82,7 +80,7 @@ public class UserAction
     public Object get(@PathVariable("id") Integer id, HttpServletResponse response)
     {
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        User bean = userService.getDAO().getByID(id);
+        User bean = userService.getDAO().get(id);
         if (null != bean)
         {
             response.setStatus(HttpServletResponse.SC_OK);
@@ -110,7 +108,7 @@ public class UserAction
             return;
         }
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        User dbUser = userService.getDAO().getByID(id);
+        User dbUser = userService.getDAO().get(id);
         if (null != dbUser)
         {
             bean.setUid(id);
@@ -134,7 +132,7 @@ public class UserAction
                              HttpServletResponse response)
     {
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        User user = userService.getDAO().getUserByEmail(email);
+        User user = userService.getDAO().getByEmail(email);
         if (null != user)
         {
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -157,7 +155,7 @@ public class UserAction
                              HttpServletResponse response)
     {
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        List<User> users = userService.getDAO().findUserByName(username);
+        List<User> users = userService.getDAO().findByName(username);
         if (null != users)
         {
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);

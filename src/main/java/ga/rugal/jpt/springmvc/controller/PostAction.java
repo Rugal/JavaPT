@@ -20,11 +20,10 @@ import java.io.IOException;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.page.Pagination;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.mindrot.jbcrypt.BCrypt;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -40,12 +39,11 @@ import org.springframework.web.multipart.MultipartFile;
  *
  * @author Rugal Bernstein
  */
+@Slf4j
 @Controller
 @RequestMapping(value = "/post")
 public class PostAction
 {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PostAction.class.getName());
 
     @Autowired
     private PostService postService;
@@ -101,7 +99,7 @@ public class PostAction
                        HttpServletResponse response)
     {
         int id = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
-        bean.setAuthor(userService.getDAO().getByID(id));
+        bean.setAuthor(userService.getDAO().get(id));
         postService.getDAO().save(bean);
         response.setStatus(HttpServletResponse.SC_CREATED);
         return bean.getPid();
@@ -123,7 +121,7 @@ public class PostAction
                        HttpServletRequest request, HttpServletResponse response)
     {
         //-------------Existence check---------------
-        Post dbPost = postService.getDAO().getByID(pid);
+        Post dbPost = postService.getDAO().get(pid);
         if (null == dbPost)
         {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -131,7 +129,7 @@ public class PostAction
         }
         //------------Permission check---------------
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
-        User user = userService.getDAO().getByID(uid);
+        User user = userService.getDAO().get(uid);
         if (!dbPost.canWrite(user))
         {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -156,7 +154,7 @@ public class PostAction
                            HttpServletResponse response)
     {
         //-------------Existence check---------------
-        Post bean = postService.getDAO().getByID(pid);
+        Post bean = postService.getDAO().get(pid);
         if (null == bean)
         {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -164,13 +162,13 @@ public class PostAction
         }
         //------------Permission check---------------
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
-        User user = userService.getDAO().getByID(uid);
+        User user = userService.getDAO().get(uid);
         if (!bean.canWrite(user))
         {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        postService.getDAO().deleteById(pid);
+        postService.getDAO().delete(bean);
         response.setStatus(HttpServletResponse.SC_ACCEPTED);
     }
 
@@ -187,7 +185,7 @@ public class PostAction
     public Object get(@PathVariable("pid") Integer pid, HttpServletResponse response)
     {
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        Post bean = postService.getDAO().getByID(pid);
+        Post bean = postService.getDAO().get(pid);
         if (null != bean)
         {
             response.setStatus(HttpServletResponse.SC_OK);
@@ -216,7 +214,7 @@ public class PostAction
                                HttpServletRequest request, HttpServletResponse response)
     {
         //-------------Existence check---------------
-        Post post = postService.getDAO().getByID(pid);
+        Post post = postService.getDAO().get(pid);
         if (null == post)
         {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -225,7 +223,7 @@ public class PostAction
         //------------Permission check---------------
 
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
-        User user = userService.getDAO().getByID(uid);
+        User user = userService.getDAO().get(uid);
         if (!post.canWrite(user))
         {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -265,7 +263,7 @@ public class PostAction
                                    HttpServletResponse response)
     {
         //-------------Existence check---------------
-        Post post = postService.getDAO().getByID(pid);
+        Post post = postService.getDAO().get(pid);
         if (null == post)
         {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -274,7 +272,7 @@ public class PostAction
         //------------Permission check---------------
 
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
-        User user = userService.getDAO().getByID(uid);
+        User user = userService.getDAO().get(uid);
         if (!post.canRead(user))
         {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -337,7 +335,7 @@ public class PostAction
                              HttpServletRequest request, HttpServletResponse response)
     {
         //-------------Existence check---------------
-        Post post = postService.getDAO().getByID(pid);
+        Post post = postService.getDAO().get(pid);
         if (null == post)
         {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -345,9 +343,9 @@ public class PostAction
         }
         //setting user in Thread
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
-        bean.setReplyer(userService.getDAO().getByID(uid));
+        bean.setReplyer(userService.getDAO().get(uid));
         //setting attached post in Thread
-        bean.setPost(postService.getDAO().getByID(pid));
+        bean.setPost(postService.getDAO().get(pid));
         threadService.getDAO().save(bean);
         response.setStatus(HttpServletResponse.SC_CREATED);
         return bean.getTid();
@@ -373,7 +371,7 @@ public class PostAction
                                        defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize)
     {
         //TODO should this method ever be exist?
-        Post post = postService.getDAO().getByID(pid);
+        Post post = postService.getDAO().get(pid);
         Pagination page = threadService.getDAO().getPage(post, pageNo, pageSize);
         if (page.getTotalCount() > 0)
         {

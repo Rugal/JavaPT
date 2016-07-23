@@ -3,7 +3,6 @@ package ga.rugal.jpt.core.dao;
 import ga.rugal.jpt.core.entity.Invitation;
 import ml.rugal.sshcommon.hibernate.Updater;
 import ml.rugal.sshcommon.page.Pagination;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -12,12 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 public interface InvitationDao
 {
 
-    Invitation deleteById(Integer id);
+    Invitation delete(Invitation bean);
 
-    @Transactional(readOnly = true)
-    Invitation getByID(Integer id);
+    Invitation get(Integer id);
 
-    @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);
 
     Invitation save(Invitation bean);

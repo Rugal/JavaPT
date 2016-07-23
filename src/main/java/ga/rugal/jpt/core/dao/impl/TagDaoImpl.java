@@ -3,11 +3,8 @@ package ga.rugal.jpt.core.dao.impl;
 import ga.rugal.jpt.core.dao.TagDao;
 import ga.rugal.jpt.core.entity.Tag;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.hibernate.HibernateBaseDao;
-import ml.rugal.sshcommon.page.Pagination;
-import org.hibernate.Criteria;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,52 +12,17 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Rugal Bernstein
  */
+@Slf4j
 @Repository
 public class TagDaoImpl extends HibernateBaseDao<Tag, Integer> implements TagDao
 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TagDaoImpl.class.getName());
-
+    @Transactional(readOnly = true)
     @Override
-    @Transactional(readOnly = true)
-    public Pagination getPage(int pageNo, int pageSize)
-    {
-        Criteria crit = createCriteria();
-        Pagination page = findByCriteria(crit, pageNo, pageSize);
-        return page;
-    }
-
-    @Transactional(readOnly = true)
     public List<Tag> findByName(String partialName)
     {
-        List<Tag> list = super.findByPropertyVague("name", partialName);
+        List<Tag> list = super.contains("name", partialName);
         return list;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Tag getByID(Integer id)
-    {
-        Tag entity = get(id);
-        return entity;
-    }
-
-    @Override
-    public Tag save(Tag bean)
-    {
-        getSession().save(bean);
-        return bean;
-    }
-
-    @Override
-    public Tag deleteById(Integer id)
-    {
-        Tag entity = super.get(id);
-        if (entity != null)
-        {
-            getSession().delete(entity);
-        }
-        return entity;
     }
 
     @Override

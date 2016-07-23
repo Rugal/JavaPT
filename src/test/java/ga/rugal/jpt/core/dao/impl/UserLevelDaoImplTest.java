@@ -38,7 +38,7 @@ public class UserLevelDaoImplTest extends DBTestBase
     public void tearDown()
     {
         System.out.println("tearDown");
-        levelDao.deleteById(level.getLid());
+        levelDao.delete(level);
     }
 
     @Test
@@ -57,12 +57,12 @@ public class UserLevelDaoImplTest extends DBTestBase
         System.out.println("findById");
         Integer id = level.getLid();
         UserLevel expResult = level;
-        UserLevel result = levelDao.getByID(id);
+        UserLevel result = levelDao.get(id);
         assertEquals(expResult, result);
     }
 
     @Test
-    public void testgetLevel()
+    public void testGetLevel()
     {
         System.out.println("getLevel");
         Integer credit = 100001;

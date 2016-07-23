@@ -61,9 +61,9 @@ public class PostDaoImplTest extends DBTestBase
     {
         System.out.println("tearDown");
         //order is important
-        postDao.deleteById(post.getPid());
-        userDao.deleteById(user.getUid());
-        levelDao.deleteById(level.getLid());
+        postDao.delete(post);
+        userDao.delete(user);
+        levelDao.delete(level);
     }
 
     @Test
@@ -84,7 +84,7 @@ public class PostDaoImplTest extends DBTestBase
         System.out.println("getByID");
         Integer id = post.getPid();
         Post expResult = post;
-        Post result = postDao.getByID(id);
+        Post result = postDao.get(id);
         assertEquals(expResult, result);
     }
 
@@ -101,17 +101,15 @@ public class PostDaoImplTest extends DBTestBase
     @Ignore
     public void testSave() throws IOException
     {
-        TrackedTorrent torrent = TrackedTorrent.load(new File("E:\\WorkSpaces\\Coding\\JavaPT\\torrents\\A12F4E3EFEDC35937670811147A076BC596176CA.torrent"));
-
+        TrackedTorrent torrent = TrackedTorrent.load(new File("torrents\\A12F4E3EFEDC35937670811147A076BC596176CA.torrent"));
         Post p = new Post();
         p.setContent("Test post 2");
         p.setEnabled(true);
         p.setPostTime(System.currentTimeMillis());
         p.setTitle("Rugal Bernstein Test post 2");
-        p.setAuthor(userDao.getByID(1));
+        p.setAuthor(userDao.get(1));
         p.setInfoHash(torrent.getHexInfoHash());
         p.setBencode(torrent.getEncoded());
         postDao.save(p);
     }
-
 }

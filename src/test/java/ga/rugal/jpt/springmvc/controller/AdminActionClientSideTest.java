@@ -68,8 +68,8 @@ public class AdminActionClientSideTest extends ControllerClientSideTestBase
     {
         System.out.println("tearDown");
         testRevoke();
-        userService.getDAO().deleteById(grantee.getUid());
-        userService.getDAO().deleteById(granter.getUid());
+        userService.getDAO().delete(grantee);
+        userService.getDAO().delete(granter);
     }
 
     private MvcResult testGrant() throws Exception

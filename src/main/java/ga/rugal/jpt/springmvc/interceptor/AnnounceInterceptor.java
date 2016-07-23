@@ -138,7 +138,7 @@ public class AnnounceInterceptor implements HandlerInterceptor
             LOG.debug(CommonLogContent.INVALID_UID, request.getRemoteAddr());
             throw new TrackerResponseException(CommonMessageContent.INVALID_UID);
         }
-        User user = userService.getDAO().getByID(uid);
+        User user = userService.getDAO().get(uid);
         if (null == user)
         {
             LOG.debug(CommonLogContent.INVALID_UID, request.getRemoteAddr());

@@ -8,9 +8,8 @@ import ga.rugal.jpt.core.service.SigninLogService;
 import ga.rugal.jpt.core.service.UserService;
 import java.text.MessageFormat;
 import javax.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.springmvc.util.Message;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,11 +21,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author Rugal Bernstein
  * @since 0.1
  */
+@Slf4j
 @Controller
 public class SigninAction
 {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SigninAction.class.getName());
 
     @Autowired
     private SigninLogService signinLogService;
@@ -51,7 +49,7 @@ public class SigninAction
         String id = request.getHeader(SystemDefaultProperties.ID);
         SigninLog signinLog = new SigninLog();
         signinLog.setIp(request.getRemoteAddr());
-        signinLog.setUid(userService.getDAO().getByID(Integer.parseInt(id)));
+        signinLog.setUid(userService.getDAO().get(Integer.parseInt(id)));
         signinLogService.getDAO().save(signinLog);
         LOG.trace(MessageFormat.format(CommonLogContent.SIGNIN, id, request.getRemoteAddr()));
         Message message = Message.successMessage(CommonMessageContent.SIGNIN, signinLog);

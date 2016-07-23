@@ -12,18 +12,22 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "client_announce", schema = "jpt")
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class ClientAnnounce
 {
 
-    private static final String sequence_name = "client_announce_caid_seq";
+    private static final String SEQUENCE_NAME = "client_announce_caid_seq";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = sequence_name)
-    @SequenceGenerator(name = sequence_name,
-        sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQUENCE_NAME)
+    @SequenceGenerator(name = SEQUENCE_NAME,
+        sequenceName = SystemDefaultProperties.SCHEMA + SEQUENCE_NAME, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     @Expose
@@ -59,123 +63,4 @@ public class ClientAnnounce
     @JoinColumn(name = "pid", referencedColumnName = "pid", nullable = false)
     @ManyToOne
     private Post post;
-
-    public ClientAnnounce()
-    {
-    }
-
-    public ClientAnnounce(Long caid)
-    {
-        this.caid = caid;
-    }
-
-    public Long getCaid()
-    {
-        return caid;
-    }
-
-    public void setCaid(Long caid)
-    {
-        this.caid = caid;
-    }
-
-    public Long getAnnounceTime()
-    {
-        return announceTime;
-    }
-
-    public void setAnnounceTime(Long announceTime)
-    {
-        this.announceTime = announceTime;
-    }
-
-    public User getUser()
-    {
-        return user;
-    }
-
-    public void setUser(User user)
-    {
-        this.user = user;
-    }
-
-    public Client getClient()
-    {
-        return client;
-    }
-
-    public void setClient(Client client)
-    {
-        this.client = client;
-    }
-
-    public Long getDownloadByte()
-    {
-        return downloadByte;
-    }
-
-    public void setDownloadByte(Long downloadByte)
-    {
-        this.downloadByte = downloadByte;
-    }
-
-    public Long getUploadByte()
-    {
-        return uploadByte;
-    }
-
-    public void setUploadByte(Long uploadByte)
-    {
-        this.uploadByte = uploadByte;
-    }
-
-    public Long getLeftByte()
-    {
-        return leftByte;
-    }
-
-    public void setLeftByte(Long leftByte)
-    {
-        this.leftByte = leftByte;
-    }
-
-    public Post getPost()
-    {
-        return post;
-    }
-
-    public void setPost(Post post)
-    {
-        this.post = post;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int hash = 0;
-        hash += (caid != null ? caid.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object)
-    {
-        if (!(object instanceof ClientAnnounce))
-        {
-            return false;
-        }
-        ClientAnnounce other = (ClientAnnounce) object;
-        if ((this.caid == null && other.caid != null) || (this.caid != null && !this.caid.equals(other.caid)))
-        {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "ga.rugal.jpt.core.entity.ClientAnnounce[ caid=" + caid + " ]";
-    }
-
 }

@@ -12,19 +12,17 @@ import ga.rugal.jpt.common.tracker.server.TrackerResponseException;
 import ga.rugal.jpt.core.service.Tracker;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
  *
  * @author Rugal Bernstein
  */
+@Slf4j
 @Service
 public class TrackerImpl implements Tracker
 {
-
-    private static final Logger LOG = LoggerFactory.getLogger(TrackerImpl.class);
 
     private final ConcurrentMap<String, TrackedTorrent> torrents = new ConcurrentHashMap<>();
 

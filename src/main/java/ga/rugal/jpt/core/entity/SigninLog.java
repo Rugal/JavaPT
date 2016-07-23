@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  *
@@ -19,15 +21,17 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "signin_log", schema = "jpt")
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class SigninLog extends BaseObject<SigninLog>
 {
 
-    private static final String sequence_name = "signin_log_slid_seq";
+    private static final String SEQUENCE_NAME = "signin_log_slid_seq";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = sequence_name)
-    @SequenceGenerator(name = sequence_name,
-        sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQUENCE_NAME)
+    @SequenceGenerator(name = SEQUENCE_NAME,
+        sequenceName = SystemDefaultProperties.SCHEMA + SEQUENCE_NAME, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     @Expose
@@ -45,80 +49,6 @@ public class SigninLog extends BaseObject<SigninLog>
     @JoinColumn(name = "uid", referencedColumnName = "uid")
     @ManyToOne
     private User uid;
-
-    public SigninLog()
-    {
-    }
-
-    public SigninLog(Integer slid)
-    {
-        this.slid = slid;
-    }
-
-    public Integer getSlid()
-    {
-        return slid;
-    }
-
-    public void setSlid(Integer slid)
-    {
-        this.slid = slid;
-    }
-
-    public Long getSigninTime()
-    {
-        return signinTime;
-    }
-
-    public void setSigninTime(Long signinTime)
-    {
-        this.signinTime = signinTime;
-    }
-
-    public String getIp()
-    {
-        return ip;
-    }
-
-    public void setIp(String ip)
-    {
-        this.ip = ip;
-    }
-
-    public User getUid()
-    {
-        return uid;
-    }
-
-    public void setUid(User uid)
-    {
-        this.uid = uid;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int hash = 0;
-        hash += (slid != null ? slid.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object)
-    {
-        if (!(object instanceof SigninLog))
-        {
-            return false;
-        }
-        SigninLog other = (SigninLog) object;
-        return !((this.slid == null && other.slid != null) || (this.slid != null && !this.slid.equals(other.slid)));
-    }
-
-    @Override
-    public String toString()
-    {
-        return "ga.rugal.jpt.core.entity.SigninLog[ slid=" + slid + " ]";
-    }
 
     @Override
     protected Class<SigninLog> getRealClass()

@@ -60,9 +60,9 @@ public class SigninActionClientSideTest extends ControllerClientSideTestBase
     public void tearDown()
     {
         System.out.println("tearDown");
-        signinLogService.getDAO().deleteById(bean.getSlid());
-        userService.getDAO().deleteById(user.getUid());
-        levelService.getDAO().deleteById(level.getLid());
+        signinLogService.getDAO().delete(bean);
+        userService.getDAO().delete(user);
+        levelService.getDAO().delete(level);
     }
 
     @Test
@@ -81,5 +81,4 @@ public class SigninActionClientSideTest extends ControllerClientSideTestBase
         bean = new SigninLog().backToObject(message.getData());
         Assert.assertNotNull(bean);
     }
-
 }

@@ -33,7 +33,7 @@ public class AuthenticationInterceptor extends BaseInterceptor
 
     /**
      * This interceptor do its jos on all handlers except null null null null null null null null
-     * null null null     {@link ga.rugal.jpt.springmvc.controller.AnnounceAction#announce(ga.rugal.jpt.common.tracker.common.ClientRequestMessageBean, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     * null null null null     {@link ga.rugal.jpt.springmvc.controller.AnnounceAction#announce(ga.rugal.jpt.common.tracker.common.ClientRequestMessageBean, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      * } <BR>
      * Any request that needs authentication must include their
      * {@link ga.rugal.jpt.common.SystemDefaultProperties#ID} and
@@ -108,7 +108,7 @@ public class AuthenticationInterceptor extends BaseInterceptor
         boolean isAuthenticated = false;
         try
         {
-            isAuthenticated = userService.getDAO().authenticateUser(Integer.parseInt(id), credential);
+            isAuthenticated = userService.getDAO().authenticate(Integer.parseInt(id), credential);
         }
         catch (Exception e)
         {

@@ -77,9 +77,9 @@ public class ThreadActionTest extends ControllerClientSideTestBase
         System.out.println("tearDown");
         //order is important
         testDelete();
-        postService.getDAO().deleteById(post.getPid());
-        userService.getDAO().deleteById(user.getUid());
-        levelService.getDAO().deleteById(level.getLid());
+        postService.getDAO().delete(post);
+        userService.getDAO().delete(user);
+        levelService.getDAO().delete(level);
     }
 
     @Test

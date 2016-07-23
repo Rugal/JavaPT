@@ -16,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  *
@@ -23,15 +25,17 @@ import javax.persistence.Transient;
  */
 @Entity
 @Table(schema = "jpt", name = "post")
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class Post extends BaseObject<Post>
 {
 
-    private static final String sequence_name = "post_pid_seq";
+    private static final String SEQUENCE_NAME = "post_pid_seq";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = sequence_name)
-    @SequenceGenerator(name = sequence_name,
-        sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQUENCE_NAME)
+    @SequenceGenerator(name = SEQUENCE_NAME,
+        sequenceName = SystemDefaultProperties.SCHEMA + SEQUENCE_NAME, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     @Expose
@@ -87,180 +91,6 @@ public class Post extends BaseObject<Post>
 
     @OneToMany(mappedBy = "post")
     private List<ClientAnnounce> clientAnnounceList;
-
-    public Post()
-    {
-    }
-
-    public Post(Integer pid)
-    {
-        this.pid = pid;
-    }
-
-    public float getRate()
-    {
-        return rate;
-    }
-
-    public void setRate(float rate)
-    {
-        this.rate = rate;
-    }
-
-    public Integer getPid()
-    {
-        return pid;
-    }
-
-    public void setPid(Integer pid)
-    {
-        this.pid = pid;
-    }
-
-    public String getTitle()
-    {
-        return title;
-    }
-
-    public void setTitle(String title)
-    {
-        this.title = title;
-    }
-
-    public String getContent()
-    {
-        return content;
-    }
-
-    public void setContent(String content)
-    {
-        this.content = content;
-    }
-
-    public byte[] getBencode()
-    {
-        return bencode;
-    }
-
-    public void setBencode(byte[] bencode)
-    {
-        this.bencode = bencode;
-    }
-
-    public List<ClientAnnounce> getClientAnnounceList()
-    {
-        return clientAnnounceList;
-    }
-
-    public void setClientAnnounceList(List<ClientAnnounce> clientAnnounceList)
-    {
-        this.clientAnnounceList = clientAnnounceList;
-    }
-
-    public String getInfoHash()
-    {
-        return infoHash;
-    }
-
-    public void setInfoHash(String infoHash)
-    {
-        this.infoHash = infoHash;
-    }
-
-    public Long getPostTime()
-    {
-        return postTime;
-    }
-
-    public void setPostTime(Long postTime)
-    {
-        this.postTime = postTime;
-    }
-
-    public Integer getSize()
-    {
-        return size;
-    }
-
-    public void setSize(Integer size)
-    {
-        this.size = size;
-    }
-
-    public Boolean getEnabled()
-    {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled)
-    {
-        this.enabled = enabled;
-    }
-
-    public UserLevel getMinLevel()
-    {
-        return minLevel;
-    }
-
-    public void setMinLevel(UserLevel minLevel)
-    {
-        this.minLevel = minLevel;
-    }
-
-    public User getAuthor()
-    {
-        return author;
-    }
-
-    public void setAuthor(User author)
-    {
-        this.author = author;
-    }
-
-    public List<PostTags> getPostTagsList()
-    {
-        return postTagsList;
-    }
-
-    public void setPostTagsList(List<PostTags> postTagsList)
-    {
-        this.postTagsList = postTagsList;
-    }
-
-    public List<Thread> getThreadList()
-    {
-        return threadList;
-    }
-
-    public void setThreadList(List<Thread> threadList)
-    {
-        this.threadList = threadList;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int hash = 0;
-        hash += (pid != null ? pid.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object)
-    {
-        if (!(object instanceof Post))
-        {
-            return false;
-        }
-        Post other = (Post) object;
-        return !((this.pid == null && other.pid != null) || (this.pid != null && !this.pid.equals(other.pid)));
-    }
-
-    @Override
-    public String toString()
-    {
-        return "ga.rugal.jpt.core.entity.Post[ pid=" + pid + " ]";
-    }
 
     @Override
     protected Class<Post> getRealClass()

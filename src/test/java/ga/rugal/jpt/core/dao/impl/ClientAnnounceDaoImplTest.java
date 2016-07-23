@@ -74,11 +74,11 @@ public class ClientAnnounceDaoImplTest extends DBTestBase
     public void tearDown()
     {
         System.out.println("tearDown");
-        clientAnnounceDao.deleteById(clientAnnounce.getCaid());
-        postDao.deleteById(post.getPid());
-        userDao.deleteById(user.getUid());
-        userLevelDao.deleteById(level.getLid());
-        clientDao.deleteById(client.getCid());
+        clientAnnounceDao.delete(clientAnnounce);
+        postDao.delete(post);
+        userDao.delete(user);
+        userLevelDao.delete(level);
+        clientDao.delete(client);
     }
 
     @Test
@@ -97,7 +97,7 @@ public class ClientAnnounceDaoImplTest extends DBTestBase
         System.out.println("getByID");
         Long id = clientAnnounce.getCaid();
         ClientAnnounce expResult = clientAnnounce;
-        ClientAnnounce result = clientAnnounceDao.getByID(id);
+        ClientAnnounce result = clientAnnounceDao.get(id);
         assertEquals(expResult, result);
     }
 

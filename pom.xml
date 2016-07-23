@@ -25,7 +25,11 @@
             <artifactId>jbcrypt</artifactId>
             <version>0.3m</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.10</version>
+        </dependency>
         <!-- JDBC Connector start -->
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -276,12 +280,12 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.3</version>
+            <version>2.7</version>
         </dependency>
         <dependency>
             <groupId>ml.rugal</groupId>
             <artifactId>ssh-common</artifactId>
-            <version>0.3</version>
+            <version>0.4</version>
         </dependency>
         <!-- spring web mvc stop -->
         <dependency>

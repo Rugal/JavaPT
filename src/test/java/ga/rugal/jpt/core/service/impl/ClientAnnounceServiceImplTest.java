@@ -2,6 +2,9 @@ package ga.rugal.jpt.core.service.impl;
 
 import ga.rugal.DBTestBase;
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
+import ga.rugal.jpt.core.dao.ClientDao;
+import ga.rugal.jpt.core.dao.PostDao;
+import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.dao.UserLevelDao;
 import ga.rugal.jpt.core.entity.Client;
 import ga.rugal.jpt.core.entity.ClientAnnounce;
@@ -9,9 +12,6 @@ import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.entity.UserLevel;
 import ga.rugal.jpt.core.service.ClientAnnounceService;
-import ga.rugal.jpt.core.service.ClientService;
-import ga.rugal.jpt.core.service.PostService;
-import ga.rugal.jpt.core.service.UserService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,13 +28,13 @@ public class ClientAnnounceServiceImplTest extends DBTestBase
     private UserLevelDao levelDao;
 
     @Autowired
-    private UserService userService;
+    private UserDao userDao;
 
     @Autowired
-    private PostService postService;
+    private PostDao postDao;
 
     @Autowired
-    private ClientService clientService;
+    private ClientDao clientDao;
 
     @Autowired
     private ClientAnnounceService clientAnnounceService;
@@ -65,22 +65,22 @@ public class ClientAnnounceServiceImplTest extends DBTestBase
     public void setUp()
     {
         System.out.println("setUp");
-        clientService.save(client);
+        clientDao.save(client);
         levelDao.save(level);
-        userService.getDAO().save(user);
-        postService.getDAO().save(post);
-        clientAnnounceService.save(clientAnnounce);
+        userDao.save(user);
+        postDao.save(post);
+        clientAnnounceService.getDAO().save(clientAnnounce);
     }
 
     @After
     public void tearDown()
     {
         System.out.println("tearDown");
-        clientAnnounceService.deleteById(clientAnnounce.getCaid());
-        postService.getDAO().deleteById(post.getPid());
-        userService.getDAO().deleteById(user.getUid());
-        levelDao.deleteById(level.getLid());
-        clientService.deleteById(client.getCid());
+        clientAnnounceService.getDAO().delete(clientAnnounce);
+        postDao.delete(post);
+        userDao.delete(user);
+        levelDao.delete(level);
+        clientDao.delete(client);
     }
 
     @Test
@@ -88,16 +88,15 @@ public class ClientAnnounceServiceImplTest extends DBTestBase
     {
         System.out.println("announce");
         TrackerUpdateBean bean = trackerUpdateBean;
-        User before = userService.getDAO().getByID(user.getUid());
+        User before = userDao.get(user.getUid());
         System.out.println(before.getDownloadByte());
         System.out.println(before.getUploadByte());
         ClientAnnounce newer = clientAnnounceService.announce(bean);
 
-        User after = userService.getDAO().getByID(user.getUid());
+        User after = userDao.get(user.getUid());
         System.out.println(after.getDownloadByte());
         System.out.println(after.getUploadByte());
 
-        clientAnnounceService.deleteById(newer.getCaid());
+        clientAnnounceService.getDAO().delete(newer);
     }
-
 }

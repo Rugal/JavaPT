@@ -13,12 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 public interface PostDao
 {
 
-    Post deleteById(Integer id);
+    Post delete(Post bean);
 
-    @Transactional(readOnly = true)
-    Post getByID(Integer id);
+    Post get(Integer id);
 
-    @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);
 
     Post save(Post bean);

@@ -38,7 +38,7 @@ public class TagDaoImplTest extends DBTestBase
     public void tearDown()
     {
         System.out.println("tearDown");
-        tagDao.deleteById(tag.getTid());
+        tagDao.delete(tag);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class TagDaoImplTest extends DBTestBase
         System.out.println("findById");
         Integer id = tag.getTid();
         Tag expResult = tag;
-        Tag result = tagDao.getByID(id);
+        Tag result = tagDao.get(id);
         assertEquals(expResult, result);
     }
 

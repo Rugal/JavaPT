@@ -11,9 +11,9 @@ import ml.rugal.sshcommon.page.Pagination;
 public interface UserLevelDao
 {
 
-    UserLevel deleteById(Integer id);
+    UserLevel delete(UserLevel bean);
 
-    UserLevel getByID(Integer id);
+    UserLevel get(Integer id);
 
     Pagination getPage(int pageNo, int pageSize);
 

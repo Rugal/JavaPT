@@ -7,8 +7,7 @@ import ga.rugal.jpt.core.service.ThreadService;
 import ga.rugal.jpt.core.service.UserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -22,12 +21,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
  *
  * @author Rugal Bernstein
  */
+@Slf4j
 @Controller
 @RequestMapping(value = "/thread")
 public class ThreadAction
 {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ThreadAction.class.getName());
 
     @Autowired
     private UserService userService;
@@ -51,7 +49,7 @@ public class ThreadAction
                          HttpServletRequest request, HttpServletResponse response)
     {
         //-------------Existence check---------------
-        Thread dbThread = threadService.getDAO().getByID(tid);
+        Thread dbThread = threadService.getDAO().get(tid);
         if (null == dbThread)
         {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -59,7 +57,7 @@ public class ThreadAction
         }
         //------------Permission check---------------
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
-        User user = userService.getDAO().getByID(uid);
+        User user = userService.getDAO().get(uid);
         if (!dbThread.canWrite(user))
         {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -85,7 +83,7 @@ public class ThreadAction
     public Object delete(@PathVariable("tid") Integer tid, HttpServletRequest request, HttpServletResponse response)
     {
         //-------------Existence check---------------
-        Thread dbThread = threadService.getDAO().getByID(tid);
+        Thread dbThread = threadService.getDAO().get(tid);
         if (null == dbThread)
         {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -93,13 +91,13 @@ public class ThreadAction
         }
         //------------Permission check---------------
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
-        User user = userService.getDAO().getByID(uid);
+        User user = userService.getDAO().get(uid);
         if (!dbThread.canWrite(user))
         {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return null;
         }
-        threadService.getDAO().deleteById(tid);
+        threadService.getDAO().delete(dbThread);
         response.setStatus(HttpServletResponse.SC_ACCEPTED);
         return null;
     }
@@ -118,7 +116,7 @@ public class ThreadAction
     public Object get(@PathVariable("tid") Integer tid, HttpServletRequest request, HttpServletResponse response)
     {
         //-------------Existence check---------------
-        Thread dbThread = threadService.getDAO().getByID(tid);
+        Thread dbThread = threadService.getDAO().get(tid);
         if (null == dbThread)
         {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -126,7 +124,7 @@ public class ThreadAction
         }
         //------------Permission check---------------
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
-        User user = userService.getDAO().getByID(uid);
+        User user = userService.getDAO().get(uid);
         if (!dbThread.canRead(user))
         {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

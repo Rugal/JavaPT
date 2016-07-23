@@ -75,11 +75,11 @@ public class PostTagsDaoImplTest extends DBTestBase
     {
         System.out.println("tearDown");
         //order is important
-        postTagsDao.deleteById(postTags.getPtid());
-        postDao.deleteById(post.getPid());
-        tagDao.deleteById(tag.getTid());
-        userDao.deleteById(user.getUid());
-        levelDao.deleteById(level.getLid());
+        postTagsDao.delete(postTags);
+        postDao.delete(post);
+        tagDao.delete(tag);
+        userDao.delete(user);
+        levelDao.delete(level);
     }
 
     @Test
@@ -98,8 +98,7 @@ public class PostTagsDaoImplTest extends DBTestBase
         System.out.println("getByID");
         Integer id = postTags.getPtid();
         PostTags expResult = postTags;
-        PostTags result = postTagsDao.getByID(id);
+        PostTags result = postTagsDao.get(id);
         assertEquals(expResult, result);
     }
-
 }

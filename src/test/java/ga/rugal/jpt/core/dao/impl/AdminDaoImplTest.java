@@ -48,8 +48,8 @@ public class AdminDaoImplTest extends DBTestBase
     {
         System.out.println("tearDown");
         //order is important
-        adminDao.deleteById(admin.getAid());
-        userDao.deleteById(user.getUid());
+        adminDao.delete(admin);
+        userDao.delete(user);
     }
 
     @Test
@@ -68,7 +68,7 @@ public class AdminDaoImplTest extends DBTestBase
         System.out.println("findById");
         Integer id = admin.getAid();
         Admin expResult = admin;
-        Admin result = adminDao.getByID(id);
+        Admin result = adminDao.get(id);
         assertEquals(expResult, result);
     }
 

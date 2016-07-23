@@ -12,10 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 public interface PostTagsDao
 {
 
-    PostTags deleteById(Integer id);
+    PostTags delete(PostTags bean);
 
-    @Transactional(readOnly = true)
-    PostTags getByID(Integer id);
+    PostTags get(Integer id);
 
     @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);

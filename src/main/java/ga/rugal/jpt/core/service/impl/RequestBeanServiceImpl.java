@@ -12,8 +12,7 @@ import ga.rugal.jpt.core.service.ClientService;
 import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.RequestBeanService;
 import ga.rugal.jpt.core.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,12 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
  * <p>
  * @author Rugal Bernstein
  */
+@Slf4j
 @Service
 @Transactional
 public class RequestBeanServiceImpl implements RequestBeanService
 {
-
-    private static final Logger LOG = LoggerFactory.getLogger(RequestBeanServiceImpl.class.getName());
 
     @Autowired
     private UserService userService;
@@ -84,7 +82,7 @@ public class RequestBeanServiceImpl implements RequestBeanService
         //
         readPeerID(bean, b.getPeerId());
         //Do database search for user and client
-        User user = userService.getDAO().getByID(b.getUid());
+        User user = userService.getDAO().get(b.getUid());
         if (null == user)
         {
             throw new TrackerResponseException(CommonMessageContent.USER_NOT_FOUND);
@@ -92,8 +90,8 @@ public class RequestBeanServiceImpl implements RequestBeanService
         bean.setUser(user);
 
         //see if reported from allowed Client software.
-        Client client = clientService.findByPeerID(bean.getCname(), bean.getVersion());
-        if (!client.isEnabled())
+        Client client = clientService.getDAO().findByPeerID(bean.getCname(), bean.getVersion());
+        if (!client.getEnabled())
         {
             throw new TrackerResponseException(CommonMessageContent.UNSUPPORTED_CLIENT);
         }

@@ -13,12 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 public interface TagDao
 {
 
-    Tag deleteById(Integer id);
+    Tag delete(Tag bean);
 
-    @Transactional(readOnly = true)
-    Tag getByID(Integer id);
+    Tag get(Integer id);
 
-    @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);
 
     Tag save(Tag bean);

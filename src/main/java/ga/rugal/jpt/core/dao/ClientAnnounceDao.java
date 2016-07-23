@@ -14,18 +14,25 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ClientAnnounceDao
 {
 
-    ClientAnnounce deleteById(Long id);
+    ClientAnnounce delete(ClientAnnounce bean);
 
-    @Transactional(readOnly = true)
-    ClientAnnounce getByID(Long id);
+    ClientAnnounce get(Long id);
 
-    @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);
 
     ClientAnnounce save(ClientAnnounce bean);
 
     ClientAnnounce updateByUpdater(Updater<ClientAnnounce> updater);
 
+    /**
+     * Find the most recent client announce record by user and torrent. Either User or Post
+     * parameters or both could be null, that means to nullify their query in SQL.
+     * <p>
+     * @param user the user that has reported this announce. If null, then ignore user query.
+     * @param post the post that related with target torrent. If null, then ignore post query.
+     * <p>
+     * @return A client announce object if such record does exist. otherwise return null.
+     */
     @Transactional(readOnly = true)
     ClientAnnounce findLastAnnounce(User user, Post post);
 }

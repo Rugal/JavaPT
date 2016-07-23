@@ -81,8 +81,8 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
         System.out.println("tearDown");
         //order is important
         testDelete();
-        userService.getDAO().deleteById(user.getUid());
-        levelService.getDAO().deleteById(level.getLid());
+        userService.getDAO().delete(user);
+        levelService.getDAO().delete(level);
     }
 
     @Test

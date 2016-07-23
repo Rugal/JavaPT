@@ -7,8 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +15,10 @@ import org.springframework.stereotype.Service;
  *
  * @author Rugal Bernstein
  */
+@Slf4j
 @Service
 public class TrackerResponseServiceImpl implements TrackerResponseService
 {
-
-    private static final Logger LOG = LoggerFactory.getLogger(TrackerResponseServiceImpl.class.getName());
 
     /**
      * {@inheritDoc }

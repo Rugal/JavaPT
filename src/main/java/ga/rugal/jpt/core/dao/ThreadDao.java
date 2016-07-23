@@ -14,12 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ThreadDao
 {
 
-    Thread deleteById(Integer id);
+    Thread delete(Thread bean);
 
-    @Transactional(readOnly = true)
-    Thread getByID(Integer id);
+    Thread get(Integer id);
 
-    @Transactional(readOnly = true)
     Pagination getPage(Post post, int pageNo, int pageSize);
 
     Thread save(Thread bean);
@@ -28,5 +26,4 @@ public interface ThreadDao
 
     @Transactional(readOnly = true)
     List<Thread> getByPID(Post post);
-
 }

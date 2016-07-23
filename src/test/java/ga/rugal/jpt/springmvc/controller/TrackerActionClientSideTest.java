@@ -58,9 +58,9 @@ public class TrackerActionClientSideTest extends ControllerClientSideTestBase
     public void tearDown()
     {
         System.out.println("tearDown");
-        adminService.getDAO().deleteById(admin.getAid());
-        userService.getDAO().deleteById(user.getUid());
-        levelService.getDAO().deleteById(level.getLid());
+        adminService.getDAO().delete(admin);
+        userService.getDAO().delete(user);
+        levelService.getDAO().delete(level);
     }
 
     @Test

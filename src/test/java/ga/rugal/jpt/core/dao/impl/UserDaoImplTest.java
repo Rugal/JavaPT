@@ -49,8 +49,8 @@ public class UserDaoImplTest extends DBTestBase
     public void tearDown()
     {
         System.out.println("tearDown");
-        userDao.deleteById(user.getUid());
-        levelDao.deleteById(level.getLid());
+        userDao.delete(user);
+        levelDao.delete(level);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class UserDaoImplTest extends DBTestBase
         System.out.println("findById");
         Integer id = user.getUid();
         User expResult = user;
-        User result = userDao.getByID(id);
+        User result = userDao.get(id);
         assertEquals(expResult, result);
     }
 
@@ -78,7 +78,7 @@ public class UserDaoImplTest extends DBTestBase
     {
         System.out.println("getByEmail");
         String email = user.getEmail();
-        User dbUser = userDao.getUserByEmail(email);
+        User dbUser = userDao.getByEmail(email);
         Assert.assertEquals(user, dbUser);
     }
 
@@ -87,7 +87,7 @@ public class UserDaoImplTest extends DBTestBase
     {
         System.out.println("findByName");
         String username = user.getUsername();
-        List<User> list = userDao.findUserByName(username);
+        List<User> list = userDao.findByName(username);
         Assert.assertEquals(1, list.size());
     }
 }

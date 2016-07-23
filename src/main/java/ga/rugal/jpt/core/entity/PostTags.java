@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  *
@@ -19,15 +21,17 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "post_tags", schema = "jpt")
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class PostTags
 {
 
-    private static final String sequence_name = "post_tags_ptid_seq";
+    private static final String SEQUENCE_NAME = "post_tags_ptid_seq";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = sequence_name)
-    @SequenceGenerator(name = sequence_name,
-        sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQUENCE_NAME)
+    @SequenceGenerator(name = SEQUENCE_NAME,
+        sequenceName = SystemDefaultProperties.SCHEMA + SEQUENCE_NAME, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     @Expose
@@ -42,69 +46,4 @@ public class PostTags
     @JoinColumn(name = "tid", referencedColumnName = "tid")
     @ManyToOne
     private Tag tag;
-
-    public PostTags()
-    {
-    }
-
-    public PostTags(Integer ptid)
-    {
-        this.ptid = ptid;
-    }
-
-    public Integer getPtid()
-    {
-        return ptid;
-    }
-
-    public void setPtid(Integer ptid)
-    {
-        this.ptid = ptid;
-    }
-
-    public Post getPost()
-    {
-        return post;
-    }
-
-    public void setPost(Post post)
-    {
-        this.post = post;
-    }
-
-    public Tag getTag()
-    {
-        return tag;
-    }
-
-    public void setTag(Tag tag)
-    {
-        this.tag = tag;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int hash = 0;
-        hash += (ptid != null ? ptid.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object)
-    {
-        if (!(object instanceof PostTags))
-        {
-            return false;
-        }
-        PostTags other = (PostTags) object;
-        return !((this.ptid == null && other.ptid != null) || (this.ptid != null && !this.ptid.equals(other.ptid)));
-    }
-
-    @Override
-    public String toString()
-    {
-        return "ga.rugal.jpt.core.entity.PostTags[ ptid=" + ptid + " ]";
-    }
-
 }

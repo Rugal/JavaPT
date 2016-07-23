@@ -37,7 +37,7 @@ public class UserServiceImplTest extends DBTestBase
     public void tearDown()
     {
         System.out.println("tearDown");
-        userService.getDAO().deleteById(user.getUid());
+        userService.getDAO().delete(user);
     }
 
     @Test

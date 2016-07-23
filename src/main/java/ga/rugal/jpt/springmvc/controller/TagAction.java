@@ -12,10 +12,9 @@ import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -33,14 +32,13 @@ import org.springframework.web.multipart.MultipartFile;
  *
  * @author Rugal Bernstein
  */
+@Slf4j
 @Controller
 @RequestMapping(value = "/tag")
 public class TagAction
 {
 
     private static final File ICON_FOLDER = new File(SystemDefaultProperties.ICON_PATH);
-
-    private static final Logger LOG = LoggerFactory.getLogger(TagAction.class.getName());
 
     @Autowired
     private TagService tagService;
@@ -139,7 +137,7 @@ public class TagAction
                              @RequestParam(value = "name", required = false) String name,
                              @RequestParam(value = "file", required = false) MultipartFile uploadedFile)
     {
-        Tag dbTag = tagService.getDAO().getByID(id);
+        Tag dbTag = tagService.getDAO().get(id);
         if (null == dbTag)
         {
             return Message.failMessage(CommonMessageContent.TAG_NOT_FOUND);
@@ -177,13 +175,13 @@ public class TagAction
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public Message deleteTag(@PathVariable("id") Integer id)
     {
-        Tag bean = tagService.getDAO().getByID(id);
+        Tag bean = tagService.getDAO().get(id);
         if (null == bean)
         {
             return Message.failMessage(CommonMessageContent.TAG_NOT_FOUND);
         }
         this.deleteFile(bean.getIcon());
-        tagService.getDAO().deleteById(id);
+        tagService.getDAO().delete(bean);
         return Message.successMessage(CommonMessageContent.DELETE_TAG, bean);
     }
 
@@ -212,7 +210,7 @@ public class TagAction
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Message getTagBean(@PathVariable("id") Integer id)
     {
-        Tag bean = tagService.getDAO().getByID(id);
+        Tag bean = tagService.getDAO().get(id);
         Message message;
         if (null == bean)
         {
@@ -238,7 +236,7 @@ public class TagAction
     @RequestMapping(value = "/{id}/icon", method = RequestMethod.GET)
     public Object getTagIcon(@PathVariable("id") Integer id, HttpServletResponse response)
     {
-        Tag bean = tagService.getDAO().getByID(id);
+        Tag bean = tagService.getDAO().get(id);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         if (null == bean)
         {

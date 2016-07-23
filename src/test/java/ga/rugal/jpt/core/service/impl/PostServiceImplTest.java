@@ -3,12 +3,12 @@ package ga.rugal.jpt.core.service.impl;
 import ga.rugal.DBTestBase;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
+import ga.rugal.jpt.core.dao.UserDao;
+import ga.rugal.jpt.core.dao.UserLevelDao;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.entity.UserLevel;
 import ga.rugal.jpt.core.service.PostService;
-import ga.rugal.jpt.core.service.UserLevelService;
-import ga.rugal.jpt.core.service.UserService;
 import java.io.IOException;
 import org.junit.After;
 import org.junit.Assert;
@@ -33,13 +33,13 @@ public class PostServiceImplTest extends DBTestBase
     private UserLevel level;
 
     @Autowired
-    private UserLevelService levelService;
+    private UserLevelDao userLevelDao;
 
     @Autowired
     private PostService postService;
 
     @Autowired
-    private UserService userService;
+    private UserDao userDao;
 
     @Autowired
     private TrackedTorrent torrent;
@@ -52,8 +52,8 @@ public class PostServiceImplTest extends DBTestBase
     public void setUp()
     {
         System.out.println("setUp");
-        levelService.getDAO().save(level);
-        userService.getDAO().save(user);
+        userLevelDao.save(level);
+        userDao.save(user);
         post.setBencode(torrent.getEncoded());
         postService.getDAO().save(post);
     }
@@ -64,9 +64,9 @@ public class PostServiceImplTest extends DBTestBase
         System.out.println("tearDown");
         //order is important
         post.setBencode(null);
-        postService.getDAO().deleteById(post.getPid());
-        userService.getDAO().deleteById(user.getUid());
-        levelService.getDAO().deleteById(level.getLid());
+        postService.getDAO().delete(post);
+        userDao.delete(user);
+        userLevelDao.delete(level);
     }
 
     @Test
@@ -77,5 +77,4 @@ public class PostServiceImplTest extends DBTestBase
         Torrent result = TrackedTorrent.load(bean.getBencode());
         Assert.assertEquals(result.getHexInfoHash(), post.getInfoHash());
     }
-
 }

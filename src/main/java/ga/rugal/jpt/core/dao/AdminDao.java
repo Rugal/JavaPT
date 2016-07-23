@@ -14,18 +14,16 @@ import org.springframework.transaction.annotation.Transactional;
 public interface AdminDao
 {
 
-    Admin deleteById(Integer id);
-
-    @Transactional(readOnly = true)
-    Admin getByID(Integer id);
-
-    @Transactional(readOnly = true)
-    Pagination getPage(int pageNo, int pageSize);
-
-    Admin save(Admin bean);
-
     Admin updateByUpdater(Updater<Admin> updater);
 
     @Transactional(readOnly = true)
     List<Admin> getByUID(User uid);
+
+    Admin delete(Admin bean);
+
+    Admin save(Admin bean);
+
+    Pagination getPage(int pageNo, int pageSize);
+
+    Admin get(Integer id);
 }

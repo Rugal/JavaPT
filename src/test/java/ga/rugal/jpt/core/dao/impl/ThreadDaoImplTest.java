@@ -66,10 +66,10 @@ public class ThreadDaoImplTest extends DBTestBase
     {
         System.out.println("tearDown");
         //order is important
-        threadDao.deleteById(thread.getTid());
-        postDao.deleteById(post.getPid());
-        userDao.deleteById(user.getUid());
-        levelDao.deleteById(level.getLid());
+        threadDao.delete(thread);
+        postDao.delete(post);
+        userDao.delete(user);
+        levelDao.delete(level);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class ThreadDaoImplTest extends DBTestBase
         System.out.println("getByID");
         Integer id = thread.getTid();
         Thread expResult = thread;
-        Thread result = threadDao.getByID(id);
+        Thread result = threadDao.get(id);
         assertEquals(expResult, result);
     }
 
