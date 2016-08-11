@@ -1,0 +1,472 @@
+FORMAT: 1A
+HOST: http://polls.apiblueprint.org/
+
+# JavaPT
+
+## Group User
+
+
+
+### Create New UID with Invitation [/user/uid?referee={referee}&code={code}]
+
+#### Create New UID [POST]
+This API will request to create a new `UID` with which a user can register within certain minutes.   
+The newly created `UID` will expire after certain minutes if user does not register with it.  
+Please ensure to consume it before expiration.  
+
++ Parameters
+    + referee (number) - ID of the referee user
+    + code (string) - Invitation code from referee user
+
++ Response 201
+    Return the new `UID`.  
+    + Body
+
+            19
+
++ Response 409
+    Unable to create `UID` due to malformed request.  
+    + Body
+
+### Register User with UID [/user]
+
+#### Register User [POST]
+After the creation of new `UID`, this API posts user registration profile to server.  
+Server will check if `UID` is valid or not.  
+Please include the `UID` in payload as it is a mandatory field for user registration.  
+
++ Request (application/json)
+    + Body
+
+            {
+                "uid":19,
+                "username":"Rugal",
+                "credential":"unencrypted-password", 
+                "email":"email@email.com"
+            }
+
++ Response 201
+    User registered.  
+    + Body
++ Response 404
+    `UID` invalid or not found.  
+    + Body
++ Response 409
+    Unable to register due to conflicted username or email address.  
+    + Body
+
+### User Profile Operation [/user/{uid}]
+
++ Parameters
+    + uid (number) - Target ID for future operations
+
+#### Get User [GET]
+Get the profile of specific user by its `uid`.   
+
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 200 (application/json)
+    User profile found.
+    + Body
+
+            {
+                "uid":1349, "name":"tenjin", "credit":0,
+                "status":"VALID", "email":"testhappy@128.com",
+                "registerTime":1442471051470, "uploadByte":0, "downloadByte":0
+            }
+
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    User profile not found.
+    + Body
+
+
+#### Deregister User [DELETE]
+
+Deregistration will not delete user profile in database, but set its status as unloginnable.   
+Just like updating user, only uid in URL will be operated, authentication fields are just for user identity verification.   
+
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 204
+    User deregistration succeeded.
+    + Body
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    User profile not found.
+    + Body
+
+#### Update User [PUT]
+Update some fields of a user profile.  
+
++ Request (application/json)
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
+    + Body
+
+            {
+                "password":"unencrypted-password", 
+                "email":"email@email.com"
+            }
+
++ Response 204
+    User profile update succeeded.
+    + Body
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    User profile not found.
+    + Body
+
+### Search User by Partial Name [/user?name={name}]
+Search for users that contains `name` in their `username` field.  
+
++ Parameters
+    + name (string) - Userame to check
+
+#### Search User [GET]
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 200 (application/json)
+    Return a list of user profiles that their username contains given `name`.  
+    + Body
+
+            [
+                {"uid":1, "username":"Rugal"},
+                {"uid":2, "username":"Tenjin"},
+                {"uid":3, "username":"Adel"},
+            ]
+
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    User profile not found.
+    + Body
+
+
+### Search User by EMail [/user?email={email}]
+Search for user whose email address is the `email` in parameter.  
+
++ Parameters
+    + email (string) - EMail address to search.  
+
+#### Search User [GET]
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 200 (application/json)
+    User profile found.
+    + Body
+
+            {
+                "uid":1, 
+                "username":"Rugal" 
+            }
+
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    User profile not found.
+    + Body
+
+
+
+
+## Group Post
+
+### Add Post [/post]
+
+#### Add Post [POST]
+
++ Request (application/json)
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
+    + Body
+    
+            {
+                "title":"Test title for a Post","enabled":true,"size":100,
+                "infoHash":"7036CA4C717C0D9FEABB26F9A60C63DD887F8FCC",
+                "minLevel":{"lid":1},"content":"Can be long content"
+            }
+
++ Response 201
+    Return ID of this post.
+    + Body
+
+            12
+
++ Response 401
+    Unauthorized access.
+    + Body
+
+### Post Operation [/post/{pid}]
+
++ Parameters
+    + pid (number) - Target ID for future operations
+
+#### Get Post [GET]
+All users are allowed to view the post and thread content.  
+But users that do not reach minimum level are unable to download torrent files and the data files.  
+
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 200
+    Return the meta content of a post.
+    + Body
+
+            {
+                "title":"Test title for a Post","enabled":true,"size":100,
+                "infoHash":"7036CA4C717C0D9FEABB26F9A60C63DD887F8FCC",
+                "minLevel":{"lid":1},"content":"Can be long content"
+            }
+
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    Post not found.
+    + Body
+
+#### Update Post [PUT]
+Only author and administrator can update post.  
+User can update all fields except `PID`.  
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
+    + Body
+    
+            {
+                "title":"Test title for a Post",
+                "enabled":true, "size":100,
+            }
+
++ Response 204
+    Update completed.
+    + Body
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    Post not found.
+    + Body
+
+#### Delete Post [DELETE]
+Only author and administrator can delete a post.  
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 204
+    Post deleted.
+    + Body
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    Post not found.
+    + Body
+
+## Group Torrent
+
+### Torrent File Operation [/post/{pid}/metainfo]
+
++ Parameters
+    + pid (number) - Target ID for future operations
+
+#### Upload File [POST]
+Attach an torrent to a post.  
+Reuploading will override old file.   
++ Request (application/x-bittorrent)
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
+    + Body
+    
+            ...content of torrent file...
+
++ Response 201
+    New Torrent file uploaded.
+    + Body
++ Response 204
+    Torrent file updated.
+    + Body    
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    Post not found.
+    + Body
++ Response 406
+    Invalid torrent file.  
+    + Body
+
+
+#### Download File [GET]
+Download the torrent file of a post.  
+User level will be checked.  
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 200 (application/x-bittorrent)
+    Download torrent file.
+    + Body
+
+            ...content of torrent file...
+
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 403
+    Insufficient user level.
+    + Body
++ Response 404
+    Post or torrent file not found.
+    + Body
+
+## Group Thread
+
+### Reply to Post [/post/{pid}/thread]
++ Parameters
+    + pid (number) - Target post ID for future operations
+
+#### Add Thread [POST]
+Attach a thread to a Post.  
+
++ Request (application/json)
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
+    + Body
+    
+            {
+                "content":"TEST CONTENT","rate":1,"enabled":true
+            }
+            
++ Response 201
+    Return `ID` of newly created thread.  
+    + Body
+            
+            345
+
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    The reply-to Post not found.
+    + Body
+
+### Thread Operation [/thread/{tid}]
++ Parameters
+    + tid (number) - Target post ID for future operations
+
+#### Get Thread [GET]
+Get thread with specific `TID`.  
+All users are allowed to view the post and thread content.  
+But users that do not reach minimum level are unable to download torrent files and the data files.  
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 200 (application/json)
+    Target thread find.
+    + Body
+
+            {
+                "content":"TEST CONTENT","rate":1,"enabled":true
+            }
+
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    Thread not found.
+    + Body
+
+
+#### Update Thread [PUT]
+Update thread.  
++ Request (application/json)
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
+    + Body
+    
+            {
+                "content":"TEST CONTENT","rate":1,"enabled":true
+            }
+            
++ Response 204
+    Thread updated
+    + Body
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    Thread not found.
+    + Body
+
+#### Delete Thread [DELETE]
+Delete thread.  
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 204
+    Thread deleted
+    + Body
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    Thread not found.
+    + Body
