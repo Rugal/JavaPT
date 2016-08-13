@@ -9,14 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -27,7 +24,6 @@ import org.hibernate.annotations.FetchMode;
 @Entity
 @Table(schema = "jpt", name = "user")
 @Data
-@EqualsAndHashCode(callSuper = false)
 public class User extends BaseObject<User>
 {
 
@@ -55,16 +51,16 @@ public class User extends BaseObject<User>
     private String email;
 
     @Expose
-    @Column(name = "upload_byte")
-    private Long uploadByte = 0l;
+    @Column(name = "upload")
+    private Long upload;
 
     @Expose
-    @Column(name = "download_byte")
-    private Long downloadByte = 0l;
+    @Column(name = "download")
+    private Long download;
 
     @Expose
     @Column
-    private Integer credit = 0;
+    private Integer credit;
 
     @Expose
     @Column(name = "register_time")
@@ -72,21 +68,17 @@ public class User extends BaseObject<User>
 
     @Expose
     @Transient
-    private UserLevel level;
+    private Level level;
 
     @Expose
     @Column
     private Status status;
 
-    @JoinColumn(name = "referee", referencedColumnName = "uid")
-    @ManyToOne
-    private User referee;
-
     @OneToMany(mappedBy = "author")
     private List<Post> postList;
 
     @OneToMany(mappedBy = "user")
-    private List<ClientAnnounce> clientAnnouncesList;
+    private List<Announce> announcesList;
 
     @OneToMany(mappedBy = "user")
     @Fetch(FetchMode.SELECT)
@@ -95,14 +87,8 @@ public class User extends BaseObject<User>
     @OneToMany(mappedBy = "granter")
     private List<Admin> granters;
 
-    @OneToMany(mappedBy = "uid")
-    private List<SigninLog> signinLogList;
-
     @OneToMany(mappedBy = "replyer")
     private List<Thread> threadList;
-
-    @OneToMany(mappedBy = "referee")
-    private List<User> userList;
 
     @Override
     protected Class<User> getRealClass()
@@ -113,6 +99,30 @@ public class User extends BaseObject<User>
     public enum Status
     {
 
-        VALID, BAN, DELETING
+        VALID, BAN, DELETE
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format("%s[ uid=%d ]", this.getClass().getName(), this.uid);
+    }
+
+    @Override
+    public boolean equals(Object object)
+    {
+        if (!(object instanceof User))
+        {
+            return false;
+        }
+        User other = (User) object;
+        return !((this.uid == null && other.uid != null) || (this.uid != null && !this.uid.equals(other.uid)));
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = 7;
+        return 37 * hash + (uid != null ? uid.hashCode() : 0);
     }
 }

@@ -14,7 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  *
@@ -23,7 +22,6 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(schema = "jpt", name = "thread")
 @Data
-@EqualsAndHashCode(callSuper = false)
 public class Thread extends BaseObject<Thread>
 {
 
@@ -42,13 +40,13 @@ public class Thread extends BaseObject<Thread>
     @Expose
     private String content;
 
-    @Column(name = "post_time")
+    @Column(name = "create_time")
     @Expose
-    private Long postTime;
+    private Long createTime;
 
-    @Column(name = "rate")
+    @Column(name = "judgement")
     @Expose
-    private Integer rate;
+    private Boolean judgement;
 
     @JoinColumn(name = "pid", referencedColumnName = "pid")
     @ManyToOne
@@ -94,6 +92,30 @@ public class Thread extends BaseObject<Thread>
         }
         List<Admin> admins = user.getAdminList();
         //----------This user is admin with sufficient privilege-------------
-        return admins.stream().anyMatch((admin) -> (admin.getLevel() == Admin.Level.ADMIN));
+        return admins.stream().anyMatch((admin) -> (admin.getRole() == Admin.Role.ADMIN));
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format("%s[ tid=%d ]", this.getClass().getName(), this.tid);
+    }
+
+    @Override
+    public boolean equals(Object object)
+    {
+        if (!(object instanceof Thread))
+        {
+            return false;
+        }
+        Thread other = (Thread) object;
+        return !((this.tid == null && other.tid != null) || (this.tid != null && !this.tid.equals(other.tid)));
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = 7;
+        return 37 * hash + (tid != null ? tid.hashCode() : 0);
     }
 }

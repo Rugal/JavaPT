@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  *
@@ -21,7 +20,6 @@ import lombok.EqualsAndHashCode;
  */
 @Entity
 @Data
-@EqualsAndHashCode(callSuper = false)
 @Table(schema = "jpt", name = "admin")
 public class Admin extends BaseObject<Admin>
 {
@@ -43,7 +41,7 @@ public class Admin extends BaseObject<Admin>
 
     @Expose
     @Column
-    private Level level;
+    private Role role;
 
     @Expose
     @JoinColumn(name = "uid", referencedColumnName = "uid")
@@ -56,15 +54,21 @@ public class Admin extends BaseObject<Admin>
     private User granter;
 
     @Override
+    public String toString()
+    {
+        return String.format("%s[ aid=%d ]", this.getClass().getName(), this.aid);
+    }
+
+    @Override
     protected Class<Admin> getRealClass()
     {
         return Admin.class;
     }
 
-    public enum Level
+    public enum Role
     {
 
-        //User who can create new post to candidate list and add torront for it
+        //User who can create new post to candidate list
         UPLOADER,
         //User who can inspect new post and publish them to the tracker
         INSPECTOR,
@@ -74,4 +78,21 @@ public class Admin extends BaseObject<Admin>
         SUPER;
     }
 
+    @Override
+    public boolean equals(Object object)
+    {
+        if (!(object instanceof Admin))
+        {
+            return false;
+        }
+        Admin other = (Admin) object;
+        return !((this.aid == null && other.aid != null) || (this.aid != null && !this.aid.equals(other.aid)));
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = 7;
+        return 37 * hash + (aid != null ? aid.hashCode() : 0);
+    }
 }

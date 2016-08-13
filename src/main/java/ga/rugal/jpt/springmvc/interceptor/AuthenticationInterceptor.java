@@ -7,8 +7,7 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,11 +21,10 @@ import org.springframework.web.servlet.ModelAndView;
  * <p>
  * @author Rugal Bernstein
  */
+@Slf4j
 @Component
 public class AuthenticationInterceptor extends BaseInterceptor
 {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AuthenticationInterceptor.class.getName());
 
     @Autowired
     private UserService userService;
@@ -86,8 +84,6 @@ public class AuthenticationInterceptor extends BaseInterceptor
         {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().flush();
-//            response.setContentType(MediaType.TEXT_PLAIN_VALUE);
-//            response.getWriter().print(CommonMessageContent.ACCESS_FORBIDDEN);
         }
         catch (IOException e)
         {

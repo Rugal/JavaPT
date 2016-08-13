@@ -1,7 +1,7 @@
 package ga.rugal.jpt.core.dao.impl;
 
-import ga.rugal.jpt.core.dao.ClientAnnounceDao;
-import ga.rugal.jpt.core.entity.ClientAnnounce;
+import ga.rugal.jpt.core.dao.AnnounceDao;
+import ga.rugal.jpt.core.entity.Announce;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
 import java.util.List;
@@ -19,18 +19,18 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Slf4j
 @Repository
-public class ClientAnnounceDaoImpl extends HibernateBaseDao<ClientAnnounce, Long> implements ClientAnnounceDao
+public class AnnounceDaoImpl extends HibernateBaseDao<Announce, Long> implements AnnounceDao
 {
 
     @Override
-    protected Class<ClientAnnounce> getEntityClass()
+    protected Class<Announce> getEntityClass()
     {
-        return ClientAnnounce.class;
+        return Announce.class;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ClientAnnounce findLastAnnounce(User user, Post post)
+    public Announce findLastAnnounce(User user, Post post)
     {
         Criteria crit = createCriteria();
         if (null != user)
@@ -43,13 +43,12 @@ public class ClientAnnounceDaoImpl extends HibernateBaseDao<ClientAnnounce, Long
         }
         crit.addOrder(Order.desc("announceTime"));
         crit.setMaxResults(1);
-        List<ClientAnnounce> list = crit.list();
-        ClientAnnounce ca = null;
+        List<Announce> list = crit.list();
+        Announce ca = null;
         if (!list.isEmpty())
         {
             ca = list.get(0);
         }
         return ca;
     }
-
 }

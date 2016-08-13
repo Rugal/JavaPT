@@ -1,6 +1,6 @@
 package ga.rugal.jpt.core.dao;
 
-import ga.rugal.jpt.core.entity.PostTags;
+import ga.rugal.jpt.core.entity.PostTag;
 import ml.rugal.sshcommon.hibernate.Updater;
 import ml.rugal.sshcommon.page.Pagination;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,14 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 public interface PostTagsDao
 {
 
-    PostTags delete(PostTags bean);
+    PostTag delete(PostTag bean);
 
-    PostTags get(Integer id);
+    PostTag get(Integer id);
 
     @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);
 
-    PostTags save(PostTags bean);
+    PostTag save(PostTag bean);
 
-    PostTags updateByUpdater(Updater<PostTags> updater);
+    PostTag updateByUpdater(Updater<PostTag> updater);
 }

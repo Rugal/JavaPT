@@ -13,16 +13,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Entity
-@Table(name = "client_announce", schema = "jpt")
+@Table(name = "announce", schema = "jpt")
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class ClientAnnounce
+public class Announce
 {
 
-    private static final String SEQUENCE_NAME = "client_announce_caid_seq";
+    private static final String SEQUENCE_NAME = "announce_aid_seq";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQUENCE_NAME)
@@ -31,23 +29,23 @@ public class ClientAnnounce
     @Basic(optional = false)
     @Column(nullable = false)
     @Expose
-    private Long caid;
+    private Long aid;
 
     @Expose
     @Column(name = "announce_time")
     private Long announceTime;
 
     @Expose
-    @Column(name = "download_byte")
-    private Long downloadByte = 0l;
+    @Column(name = "download")
+    private Long download = 0l;
 
     @Expose
-    @Column(name = "upload_byte")
-    private Long uploadByte = 0l;
+    @Column(name = "upload")
+    private Long upload = 0l;
 
     @Expose
-    @Column(name = "left_byte")
-    private Long leftByte = 0l;
+    @Column(name = "_left")
+    private Long left = 0l;
 
     @JoinColumn(name = "uid", referencedColumnName = "uid")
     @ManyToOne
@@ -63,4 +61,28 @@ public class ClientAnnounce
     @JoinColumn(name = "pid", referencedColumnName = "pid", nullable = false)
     @ManyToOne
     private Post post;
+
+    @Override
+    public String toString()
+    {
+        return String.format("%s[ aid=%d ]", this.getClass().getName(), this.aid);
+    }
+
+    @Override
+    public boolean equals(Object object)
+    {
+        if (!(object instanceof Announce))
+        {
+            return false;
+        }
+        Announce other = (Announce) object;
+        return !((this.aid == null && other.aid != null) || (this.aid != null && !this.aid.equals(other.aid)));
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = 7;
+        return 37 * hash + (aid != null ? aid.hashCode() : 0);
+    }
 }

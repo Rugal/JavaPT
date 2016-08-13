@@ -1,6 +1,6 @@
 package ga.rugal.jpt.core.dao;
 
-import ga.rugal.jpt.core.entity.ClientAnnounce;
+import ga.rugal.jpt.core.entity.Announce;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
 import ml.rugal.sshcommon.hibernate.Updater;
@@ -11,18 +11,18 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Rugal Bernstein
  */
-public interface ClientAnnounceDao
+public interface AnnounceDao
 {
 
-    ClientAnnounce delete(ClientAnnounce bean);
+    Announce delete(Announce bean);
 
-    ClientAnnounce get(Long id);
+    Announce get(Long id);
 
     Pagination getPage(int pageNo, int pageSize);
 
-    ClientAnnounce save(ClientAnnounce bean);
+    Announce save(Announce bean);
 
-    ClientAnnounce updateByUpdater(Updater<ClientAnnounce> updater);
+    Announce updateByUpdater(Updater<Announce> updater);
 
     /**
      * Find the most recent client announce record by user and torrent. Either User or Post
@@ -34,5 +34,5 @@ public interface ClientAnnounceDao
      * @return A client announce object if such record does exist. otherwise return null.
      */
     @Transactional(readOnly = true)
-    ClientAnnounce findLastAnnounce(User user, Post post);
+    Announce findLastAnnounce(User user, Post post);
 }

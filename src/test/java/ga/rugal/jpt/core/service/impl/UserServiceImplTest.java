@@ -1,7 +1,7 @@
 package ga.rugal.jpt.core.service.impl;
 
 import ga.rugal.DBTestBase;
-import ga.rugal.jpt.core.entity.ClientAnnounce;
+import ga.rugal.jpt.core.entity.Announce;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.UserService;
 import org.junit.After;
@@ -41,18 +41,17 @@ public class UserServiceImplTest extends DBTestBase
     }
 
     @Test
-    public void testClientAnnounce()
+    public void testAnnounce()
     {
         System.out.println("clientAnnounce");
         User bean = user;
-        System.out.println(bean.getDownloadByte());
-        System.out.println(bean.getUploadByte());
-        ClientAnnounce clientAnnounce = new ClientAnnounce();
-        clientAnnounce.setDownloadByte(100l);
-        clientAnnounce.setUploadByte(100l);
-        User result = userService.clientAnnounce(bean, clientAnnounce);
-        System.out.println(result.getDownloadByte());
-        System.out.println(result.getUploadByte());
+        System.out.println(bean.getDownload());
+        System.out.println(bean.getUpload());
+        Announce announce = new Announce();
+        announce.setDownload(100l);
+        announce.setUpload(100l);
+        User result = userService.announce(bean, announce);
+        System.out.println(result.getDownload());
+        System.out.println(result.getUpload());
     }
-
 }

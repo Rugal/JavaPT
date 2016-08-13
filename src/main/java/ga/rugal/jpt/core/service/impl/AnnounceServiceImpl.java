@@ -1,8 +1,8 @@
 package ga.rugal.jpt.core.service.impl;
 
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
-import ga.rugal.jpt.core.dao.ClientAnnounceDao;
-import ga.rugal.jpt.core.entity.ClientAnnounce;
+import ga.rugal.jpt.core.dao.AnnounceDao;
+import ga.rugal.jpt.core.entity.Announce;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.ClientAnnounceService;
@@ -21,11 +21,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @Transactional
-public class ClientAnnounceServiceImpl implements ClientAnnounceService
+public class AnnounceServiceImpl implements ClientAnnounceService
 {
 
     @Autowired
-    private ClientAnnounceDao dao;
+    private AnnounceDao dao;
 
     @Autowired
     private UserService userService;
@@ -33,12 +33,12 @@ public class ClientAnnounceServiceImpl implements ClientAnnounceService
     @Autowired
     private PostService postService;
 
-    private ClientAnnounce save(TrackerUpdateBean bean)
+    private Announce save(TrackerUpdateBean bean)
     {
-        ClientAnnounce clientAnnounce = new ClientAnnounce();
-        clientAnnounce.setDownloadByte(bean.getDownloaded());
-        clientAnnounce.setUploadByte(bean.getUploaded());
-        clientAnnounce.setLeftByte(bean.getLeft());
+        Announce clientAnnounce = new Announce();
+        clientAnnounce.setDownload(bean.getDownloaded());
+        clientAnnounce.setUpload(bean.getUploaded());
+        clientAnnounce.setLeft(bean.getLeft());
         clientAnnounce.setAnnounceTime(System.currentTimeMillis());
         clientAnnounce.setUser(bean.getUser());
         clientAnnounce.setClient(bean.getClient());
@@ -47,10 +47,10 @@ public class ClientAnnounceServiceImpl implements ClientAnnounceService
     }
 
     @Override
-    public ClientAnnounce update(ClientAnnounce bean)
+    public Announce update(Announce bean)
     {
 
-        Updater<ClientAnnounce> updater = new Updater<>(bean);
+        Updater<Announce> updater = new Updater<>(bean);
         return dao.updateByUpdater(updater);
         //-----These comments is here for testing transaction consistency.-------
 //        throw new RuntimeException();
@@ -60,21 +60,21 @@ public class ClientAnnounceServiceImpl implements ClientAnnounceService
      * {@inheritDoc}
      */
     @Override
-    public ClientAnnounce announce(TrackerUpdateBean bean)
+    public Announce announce(TrackerUpdateBean bean)
     {
         //check last update for this torrent
-        ClientAnnounce last = this.dao.findLastAnnounce(bean.getUser(), bean.getPost());
+        Announce last = this.dao.findLastAnnounce(bean.getUser(), bean.getPost());
         //log the most recent Client Announce
-        ClientAnnounce current = this.save(bean);
+        Announce current = this.save(bean);
         //compute the difference
-        ClientAnnounce diff = new ClientAnnounce();
+        Announce diff = new Announce();
         if (null != last)
         {
-            diff.setDownloadByte(current.getDownloadByte() - last.getDownloadByte());
-            diff.setUploadByte(current.getUploadByte() - last.getUploadByte());
+            diff.setDownload(current.getDownload() - last.getDownload());
+            diff.setUpload(current.getUpload() - last.getUpload());
         }
         //update user information
-        userService.clientAnnounce(bean.getUser(), diff);
+        userService.announce(bean.getUser(), diff);
         return current;
     }
 
@@ -82,7 +82,7 @@ public class ClientAnnounceServiceImpl implements ClientAnnounceService
      * {@inheritDoc}
      */
     @Override
-    public ClientAnnounce findLastAnnounceByUser(User user)
+    public Announce findLastAnnounceByUser(User user)
     {
         return this.dao.findLastAnnounce(user, null);
     }
@@ -91,13 +91,13 @@ public class ClientAnnounceServiceImpl implements ClientAnnounceService
      * {@inheritDoc}
      */
     @Override
-    public ClientAnnounce findLastAnnounceByTorrent(Post post)
+    public Announce findLastAnnounceByTorrent(Post post)
     {
         return this.dao.findLastAnnounce(null, post);
     }
 
     @Override
-    public ClientAnnounceDao getDAO()
+    public AnnounceDao getDAO()
     {
         return this.dao;
     }

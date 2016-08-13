@@ -1,12 +1,11 @@
 package config;
 
+import com.google.gson.Gson;
 import com.zaxxer.hikari.HikariDataSource;
 import ga.rugal.jpt.core.entity.PackageInfo;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -36,8 +35,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class ApplicationContext
 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ApplicationContext.class.getName());
-
     public static final String hibernate_connection_autocommit = "hibernate.connection.autocommit";
 
     public static final String hibernate_format_sql = "hibernate.format_sql";
@@ -54,6 +51,12 @@ public class ApplicationContext
 
     @Autowired
     private Environment env;
+
+    @Bean
+    public Gson GSON()
+    {
+        return new Gson();
+    }
 
 //<editor-fold defaultstate="collapsed" desc="HikariCP Datasoure Configuration" >
     @Bean(destroyMethod = "close")

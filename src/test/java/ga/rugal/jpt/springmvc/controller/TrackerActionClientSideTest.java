@@ -4,7 +4,7 @@ import config.SystemDefaultProperties;
 import ga.rugal.ControllerClientSideTestBase;
 import ga.rugal.jpt.core.entity.Admin;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.entity.UserLevel;
+import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.service.AdminService;
 import ga.rugal.jpt.core.service.UserLevelService;
 import ga.rugal.jpt.core.service.UserService;
@@ -40,7 +40,7 @@ public class TrackerActionClientSideTest extends ControllerClientSideTestBase
     private User user;
 
     @Autowired
-    private UserLevel level;
+    private Level level;
 
     @Autowired
     private Admin admin;

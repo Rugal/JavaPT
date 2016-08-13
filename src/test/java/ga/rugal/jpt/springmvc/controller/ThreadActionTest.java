@@ -2,10 +2,10 @@ package ga.rugal.jpt.springmvc.controller;
 
 import config.SystemDefaultProperties;
 import ga.rugal.ControllerClientSideTestBase;
+import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.entity.UserLevel;
 import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.UserLevelService;
 import ga.rugal.jpt.core.service.UserService;
@@ -43,7 +43,7 @@ public class ThreadActionTest extends ControllerClientSideTestBase
     private Thread thread;
 
     @Autowired
-    private UserLevel level;
+    private Level level;
 
     @Autowired
     private UserLevelService levelService;
@@ -68,7 +68,7 @@ public class ThreadActionTest extends ControllerClientSideTestBase
         //saving thread by HTTP request
         MvcResult result = testSave();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
-        thread = thread.backToObject(message.getData());
+        thread = thread.toObject(message.getData());
     }
 
     @After
@@ -87,7 +87,7 @@ public class ThreadActionTest extends ControllerClientSideTestBase
     {
         System.out.println("updateThread");
         Assert.assertNotNull(thread.getTid());
-        thread.setPostTime(Long.MIN_VALUE);
+        thread.setCreateTime(Long.MIN_VALUE);
         MvcResult result = this.mockMvc.perform(put("/thread/" + thread.getTid())
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
@@ -97,8 +97,8 @@ public class ThreadActionTest extends ControllerClientSideTestBase
             .andDo(print())
             .andExpect(status().isOk()).andReturn();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
-        Thread beanUpdated = thread.backToObject(message.getData());
-        Assert.assertEquals(beanUpdated.getPostTime(), thread.getPostTime());
+        Thread beanUpdated = thread.toObject(message.getData());
+        Assert.assertEquals(beanUpdated.getCreateTime(), thread.getCreateTime());
     }
 
     @Test
@@ -115,7 +115,7 @@ public class ThreadActionTest extends ControllerClientSideTestBase
             .andReturn();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
         //special case for this unit test
-        thread = thread.backToObject(message.getData());
+        thread = thread.toObject(message.getData());
         Assert.assertNotNull(thread);
     }
 

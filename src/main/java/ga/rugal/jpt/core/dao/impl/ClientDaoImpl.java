@@ -54,7 +54,7 @@ public class ClientDaoImpl extends HibernateBaseDao<Client, Integer> implements 
                 client = this.get(0);
                 //this method will find the default client for others.
                 //maybe use getByPeerID("*", "*") will be better.
-                LOG.debug(CommonLogContent.OTHER_CLIENT, client.getEnabled() ? "enabled" : "disabled");
+                LOG.debug(CommonLogContent.OTHER_CLIENT, client.getEnable() ? "enabled" : "disabled");
             }
         }
         return client;

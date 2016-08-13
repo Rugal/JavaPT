@@ -5,27 +5,27 @@ import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.core.dao.ClientDao;
 import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.dao.UserDao;
-import ga.rugal.jpt.core.dao.UserLevelDao;
+import ga.rugal.jpt.core.entity.Announce;
 import ga.rugal.jpt.core.entity.Client;
-import ga.rugal.jpt.core.entity.ClientAnnounce;
+import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.entity.UserLevel;
 import ga.rugal.jpt.core.service.ClientAnnounceService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ga.rugal.jpt.core.dao.LevelDao;
 
 /**
  *
  * @author Rugal Bernstein
  */
-public class ClientAnnounceServiceImplTest extends DBTestBase
+public class AnnounceServiceImplTest extends DBTestBase
 {
 
     @Autowired
-    private UserLevelDao levelDao;
+    private LevelDao levelDao;
 
     @Autowired
     private UserDao userDao;
@@ -40,7 +40,7 @@ public class ClientAnnounceServiceImplTest extends DBTestBase
     private ClientAnnounceService clientAnnounceService;
 
     @Autowired
-    private UserLevel level;
+    private Level level;
 
     @Autowired
     private TrackerUpdateBean trackerUpdateBean;
@@ -55,9 +55,9 @@ public class ClientAnnounceServiceImplTest extends DBTestBase
     private Client client;
 
     @Autowired
-    private ClientAnnounce clientAnnounce;
+    private Announce clientAnnounce;
 
-    public ClientAnnounceServiceImplTest()
+    public AnnounceServiceImplTest()
     {
     }
 
@@ -89,13 +89,13 @@ public class ClientAnnounceServiceImplTest extends DBTestBase
         System.out.println("announce");
         TrackerUpdateBean bean = trackerUpdateBean;
         User before = userDao.get(user.getUid());
-        System.out.println(before.getDownloadByte());
-        System.out.println(before.getUploadByte());
-        ClientAnnounce newer = clientAnnounceService.announce(bean);
+        System.out.println(before.getDownload());
+        System.out.println(before.getUpload());
+        Announce newer = clientAnnounceService.announce(bean);
 
         User after = userDao.get(user.getUid());
-        System.out.println(after.getDownloadByte());
-        System.out.println(after.getUploadByte());
+        System.out.println(after.getDownload());
+        System.out.println(after.getUpload());
 
         clientAnnounceService.getDAO().delete(newer);
     }

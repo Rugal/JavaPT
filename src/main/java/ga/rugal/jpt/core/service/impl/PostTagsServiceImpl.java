@@ -1,7 +1,7 @@
 package ga.rugal.jpt.core.service.impl;
 
 import ga.rugal.jpt.core.dao.PostTagsDao;
-import ga.rugal.jpt.core.entity.PostTags;
+import ga.rugal.jpt.core.entity.PostTag;
 import ga.rugal.jpt.core.service.PostTagsService;
 import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.hibernate.Updater;
@@ -29,9 +29,9 @@ public class PostTagsServiceImpl implements PostTagsService
     }
 
     @Override
-    public PostTags update(PostTags bean)
+    public PostTag update(PostTag bean)
     {
-        Updater<PostTags> updater = new Updater<>(bean);
+        Updater<PostTag> updater = new Updater<>(bean);
         return dao.updateByUpdater(updater);
     }
 }

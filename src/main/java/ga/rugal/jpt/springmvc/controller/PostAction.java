@@ -2,7 +2,6 @@ package ga.rugal.jpt.springmvc.controller;
 
 import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.CommonLogContent;
-import ga.rugal.jpt.common.CommonMessageContent;
 import ga.rugal.jpt.common.tracker.bcodec.BDecoder;
 import ga.rugal.jpt.common.tracker.bcodec.BEValue;
 import ga.rugal.jpt.common.tracker.bcodec.BEncoder;
@@ -11,7 +10,6 @@ import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.service.AdminService;
 import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.ThreadService;
 import ga.rugal.jpt.core.service.UserService;
@@ -21,8 +19,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import ml.rugal.sshcommon.page.Pagination;
-import ml.rugal.sshcommon.springmvc.util.Message;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -52,35 +48,27 @@ public class PostAction
     private UserService userService;
 
     @Autowired
-    private AdminService adminService;
-
-    @Autowired
     private ThreadService threadService;
 
     /**
-     * GET a post from database.
+     * GET a page of posts from database.
      *
+     * @param name
      * @param pageNo
      * @param pageSize
+     * @param response
      *
      * @return
      */
     @ResponseBody
-    //    @RequestMapping(method = RequestMethod.GET)
-    public Message getPage(@RequestParam(name = "pageNo", required = true,
-        defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
-                           @RequestParam(name = "pageSize", required = true,
-                               defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize)
+    @RequestMapping(method = RequestMethod.GET)
+    public Object getPage(@RequestParam(name = "name", required = false) String name,
+                          @RequestParam(name = "pageNo", required = true, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
+                          @RequestParam(name = "pageSize", required = true, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize,
+                          HttpServletResponse response)
     {
         //TODO ignore content of each post so as to reduce data transmission
-        Pagination page = postService.getDAO().getPage(pageNo, pageSize);
-        if (page.getTotalCount() > 0)
-        {
-            return Message.successMessage(CommonMessageContent.GET_POST, page);
-        } else
-        {
-            return Message.failMessage(CommonMessageContent.POST_NOT_FOUND);
-        }
+        return postService.getDAO().getPage(pageNo, pageSize);
     }
 
     //--------------------------------Add Post-----------------------------------
@@ -138,7 +126,7 @@ public class PostAction
         //------------------Update-------------------
         bean.setPid(pid);//In case of malformed bean
         postService.update(bean);
-        response.setStatus(HttpServletResponse.SC_OK);
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
     /**
@@ -150,8 +138,8 @@ public class PostAction
      */
     @ResponseBody
     @RequestMapping(value = "/{pid}", method = RequestMethod.DELETE)
-    public void deletePost(@PathVariable("pid") Integer pid, HttpServletRequest request,
-                           HttpServletResponse response)
+    public void delete(@PathVariable("pid") Integer pid, HttpServletRequest request,
+                       HttpServletResponse response)
     {
         //-------------Existence check---------------
         Post bean = postService.getDAO().get(pid);
@@ -168,8 +156,9 @@ public class PostAction
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
+        //-------------------Delete--------------------
         postService.getDAO().delete(bean);
-        response.setStatus(HttpServletResponse.SC_ACCEPTED);
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
     /**
@@ -194,24 +183,21 @@ public class PostAction
         return bean;
     }
 
-    //-------------------------Torrent File Operation-----------------------
+    //----------------------------Torrent File Operation-------------------------
     /**
-     * Upload an BitTorrent file that includes meta-info of a torrent. <BR> A post could only have
-     * one torrent file, and it is read only. No one could update a uploaded torrent, unless they
-     * delete and re-post a new version.
+     * Upload an BitTorrent file that includes meta-info of a torrent. <BR> A post could only have one torrent file, and
+     * it is read only. No one could update a uploaded torrent, unless they delete and re-post a new version.
      *
      * @param pid      the post that this torrent file will be attached with.
      * @param metainfo thread bean resembled from request body.
      * @param request
      * @param response
-     *
-     * @return The persisted post bean.
      */
     @ResponseBody
     @RequestMapping(value = "/{pid}/metainfo", method = RequestMethod.POST)
-    public void uploadMetainfo(@PathVariable("pid") Integer pid,
-                               @RequestParam(value = "file") MultipartFile metainfo,
-                               HttpServletRequest request, HttpServletResponse response)
+    public void upload(@PathVariable("pid") Integer pid,
+                       @RequestParam(value = "file") MultipartFile metainfo,
+                       HttpServletRequest request, HttpServletResponse response)
     {
         //-------------Existence check---------------
         Post post = postService.getDAO().get(pid);
@@ -258,19 +244,18 @@ public class PostAction
      */
     @ResponseBody
     @RequestMapping(value = "/{pid}/metainfo", method = RequestMethod.GET)
-    public Object downloadMetainfo(@PathVariable("pid") Integer pid,
-                                   HttpServletRequest request,
-                                   HttpServletResponse response)
+    public Object download(@PathVariable("pid") Integer pid,
+                           HttpServletRequest request,
+                           HttpServletResponse response)
     {
-        //-------------Existence check---------------
+        //----------------Existence check------------------
         Post post = postService.getDAO().get(pid);
         if (null == post)
         {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return null;
         }
-        //------------Permission check---------------
-
+        //----------------Permission check-------------------
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
         User user = userService.getDAO().get(uid);
         if (!post.canRead(user))
@@ -278,8 +263,7 @@ public class PostAction
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return null;
         }
-
-        //--------------Announce URL conversion---------------
+        //----------------Announce URL conversion-----------------
         byte[] data = null;
         try
         {
@@ -295,8 +279,8 @@ public class PostAction
             response.setContentLength(data.length);
             //for browser downloading behavior
             response.setHeader("Content-Disposition",
-                               String.format("attachment; filename=%s.torrent;",
-                                             post.getInfoHash()));
+                               String.format("attachment; filename=%s.torrent;", post.getHash()));
+            response.setStatus(HttpServletResponse.SC_OK);
         }
         catch (IOException ex)
         {
@@ -306,21 +290,28 @@ public class PostAction
         return data;
     }
 
+    /**
+     * Generate a user related announce URL.
+     *
+     * @param post
+     * @param request
+     *
+     * @return
+     */
     private String wrapAnnounceURL(Post post, HttpServletRequest request)
     {
         String text = request.getParameter(SystemDefaultProperties.ID) + post.getPid();
         String crypted = BCrypt.hashpw(text, BCrypt.gensalt());
-        String url = String.format(SystemDefaultProperties.ANNOUNCE_TEMPLATE,
-                                   request.getParameter(SystemDefaultProperties.ID),
-                                   crypted);
-        return url;
+        return String.format(SystemDefaultProperties.ANNOUNCE_TEMPLATE,
+                             request.getParameter(SystemDefaultProperties.ID),
+                             crypted);
     }
 
     //-----------------------Post related Threads-------------------------
     /**
      * Persist a thread bean into database. Notice a thread must be attached under a post.<BR>
-     * All users are allowed to view the post and thread content, but users that do not reach
-     * minimum level requirement will not able to download torrent files and the data files
+     * All users are allowed to view the post and thread content, but users that do not reach minimum level requirement
+     * will not able to download torrent files and the data files
      *
      * @param pid      the post that this thread will be attached below.
      * @param bean     thread bean resembled from request body.
@@ -345,41 +336,38 @@ public class PostAction
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
         bean.setReplyer(userService.getDAO().get(uid));
         //setting attached post in Thread
-        bean.setPost(postService.getDAO().get(pid));
+        bean.setPost(post);
         threadService.getDAO().save(bean);
         response.setStatus(HttpServletResponse.SC_CREATED);
         return bean.getTid();
     }
 
     /**
-     * GET threads for a post by page.
+     * GET a page of threads for a post.
      *
      * @param pid      primary key of target post.
      * @param pageSize size of each page. Default with
      *                 {@link ga.rugal.jpt.common.SystemDefaultProperties.DEFAULT_PAGE_SIZE}
      * @param pageNo   indicate which page the client needs. Start from 1. Default with
      *                 {@link ga.rugal.jpt.common.SystemDefaultProperties.DEFAULT_PAGE_NUMBER}
+     * @param response
      *
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/{pid}/thread", method = RequestMethod.GET)
-    public Message getThreadByPost(@PathVariable("pid") Integer pid,
-                                   @RequestParam(name = "pageNo", required = true,
-                                       defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
-                                   @RequestParam(name = "pageSize", required = true,
-                                       defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize)
+    public Object getThreadByPage(@PathVariable("pid") Integer pid,
+                                  @RequestParam(name = "pageNo", required = false, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
+                                  @RequestParam(name = "pageSize", required = false, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize,
+                                  HttpServletResponse response)
     {
-        //TODO should this method ever be exist?
         Post post = postService.getDAO().get(pid);
-        Pagination page = threadService.getDAO().getPage(post, pageNo, pageSize);
-        if (page.getTotalCount() > 0)
+        if (null == post)
         {
-            return Message.successMessage(CommonMessageContent.GET_THREAD, page);
-        } else
-        {
-            return Message.failMessage(CommonMessageContent.THREADS_NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return null;
         }
+        response.setStatus(HttpServletResponse.SC_OK);
+        return threadService.getDAO().getPage(post, pageNo, pageSize);
     }
-
 }

@@ -1,7 +1,7 @@
 package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.jpt.core.dao.PostTagsDao;
-import ga.rugal.jpt.core.entity.PostTags;
+import ga.rugal.jpt.core.entity.PostTag;
 import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.hibernate.HibernateBaseDao;
 import org.springframework.stereotype.Repository;
@@ -12,12 +12,12 @@ import org.springframework.stereotype.Repository;
  */
 @Slf4j
 @Repository
-public class PostTagsDaoImpl extends HibernateBaseDao<PostTags, Integer> implements PostTagsDao
+public class PostTagsDaoImpl extends HibernateBaseDao<PostTag, Integer> implements PostTagsDao
 {
 
     @Override
-    protected Class<PostTags> getEntityClass()
+    protected Class<PostTag> getEntityClass()
     {
-        return PostTags.class;
+        return PostTag.class;
     }
 }

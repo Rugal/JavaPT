@@ -1,10 +1,11 @@
 package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.DBTestBase;
-import ga.rugal.jpt.core.dao.UserLevelDao;
-import ga.rugal.jpt.core.entity.UserLevel;
+import ga.rugal.jpt.core.dao.LevelDao;
+import ga.rugal.jpt.core.entity.Level;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
+import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,16 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author Rugal Bernstein
  */
-public class UserLevelDaoImplTest extends DBTestBase
+public class LevelDaoImplTest extends DBTestBase
 {
 
     @Autowired
-    private UserLevelDao levelDao;
+    private LevelDao levelDao;
 
     @Autowired
-    private UserLevel level;
+    private Level level;
 
-    public UserLevelDaoImplTest()
+    public LevelDaoImplTest()
     {
     }
 
@@ -56,8 +57,8 @@ public class UserLevelDaoImplTest extends DBTestBase
     {
         System.out.println("findById");
         Integer id = level.getLid();
-        UserLevel expResult = level;
-        UserLevel result = levelDao.get(id);
+        Level expResult = level;
+        Level result = levelDao.get(id);
         assertEquals(expResult, result);
     }
 
@@ -65,10 +66,8 @@ public class UserLevelDaoImplTest extends DBTestBase
     public void testGetLevel()
     {
         System.out.println("getLevel");
-        Integer credit = 100001;
-        UserLevel result = levelDao.getLevel(credit);
-        System.out.println(result);
-        System.out.println(result.getName());
+        Level result = levelDao.getLevel(2048l, 1028l);
+        Assert.assertTrue(2 == result.getLid());
     }
 
 }

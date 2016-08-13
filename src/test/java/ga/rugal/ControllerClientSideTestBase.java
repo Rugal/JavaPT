@@ -1,6 +1,5 @@
 package ga.rugal;
 
-import com.google.gson.Gson;
 import ga.JUnitSpringTestBase;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -23,8 +22,6 @@ import org.springframework.web.context.WebApplicationContext;
 @Ignore
 public abstract class ControllerClientSideTestBase extends JUnitSpringTestBase
 {
-
-    protected static final Gson GSON = new Gson();
 
     @Autowired
     public WebApplicationContext wac;

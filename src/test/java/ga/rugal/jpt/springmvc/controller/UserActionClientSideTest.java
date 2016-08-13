@@ -38,7 +38,7 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
         System.out.println("setUp");
         MvcResult result = testSave();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
-        user = user.backToObject(message.getData());
+        user = user.toObject(message.getData());
     }
 
     @After
@@ -86,7 +86,7 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
             .andDo(print())
             .andExpect(status().isOk()).andReturn();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
-        User beanUpdated = user.backToObject(message.getData());
+        User beanUpdated = user.toObject(message.getData());
         Assert.assertEquals(beanUpdated.getCredit(), user.getCredit());
     }
 

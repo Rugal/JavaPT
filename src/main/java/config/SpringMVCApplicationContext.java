@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
@@ -71,13 +70,12 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer)
     {
         configurer.favorPathExtension(false).favorParameter(false);
-        configurer.defaultContentType(MediaType.TEXT_PLAIN);
+        configurer.defaultContentType(MediaType.APPLICATION_JSON);
     }
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters)
     {
-        converters.add(new StringHttpMessageConverter());
         converters.add(gsonHttpMessageConverter());
         converters.add(byteArrayHttpMessageConverter());
     }
@@ -89,8 +87,7 @@ public class SpringMVCApplicationContext extends WebMvcConfigurerAdapter
         supportedMediaTypes.add(MediaType.IMAGE_GIF);
         supportedMediaTypes.add(MediaType.IMAGE_JPEG);
         supportedMediaTypes.add(MediaType.IMAGE_PNG);
-        supportedMediaTypes.add(MediaType.valueOf("application/x-bittorrent"));
-//        supportedMediaTypes.add(MediaType.ALL);
+        supportedMediaTypes.add(MediaType.valueOf(SystemDefaultProperties.BITTORRENT_MIME));
         messageConverter.setSupportedMediaTypes(supportedMediaTypes);
         return messageConverter;
     }

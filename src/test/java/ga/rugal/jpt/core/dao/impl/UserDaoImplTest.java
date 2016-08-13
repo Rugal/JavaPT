@@ -2,9 +2,8 @@ package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.DBTestBase;
 import ga.rugal.jpt.core.dao.UserDao;
-import ga.rugal.jpt.core.dao.UserLevelDao;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.entity.UserLevel;
+import ga.rugal.jpt.core.entity.Level;
 import java.util.List;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
@@ -13,6 +12,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ga.rugal.jpt.core.dao.LevelDao;
 
 /**
  *
@@ -22,13 +22,13 @@ public class UserDaoImplTest extends DBTestBase
 {
 
     @Autowired
-    private UserLevelDao levelDao;
+    private LevelDao levelDao;
 
     @Autowired
     private UserDao userDao;
 
     @Autowired
-    private UserLevel level;
+    private Level level;
 
     @Autowired
     private User user;

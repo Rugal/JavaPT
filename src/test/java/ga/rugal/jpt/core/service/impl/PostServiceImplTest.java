@@ -4,10 +4,9 @@ import ga.rugal.DBTestBase;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.core.dao.UserDao;
-import ga.rugal.jpt.core.dao.UserLevelDao;
+import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.entity.UserLevel;
 import ga.rugal.jpt.core.service.PostService;
 import java.io.IOException;
 import org.junit.After;
@@ -15,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ga.rugal.jpt.core.dao.LevelDao;
 
 /**
  *
@@ -30,10 +30,10 @@ public class PostServiceImplTest extends DBTestBase
     private User user;
 
     @Autowired
-    private UserLevel level;
+    private Level level;
 
     @Autowired
-    private UserLevelDao userLevelDao;
+    private LevelDao userLevelDao;
 
     @Autowired
     private PostService postService;
@@ -73,8 +73,8 @@ public class PostServiceImplTest extends DBTestBase
     public void testTorrentSave() throws IOException
     {
         System.out.println("Save with Torrent");
-        Post bean = postService.getDAO().getByTorrent(post.getInfoHash());
+        Post bean = postService.getDAO().getByTorrent(post.getHash());
         Torrent result = TrackedTorrent.load(bean.getBencode());
-        Assert.assertEquals(result.getHexInfoHash(), post.getInfoHash());
+        Assert.assertEquals(result.getHexInfoHash(), post.getHash());
     }
 }

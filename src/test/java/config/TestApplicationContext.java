@@ -4,20 +4,16 @@ import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.core.entity.Admin;
+import ga.rugal.jpt.core.entity.Announce;
 import ga.rugal.jpt.core.entity.Client;
-import ga.rugal.jpt.core.entity.ClientAnnounce;
-import ga.rugal.jpt.core.entity.Invitation;
+import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
-import ga.rugal.jpt.core.entity.PostTags;
-import ga.rugal.jpt.core.entity.SigninLog;
+import ga.rugal.jpt.core.entity.PostTag;
 import ga.rugal.jpt.core.entity.Tag;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.entity.UserLevel;
 import java.io.File;
 import java.io.IOException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,41 +30,18 @@ import org.springframework.context.annotation.Configuration;
 public class TestApplicationContext
 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TestApplicationContext.class.getName());
-
     @Bean
     @Autowired
-    public SigninLog signinLog(User user)
-    {
-        SigninLog bean = new SigninLog();
-        bean.setIp("127.0.0.1");
-        bean.setSigninTime(System.currentTimeMillis());
-        bean.setUid(user);
-        return bean;
-    }
-
-    @Bean
-    @Autowired
-    public Invitation invitation(User user)
-    {
-        Invitation bean = new Invitation();
-        bean.setIssueTime(System.currentTimeMillis());
-        bean.setUser(user);
-        return bean;
-    }
-
-    @Bean
-    @Autowired
-    public Post post(User user, UserLevel level, TrackedTorrent torrent)
+    public Post post(User user, Level level, TrackedTorrent torrent)
     {
         Post bean = new Post();
         bean.setContent("TEST");
-        bean.setEnabled(true);
-        bean.setPostTime(System.currentTimeMillis());
+        bean.setEnable(true);
+        bean.setCreateTime(System.currentTimeMillis());
         bean.setSize(100);
         bean.setTitle("Test title");
-        bean.setInfoHash(torrent.getHexInfoHash());
-        bean.setMinLevel(level);
+        bean.setHash(torrent.getHexInfoHash());
+        bean.setLevel(level);
         bean.setAuthor(user);
         bean.setRate(0);
 //        bean.setBencode(torrent.getEncoded());
@@ -89,9 +62,9 @@ public class TestApplicationContext
 
     @Autowired
     @Bean
-    public PostTags postTags(Post post, Tag tag)
+    public PostTag postTags(Post post, Tag tag)
     {
-        PostTags postTags = new PostTags();
+        PostTag postTags = new PostTag();
         postTags.setPost(post);
         postTags.setTag(tag);
         return postTags;
@@ -101,7 +74,7 @@ public class TestApplicationContext
     public Client client()
     {
         Client bean = new Client();
-        bean.setEnabled(true);
+        bean.setEnable(true);
         bean.setName("transmit");
         bean.setVersion("*");
         return bean;
@@ -114,16 +87,17 @@ public class TestApplicationContext
         Thread bean = new Thread();
         bean.setContent("TEST CONTENT");
         bean.setPost(post);
-        bean.setPostTime(System.currentTimeMillis());
+        bean.setCreateTime(System.currentTimeMillis());
         bean.setReplyer(user);
         return bean;
     }
 
     @Bean
-    public UserLevel level()
+    public Level level()
     {
-        UserLevel bean = new UserLevel();
-        bean.setMinimum(Integer.MAX_VALUE);
+        Level bean = new Level();
+        bean.setUpload(0l);
+        bean.setDownload(0l);
         bean.setName("Test");
         return bean;
     }
@@ -139,15 +113,15 @@ public class TestApplicationContext
 
     @Autowired
     @Bean
-    public ClientAnnounce clientAnnounce(User user, Client client, Post post)
+    public Announce announce(User user, Client client, Post post)
     {
-        ClientAnnounce bean = new ClientAnnounce();
+        Announce bean = new Announce();
         bean.setAnnounceTime(System.currentTimeMillis());
         bean.setClient(client);
         bean.setUser(user);
         bean.setPost(post);
-        bean.setUploadByte(0l);
-        bean.setDownloadByte(0l);
+        bean.setUpload(0l);
+        bean.setDownload(0l);
         return bean;
     }
 
@@ -159,7 +133,7 @@ public class TestApplicationContext
         bean.setUser(user);
         bean.setGranter(user);
         bean.setSince(System.currentTimeMillis());
-        bean.setLevel(Admin.Level.SUPER);
+        bean.setRole(Admin.Role.SUPER);
         return bean;
     }
 
@@ -173,7 +147,7 @@ public class TestApplicationContext
         bean.setUploaded(101l);
         bean.setLeft(100l);
         bean.setEvent(RequestEvent.STARTED);
-        bean.setInfoHash(post.getInfoHash());
+        bean.setInfoHash(post.getHash());
         bean.setPost(post);
         bean.setUser(user);
 
@@ -191,8 +165,8 @@ public class TestApplicationContext
     @Bean
     public File testTorrentFile()
     {
-        File file = new File(SystemDefaultProperties.TORRENT_PATH).listFiles((File dir, String fileName) -> fileName.startsWith("Junit"))[0];
+        File file = new File(SystemDefaultProperties.TORRENT_PATH)
+            .listFiles((File dir, String fileName) -> fileName.startsWith("Junit"))[0];
         return file;
     }
-
 }

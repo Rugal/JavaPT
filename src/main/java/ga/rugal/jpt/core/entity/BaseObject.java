@@ -12,7 +12,7 @@ public abstract class BaseObject<T>
 
     private static final Gson GSON = new Gson();
 
-    public T backToObject(Object data)
+    public T toObject(Object data)
     {
         String json = GSON.toJson(data);
         return GSON.fromJson(json, this.getRealClass());

@@ -33,5 +33,5 @@ public interface AdminService extends BaseService<AdminDao>
      * @return
      */
     @Transactional(readOnly = true)
-    boolean meetAdminLevels(User user, Admin.Level... levels);
+    boolean meetAdminLevels(User user, Admin.Role... levels);
 }

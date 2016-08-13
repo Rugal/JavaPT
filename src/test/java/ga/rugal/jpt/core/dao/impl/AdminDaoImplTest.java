@@ -71,5 +71,4 @@ public class AdminDaoImplTest extends DBTestBase
         Admin result = adminDao.get(id);
         assertEquals(expResult, result);
     }
-
 }

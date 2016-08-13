@@ -1,18 +1,21 @@
 package ga.rugal.jpt.springmvc.controller;
 
+import com.google.gson.Gson;
 import config.SystemDefaultProperties;
 import ga.rugal.ControllerClientSideTestBase;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
+import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.entity.UserLevel;
 import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.UserLevelService;
 import ga.rugal.jpt.core.service.UserService;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import ml.rugal.sshcommon.springmvc.util.Message;
+import java.io.InputStream;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -33,8 +36,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author Rugal Bernstein
  */
+@Slf4j
 public class PostActionClientSideTest extends ControllerClientSideTestBase
 {
+
+    @Autowired
+    private Gson GSON;
 
     @Autowired
     private File testTorrentFile;
@@ -49,7 +56,7 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     private User user;
 
     @Autowired
-    private UserLevel level;
+    private Level level;
 
     @Autowired
     private UserLevelService levelService;
@@ -67,18 +74,17 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     @Before
     public void setUp() throws Exception
     {
-        System.out.println("setUp");
+        LOG.info("setUp");
         levelService.getDAO().save(level);
         userService.getDAO().save(user);
         MvcResult result = testSave();
-        Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
-        post = post.backToObject(message.getData());
+        post.setPid(Integer.parseInt(result.getResponse().getContentAsString()));
     }
 
     @After
     public void tearDown() throws Exception
     {
-        System.out.println("tearDown");
+        LOG.info("tearDown");
         //order is important
         testDelete();
         userService.getDAO().delete(user);
@@ -88,18 +94,18 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     @Test
     public void testSavePost() throws Exception
     {
-        System.out.println("savePost");
+        LOG.info("save");
         Assert.assertNotNull(post.getPid());
     }
 
     private MvcResult testSave() throws Exception
     {
+        post.setPid(null);
         return this.mockMvc.perform(post("/post").content(GSON.toJson(post))
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
             .andReturn();
     }
 
@@ -107,82 +113,123 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     {
         this.mockMvc.perform(delete("/post/" + post.getPid())
             .header(SystemDefaultProperties.ID, user.getUid())
-            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword()))
+            .andExpect(status().isNoContent());
     }
 
     @Test
-    public void testUpdatePost() throws Exception
+    public void update_404() throws Exception
     {
-        System.out.println("updatePost");
+        LOG.info("update");
         Assert.assertNotNull(post.getPid());
-        post.setEnabled(!post.getEnabled());
-        MvcResult result = this.mockMvc.perform(put("/post/" + post.getPid())
+        post.setEnable(!post.getEnable());
+        this.mockMvc.perform(put("/post/0")
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
             .content(GSON.toJson(post))
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON))
+            .contentType(MediaType.APPLICATION_JSON))
             .andDo(print())
-            .andExpect(status().isOk()).andReturn();
-        Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
-        Post beanUpdated = post.backToObject(message.getData());
-        Assert.assertEquals(beanUpdated.getEnabled(), post.getEnabled());
+            .andExpect(status().isNotFound());
     }
 
     @Test
-    public void testGetPost() throws Exception
+    public void update_204() throws Exception
     {
-        System.out.println("getPost");
+        Assert.assertNotNull(post.getPid());
+        post.setEnable(!post.getEnable());
+        this.mockMvc.perform(put("/post/" + post.getPid())
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .content(GSON.toJson(post))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void get_404() throws Exception
+    {
+        this.mockMvc.perform(get("/post/0")
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void get_200() throws Exception
+    {
         MvcResult result = this.mockMvc.perform(get("/post/" + post.getPid())
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-            .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isOk())
             .andReturn();
-        Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
-        //special case for this unit test
-        post = post.backToObject(message.getData());
-        Assert.assertNotNull(post);
+        Post db = GSON.fromJson(result.getResponse().getContentAsString(), Post.class);
+        Assert.assertEquals(post, db);
     }
 
     @Test
-    public void testUploadMetainfo() throws Exception
+    public void uploadMetainfo_406() throws Exception
     {
-        System.out.println("updateMetainfo");
+        Assert.assertNotNull(post.getPid());
+        Assert.assertNull(post.getBencode());
+        InputStream stream = new ByteArrayInputStream(new byte[1]);
+        MockMultipartFile mmf = new MockMultipartFile("file", testTorrentFile.getName(),
+                                                      MediaType.MULTIPART_FORM_DATA_VALUE,
+                                                      stream);
+        this.mockMvc.perform(fileUpload("/post/" + post.getPid() + "/metainfo")
+            .file(mmf)
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword()))
+            .andDo(print())
+            .andExpect(status().isNotAcceptable());
+    }
+
+    @Test
+    public void uploadMetainfo_404() throws Exception
+    {
         Assert.assertNotNull(post.getPid());
         Assert.assertNull(post.getBencode());
         MockMultipartFile mmf = new MockMultipartFile("file", testTorrentFile.getName(),
-                                                      "multipart/form-data", new FileInputStream(testTorrentFile));
-        MvcResult result = this.mockMvc.perform(fileUpload("/post/" + post.getPid() + "/metainfo")
+                                                      MediaType.MULTIPART_FORM_DATA_VALUE,
+                                                      new FileInputStream(testTorrentFile));
+        this.mockMvc.perform(fileUpload("/post/0/metainfo")
             .file(mmf)
             .header(SystemDefaultProperties.ID, user.getUid())
-            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-            .accept(MediaType.APPLICATION_JSON))
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword()))
             .andDo(print())
-            .andExpect(status().isOk())
-            .andReturn();
-        Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
-        Assert.assertEquals(Message.SUCCESS, message.getStatus());
+            .andExpect(status().isNotFound());
     }
 
     @Test
-    public void testDownloadMetainfo() throws Exception
+    public void uploadMetainfo_202() throws Exception
     {
-        System.out.println("downloadMetainfo");
+        Assert.assertNotNull(post.getPid());
+        Assert.assertNull(post.getBencode());
+        MockMultipartFile mmf = new MockMultipartFile("file", testTorrentFile.getName(),
+                                                      MediaType.MULTIPART_FORM_DATA_VALUE,
+                                                      new FileInputStream(testTorrentFile));
+        this.mockMvc.perform(fileUpload("/post/" + post.getPid() + "/metainfo")
+            .file(mmf)
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword()))
+            .andDo(print())
+            .andExpect(status().isAccepted());
+    }
+
+    @Test
+    public void downloadMetainfo_200() throws Exception
+    {
         Assert.assertNotNull(post.getPid());
         post.setBencode(torrent.getEncoded());
         postService.update(post);
         MvcResult result = this.mockMvc.perform(get("/post/" + post.getPid() + "/metainfo")
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-            .accept(new String[]
-            {
-                "application/x-bittorrent", MediaType.APPLICATION_JSON_VALUE
-        }))
+            .accept(SystemDefaultProperties.BITTORRENT_MIME, MediaType.APPLICATION_JSON_VALUE))
             .andDo(print())
             .andExpect(status().isOk())
             .andReturn();
@@ -193,20 +240,16 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     }
 
     @Test
-    public void testMissDownloadMetainfo() throws Exception
+    public void downloadMetainfo_404() throws Exception
     {
-        System.out.println("downloadMetainfo");
-        MvcResult result = this.mockMvc.perform(get("/post/0/metainfo")
+        Assert.assertNotNull(post.getPid());
+        post.setBencode(torrent.getEncoded());
+        postService.update(post);
+        this.mockMvc.perform(get("/post/0/metainfo")
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-            .accept(new String[]
-            {
-                "application/x-bittorrent", MediaType.APPLICATION_JSON_VALUE
-        }))
+            .accept(SystemDefaultProperties.BITTORRENT_MIME, MediaType.APPLICATION_JSON_VALUE))
             .andDo(print())
-            .andExpect(status().isOk())
-            .andReturn();
-        Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
-        Assert.assertEquals(Message.FAIL, message.getStatus());
+            .andExpect(status().isNotFound());
     }
 }

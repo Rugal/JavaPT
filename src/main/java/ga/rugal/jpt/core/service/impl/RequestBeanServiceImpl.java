@@ -91,7 +91,7 @@ public class RequestBeanServiceImpl implements RequestBeanService
 
         //see if reported from allowed Client software.
         Client client = clientService.getDAO().findByPeerID(bean.getCname(), bean.getVersion());
-        if (!client.getEnabled())
+        if (!client.getEnable())
         {
             throw new TrackerResponseException(CommonMessageContent.UNSUPPORTED_CLIENT);
         }

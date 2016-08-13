@@ -59,7 +59,7 @@ public class AdminServiceImpl implements AdminService
      */
     @Transactional(readOnly = true)
     @Override
-    public boolean meetAdminLevels(User user, Admin.Level... levels)
+    public boolean meetAdminLevels(User user, Admin.Role... roles)
     {
         List<Admin> admins = this.getDAO().getByUID(user);
         if (admins.isEmpty())
@@ -69,16 +69,16 @@ public class AdminServiceImpl implements AdminService
         //Deny access by default if without any required role
         boolean value = false;
         //---------------------
-        Set<Admin.Level> ownedLevel = new HashSet<>(5);
+        Set<Admin.Role> ownedLevel = new HashSet<>(5);
         //Replace user.getAdminList as hibernate lazy loading problem
         admins.stream().forEach((admin) ->
             {
-                ownedLevel.add(admin.getLevel());
+                ownedLevel.add(admin.getRole());
             });
 
-        for (Admin.Level requiredLevel : levels)
+        for (Admin.Role requiredRole : roles)
         {
-            if (ownedLevel.contains(requiredLevel))
+            if (ownedLevel.contains(requiredRole))
             {
                 //If match any role
                 value = true;

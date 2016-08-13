@@ -2,7 +2,6 @@ package ga.rugal.jpt.springmvc.controller;
 
 import config.SystemDefaultProperties;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.service.InvitationService;
 import ga.rugal.jpt.core.service.UserService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -31,9 +30,6 @@ public class UserAction
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private InvitationService invitationService;
-
     //Create new UID with invitation
     //Register User with UID
     //--------------------------User Profile Operation-----------------------------
@@ -61,7 +57,7 @@ public class UserAction
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         if (null != bean)
         {
-            bean.setStatus(User.Status.DELETING);
+            bean.setStatus(User.Status.DELETE);
             userService.update(bean);
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         }
@@ -117,7 +113,7 @@ public class UserAction
         }
     }
 
-    //---------------------------------Search User----------------------------------
+    //---------------------------------Search User-------------------------------------
     /**
      * Get the user with email address.
      *
@@ -142,7 +138,7 @@ public class UserAction
     }
 
     /**
-     * Search for users that contains name in their username field
+     * Find user with given user name.
      *
      * @param username
      * @param response

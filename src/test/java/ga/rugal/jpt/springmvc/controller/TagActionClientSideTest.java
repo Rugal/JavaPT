@@ -1,10 +1,11 @@
 package ga.rugal.jpt.springmvc.controller;
 
+import com.google.gson.Gson;
 import config.SystemDefaultProperties;
 import ga.rugal.ControllerClientSideTestBase;
+import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Tag;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.entity.UserLevel;
 import ga.rugal.jpt.core.service.UserLevelService;
 import ga.rugal.jpt.core.service.UserService;
 import java.io.File;
@@ -13,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.junit.After;
 import org.junit.Assert;
@@ -34,8 +36,12 @@ import org.springframework.util.FileCopyUtils;
  *
  * @author Rugal Bernstein
  */
+@Slf4j
 public class TagActionClientSideTest extends ControllerClientSideTestBase
 {
+
+    @Autowired
+    private Gson GSON;
 
     //the icon file for convenience
     private File file;
@@ -50,7 +56,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
     private UserService userService;
 
     @Autowired
-    private UserLevel level;
+    private Level level;
 
     @Autowired
     private Tag tag;
@@ -65,19 +71,19 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
     @Before
     public void setUp() throws Exception
     {
-        System.out.println("setUp");
+        LOG.info("setUp");
         file = new File(new File(SystemDefaultProperties.ICON_PATH), tag.getIcon());
         levelService.getDAO().save(level);
         userService.getDAO().save(user);
         MvcResult result = saveTag();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
-        db = tag.backToObject(message.getData());
+        db = tag.toObject(message.getData());
     }
 
     @After
     public void tearDown() throws Exception
     {
-        System.out.println("tearDown");
+        LOG.info("tearDown");
         deleteTag();
         userService.getDAO().delete(user);
         levelService.getDAO().delete(level);
@@ -85,7 +91,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
 
     private MvcResult saveTag() throws Exception
     {
-        MockMultipartFile mmf = new MockMultipartFile("file", file.getName(), "multipart/form-data", new FileInputStream(file));
+        MockMultipartFile mmf = new MockMultipartFile("file", file.getName(), MediaType.MULTIPART_FORM_DATA_VALUE, new FileInputStream(file));
         return this.mockMvc.perform(fileUpload("/tag")
             .file(mmf)
             .header(SystemDefaultProperties.ID, user.getUid())
@@ -109,7 +115,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
     @Test
     public void testGetTagBean() throws Exception
     {
-        System.out.println("getTagBean");
+        LOG.info("getTagBean");
         MvcResult result = this.mockMvc.perform(get("/tag/" + db.getTid())
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
@@ -118,14 +124,14 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
             .andExpect(status().isOk())
             .andReturn();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
-        Tag test = tag.backToObject(message.getData());
+        Tag test = tag.toObject(message.getData());
         Assert.assertEquals(db.getIcon(), test.getIcon());
     }
 
     @Test
     public void testGetMissedTagIcon() throws Exception
     {
-        System.out.println("getMissedTagIcon");
+        LOG.info("getMissedTagIcon");
         this.mockMvc.perform(get("/tag/" + 0 + "/icon")
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
@@ -139,7 +145,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
     @Test
     public void testGetTagIcon() throws Exception
     {
-        System.out.println("getTagIcon");
+        LOG.info("getTagIcon");
         MvcResult result = this.mockMvc.perform(get("/tag/" + db.getTid() + "/icon")
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
@@ -159,7 +165,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
     @Test
     public void testUpdateTag() throws IOException, Exception
     {
-        System.out.println("UpdateTag");
+        LOG.info("UpdateTag");
         FileInputStream fis = new FileInputStream(file);
         MockMultipartFile multipartFile = new MockMultipartFile("file", fis);
         Map<String, String> contentTypeParams = new HashMap<>();
@@ -177,7 +183,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
             .andDo(print())
             .andReturn();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
-        Tag updated = tag.backToObject(message.getData());
+        Tag updated = tag.toObject(message.getData());
         Assert.assertEquals(db.getName() + "Updated", updated.getName());
     }
 

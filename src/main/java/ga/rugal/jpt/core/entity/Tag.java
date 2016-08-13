@@ -13,7 +13,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  *
@@ -22,7 +21,6 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(schema = "jpt", name = "tag")
 @Data
-@EqualsAndHashCode(callSuper = false)
 public class Tag extends BaseObject<Tag>
 {
 
@@ -45,7 +43,7 @@ public class Tag extends BaseObject<Tag>
     private String icon;
 
     @OneToMany(mappedBy = "tag")
-    private List<PostTags> postTagsList;
+    private List<PostTag> postTagsList;
 
     @Override
     protected Class<Tag> getRealClass()
@@ -53,4 +51,27 @@ public class Tag extends BaseObject<Tag>
         return Tag.class;
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("%s[ tid=%d ]", this.getClass().getName(), this.tid);
+    }
+
+    @Override
+    public boolean equals(Object object)
+    {
+        if (!(object instanceof Tag))
+        {
+            return false;
+        }
+        Tag other = (Tag) object;
+        return !((this.tid == null && other.tid != null) || (this.tid != null && !this.tid.equals(other.tid)));
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = 7;
+        return 37 * hash + (tid != null ? tid.hashCode() : 0);
+    }
 }

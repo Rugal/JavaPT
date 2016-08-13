@@ -15,9 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  *
@@ -26,7 +24,6 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(schema = "jpt", name = "post")
 @Data
-@EqualsAndHashCode(callSuper = false)
 public class Post extends BaseObject<Post>
 {
 
@@ -50,12 +47,12 @@ public class Post extends BaseObject<Post>
     private String content;
 
     @Expose
-    @Column(length = 50, name = "info_hash")
-    private String infoHash;
+    @Column(length = 50, name = "hash")
+    private String hash;
 
     @Expose
-    @Column(name = "post_time")
-    private Long postTime;
+    @Column(name = "create_time")
+    private Long createTime;
 
     @Column(length = 2147483647)
     @Expose
@@ -67,16 +64,16 @@ public class Post extends BaseObject<Post>
 
     @Column
     @Expose
-    private Boolean enabled;
+    private Boolean enable;
 
-    @JoinColumn(name = "min_level", referencedColumnName = "lid")
+    @JoinColumn(name = "lid", referencedColumnName = "lid")
     @ManyToOne
     @Expose
-    private UserLevel minLevel;
+    private Level level;
 
-    @Transient
+    @Column
     @Expose
-    private float rate;
+    private Integer rate;
 
     @JoinColumn(name = "uid", referencedColumnName = "uid")
     @ManyToOne
@@ -84,13 +81,10 @@ public class Post extends BaseObject<Post>
     private User author;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private List<PostTags> postTagsList;
+    private List<PostTag> postTagsList;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Thread> threadList;
-
-    @OneToMany(mappedBy = "post")
-    private List<ClientAnnounce> clientAnnounceList;
 
     @Override
     protected Class<Post> getRealClass()
@@ -108,12 +102,12 @@ public class Post extends BaseObject<Post>
     public boolean canRead(User user)
     {
         //------------This user is author or  reaches minimum level-------------
-        if (this.getAuthor().equals(user) || user.getLevel().compareTo(this.getMinLevel()) >= 0)
+        if (this.getAuthor().equals(user) || user.getLevel().compareTo(this.getLevel()) >= 0)
         {
             return true;
         }
         List<Admin> admins = user.getAdminList();
-        return admins.stream().anyMatch((admin) -> (admin.getLevel() == Admin.Level.INSPECTOR));
+        return admins.stream().anyMatch((admin) -> (admin.getRole() == Admin.Role.INSPECTOR));
     }
 
     /**
@@ -132,7 +126,30 @@ public class Post extends BaseObject<Post>
         }
         List<Admin> admins = user.getAdminList();
         //----------This user is admin with sufficient privilege-------------
-        return admins.stream().anyMatch((admin) -> (admin.getLevel() == Admin.Level.ADMIN));
+        return admins.stream().anyMatch((admin) -> (admin.getRole() == Admin.Role.ADMIN));
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("%s[ pid=%d ]", this.getClass().getName(), this.pid);
+    }
+
+    @Override
+    public boolean equals(Object object)
+    {
+        if (!(object instanceof Post))
+        {
+            return false;
+        }
+        Post other = (Post) object;
+        return !((this.pid == null && other.pid != null) || (this.pid != null && !this.pid.equals(other.pid)));
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = 7;
+        return 37 * hash + (pid != null ? pid.hashCode() : 0);
+    }
 }

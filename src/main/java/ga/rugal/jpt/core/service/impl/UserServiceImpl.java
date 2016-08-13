@@ -1,7 +1,7 @@
 package ga.rugal.jpt.core.service.impl;
 
 import ga.rugal.jpt.core.dao.UserDao;
-import ga.rugal.jpt.core.entity.ClientAnnounce;
+import ga.rugal.jpt.core.entity.Announce;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -37,14 +37,14 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public User clientAnnounce(User bean, ClientAnnounce clientAnnounce)
+    public User announce(User bean, Announce announce)
     {
-        bean.setDownloadByte(bean.getDownloadByte() + clientAnnounce.getDownloadByte());
-        bean.setUploadByte(bean.getUploadByte() + clientAnnounce.getUploadByte());
+        bean.setDownload(bean.getDownload() + announce.getDownload());
+        bean.setUpload(bean.getUpload() + announce.getUpload());
         Updater<User> updater = new Updater<>(bean);
         updater.setUpdateMode(Updater.UpdateMode.MIN);
-        updater.include("uploadByte");
-        updater.include("downloadByte");
+        updater.include("upload");
+        updater.include("download");
         return dao.updateByUpdater(updater);
     }
 }

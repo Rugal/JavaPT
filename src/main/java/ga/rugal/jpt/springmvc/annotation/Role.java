@@ -21,5 +21,5 @@ import java.lang.annotation.Target;
 public @interface Role
 {
 
-    Admin.Level[] value();
+    Admin.Role[] value();
 }

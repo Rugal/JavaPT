@@ -13,17 +13,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  *
  * @author Rugal Bernstein
  */
 @Entity
-@Table(name = "post_tags", schema = "jpt")
+@Table(name = "post_tag", schema = "jpt")
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class PostTags
+public class PostTag
 {
 
     private static final String SEQUENCE_NAME = "post_tags_ptid_seq";
@@ -46,4 +44,28 @@ public class PostTags
     @JoinColumn(name = "tid", referencedColumnName = "tid")
     @ManyToOne
     private Tag tag;
+
+    @Override
+    public String toString()
+    {
+        return String.format("%s[ ptid=%d ]", this.getClass().getName(), this.ptid);
+    }
+
+    @Override
+    public boolean equals(Object object)
+    {
+        if (!(object instanceof PostTag))
+        {
+            return false;
+        }
+        PostTag other = (PostTag) object;
+        return !((this.ptid == null && other.ptid != null) || (this.ptid != null && !this.ptid.equals(other.ptid)));
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = 7;
+        return 37 * hash + (ptid != null ? ptid.hashCode() : 0);
+    }
 }

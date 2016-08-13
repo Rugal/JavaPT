@@ -1,7 +1,7 @@
 package ga.rugal.jpt.core.dao.impl;
 
-import ga.rugal.jpt.core.dao.UserLevelDao;
-import ga.rugal.jpt.core.entity.UserLevel;
+import ga.rugal.jpt.core.dao.LevelDao;
+import ga.rugal.jpt.core.entity.Level;
 import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.hibernate.HibernateBaseDao;
 import org.hibernate.Criteria;
@@ -16,24 +16,24 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Slf4j
 @Repository
-public class UserLevelDaoImpl extends HibernateBaseDao<UserLevel, Integer> implements UserLevelDao
+public class LevelDaoImpl extends HibernateBaseDao<Level, Integer> implements LevelDao
 {
 
     @Override
     @Transactional(readOnly = true)
-    public UserLevel getLevel(Integer credit)
+    public Level getLevel(Long upload, Long download)
     {
-        //select * from level where minimum < 7000 order by minimum desc limit 1;
         Criteria crit = createCriteria();
-        crit.add(Restrictions.lt("minimum", credit));
-        crit.addOrder(Order.desc("minimum"));
+        crit.add(Restrictions.le("download", download));
+        crit.add(Restrictions.le("upload", upload));
+        crit.addOrder(Order.desc("upload"));
         crit.setMaxResults(1);
-        return (UserLevel) crit.list().get(0);
+        return (Level) crit.list().get(0);
     }
 
     @Override
-    protected Class<UserLevel> getEntityClass()
+    protected Class<Level> getEntityClass()
     {
-        return UserLevel.class;
+        return Level.class;
     }
 }

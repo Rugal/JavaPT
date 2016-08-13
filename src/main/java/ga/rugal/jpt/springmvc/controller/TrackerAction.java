@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping(value = "/tracker")
-@Role(Admin.Level.SUPER)
+@Role(Admin.Role.SUPER)
 public class TrackerAction
 {
 

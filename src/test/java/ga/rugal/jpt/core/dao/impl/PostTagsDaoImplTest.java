@@ -5,18 +5,18 @@ import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.dao.PostTagsDao;
 import ga.rugal.jpt.core.dao.TagDao;
 import ga.rugal.jpt.core.dao.UserDao;
-import ga.rugal.jpt.core.dao.UserLevelDao;
 import ga.rugal.jpt.core.entity.Post;
-import ga.rugal.jpt.core.entity.PostTags;
+import ga.rugal.jpt.core.entity.PostTag;
 import ga.rugal.jpt.core.entity.Tag;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.entity.UserLevel;
+import ga.rugal.jpt.core.entity.Level;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ga.rugal.jpt.core.dao.LevelDao;
 
 /**
  *
@@ -38,10 +38,10 @@ public class PostTagsDaoImplTest extends DBTestBase
     private PostTagsDao postTagsDao;
 
     @Autowired
-    private UserLevelDao levelDao;
+    private LevelDao levelDao;
 
     @Autowired
-    private UserLevel level;
+    private Level level;
 
     @Autowired
     private Post post;
@@ -53,7 +53,7 @@ public class PostTagsDaoImplTest extends DBTestBase
     private Tag tag;
 
     @Autowired
-    private PostTags postTags;
+    private PostTag postTags;
 
     public PostTagsDaoImplTest()
     {
@@ -97,8 +97,8 @@ public class PostTagsDaoImplTest extends DBTestBase
     {
         System.out.println("getByID");
         Integer id = postTags.getPtid();
-        PostTags expResult = postTags;
-        PostTags result = postTagsDao.get(id);
+        PostTag expResult = postTags;
+        PostTag result = postTagsDao.get(id);
         assertEquals(expResult, result);
     }
 }

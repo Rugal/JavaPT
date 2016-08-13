@@ -1,28 +1,28 @@
 package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.DBTestBase;
-import ga.rugal.jpt.core.dao.ClientAnnounceDao;
+import ga.rugal.jpt.core.dao.AnnounceDao;
 import ga.rugal.jpt.core.dao.ClientDao;
 import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.dao.UserDao;
-import ga.rugal.jpt.core.dao.UserLevelDao;
+import ga.rugal.jpt.core.entity.Announce;
 import ga.rugal.jpt.core.entity.Client;
-import ga.rugal.jpt.core.entity.ClientAnnounce;
+import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.entity.UserLevel;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ga.rugal.jpt.core.dao.LevelDao;
 
 /**
  *
  * @author Rugal Bernstein
  */
-public class ClientAnnounceDaoImplTest extends DBTestBase
+public class AnnounceDaoImplTest extends DBTestBase
 {
 
     @Autowired
@@ -32,16 +32,16 @@ public class ClientAnnounceDaoImplTest extends DBTestBase
     private UserDao userDao;
 
     @Autowired
-    private ClientAnnounceDao clientAnnounceDao;
+    private AnnounceDao clientAnnounceDao;
 
     @Autowired
     private PostDao postDao;
 
     @Autowired
-    private UserLevelDao userLevelDao;
+    private LevelDao userLevelDao;
 
     @Autowired
-    private UserLevel level;
+    private Level level;
 
     @Autowired
     private User user;
@@ -53,9 +53,9 @@ public class ClientAnnounceDaoImplTest extends DBTestBase
     private Post post;
 
     @Autowired
-    private ClientAnnounce clientAnnounce;
+    private Announce clientAnnounce;
 
-    public ClientAnnounceDaoImplTest()
+    public AnnounceDaoImplTest()
     {
     }
 
@@ -89,23 +89,25 @@ public class ClientAnnounceDaoImplTest extends DBTestBase
         int pageSize = 1;
         Pagination result = clientAnnounceDao.getPage(pageNo, pageSize);
         System.out.println(result.getList().size());
+        Assert.assertFalse(result.getList().isEmpty());
     }
 
     @Test
-    public void testGetByID()
+    public void testGet()
     {
-        System.out.println("getByID");
-        Long id = clientAnnounce.getCaid();
-        ClientAnnounce expResult = clientAnnounce;
-        ClientAnnounce result = clientAnnounceDao.get(id);
-        assertEquals(expResult, result);
+        System.out.println("get");
+        Long id = clientAnnounce.getAid();
+        Announce expResult = clientAnnounce;
+        Announce result = clientAnnounceDao.get(id);
+        Assert.assertEquals(expResult, result);
     }
 
     @Test
     public void testFindLastAnnounce()
     {
-        ClientAnnounce ca = clientAnnounceDao.findLastAnnounce(user, post);
-        System.out.println(ca == null);
+        System.out.println("findLastAnnounce");
+        Announce ca = clientAnnounceDao.findLastAnnounce(user, post);
+        Assert.assertNotNull(ca);
     }
 
 }

@@ -57,8 +57,9 @@ public class TagAction
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
-    public Message saveTag(@RequestParam(value = "name", required = true) String name,
-                           @RequestParam("file") MultipartFile uploadedFile)
+    public Message save(@RequestParam(value = "name", required = true) String name,
+                        @RequestParam("file") MultipartFile uploadedFile,
+                        HttpServletResponse response)
     {
         Tag bean = new Tag();
         bean.setName(name);

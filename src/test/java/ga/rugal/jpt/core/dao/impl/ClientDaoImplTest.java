@@ -28,7 +28,7 @@ public class ClientDaoImplTest extends DBTestBase
     {
         System.out.println("setUp");
         client = new Client();
-        client.setEnabled(true);
+        client.setEnable(true);
         client.setName("transmit");
         client.setVersion("*");
         clientDao.save(client);
@@ -59,5 +59,4 @@ public class ClientDaoImplTest extends DBTestBase
         Client result = clientDao.get(id);
         Assert.assertEquals(result, client);
     }
-
 }

@@ -1,20 +1,20 @@
 package ga.rugal.jpt.core.service;
 
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
-import ga.rugal.jpt.core.dao.ClientAnnounceDao;
-import ga.rugal.jpt.core.entity.ClientAnnounce;
+import ga.rugal.jpt.core.entity.Announce;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
 import org.springframework.transaction.annotation.Transactional;
+import ga.rugal.jpt.core.dao.AnnounceDao;
 
 /**
  *
  * @author Rugal Bernstein
  */
-public interface ClientAnnounceService extends BaseService<ClientAnnounceDao>
+public interface ClientAnnounceService extends BaseService<AnnounceDao>
 {
 
-    ClientAnnounce update(ClientAnnounce bean);
+    Announce update(Announce bean);
 
     /**
      * Announce a update for user.
@@ -28,7 +28,7 @@ public interface ClientAnnounceService extends BaseService<ClientAnnounceDao>
      * @param bean <p>
      * @return
      */
-    ClientAnnounce announce(TrackerUpdateBean bean);
+    Announce announce(TrackerUpdateBean bean);
 
     /**
      * Find the most recent client announce record according to user.
@@ -40,7 +40,7 @@ public interface ClientAnnounceService extends BaseService<ClientAnnounceDao>
      * @return A client announce object if such record does exist. otherwise return null.
      */
     @Transactional(readOnly = true)
-    ClientAnnounce findLastAnnounceByUser(User user);
+    Announce findLastAnnounceByUser(User user);
 
     /**
      * Find the most recent client announce record according to torrent.
@@ -52,6 +52,6 @@ public interface ClientAnnounceService extends BaseService<ClientAnnounceDao>
      * @return A client announce object if such record does exist. otherwise return null.
      */
     @Transactional(readOnly = true)
-    ClientAnnounce findLastAnnounceByTorrent(Post post);
+    Announce findLastAnnounceByTorrent(Post post);
 
 }

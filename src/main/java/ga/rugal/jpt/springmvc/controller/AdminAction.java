@@ -26,11 +26,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Slf4j
 @Controller
 @RequestMapping(value = "/admin")
-@Role(
-    value =
-    {
-        Admin.Level.ADMIN, Admin.Level.SUPER
-    })
+@Role(value =
+{
+    Admin.Role.ADMIN, Admin.Role.SUPER
+})
 public class AdminAction
 {
 
@@ -43,27 +42,27 @@ public class AdminAction
     /**
      * Grant a admin role to a user.
      *
-     * @param uid     The user to be granted. Must exists in db.
-     * @param role    The role name to be granted to.
-     * @param request Get grantee user from.
+     * @param uid      The user to be granted. Must exists in db.
+     * @param roleName The role name to be granted to.
+     * @param request  Get grantee user from.
      *
      * @return
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
-    public Message grant(@RequestParam("grantee") Integer uid, @RequestParam("role") String role, HttpServletRequest request)
+    public Message grant(@RequestParam("grantee") Integer uid, @RequestParam("role") String roleName, HttpServletRequest request)
     {
         User grantee = userService.getDAO().get(uid);
         if (null == grantee)
         {
             return Message.failMessage(CommonMessageContent.GRANTEE_NOT_FOUND);
         }
-        Admin.Level level;
+        Admin.Role role;
         try
         {
             //TODO need proper role judgement, check if the granter is eligible to grant such admin role.
             //like the role to be granted can not surpass the one that granter has.
-            level = Admin.Level.valueOf(role);
+            role = Admin.Role.valueOf(roleName);
         }
         catch (Exception e)
         {
@@ -74,7 +73,7 @@ public class AdminAction
         User granter = userService.getDAO().get(Integer.parseInt(granterID));
         Admin admin = new Admin();
         admin.setGranter(granter);
-        admin.setLevel(level);
+        admin.setRole(role);
         admin.setUser(grantee);
         adminService.getDAO().save(admin);
         return Message.successMessage(CommonMessageContent.GRANT_DONE, admin);
