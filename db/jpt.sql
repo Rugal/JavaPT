@@ -466,7 +466,7 @@ COPY admin (aid, uid, granter, since, role) FROM stdin;
 -- Name: admin_aid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: -
 --
 
-SELECT pg_catalog.setval('admin_aid_seq', 253, true);
+SELECT pg_catalog.setval('admin_aid_seq', 50, true);
 
 
 --
@@ -507,7 +507,7 @@ COPY client (cid, name, version, enable, cname) FROM stdin;
 -- Name: client_cid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: -
 --
 
-SELECT pg_catalog.setval('client_cid_seq', 562, true);
+SELECT pg_catalog.setval('client_cid_seq', 100, true);
 
 
 --
@@ -534,7 +534,7 @@ COPY level (lid, name, icon, upload, download) FROM stdin;
 -- Name: level_lid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: -
 --
 
-SELECT pg_catalog.setval('level_lid_seq', 2114, true);
+SELECT pg_catalog.setval('level_lid_seq', 50, true);
 
 
 --
@@ -555,7 +555,7 @@ COPY post (pid, uid, title, content, create_time, size, enable, hash, bencode, r
 -- Name: post_pid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: -
 --
 
-SELECT pg_catalog.setval('post_pid_seq', 1227, true);
+SELECT pg_catalog.setval('post_pid_seq', 50, true);
 
 
 --
@@ -574,7 +574,7 @@ COPY post_tag (ptid, tid, pid) FROM stdin;
 -- Name: post_tags_ptid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: -
 --
 
-SELECT pg_catalog.setval('post_tags_ptid_seq', 156, true);
+SELECT pg_catalog.setval('post_tags_ptid_seq', 50, true);
 
 
 --
@@ -608,7 +608,7 @@ COPY tag (tid, name, icon) FROM stdin;
 -- Name: tag_tid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: -
 --
 
-SELECT pg_catalog.setval('tag_tid_seq', 496, true);
+SELECT pg_catalog.setval('tag_tid_seq', 50, true);
 
 
 --
@@ -627,7 +627,7 @@ COPY thread (tid, pid, uid, content, create_time, judgement) FROM stdin;
 -- Name: thread_tid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: -
 --
 
-SELECT pg_catalog.setval('thread_tid_seq', 283, true);
+SELECT pg_catalog.setval('thread_tid_seq', 50, true);
 
 
 --
@@ -651,7 +651,7 @@ COPY "user" (uid, password, username, email, upload, download, credit, register_
 -- Name: user_uid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: -
 --
 
-SELECT pg_catalog.setval('user_uid_seq', 2250, true);
+SELECT pg_catalog.setval('user_uid_seq', 100, true);
 
 
 --
