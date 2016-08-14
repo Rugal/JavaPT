@@ -39,9 +39,6 @@ public class Tag extends BaseObject<Tag>
     @Column(length = 50)
     private String name;
 
-    @Column(length = 50)
-    private String icon;
-
     @OneToMany(mappedBy = "tag")
     private List<PostTag> postTagsList;
 

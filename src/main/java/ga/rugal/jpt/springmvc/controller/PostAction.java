@@ -63,8 +63,9 @@ public class PostAction
     @ResponseBody
 //    @RequestMapping(method = RequestMethod.GET)
     public Object getPage(@RequestParam(name = "name", required = false) String name,
-                          @RequestParam(name = "pageNo", required = true, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
-                          @RequestParam(name = "pageSize", required = true, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize,
+                          @RequestParam(name = "pageNo", required = false, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
+                          @RequestParam(name = "pageSize", required = false, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize,
+                          //tag list
                           HttpServletResponse response)
     {
         //TODO ignore content of each post so as to reduce data transmission
@@ -307,7 +308,7 @@ public class PostAction
                              crypted);
     }
 
-    //-----------------------Post related Threads-------------------------
+    //------------------------Post related Threads--------------------------
     /**
      * Persist a thread bean into database. Notice a thread must be attached under a post.<BR>
      * All users are allowed to view the post and thread content, but users that do not reach minimum level requirement
