@@ -8,9 +8,13 @@ import ga.rugal.jpt.common.tracker.bcodec.BEncoder;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.core.entity.Post;
+import ga.rugal.jpt.core.entity.PostTag;
+import ga.rugal.jpt.core.entity.Tag;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.PostService;
+import ga.rugal.jpt.core.service.TagService;
+import ga.rugal.jpt.core.service.TaggingService;
 import ga.rugal.jpt.core.service.ThreadService;
 import ga.rugal.jpt.core.service.UserService;
 import java.io.ByteArrayInputStream;
@@ -40,6 +44,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping(value = "/post")
 public class PostAction
 {
+
+    @Autowired
+    private TaggingService taggingService;
+
+    @Autowired
+    private TagService tagService;
 
     @Autowired
     private PostService postService;
@@ -371,4 +381,43 @@ public class PostAction
         response.setStatus(HttpServletResponse.SC_OK);
         return threadService.getDAO().getPage(post, pageNo, pageSize);
     }
+
+    //--------------------------Tagging-------------------------------------
+    /**
+     * Add a tag to Post
+     *
+     * @param pid
+     * @param tid
+     * @param request
+     * @param response
+     *
+     */
+    @ResponseBody
+    @RequestMapping(value = "/{pid}/tag/{tid}", method = RequestMethod.POST)
+    public void tag(@PathVariable("pid") Integer pid, @PathVariable("tid") Integer tid, HttpServletRequest request, HttpServletResponse response)
+    {
+        //-----------------Existence check------------------
+        Post dbPost = postService.getDAO().get(pid);
+        Tag dbTag = tagService.getDAO().get(tid);
+        if (null == dbPost || null == dbTag)
+        {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        //----------------Permission check------------------
+        int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
+        User user = userService.getDAO().get(uid);
+        if (!dbPost.canWrite(user))
+        {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        //----------------Persist------------------
+        PostTag bean = new PostTag();
+        bean.setPost(dbPost);
+        bean.setTag(dbTag);
+        taggingService.getDAO().save(bean);
+        response.setStatus(HttpServletResponse.SC_CREATED);
+    }
+
 }

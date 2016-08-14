@@ -1,13 +1,13 @@
 package ga.rugal.jpt.core.service.impl;
 
-import ga.rugal.jpt.core.dao.PostTagsDao;
 import ga.rugal.jpt.core.entity.PostTag;
-import ga.rugal.jpt.core.service.PostTagsService;
 import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.hibernate.Updater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ga.rugal.jpt.core.service.TaggingService;
+import ga.rugal.jpt.core.dao.TaggingDao;
 
 /**
  *
@@ -16,14 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @Transactional
-public class PostTagsServiceImpl implements PostTagsService
+public class TaggingServiceImpl implements TaggingService
 {
 
     @Autowired
-    private PostTagsDao dao;
+    private TaggingDao dao;
 
     @Override
-    public PostTagsDao getDAO()
+    public TaggingDao getDAO()
     {
         return this.dao;
     }

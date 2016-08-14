@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Rugal Bernstein
  */
-public interface PostTagsDao
+public interface TaggingDao
 {
 
     PostTag delete(PostTag bean);

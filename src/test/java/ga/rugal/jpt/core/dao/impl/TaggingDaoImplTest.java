@@ -2,7 +2,6 @@ package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.DBTestBase;
 import ga.rugal.jpt.core.dao.PostDao;
-import ga.rugal.jpt.core.dao.PostTagsDao;
 import ga.rugal.jpt.core.dao.TagDao;
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.entity.Post;
@@ -17,12 +16,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ga.rugal.jpt.core.dao.LevelDao;
+import ga.rugal.jpt.core.dao.TaggingDao;
 
 /**
  *
  * @author Rugal Bernstein
  */
-public class PostTagsDaoImplTest extends DBTestBase
+public class TaggingDaoImplTest extends DBTestBase
 {
 
     @Autowired
@@ -35,7 +35,7 @@ public class PostTagsDaoImplTest extends DBTestBase
     private PostDao postDao;
 
     @Autowired
-    private PostTagsDao postTagsDao;
+    private TaggingDao postTagsDao;
 
     @Autowired
     private LevelDao levelDao;
@@ -55,7 +55,7 @@ public class PostTagsDaoImplTest extends DBTestBase
     @Autowired
     private PostTag postTags;
 
-    public PostTagsDaoImplTest()
+    public TaggingDaoImplTest()
     {
     }
 
