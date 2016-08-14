@@ -9,7 +9,6 @@ import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.PostService;
-import ga.rugal.jpt.core.service.UserLevelService;
 import ga.rugal.jpt.core.service.UserService;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -31,6 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import ga.rugal.jpt.core.service.LevelService;
 
 /**
  *
@@ -59,7 +59,7 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     private Level level;
 
     @Autowired
-    private UserLevelService levelService;
+    private LevelService levelService;
 
     @Autowired
     private UserService userService;

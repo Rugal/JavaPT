@@ -99,7 +99,7 @@ public class User extends BaseObject<User>
     public enum Status
     {
 
-        VALID, BAN, DELETE
+        VALID, BAN, DELETE, INITIAL
     }
 
     @Override

@@ -7,7 +7,7 @@ import ga.rugal.jpt.core.dao.LevelDao;
  *
  * @author Rugal Bernstein
  */
-public interface UserLevelService extends BaseService<LevelDao>
+public interface LevelService extends BaseService<LevelDao>
 {
 
     Level update(Level bean);

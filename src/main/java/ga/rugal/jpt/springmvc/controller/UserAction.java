@@ -2,8 +2,8 @@ package ga.rugal.jpt.springmvc.controller;
 
 import config.SystemDefaultProperties;
 import ga.rugal.jpt.core.entity.User;
+import ga.rugal.jpt.core.service.LevelService;
 import ga.rugal.jpt.core.service.UserService;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -28,16 +28,44 @@ public class UserAction
 {
 
     @Autowired
+    private LevelService levelService;
+
+    @Autowired
     private UserService userService;
 
     //Create new UID with invitation
     //Register User with UID
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST)
+    public void register(@RequestBody User bean, HttpServletRequest request, HttpServletResponse response)
+    {
+        //--------------------------uid verification------------------------------
+        //1. uid invalid
+        if (bean.getUid() == null)
+        {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        //2. bean exists
+        User db = userService.getDAO().get(bean.getUid());
+        if (!db.getStatus().equals(User.Status.INITIAL))
+        {
+            response.setStatus(HttpServletResponse.SC_CONFLICT);
+            return;
+        }
+        //-------------------------update user profile---------------------------
+        bean.setStatus(User.Status.VALID);//activate
+        bean.setLevel(levelService.getDAO().get(1));//basic level
+        userService.update(bean);
+        response.setStatus(HttpServletResponse.SC_CREATED);
+    }
+
     //--------------------------User Profile Operation-----------------------------
     /**
      * De-registration will not delete user profile in database, but set its status as un-loginable.
      * <BR>
-     * Just like updating user, only <code>uid</code> in URL will be operated, authentication fields
-     * are just for user identity verification.
+     * Just like updating user, only <code>uid</code> in URL will be operated, authentication fields are just for user
+     * identity verification.
      *
      * @param id       the target user id.
      * @param request
@@ -115,7 +143,7 @@ public class UserAction
 
     //---------------------------------Search User-------------------------------------
     /**
-     * Get the user with email address.
+     * Get a specific user with email address.
      *
      * @param email
      * @param response
@@ -138,25 +166,23 @@ public class UserAction
     }
 
     /**
-     * Find user with given user name.
+     * Find user that their usernames contain given "username" parameter.
      *
      * @param username
      * @param response
+     * @param pageNo
+     * @param pageSize
      *
      * @return
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, params = "username")
-    public Object findByName(@RequestParam(value = "username", required = true) String username,
-                             HttpServletResponse response)
+    public Object findByName(@RequestParam(value = "username") String username, HttpServletResponse response,
+                             @RequestParam(name = "pageNo", required = true, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
+                             @RequestParam(name = "pageSize", required = true, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize)
     {
-        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        List<User> users = userService.getDAO().findByName(username);
-        if (null != users)
-        {
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
-        return users;
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setStatus(HttpServletResponse.SC_OK);
+        return userService.getDAO().findByName(username, pageNo, pageSize);
     }
 }

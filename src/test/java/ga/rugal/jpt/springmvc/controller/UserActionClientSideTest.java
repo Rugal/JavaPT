@@ -1,8 +1,10 @@
 package ga.rugal.jpt.springmvc.controller;
 
+import com.google.gson.Gson;
 import config.SystemDefaultProperties;
 import ga.rugal.ControllerClientSideTestBase;
 import ga.rugal.jpt.core.entity.User;
+import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.springmvc.util.Message;
 import org.junit.After;
 import org.junit.Assert;
@@ -22,8 +24,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author Rugal Bernstein
  */
+@Slf4j
 public class UserActionClientSideTest extends ControllerClientSideTestBase
 {
+    @Autowired
+    private Gson GSON;
 
     @Autowired
     private User user;
@@ -35,7 +40,7 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
     @Before
     public void setUp() throws Exception
     {
-        System.out.println("setUp");
+        LOG.info("setUp");
         MvcResult result = testSave();
         Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
         user = user.toObject(message.getData());
@@ -44,14 +49,14 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
     @After
     public void tearDown() throws Exception
     {
-        System.out.println("tearDown");
+        LOG.info("tearDown");
         testDelete();
     }
 
-//    @Test
+    @Test
     public void testRegisterUser() throws Exception
     {
-        System.out.println("registerUser");
+        LOG.info("registerUser");
         Assert.assertNotNull(user.getUid());
     }
 
@@ -60,7 +65,8 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
         return this.mockMvc.perform(post("/user").content(GSON.toJson(user))
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk()).andReturn();
+            .andExpect(status().isOk())
+            .andReturn();
     }
 
     private void testDelete() throws Exception
@@ -75,7 +81,7 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
 //    @Test
     public void testUpdateUserProfile() throws Exception
     {
-        System.out.println("updateUserProfile");
+        LOG.info("updateUserProfile");
         user.setCredit(user.getCredit() + 100);
         MvcResult result = this.mockMvc.perform(put("/user/" + user.getUid())
             .header(SystemDefaultProperties.ID, user.getUid())
@@ -93,7 +99,7 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
 //    @Test
     public void testRetrieveUserProfile() throws Exception
     {
-        System.out.println("retrieveUserProfile");
+        LOG.info("retrieveUserProfile");
         this.mockMvc.perform(get("/user/" + user.getUid())
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
@@ -106,7 +112,7 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
     @Test
     public void testIsUsernameAvailable() throws Exception
     {
-        System.out.println("isUsernameAvailable");
+        LOG.info("isUsernameAvailable");
         MvcResult result;
         Message message;
         result = this.mockMvc.perform(get("/user")
@@ -131,7 +137,7 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
 //    @Test
     public void testIsEmailAvailable() throws Exception
     {
-        System.out.println("isEmailAvailable");
+        LOG.info("isEmailAvailable");
         MvcResult result;
         Message message;
         result = this.mockMvc.perform(get("/user")

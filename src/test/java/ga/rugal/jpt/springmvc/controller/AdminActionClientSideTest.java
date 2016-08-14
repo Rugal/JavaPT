@@ -1,5 +1,6 @@
 package ga.rugal.jpt.springmvc.controller;
 
+import com.google.gson.Gson;
 import config.SystemDefaultProperties;
 import ga.rugal.ControllerClientSideTestBase;
 import ga.rugal.jpt.core.entity.Admin;
@@ -26,6 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class AdminActionClientSideTest extends ControllerClientSideTestBase
 {
+    @Autowired
+    private Gson GSON;
 
     private Admin admin;
 

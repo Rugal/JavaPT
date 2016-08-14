@@ -2,9 +2,9 @@ package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.entity.User;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.hibernate.HibernateBaseDao;
+import ml.rugal.sshcommon.page.Pagination;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -25,9 +25,11 @@ public class UserDaoImpl extends HibernateBaseDao<User, Integer> implements User
      */
     @Override
     @Transactional(readOnly = true)
-    public List<User> findByName(String username)
+    public Pagination findByName(String username, Integer pageNo, Integer pageSize)
     {
-        return super.contains("username", username);
+        Criteria criteria = createCriteria();
+        criteria.add(Restrictions.like("username", "%" + username + "%"));
+        return findByCriteria(criteria, pageNo, pageSize);
     }
 
     /**

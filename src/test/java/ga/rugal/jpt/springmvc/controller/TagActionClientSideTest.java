@@ -6,7 +6,6 @@ import ga.rugal.ControllerClientSideTestBase;
 import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Tag;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.service.UserLevelService;
 import ga.rugal.jpt.core.service.UserService;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,6 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.util.FileCopyUtils;
+import ga.rugal.jpt.core.service.LevelService;
 
 /**
  *
@@ -50,7 +50,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
     private Tag db;
 
     @Autowired
-    private UserLevelService levelService;
+    private LevelService levelService;
 
     @Autowired
     private UserService userService;

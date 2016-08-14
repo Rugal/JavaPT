@@ -8,7 +8,6 @@ import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.PostService;
-import ga.rugal.jpt.core.service.UserLevelService;
 import ga.rugal.jpt.core.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.page.Pagination;
@@ -26,6 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import ga.rugal.jpt.core.service.LevelService;
 
 /**
  *
@@ -51,7 +51,7 @@ public class ThreadActionTest extends ControllerClientSideTestBase
     private Level level;
 
     @Autowired
-    private UserLevelService levelService;
+    private LevelService levelService;
 
     @Autowired
     private UserService userService;
@@ -151,7 +151,7 @@ public class ThreadActionTest extends ControllerClientSideTestBase
     }
 
     @Test
-    public void testGetThreadPage() throws Exception
+    public void testGetThreadByPage() throws Exception
     {
         LOG.info("getThreadByPage");
         MvcResult result = this.mockMvc.perform(get(String.format("/post/%d/thread", post.getPid()))
@@ -164,5 +164,4 @@ public class ThreadActionTest extends ControllerClientSideTestBase
         Pagination page = GSON.fromJson(result.getResponse().getContentAsString(), Pagination.class);
         Assert.assertEquals(1, page.getTotalPage());
     }
-
 }

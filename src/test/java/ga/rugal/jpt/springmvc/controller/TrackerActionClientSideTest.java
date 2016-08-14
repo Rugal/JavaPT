@@ -6,7 +6,6 @@ import ga.rugal.jpt.core.entity.Admin;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.service.AdminService;
-import ga.rugal.jpt.core.service.UserLevelService;
 import ga.rugal.jpt.core.service.UserService;
 import org.junit.After;
 import org.junit.Before;
@@ -18,6 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import ga.rugal.jpt.core.service.LevelService;
 
 /**
  *
@@ -28,7 +28,7 @@ public class TrackerActionClientSideTest extends ControllerClientSideTestBase
 {
 
     @Autowired
-    private UserLevelService levelService;
+    private LevelService levelService;
 
     @Autowired
     private UserService userService;
