@@ -20,13 +20,7 @@ public class TagDaoImpl extends HibernateBaseDao<Tag, Integer> implements TagDao
 {
 
     /**
-     * Find tags that names contain given `partialName` parameter.
-     *
-     * @param partialName
-     * @param pageNo   The page number
-     * @param pageSize Size of each page
-     *
-     * @return A page of target objects.
+     * {@inheritDoc }
      */
     @Transactional(readOnly = true)
     @Override

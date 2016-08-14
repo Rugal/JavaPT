@@ -23,12 +23,10 @@ import org.springframework.context.annotation.FilterType;
  * @author Rugal Bernstein
  */
 @Configuration
-@ComponentScan(basePackageClasses = PackageInfo.class, includeFilters
-                                                       = @ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE, classes =
-        {
-            AnnounceAction.class, TrackerAction.class
-        }))
+@ComponentScan(basePackageClasses = PackageInfo.class, includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes =
+{
+    AnnounceAction.class, TrackerAction.class
+}))
 public class TrackerContext
 {
 
@@ -41,8 +39,8 @@ public class TrackerContext
     private Tracker tracker;
 
     /**
-     * Create a tracker server in local, with same port to servlet container Spring will start this
-     * tracker after creation of bean.
+     * Create a tracker server in local, with same port to servlet container Spring will start this tracker after
+     * creation of bean.
      *
      * @return
      *

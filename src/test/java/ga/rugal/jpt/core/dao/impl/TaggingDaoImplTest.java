@@ -1,27 +1,30 @@
 package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.DBTestBase;
+import ga.rugal.jpt.core.dao.LevelDao;
 import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.dao.TagDao;
+import ga.rugal.jpt.core.dao.TaggingDao;
 import ga.rugal.jpt.core.dao.UserDao;
+import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.PostTag;
 import ga.rugal.jpt.core.entity.Tag;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.entity.Level;
+import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
+import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ga.rugal.jpt.core.dao.LevelDao;
-import ga.rugal.jpt.core.dao.TaggingDao;
 
 /**
  *
  * @author Rugal Bernstein
  */
+@Slf4j
 public class TaggingDaoImplTest extends DBTestBase
 {
 
@@ -62,7 +65,7 @@ public class TaggingDaoImplTest extends DBTestBase
     @Before
     public void setUp()
     {
-        System.out.println("setUp");
+        LOG.info("setUp");
         levelDao.save(level);
         userDao.save(user);
         tagDao.save(tag);
@@ -73,7 +76,7 @@ public class TaggingDaoImplTest extends DBTestBase
     @After
     public void tearDown()
     {
-        System.out.println("tearDown");
+        LOG.info("tearDown");
         //order is important
         postTagsDao.delete(postTags);
         postDao.delete(post);
@@ -83,19 +86,17 @@ public class TaggingDaoImplTest extends DBTestBase
     }
 
     @Test
-    public void testGetPage()
+    public void getPage()
     {
-        System.out.println("getPage");
-        int pageNo = 0;
-        int pageSize = 1;
-        Pagination result = postTagsDao.getPage(pageNo, pageSize);
-        System.out.println(result.getList().size());
+        LOG.info("getPage");
+        Pagination result = postTagsDao.getPage(1, 1);
+        Assert.assertEquals(1, result.getList().size());
     }
 
     @Test
-    public void testGetByID()
+    public void get()
     {
-        System.out.println("getByID");
+        LOG.info("get");
         Integer id = postTags.getPtid();
         PostTag expResult = postTags;
         PostTag result = postTagsDao.get(id);

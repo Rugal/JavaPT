@@ -20,6 +20,15 @@ public interface TagDao
 
     Tag save(Tag bean);
 
+    /**
+     * Find tags that names contain given `partialName` parameter.
+     *
+     * @param partialName
+     * @param pageNo      The page number
+     * @param pageSize    Size of each page
+     *
+     * @return A page of target objects.
+     */
     @Transactional(readOnly = true)
     Pagination findByName(String partialName, int pageNo, int pageSize);
 

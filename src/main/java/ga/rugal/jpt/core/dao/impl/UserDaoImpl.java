@@ -51,11 +51,6 @@ public class UserDaoImpl extends HibernateBaseDao<User, Integer> implements User
         criteria.add(Restrictions.eq("password", password));
         criteria.setProjection(Projections.count("uid"));
         return ((Number) criteria.uniqueResult()).intValue() == 1;
-//        String hql = "SELECT count(1) FROM User bean WHERE bean.uid=:uid AND bean.password=:password";
-//        Query query = getSession().createQuery(hql);
-//        query.setParameter("uid", uid);
-//        query.setParameter("password", password);
-//        return ((Number) query.iterate().next()).intValue() == 1;
     }
 
     @Override

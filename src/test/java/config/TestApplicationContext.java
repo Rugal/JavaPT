@@ -75,8 +75,9 @@ public class TestApplicationContext
     {
         Client bean = new Client();
         bean.setEnable(true);
-        bean.setName("transmit");
-        bean.setVersion("*");
+        bean.setName("Test client");
+        bean.setVersion("1");
+        bean.setCname("Test");
         return bean;
     }
 

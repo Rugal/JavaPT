@@ -3,10 +3,10 @@ package ga.rugal.jpt.core.dao.impl;
 import ga.rugal.DBTestBase;
 import ga.rugal.jpt.core.dao.LevelDao;
 import ga.rugal.jpt.core.entity.Level;
+import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
 import org.junit.Assert;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author Rugal Bernstein
  */
+@Slf4j
 public class LevelDaoImplTest extends DBTestBase
 {
 
@@ -31,43 +32,40 @@ public class LevelDaoImplTest extends DBTestBase
     @Before
     public void setUp()
     {
-        System.out.println("setUp");
+        LOG.info("setUp");
         levelDao.save(level);
     }
 
     @After
     public void tearDown()
     {
-        System.out.println("tearDown");
+        LOG.info("tearDown");
         levelDao.delete(level);
     }
 
     @Test
-    public void testGetPage()
+    public void getPage()
     {
-        System.out.println("getPage");
-        int pageNo = 0;
-        int pageSize = 1;
-        Pagination result = levelDao.getPage(pageNo, pageSize);
-        System.out.println(result.getList().size());
+        LOG.info("getPage");
+        Pagination result = levelDao.getPage(1, 1);
+        Assert.assertFalse(result.getList().isEmpty());
     }
 
     @Test
-    public void testFindById()
+    public void get()
     {
-        System.out.println("findById");
+        LOG.info("get");
         Integer id = level.getLid();
         Level expResult = level;
         Level result = levelDao.get(id);
-        assertEquals(expResult, result);
+        Assert.assertEquals(expResult, result);
     }
 
     @Test
-    public void testGetLevel()
+    public void getLevel()
     {
-        System.out.println("getLevel");
-        Level result = levelDao.getLevel(2048l, 1028l);
-        Assert.assertTrue(2 == result.getLid());
+        LOG.info("getLevel");
+        Level result = levelDao.getLevel(level.getUpload(), level.getDownload());
+        Assert.assertEquals(level.getLid(), result.getLid());
     }
-
 }

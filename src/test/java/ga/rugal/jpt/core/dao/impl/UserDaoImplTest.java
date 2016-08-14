@@ -5,10 +5,10 @@ import ga.rugal.jpt.core.dao.LevelDao;
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.User;
+import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
 import org.junit.Assert;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author Rugal Bernstein
  */
+@Slf4j
 public class UserDaoImplTest extends DBTestBase
 {
 
@@ -39,7 +40,7 @@ public class UserDaoImplTest extends DBTestBase
     @Before
     public void setUp()
     {
-        System.out.println("setUp");
+        LOG.info("setUp");
         levelDao.save(level);
         userDao.save(user);
     }
@@ -47,46 +48,57 @@ public class UserDaoImplTest extends DBTestBase
     @After
     public void tearDown()
     {
-        System.out.println("tearDown");
+        LOG.info("tearDown");
         userDao.delete(user);
         levelDao.delete(level);
     }
 
     @Test
-    public void testGetPage()
+    public void getPage()
     {
-        System.out.println("getPage");
-        int pageNo = 0;
-        int pageSize = 1;
-        Pagination result = userDao.getPage(pageNo, pageSize);
-        System.out.println(result.getList().size());
+        LOG.info("getPage");
+        Pagination result = userDao.getPage(1, 1);
+        Assert.assertEquals(1, result.getList().size());
     }
 
     @Test
-    public void testFindById()
+    public void get()
     {
-        System.out.println("findById");
+        LOG.info("get");
         Integer id = user.getUid();
         User expResult = user;
         User result = userDao.get(id);
-        assertEquals(expResult, result);
+        Assert.assertEquals(expResult, result);
     }
 
     @Test
-    public void testGetByEmail()
+    public void getByEmail()
     {
-        System.out.println("getByEmail");
+        LOG.info("getByEmail");
         String email = user.getEmail();
         User dbUser = userDao.getByEmail(email);
         Assert.assertEquals(user, dbUser);
     }
 
     @Test
-    public void testFindByName()
+    public void findByName()
     {
-        System.out.println("findByName");
+        LOG.info("findByName");
         String username = user.getUsername();
         Pagination page = userDao.findByName(username, 1, 1);
         Assert.assertEquals(1, page.getTotalCount());
+    }
+
+    @Test
+    public void authenticate_false()
+    {
+        LOG.info("authenticate");
+        Assert.assertFalse(userDao.authenticate(user.getUid(), "Test"));
+    }
+    @Test
+    public void authenticate_true()
+    {
+        LOG.info("authenticate");
+        Assert.assertTrue(userDao.authenticate(user.getUid(), user.getPassword()));
     }
 }

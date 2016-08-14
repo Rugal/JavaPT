@@ -1,25 +1,27 @@
 package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.DBTestBase;
+import ga.rugal.jpt.core.dao.LevelDao;
 import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.dao.ThreadDao;
 import ga.rugal.jpt.core.dao.UserDao;
+import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.entity.Level;
+import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ga.rugal.jpt.core.dao.LevelDao;
 
 /**
  *
  * @author Rugal Bernstein
  */
+@Slf4j
 public class ThreadDaoImplTest extends DBTestBase
 {
 
@@ -54,7 +56,7 @@ public class ThreadDaoImplTest extends DBTestBase
     @Before
     public void setUp()
     {
-        System.out.println("setUp");
+        LOG.info("setUp");
         levelDao.save(level);
         userDao.save(user);
         postDao.save(post);
@@ -64,7 +66,7 @@ public class ThreadDaoImplTest extends DBTestBase
     @After
     public void tearDown()
     {
-        System.out.println("tearDown");
+        LOG.info("tearDown");
         //order is important
         threadDao.delete(thread);
         postDao.delete(post);
@@ -73,23 +75,20 @@ public class ThreadDaoImplTest extends DBTestBase
     }
 
     @Test
-    public void testGetPage()
+    public void getPage()
     {
-        System.out.println("getPage");
-        int pageNo = 1;
-        int pageSize = 1;
-        Pagination result = threadDao.getPage(post, pageNo, pageSize);
-        System.out.println(result.getList().size());
+        LOG.info("getPage");
+        Pagination result = threadDao.getPage(post, 1, 1);
+        Assert.assertEquals(1, result.getList().size());
     }
 
     @Test
-    public void testGetByID()
+    public void get()
     {
-        System.out.println("getByID");
+        LOG.info("get");
         Integer id = thread.getTid();
         Thread expResult = thread;
         Thread result = threadDao.get(id);
-        assertEquals(expResult, result);
+        Assert.assertEquals(expResult, result);
     }
-
 }

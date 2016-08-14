@@ -386,15 +386,59 @@ public class PostAction
     /**
      * Add a tag to Post
      *
-     * @param pid
-     * @param tid
+     * @param pid      Target Post ID
+     * @param tid      ID of Tag
      * @param request
      * @param response
      *
      */
     @ResponseBody
     @RequestMapping(value = "/{pid}/tag/{tid}", method = RequestMethod.POST)
-    public void tag(@PathVariable("pid") Integer pid, @PathVariable("tid") Integer tid, HttpServletRequest request, HttpServletResponse response)
+    public void tag(@PathVariable("pid") Integer pid, @PathVariable("tid") Integer tid, HttpServletRequest request,
+                    HttpServletResponse response)
+    {
+        //-----------------Existence check------------------
+        Post dbPost = postService.getDAO().get(pid);
+        Tag dbTag = tagService.getDAO().get(tid);
+        if (null == dbPost || null == dbTag)
+        {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        if (null != taggingService.getDAO().get(dbPost, dbTag))
+        {
+            response.setStatus(HttpServletResponse.SC_CONFLICT);
+            return;
+        }
+        //----------------Permission check------------------
+        int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
+        User user = userService.getDAO().get(uid);
+        if (!dbPost.canWrite(user))
+        {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        //----------------Persist------------------
+        PostTag bean = new PostTag();
+        bean.setPost(dbPost);
+        bean.setTag(dbTag);
+        taggingService.getDAO().save(bean);
+        response.setStatus(HttpServletResponse.SC_CREATED);
+    }
+
+    /**
+     * Remove a tag from Post
+     *
+     * @param pid      Target Post ID
+     * @param tid      ID of Tag
+     * @param request
+     * @param response
+     *
+     */
+    @ResponseBody
+    @RequestMapping(value = "/{pid}/tag/{tid}", method = RequestMethod.DELETE)
+    public void untag(@PathVariable("pid") Integer pid, @PathVariable("tid") Integer tid, HttpServletRequest request,
+                      HttpServletResponse response)
     {
         //-----------------Existence check------------------
         Post dbPost = postService.getDAO().get(pid);
@@ -412,12 +456,37 @@ public class PostAction
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        //----------------Persist------------------
-        PostTag bean = new PostTag();
-        bean.setPost(dbPost);
-        bean.setTag(dbTag);
-        taggingService.getDAO().save(bean);
-        response.setStatus(HttpServletResponse.SC_CREATED);
+        //----------------Delete------------------
+        PostTag bean = taggingService.getDAO().get(dbPost, dbTag);
+        if (null == bean)
+        {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        taggingService.getDAO().delete(bean);
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+    }
+
+    /**
+     * GET all tags of a post
+     *
+     * @param pid      primary key of target post.
+     * @param response
+     *
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/{pid}/tag", method = RequestMethod.GET)
+    public Object getPostTags(@PathVariable("pid") Integer pid, HttpServletResponse response)
+    {
+        Post post = postService.getDAO().get(pid);
+        if (null == post)
+        {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return null;
+        }
+        response.setStatus(HttpServletResponse.SC_OK);
+        return taggingService.getDAO().getTags(post);
     }
 
 }

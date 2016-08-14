@@ -26,7 +26,11 @@ public interface PostDao
     @Transactional(readOnly = true)
     Post getByTorrent(String infoHash);
 
+    /**
+     * Get all Torronts. For tracker initialization.
+     *
+     * @return
+     */
     @Transactional(readOnly = true)
     List getAllTorrentsOnly();
-
 }

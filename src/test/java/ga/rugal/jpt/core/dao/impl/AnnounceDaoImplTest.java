@@ -3,6 +3,7 @@ package ga.rugal.jpt.core.dao.impl;
 import ga.rugal.DBTestBase;
 import ga.rugal.jpt.core.dao.AnnounceDao;
 import ga.rugal.jpt.core.dao.ClientDao;
+import ga.rugal.jpt.core.dao.LevelDao;
 import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.entity.Announce;
@@ -10,18 +11,19 @@ import ga.rugal.jpt.core.entity.Client;
 import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
+import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ga.rugal.jpt.core.dao.LevelDao;
 
 /**
  *
  * @author Rugal Bernstein
  */
+@Slf4j
 public class AnnounceDaoImplTest extends DBTestBase
 {
 
@@ -62,7 +64,7 @@ public class AnnounceDaoImplTest extends DBTestBase
     @Before
     public void setUp()
     {
-        System.out.println("setUp");
+        LOG.info("setUp");
         clientDao.save(client);
         userLevelDao.save(level);
         userDao.save(user);
@@ -73,7 +75,7 @@ public class AnnounceDaoImplTest extends DBTestBase
     @After
     public void tearDown()
     {
-        System.out.println("tearDown");
+        LOG.info("tearDown");
         clientAnnounceDao.delete(clientAnnounce);
         postDao.delete(post);
         userDao.delete(user);
@@ -82,20 +84,17 @@ public class AnnounceDaoImplTest extends DBTestBase
     }
 
     @Test
-    public void testGetPage()
+    public void getPage()
     {
-        System.out.println("getPage");
-        int pageNo = 0;
-        int pageSize = 1;
-        Pagination result = clientAnnounceDao.getPage(pageNo, pageSize);
-        System.out.println(result.getList().size());
+        LOG.info("getPage");
+        Pagination result = clientAnnounceDao.getPage(1, 1);
         Assert.assertFalse(result.getList().isEmpty());
     }
 
     @Test
-    public void testGet()
+    public void get()
     {
-        System.out.println("get");
+        LOG.info("get");
         Long id = clientAnnounce.getAid();
         Announce expResult = clientAnnounce;
         Announce result = clientAnnounceDao.get(id);
@@ -103,9 +102,9 @@ public class AnnounceDaoImplTest extends DBTestBase
     }
 
     @Test
-    public void testFindLastAnnounce()
+    public void findLastAnnounce()
     {
-        System.out.println("findLastAnnounce");
+        LOG.info("findLastAnnounce");
         Announce ca = clientAnnounceDao.findLastAnnounce(user, post);
         Assert.assertNotNull(ca);
     }
