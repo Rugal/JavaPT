@@ -86,7 +86,6 @@ public class AnnounceDaoImplTest extends DBTestBase
     @Test
     public void getPage()
     {
-        LOG.info("getPage");
         Pagination result = clientAnnounceDao.getPage(1, 1);
         Assert.assertFalse(result.getList().isEmpty());
     }
@@ -94,7 +93,6 @@ public class AnnounceDaoImplTest extends DBTestBase
     @Test
     public void get()
     {
-        LOG.info("get");
         Long id = clientAnnounce.getAid();
         Announce expResult = clientAnnounce;
         Announce result = clientAnnounceDao.get(id);
@@ -104,7 +102,6 @@ public class AnnounceDaoImplTest extends DBTestBase
     @Test
     public void findLastAnnounce()
     {
-        LOG.info("findLastAnnounce");
         Announce ca = clientAnnounceDao.findLastAnnounce(user, post);
         Assert.assertNotNull(ca);
     }

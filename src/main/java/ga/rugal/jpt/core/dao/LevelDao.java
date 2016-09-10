@@ -19,6 +19,16 @@ public interface LevelDao
 
     Level save(Level bean);
 
+    /**
+     * Get user level. The matched user level is defined as:<BR>
+     * The highest level in which both upload and download requirements are just less than user's current upload and
+     * download amount, respectively.
+     *
+     * @param upload
+     * @param download
+     *
+     * @return
+     */
     Level getLevel(Long upload, Long download);
 
     Level updateByUpdater(Updater<Level> updater);

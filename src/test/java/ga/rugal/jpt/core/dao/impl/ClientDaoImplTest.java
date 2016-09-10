@@ -29,10 +29,6 @@ public class ClientDaoImplTest extends DBTestBase
     public void setUp()
     {
         LOG.info("setUp");
-        client = new Client();
-        client.setEnable(true);
-        client.setName("transmit");
-        client.setVersion("*");
         clientDao.save(client);
     }
 
@@ -46,7 +42,6 @@ public class ClientDaoImplTest extends DBTestBase
     @Test
     public void getPage()
     {
-        LOG.info("getPage");
         Pagination result = clientDao.getPage(1, 1);
         Assert.assertFalse(result.getList().isEmpty());
     }
@@ -54,7 +49,6 @@ public class ClientDaoImplTest extends DBTestBase
     @Test
     public void get()
     {
-        LOG.info("get");
         Integer id = client.getCid();
         Client result = clientDao.get(id);
         Assert.assertEquals(result, client);
@@ -63,16 +57,14 @@ public class ClientDaoImplTest extends DBTestBase
     @Test
     public void findByPeerID_other()
     {
-        LOG.info("findByPeerID");
         Client result = clientDao.findByPeerID("unable", "unable");
         Assert.assertEquals("*", result.getCname());
         Assert.assertEquals("*", result.getVersion());
     }
 
     @Test
-    public void getByPeerID()
+    public void getByPeerID_ok()
     {
-        LOG.info("getByPeerID");
         Client result = clientDao.getByPeerID(client.getCname(), client.getVersion());
         Assert.assertEquals(client, result);
     }

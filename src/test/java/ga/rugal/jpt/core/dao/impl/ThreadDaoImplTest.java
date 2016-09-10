@@ -77,7 +77,6 @@ public class ThreadDaoImplTest extends DBTestBase
     @Test
     public void getPage()
     {
-        LOG.info("getPage");
         Pagination result = threadDao.getPage(post, 1, 1);
         Assert.assertEquals(1, result.getList().size());
     }
@@ -85,7 +84,6 @@ public class ThreadDaoImplTest extends DBTestBase
     @Test
     public void get()
     {
-        LOG.info("get");
         Integer id = thread.getTid();
         Thread expResult = thread;
         Thread result = threadDao.get(id);

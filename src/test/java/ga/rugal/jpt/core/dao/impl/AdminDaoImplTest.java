@@ -57,7 +57,6 @@ public class AdminDaoImplTest extends DBTestBase
     @Test
     public void getPage()
     {
-        LOG.info("getPage");
         Pagination result = adminDao.getPage(1, 1);
         Assert.assertFalse(result.getList().isEmpty());
     }
@@ -65,7 +64,6 @@ public class AdminDaoImplTest extends DBTestBase
     @Test
     public void get()
     {
-        LOG.info("get");
         Integer id = admin.getAid();
         Admin expResult = admin;
         Admin result = adminDao.get(id);

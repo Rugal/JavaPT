@@ -46,7 +46,6 @@ public class LevelDaoImplTest extends DBTestBase
     @Test
     public void getPage()
     {
-        LOG.info("getPage");
         Pagination result = levelDao.getPage(1, 1);
         Assert.assertFalse(result.getList().isEmpty());
     }
@@ -54,7 +53,6 @@ public class LevelDaoImplTest extends DBTestBase
     @Test
     public void get()
     {
-        LOG.info("get");
         Integer id = level.getLid();
         Level expResult = level;
         Level result = levelDao.get(id);
@@ -64,8 +62,8 @@ public class LevelDaoImplTest extends DBTestBase
     @Test
     public void getLevel()
     {
-        LOG.info("getLevel");
-        Level result = levelDao.getLevel(level.getUpload(), level.getDownload());
-        Assert.assertEquals(level.getLid(), result.getLid());
+        //Just to get the minimum level
+        Level result = levelDao.getLevel(0l, 0l);
+        Assert.assertEquals(new Integer(1), result.getLid());
     }
 }

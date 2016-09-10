@@ -48,7 +48,7 @@ public class ApplicationContext
 
     public static final String DIALECT = "hibernate.dialect";
 
-    public static final String package_to_scan = PackageInfo.class.getPackage().getName();
+    public static final String PACKAGE_TO_SCAN = PackageInfo.class.getPackage().getName();
 
     @Value("${jdbc.username}")
     private String username;
@@ -106,16 +106,17 @@ public class ApplicationContext
 //<editor-fold defaultstate="collapsed" desc="Hibernate Session factory configuration">
     @Bean
     @Autowired
-    public LocalSessionFactoryBean sessionFactory(DataSource datasouce)
+    public LocalSessionFactoryBean sessionFactory(DataSource datasouce, Properties hibernateProperties)
     {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(datasouce);
-        sessionFactory.setPackagesToScan(package_to_scan);
-        sessionFactory.setHibernateProperties(hibernateProperties());
+        sessionFactory.setPackagesToScan(PACKAGE_TO_SCAN);
+        sessionFactory.setHibernateProperties(hibernateProperties);
         return sessionFactory;
     }
 
-    private Properties hibernateProperties()
+    @Bean
+    public Properties hibernateProperties()
     {
         Properties hibernateProperties = new Properties();
         hibernateProperties.put(DIALECT, dialect);

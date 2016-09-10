@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import ml.rugal.sshcommon.hibernate.Updater;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class AdminServiceImpl implements AdminService
 {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AdminServiceImpl.class.getName());
 
     @Autowired
     private AdminDao dao;
@@ -87,5 +83,4 @@ public class AdminServiceImpl implements AdminService
         }
         return value;
     }
-
 }

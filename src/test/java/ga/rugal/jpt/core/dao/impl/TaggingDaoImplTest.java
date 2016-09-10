@@ -88,7 +88,6 @@ public class TaggingDaoImplTest extends DBTestBase
     @Test
     public void getPage()
     {
-        LOG.info("getPage");
         Pagination result = postTagsDao.getPage(1, 1);
         Assert.assertEquals(1, result.getList().size());
     }
@@ -96,7 +95,6 @@ public class TaggingDaoImplTest extends DBTestBase
     @Test
     public void get()
     {
-        LOG.info("get");
         Integer id = postTags.getPtid();
         PostTag expResult = postTags;
         PostTag result = postTagsDao.get(id);

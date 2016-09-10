@@ -46,7 +46,6 @@ public class TagDaoImplTest extends DBTestBase
     @Test
     public void getPage()
     {
-        LOG.info("getPage");
         Pagination result = tagDao.getPage(1, 1);
         Assert.assertEquals(1, result.getList().size());
     }
@@ -54,7 +53,6 @@ public class TagDaoImplTest extends DBTestBase
     @Test
     public void get()
     {
-        LOG.info("get");
         Integer id = tag.getTid();
         Tag expResult = tag;
         Tag result = tagDao.get(id);
@@ -64,7 +62,6 @@ public class TagDaoImplTest extends DBTestBase
     @Test
     public void findByName()
     {
-        LOG.info("findByName");
         Pagination result = tagDao.findByName("Test", 1, 1);
         Assert.assertFalse(result.getList().isEmpty());
     }
