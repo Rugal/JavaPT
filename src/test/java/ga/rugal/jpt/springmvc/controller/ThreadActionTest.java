@@ -7,6 +7,7 @@ import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
+import ga.rugal.jpt.core.service.LevelService;
 import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import ga.rugal.jpt.core.service.LevelService;
 
 /**
  *
@@ -59,10 +59,6 @@ public class ThreadActionTest extends ControllerClientSideTestBase
     @Autowired
     private PostService postService;
 
-    public ThreadActionTest()
-    {
-    }
-
     @Before
     public void setUp() throws Exception
     {
@@ -71,7 +67,7 @@ public class ThreadActionTest extends ControllerClientSideTestBase
         userService.getDAO().save(user);
         postService.getDAO().save(post);
         //saving thread by HTTP request
-        thread.setTid(Integer.parseInt(testSave().getResponse().getContentAsString()));
+        thread.setTid(Integer.parseInt(this.testSave().getResponse().getContentAsString()));
     }
 
     @After
@@ -79,16 +75,34 @@ public class ThreadActionTest extends ControllerClientSideTestBase
     {
         LOG.info("tearDown");
         //order is important
-        testDelete();
+        this.testDelete();
         postService.getDAO().delete(post);
         userService.getDAO().delete(user);
         levelService.getDAO().delete(level);
     }
 
-    @Test
-    public void testUpdateThread() throws Exception
+    private MvcResult testSave() throws Exception
     {
-        LOG.info("updateThread");
+        return this.mockMvc.perform(post(String.format("/post/%d/thread", post.getPid()))
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .content(GSON.toJson(thread))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andReturn();
+    }
+
+    private void testDelete() throws Exception
+    {
+        this.mockMvc.perform(delete("/thread/" + thread.getTid())
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword()))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void update() throws Exception
+    {
         Assert.assertNotNull(thread.getTid());
         thread.setCreateTime(Long.MIN_VALUE);
         MvcResult result = this.mockMvc.perform(put("/thread/" + thread.getTid())
@@ -105,7 +119,7 @@ public class ThreadActionTest extends ControllerClientSideTestBase
     }
 
     @Test
-    public void testGetThread() throws Exception
+    public void get_200() throws Exception
     {
         LOG.info("getThread");
         MvcResult result = this.mockMvc.perform(get("/thread/" + thread.getTid())
@@ -120,26 +134,6 @@ public class ThreadActionTest extends ControllerClientSideTestBase
         //special case for this unit test
         thread = thread.toObject(message.getData());
         Assert.assertNotNull(thread);
-    }
-
-    private MvcResult testSave() throws Exception
-    {
-        LOG.info("saveThread");
-        return this.mockMvc.perform(post(String.format("/post/%d/thread", post.getPid()))
-            .header(SystemDefaultProperties.ID, user.getUid())
-            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-            .content(GSON.toJson(thread))
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isCreated())
-            .andReturn();
-    }
-
-    private void testDelete() throws Exception
-    {
-        this.mockMvc.perform(delete("/thread/" + thread.getTid())
-            .header(SystemDefaultProperties.ID, user.getUid())
-            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword()))
-            .andExpect(status().isNoContent());
     }
 
     @Test
@@ -163,5 +157,11 @@ public class ThreadActionTest extends ControllerClientSideTestBase
             .andReturn();
         Pagination page = GSON.fromJson(result.getResponse().getContentAsString(), Pagination.class);
         Assert.assertEquals(1, page.getTotalPage());
+    }
+
+    @Test
+    public void save() throws Exception
+    {
+
     }
 }

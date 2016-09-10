@@ -2,10 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.3
--- Dumped by pg_dump version 9.5.0
-
--- Started on 2016-08-03 22:05:02
+-- Dumped from database version 9.5.4
+-- Dumped by pg_dump version 9.5.4
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -16,12 +14,13 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 7 (class 2615 OID 16545)
--- Name: jpt; Type: SCHEMA; Schema: -; Owner: -
+-- Name: jpt; Type: SCHEMA; Schema: -; Owner: postgres
 --
 
 CREATE SCHEMA jpt;
 
+
+ALTER SCHEMA jpt OWNER TO postgres;
 
 SET search_path = jpt, pg_catalog;
 
@@ -30,8 +29,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 181 (class 1259 OID 16546)
--- Name: admin; Type: TABLE; Schema: jpt; Owner: -
+-- Name: admin; Type: TABLE; Schema: jpt; Owner: postgres
 --
 
 CREATE TABLE admin (
@@ -43,9 +41,10 @@ CREATE TABLE admin (
 );
 
 
+ALTER TABLE admin OWNER TO postgres;
+
 --
--- TOC entry 182 (class 1259 OID 16549)
--- Name: admin_aid_seq; Type: SEQUENCE; Schema: jpt; Owner: -
+-- Name: admin_aid_seq; Type: SEQUENCE; Schema: jpt; Owner: postgres
 --
 
 CREATE SEQUENCE admin_aid_seq
@@ -56,18 +55,17 @@ CREATE SEQUENCE admin_aid_seq
     CACHE 1;
 
 
+ALTER TABLE admin_aid_seq OWNER TO postgres;
+
 --
--- TOC entry 2260 (class 0 OID 0)
--- Dependencies: 182
--- Name: admin_aid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: -
+-- Name: admin_aid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: postgres
 --
 
 ALTER SEQUENCE admin_aid_seq OWNED BY admin.aid;
 
 
 --
--- TOC entry 198 (class 1259 OID 16739)
--- Name: announce; Type: TABLE; Schema: jpt; Owner: -
+-- Name: announce; Type: TABLE; Schema: jpt; Owner: postgres
 --
 
 CREATE TABLE announce (
@@ -82,9 +80,10 @@ CREATE TABLE announce (
 );
 
 
+ALTER TABLE announce OWNER TO postgres;
+
 --
--- TOC entry 197 (class 1259 OID 16737)
--- Name: announce_aid_seq; Type: SEQUENCE; Schema: jpt; Owner: -
+-- Name: announce_aid_seq; Type: SEQUENCE; Schema: jpt; Owner: postgres
 --
 
 CREATE SEQUENCE announce_aid_seq
@@ -95,18 +94,17 @@ CREATE SEQUENCE announce_aid_seq
     CACHE 1;
 
 
+ALTER TABLE announce_aid_seq OWNER TO postgres;
+
 --
--- TOC entry 2261 (class 0 OID 0)
--- Dependencies: 197
--- Name: announce_aid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: -
+-- Name: announce_aid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: postgres
 --
 
 ALTER SEQUENCE announce_aid_seq OWNED BY announce.aid;
 
 
 --
--- TOC entry 183 (class 1259 OID 16551)
--- Name: client; Type: TABLE; Schema: jpt; Owner: -
+-- Name: client; Type: TABLE; Schema: jpt; Owner: postgres
 --
 
 CREATE TABLE client (
@@ -118,9 +116,10 @@ CREATE TABLE client (
 );
 
 
+ALTER TABLE client OWNER TO postgres;
+
 --
--- TOC entry 184 (class 1259 OID 16559)
--- Name: client_cid_seq; Type: SEQUENCE; Schema: jpt; Owner: -
+-- Name: client_cid_seq; Type: SEQUENCE; Schema: jpt; Owner: postgres
 --
 
 CREATE SEQUENCE client_cid_seq
@@ -131,18 +130,30 @@ CREATE SEQUENCE client_cid_seq
     CACHE 1;
 
 
+ALTER TABLE client_cid_seq OWNER TO postgres;
+
 --
--- TOC entry 2262 (class 0 OID 0)
--- Dependencies: 184
--- Name: client_cid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: -
+-- Name: client_cid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: postgres
 --
 
 ALTER SEQUENCE client_cid_seq OWNED BY client.cid;
 
 
 --
--- TOC entry 185 (class 1259 OID 16566)
--- Name: level; Type: TABLE; Schema: jpt; Owner: -
+-- Name: invitation; Type: TABLE; Schema: jpt; Owner: postgres
+--
+
+CREATE TABLE invitation (
+    id character varying(20) NOT NULL,
+    invitor integer,
+    invitee integer
+);
+
+
+ALTER TABLE invitation OWNER TO postgres;
+
+--
+-- Name: level; Type: TABLE; Schema: jpt; Owner: postgres
 --
 
 CREATE TABLE level (
@@ -154,9 +165,10 @@ CREATE TABLE level (
 );
 
 
+ALTER TABLE level OWNER TO postgres;
+
 --
--- TOC entry 186 (class 1259 OID 16569)
--- Name: level_lid_seq; Type: SEQUENCE; Schema: jpt; Owner: -
+-- Name: level_lid_seq; Type: SEQUENCE; Schema: jpt; Owner: postgres
 --
 
 CREATE SEQUENCE level_lid_seq
@@ -167,18 +179,17 @@ CREATE SEQUENCE level_lid_seq
     CACHE 1;
 
 
+ALTER TABLE level_lid_seq OWNER TO postgres;
+
 --
--- TOC entry 2263 (class 0 OID 0)
--- Dependencies: 186
--- Name: level_lid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: -
+-- Name: level_lid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: postgres
 --
 
 ALTER SEQUENCE level_lid_seq OWNED BY level.lid;
 
 
 --
--- TOC entry 187 (class 1259 OID 16571)
--- Name: post; Type: TABLE; Schema: jpt; Owner: -
+-- Name: post; Type: TABLE; Schema: jpt; Owner: postgres
 --
 
 CREATE TABLE post (
@@ -196,9 +207,10 @@ CREATE TABLE post (
 );
 
 
+ALTER TABLE post OWNER TO postgres;
+
 --
--- TOC entry 188 (class 1259 OID 16577)
--- Name: post_pid_seq; Type: SEQUENCE; Schema: jpt; Owner: -
+-- Name: post_pid_seq; Type: SEQUENCE; Schema: jpt; Owner: postgres
 --
 
 CREATE SEQUENCE post_pid_seq
@@ -209,18 +221,17 @@ CREATE SEQUENCE post_pid_seq
     CACHE 1;
 
 
+ALTER TABLE post_pid_seq OWNER TO postgres;
+
 --
--- TOC entry 2264 (class 0 OID 0)
--- Dependencies: 188
--- Name: post_pid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: -
+-- Name: post_pid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: postgres
 --
 
 ALTER SEQUENCE post_pid_seq OWNED BY post.pid;
 
 
 --
--- TOC entry 189 (class 1259 OID 16579)
--- Name: post_tag; Type: TABLE; Schema: jpt; Owner: -
+-- Name: post_tag; Type: TABLE; Schema: jpt; Owner: postgres
 --
 
 CREATE TABLE post_tag (
@@ -230,9 +241,10 @@ CREATE TABLE post_tag (
 );
 
 
+ALTER TABLE post_tag OWNER TO postgres;
+
 --
--- TOC entry 190 (class 1259 OID 16582)
--- Name: post_tags_ptid_seq; Type: SEQUENCE; Schema: jpt; Owner: -
+-- Name: post_tags_ptid_seq; Type: SEQUENCE; Schema: jpt; Owner: postgres
 --
 
 CREATE SEQUENCE post_tags_ptid_seq
@@ -243,18 +255,17 @@ CREATE SEQUENCE post_tags_ptid_seq
     CACHE 1;
 
 
+ALTER TABLE post_tags_ptid_seq OWNER TO postgres;
+
 --
--- TOC entry 2265 (class 0 OID 0)
--- Dependencies: 190
--- Name: post_tags_ptid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: -
+-- Name: post_tags_ptid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: postgres
 --
 
 ALTER SEQUENCE post_tags_ptid_seq OWNED BY post_tag.ptid;
 
 
 --
--- TOC entry 199 (class 1259 OID 16977)
--- Name: student; Type: TABLE; Schema: jpt; Owner: -
+-- Name: student; Type: TABLE; Schema: jpt; Owner: postgres
 --
 
 CREATE TABLE student (
@@ -264,21 +275,22 @@ CREATE TABLE student (
 );
 
 
+ALTER TABLE student OWNER TO postgres;
+
 --
--- TOC entry 191 (class 1259 OID 16589)
--- Name: tag; Type: TABLE; Schema: jpt; Owner: -
+-- Name: tag; Type: TABLE; Schema: jpt; Owner: postgres
 --
 
 CREATE TABLE tag (
     tid integer NOT NULL,
-    name character varying(50),
-    icon character varying(50)
+    name character varying(50)
 );
 
 
+ALTER TABLE tag OWNER TO postgres;
+
 --
--- TOC entry 192 (class 1259 OID 16592)
--- Name: tag_tid_seq; Type: SEQUENCE; Schema: jpt; Owner: -
+-- Name: tag_tid_seq; Type: SEQUENCE; Schema: jpt; Owner: postgres
 --
 
 CREATE SEQUENCE tag_tid_seq
@@ -289,18 +301,17 @@ CREATE SEQUENCE tag_tid_seq
     CACHE 1;
 
 
+ALTER TABLE tag_tid_seq OWNER TO postgres;
+
 --
--- TOC entry 2266 (class 0 OID 0)
--- Dependencies: 192
--- Name: tag_tid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: -
+-- Name: tag_tid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: postgres
 --
 
 ALTER SEQUENCE tag_tid_seq OWNED BY tag.tid;
 
 
 --
--- TOC entry 193 (class 1259 OID 16594)
--- Name: thread; Type: TABLE; Schema: jpt; Owner: -
+-- Name: thread; Type: TABLE; Schema: jpt; Owner: postgres
 --
 
 CREATE TABLE thread (
@@ -313,9 +324,10 @@ CREATE TABLE thread (
 );
 
 
+ALTER TABLE thread OWNER TO postgres;
+
 --
--- TOC entry 194 (class 1259 OID 16600)
--- Name: thread_tid_seq; Type: SEQUENCE; Schema: jpt; Owner: -
+-- Name: thread_tid_seq; Type: SEQUENCE; Schema: jpt; Owner: postgres
 --
 
 CREATE SEQUENCE thread_tid_seq
@@ -326,18 +338,17 @@ CREATE SEQUENCE thread_tid_seq
     CACHE 1;
 
 
+ALTER TABLE thread_tid_seq OWNER TO postgres;
+
 --
--- TOC entry 2267 (class 0 OID 0)
--- Dependencies: 194
--- Name: thread_tid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: -
+-- Name: thread_tid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: postgres
 --
 
 ALTER SEQUENCE thread_tid_seq OWNED BY thread.tid;
 
 
 --
--- TOC entry 195 (class 1259 OID 16602)
--- Name: user; Type: TABLE; Schema: jpt; Owner: -
+-- Name: user; Type: TABLE; Schema: jpt; Owner: postgres
 --
 
 CREATE TABLE "user" (
@@ -353,9 +364,10 @@ CREATE TABLE "user" (
 );
 
 
+ALTER TABLE "user" OWNER TO postgres;
+
 --
--- TOC entry 196 (class 1259 OID 16608)
--- Name: user_uid_seq; Type: SEQUENCE; Schema: jpt; Owner: -
+-- Name: user_uid_seq; Type: SEQUENCE; Schema: jpt; Owner: postgres
 --
 
 CREATE SEQUENCE user_uid_seq
@@ -366,113 +378,98 @@ CREATE SEQUENCE user_uid_seq
     CACHE 1;
 
 
+ALTER TABLE user_uid_seq OWNER TO postgres;
+
 --
--- TOC entry 2268 (class 0 OID 0)
--- Dependencies: 196
--- Name: user_uid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: -
+-- Name: user_uid_seq; Type: SEQUENCE OWNED BY; Schema: jpt; Owner: postgres
 --
 
 ALTER SEQUENCE user_uid_seq OWNED BY "user".uid;
 
 
 --
--- TOC entry 2072 (class 2604 OID 16610)
--- Name: aid; Type: DEFAULT; Schema: jpt; Owner: -
+-- Name: aid; Type: DEFAULT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY admin ALTER COLUMN aid SET DEFAULT nextval('admin_aid_seq'::regclass);
 
 
 --
--- TOC entry 2084 (class 2604 OID 16742)
--- Name: aid; Type: DEFAULT; Schema: jpt; Owner: -
+-- Name: aid; Type: DEFAULT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY announce ALTER COLUMN aid SET DEFAULT nextval('announce_aid_seq'::regclass);
 
 
 --
--- TOC entry 2073 (class 2604 OID 16611)
--- Name: cid; Type: DEFAULT; Schema: jpt; Owner: -
+-- Name: cid; Type: DEFAULT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY client ALTER COLUMN cid SET DEFAULT nextval('client_cid_seq'::regclass);
 
 
 --
--- TOC entry 2074 (class 2604 OID 16614)
--- Name: lid; Type: DEFAULT; Schema: jpt; Owner: -
+-- Name: lid; Type: DEFAULT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY level ALTER COLUMN lid SET DEFAULT nextval('level_lid_seq'::regclass);
 
 
 --
--- TOC entry 2075 (class 2604 OID 16615)
--- Name: pid; Type: DEFAULT; Schema: jpt; Owner: -
+-- Name: pid; Type: DEFAULT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY post ALTER COLUMN pid SET DEFAULT nextval('post_pid_seq'::regclass);
 
 
 --
--- TOC entry 2077 (class 2604 OID 16616)
--- Name: ptid; Type: DEFAULT; Schema: jpt; Owner: -
+-- Name: ptid; Type: DEFAULT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY post_tag ALTER COLUMN ptid SET DEFAULT nextval('post_tags_ptid_seq'::regclass);
 
 
 --
--- TOC entry 2078 (class 2604 OID 16618)
--- Name: tid; Type: DEFAULT; Schema: jpt; Owner: -
+-- Name: tid; Type: DEFAULT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY tag ALTER COLUMN tid SET DEFAULT nextval('tag_tid_seq'::regclass);
 
 
 --
--- TOC entry 2079 (class 2604 OID 16619)
--- Name: tid; Type: DEFAULT; Schema: jpt; Owner: -
+-- Name: tid; Type: DEFAULT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY thread ALTER COLUMN tid SET DEFAULT nextval('thread_tid_seq'::regclass);
 
 
 --
--- TOC entry 2083 (class 2604 OID 16620)
--- Name: uid; Type: DEFAULT; Schema: jpt; Owner: -
+-- Name: uid; Type: DEFAULT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY "user" ALTER COLUMN uid SET DEFAULT nextval('user_uid_seq'::regclass);
 
 
 --
--- TOC entry 2237 (class 0 OID 16546)
--- Dependencies: 181
--- Data for Name: admin; Type: TABLE DATA; Schema: jpt; Owner: -
+-- Data for Name: admin; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
 COPY admin (aid, uid, granter, since, role) FROM stdin;
-9	6	6	1439782679993	3
-8	1	\N	1439004612212	2
-10	7	7	1439782680104	2
+1	6	6	1439782679993	3
+2	1	\N	1439004612212	2
+3	7	7	1439782680104	2
 \.
 
 
 --
--- TOC entry 2269 (class 0 OID 0)
--- Dependencies: 182
--- Name: admin_aid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: -
+-- Name: admin_aid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('admin_aid_seq', 50, true);
+SELECT pg_catalog.setval('admin_aid_seq', 10, true);
 
 
 --
--- TOC entry 2254 (class 0 OID 16739)
--- Dependencies: 198
--- Data for Name: announce; Type: TABLE DATA; Schema: jpt; Owner: -
+-- Data for Name: announce; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
 COPY announce (aid, cid, uid, pid, announce_time, download, upload, _left) FROM stdin;
@@ -480,40 +477,42 @@ COPY announce (aid, cid, uid, pid, announce_time, download, upload, _left) FROM 
 
 
 --
--- TOC entry 2270 (class 0 OID 0)
--- Dependencies: 197
--- Name: announce_aid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: -
+-- Name: announce_aid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('announce_aid_seq', 35, true);
+SELECT pg_catalog.setval('announce_aid_seq', 1, true);
 
 
 --
--- TOC entry 2239 (class 0 OID 16551)
--- Dependencies: 183
--- Data for Name: client; Type: TABLE DATA; Schema: jpt; Owner: -
+-- Data for Name: client; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
 COPY client (cid, name, version, enable, cname) FROM stdin;
-2	transmit	*	t	\N
 0	*	*	f	*
-1	Utorrent	*	t	UT
+1	Utorrent	3.2	t	UT
+2	transmit	2.8	t	\N
+3	transmit	*	t	\N
+4	Utorrent	*	t	UT
 \.
 
 
 --
--- TOC entry 2271 (class 0 OID 0)
--- Dependencies: 184
--- Name: client_cid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: -
+-- Name: client_cid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('client_cid_seq', 100, true);
+SELECT pg_catalog.setval('client_cid_seq', 10, true);
 
 
 --
--- TOC entry 2241 (class 0 OID 16566)
--- Dependencies: 185
--- Data for Name: level; Type: TABLE DATA; Schema: jpt; Owner: -
+-- Data for Name: invitation; Type: TABLE DATA; Schema: jpt; Owner: postgres
+--
+
+COPY invitation (id, invitor, invitee) FROM stdin;
+\.
+
+
+--
+-- Data for Name: level; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
 COPY level (lid, name, icon, upload, download) FROM stdin;
@@ -529,18 +528,14 @@ COPY level (lid, name, icon, upload, download) FROM stdin;
 
 
 --
--- TOC entry 2272 (class 0 OID 0)
--- Dependencies: 186
--- Name: level_lid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: -
+-- Name: level_lid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('level_lid_seq', 50, true);
+SELECT pg_catalog.setval('level_lid_seq', 10, true);
 
 
 --
--- TOC entry 2243 (class 0 OID 16571)
--- Dependencies: 187
--- Data for Name: post; Type: TABLE DATA; Schema: jpt; Owner: -
+-- Data for Name: post; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
 COPY post (pid, uid, title, content, create_time, size, enable, hash, bencode, rate, lid) FROM stdin;
@@ -550,18 +545,14 @@ COPY post (pid, uid, title, content, create_time, size, enable, hash, bencode, r
 
 
 --
--- TOC entry 2273 (class 0 OID 0)
--- Dependencies: 188
--- Name: post_pid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: -
+-- Name: post_pid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('post_pid_seq', 50, true);
+SELECT pg_catalog.setval('post_pid_seq', 10, true);
 
 
 --
--- TOC entry 2245 (class 0 OID 16579)
--- Dependencies: 189
--- Data for Name: post_tag; Type: TABLE DATA; Schema: jpt; Owner: -
+-- Data for Name: post_tag; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
 COPY post_tag (ptid, tid, pid) FROM stdin;
@@ -569,18 +560,14 @@ COPY post_tag (ptid, tid, pid) FROM stdin;
 
 
 --
--- TOC entry 2274 (class 0 OID 0)
--- Dependencies: 190
--- Name: post_tags_ptid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: -
+-- Name: post_tags_ptid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('post_tags_ptid_seq', 50, true);
+SELECT pg_catalog.setval('post_tags_ptid_seq', 1, true);
 
 
 --
--- TOC entry 2255 (class 0 OID 16977)
--- Dependencies: 199
--- Data for Name: student; Type: TABLE DATA; Schema: jpt; Owner: -
+-- Data for Name: student; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
 COPY student (id, age, name) FROM stdin;
@@ -588,33 +575,27 @@ COPY student (id, age, name) FROM stdin;
 
 
 --
--- TOC entry 2247 (class 0 OID 16589)
--- Dependencies: 191
--- Data for Name: tag; Type: TABLE DATA; Schema: jpt; Owner: -
+-- Data for Name: tag; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
-COPY tag (tid, name, icon) FROM stdin;
-1	Movie	icon/movie.gif
-2	Animation	icon/anim.gif
-3	FLAC	icon/flac.gif
-4	BLUE-RAY	icon/blue-ray.gif
-5	Touchless	icon/touchless.gif
+COPY tag (tid, name) FROM stdin;
+1	Movie
+2	Animation
+3	FLAC
+4	BLUE-RAY
+5	Touchless
 \.
 
 
 --
--- TOC entry 2275 (class 0 OID 0)
--- Dependencies: 192
--- Name: tag_tid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: -
+-- Name: tag_tid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tag_tid_seq', 50, true);
+SELECT pg_catalog.setval('tag_tid_seq', 10, true);
 
 
 --
--- TOC entry 2249 (class 0 OID 16594)
--- Dependencies: 193
--- Data for Name: thread; Type: TABLE DATA; Schema: jpt; Owner: -
+-- Data for Name: thread; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
 COPY thread (tid, pid, uid, content, create_time, judgement) FROM stdin;
@@ -622,41 +603,35 @@ COPY thread (tid, pid, uid, content, create_time, judgement) FROM stdin;
 
 
 --
--- TOC entry 2276 (class 0 OID 0)
--- Dependencies: 194
--- Name: thread_tid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: -
+-- Name: thread_tid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('thread_tid_seq', 50, true);
+SELECT pg_catalog.setval('thread_tid_seq', 1, true);
 
 
 --
--- TOC entry 2251 (class 0 OID 16602)
--- Dependencies: 195
--- Data for Name: user; Type: TABLE DATA; Schema: jpt; Owner: -
+-- Data for Name: user; Type: TABLE DATA; Schema: jpt; Owner: postgres
 --
 
 COPY "user" (uid, password, username, email, upload, download, credit, register_time, status) FROM stdin;
-1	123456	Rugal	ryujin@163.com	0	0	0	1438837127628	\N
-3	123456	Tiger	null@123.com	0	0	0	1438965604092	2
-6	test	test	test@123.com	0	0	0	1439782679846	2
+1	123456	Rugal	ryujin@163.com	0	0	0	1438837127628	2
 2	123456	Spooky	1@163.com	0	0	0	1438965572744	0
-7	test	test	2@163.com	0	0	0	1439782680097	2
+3	123456	Tiger	null@123.com	0	0	0	1438965604092	2
+4	test	Adel	test@123.com	0	0	0	1439782679846	2
+7	test	Orochi	2@163.com	0	0	0	1439782680097	2
+6	123456	God	god@god.com	0	0	0	1438965604092	2
 \.
 
 
 --
--- TOC entry 2277 (class 0 OID 0)
--- Dependencies: 196
--- Name: user_uid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: -
+-- Name: user_uid_seq; Type: SEQUENCE SET; Schema: jpt; Owner: postgres
 --
 
-SELECT pg_catalog.setval('user_uid_seq', 100, true);
+SELECT pg_catalog.setval('user_uid_seq', 10, true);
 
 
 --
--- TOC entry 2089 (class 2606 OID 16624)
--- Name: admin_pkey; Type: CONSTRAINT; Schema: jpt; Owner: -
+-- Name: admin_pkey; Type: CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY admin
@@ -664,8 +639,7 @@ ALTER TABLE ONLY admin
 
 
 --
--- TOC entry 2109 (class 2606 OID 16747)
--- Name: announce_pkey; Type: CONSTRAINT; Schema: jpt; Owner: -
+-- Name: announce_pkey; Type: CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY announce
@@ -673,8 +647,7 @@ ALTER TABLE ONLY announce
 
 
 --
--- TOC entry 2091 (class 2606 OID 16628)
--- Name: client_pkey; Type: CONSTRAINT; Schema: jpt; Owner: -
+-- Name: client_pkey; Type: CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY client
@@ -682,8 +655,15 @@ ALTER TABLE ONLY client
 
 
 --
--- TOC entry 2094 (class 2606 OID 16632)
--- Name: level_pkey; Type: CONSTRAINT; Schema: jpt; Owner: -
+-- Name: invitation_pkey; Type: CONSTRAINT; Schema: jpt; Owner: postgres
+--
+
+ALTER TABLE ONLY invitation
+    ADD CONSTRAINT invitation_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: level_pkey; Type: CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY level
@@ -691,8 +671,7 @@ ALTER TABLE ONLY level
 
 
 --
--- TOC entry 2096 (class 2606 OID 16634)
--- Name: post_pkey; Type: CONSTRAINT; Schema: jpt; Owner: -
+-- Name: post_pkey; Type: CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY post
@@ -700,8 +679,7 @@ ALTER TABLE ONLY post
 
 
 --
--- TOC entry 2099 (class 2606 OID 16636)
--- Name: post_tags_pkey; Type: CONSTRAINT; Schema: jpt; Owner: -
+-- Name: post_tags_pkey; Type: CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY post_tag
@@ -709,8 +687,7 @@ ALTER TABLE ONLY post_tag
 
 
 --
--- TOC entry 2111 (class 2606 OID 16981)
--- Name: student_pkey; Type: CONSTRAINT; Schema: jpt; Owner: -
+-- Name: student_pkey; Type: CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY student
@@ -718,8 +695,7 @@ ALTER TABLE ONLY student
 
 
 --
--- TOC entry 2101 (class 2606 OID 16640)
--- Name: tag_pkey; Type: CONSTRAINT; Schema: jpt; Owner: -
+-- Name: tag_pkey; Type: CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY tag
@@ -727,8 +703,7 @@ ALTER TABLE ONLY tag
 
 
 --
--- TOC entry 2103 (class 2606 OID 16642)
--- Name: thread_pkey; Type: CONSTRAINT; Schema: jpt; Owner: -
+-- Name: thread_pkey; Type: CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY thread
@@ -736,8 +711,7 @@ ALTER TABLE ONLY thread
 
 
 --
--- TOC entry 2107 (class 2606 OID 16644)
--- Name: user_pkey; Type: CONSTRAINT; Schema: jpt; Owner: -
+-- Name: user_pkey; Type: CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY "user"
@@ -745,40 +719,35 @@ ALTER TABLE ONLY "user"
 
 
 --
--- TOC entry 2092 (class 1259 OID 16645)
--- Name: unq_client_cname; Type: INDEX; Schema: jpt; Owner: -
+-- Name: unq_client_cname; Type: INDEX; Schema: jpt; Owner: postgres
 --
 
 CREATE INDEX unq_client_cname ON client USING btree (cname);
 
 
 --
--- TOC entry 2097 (class 1259 OID 16647)
--- Name: unq_post_infohash; Type: INDEX; Schema: jpt; Owner: -
+-- Name: unq_post_infohash; Type: INDEX; Schema: jpt; Owner: postgres
 --
 
 CREATE UNIQUE INDEX unq_post_infohash ON post USING btree (hash);
 
 
 --
--- TOC entry 2104 (class 1259 OID 16648)
--- Name: unq_user_email; Type: INDEX; Schema: jpt; Owner: -
+-- Name: unq_user_email; Type: INDEX; Schema: jpt; Owner: postgres
 --
 
 CREATE INDEX unq_user_email ON "user" USING btree (email);
 
 
 --
--- TOC entry 2105 (class 1259 OID 16649)
--- Name: unq_user_username; Type: INDEX; Schema: jpt; Owner: -
+-- Name: unq_user_username; Type: INDEX; Schema: jpt; Owner: postgres
 --
 
 CREATE INDEX unq_user_username ON "user" USING btree (username);
 
 
 --
--- TOC entry 2112 (class 2606 OID 16650)
--- Name: admin_grantee_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: -
+-- Name: admin_grantee_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY admin
@@ -786,8 +755,7 @@ ALTER TABLE ONLY admin
 
 
 --
--- TOC entry 2113 (class 2606 OID 16655)
--- Name: admin_uid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: -
+-- Name: admin_uid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY admin
@@ -795,8 +763,7 @@ ALTER TABLE ONLY admin
 
 
 --
--- TOC entry 2120 (class 2606 OID 16748)
--- Name: announce_cid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: -
+-- Name: announce_cid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY announce
@@ -804,8 +771,7 @@ ALTER TABLE ONLY announce
 
 
 --
--- TOC entry 2122 (class 2606 OID 16758)
--- Name: announce_pid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: -
+-- Name: announce_pid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY announce
@@ -813,8 +779,7 @@ ALTER TABLE ONLY announce
 
 
 --
--- TOC entry 2121 (class 2606 OID 16753)
--- Name: announce_uid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: -
+-- Name: announce_uid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY announce
@@ -822,8 +787,23 @@ ALTER TABLE ONLY announce
 
 
 --
--- TOC entry 2115 (class 2606 OID 16732)
--- Name: post_lid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: -
+-- Name: invitation_invitee_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
+--
+
+ALTER TABLE ONLY invitation
+    ADD CONSTRAINT invitation_invitee_fkey FOREIGN KEY (invitee) REFERENCES "user"(uid);
+
+
+--
+-- Name: invitation_invitor_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
+--
+
+ALTER TABLE ONLY invitation
+    ADD CONSTRAINT invitation_invitor_fkey FOREIGN KEY (invitor) REFERENCES "user"(uid);
+
+
+--
+-- Name: post_lid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY post
@@ -831,8 +811,7 @@ ALTER TABLE ONLY post
 
 
 --
--- TOC entry 2116 (class 2606 OID 16685)
--- Name: post_tags_pid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: -
+-- Name: post_tags_pid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY post_tag
@@ -840,8 +819,7 @@ ALTER TABLE ONLY post_tag
 
 
 --
--- TOC entry 2117 (class 2606 OID 16690)
--- Name: post_tags_tid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: -
+-- Name: post_tags_tid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY post_tag
@@ -849,8 +827,7 @@ ALTER TABLE ONLY post_tag
 
 
 --
--- TOC entry 2114 (class 2606 OID 16695)
--- Name: post_uid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: -
+-- Name: post_uid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY post
@@ -858,8 +835,7 @@ ALTER TABLE ONLY post
 
 
 --
--- TOC entry 2118 (class 2606 OID 16705)
--- Name: thread_pid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: -
+-- Name: thread_pid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY thread
@@ -867,15 +843,12 @@ ALTER TABLE ONLY thread
 
 
 --
--- TOC entry 2119 (class 2606 OID 16710)
--- Name: thread_uid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: -
+-- Name: thread_uid_fkey; Type: FK CONSTRAINT; Schema: jpt; Owner: postgres
 --
 
 ALTER TABLE ONLY thread
     ADD CONSTRAINT thread_uid_fkey FOREIGN KEY (uid) REFERENCES "user"(uid);
 
-
--- Completed on 2016-08-03 22:05:03
 
 --
 -- PostgreSQL database dump complete

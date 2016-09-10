@@ -11,7 +11,7 @@ public interface SystemDefaultProperties
 
     boolean TORRENT_FROM_DB = true;
 
-    final String SCHEMA = "jpt.";
+    final String SCHEMA = "jpt";
 
     final String ID = "id";
 

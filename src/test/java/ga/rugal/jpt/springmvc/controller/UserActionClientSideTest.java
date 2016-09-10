@@ -54,7 +54,7 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
     }
 
     @Test
-    public void testRegisterUser() throws Exception
+    public void registerUser() throws Exception
     {
         LOG.info("registerUser");
         Assert.assertNotNull(user.getUid());
@@ -63,9 +63,8 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
     private MvcResult testSave() throws Exception
     {
         return this.mockMvc.perform(post("/user").content(GSON.toJson(user))
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
             .andReturn();
     }
 
@@ -134,7 +133,7 @@ public class UserActionClientSideTest extends ControllerClientSideTestBase
         Assert.assertEquals(Message.SUCCESS, message.getStatus());
     }
 
-//    @Test
+    @Test
     public void testIsEmailAvailable() throws Exception
     {
         LOG.info("isEmailAvailable");

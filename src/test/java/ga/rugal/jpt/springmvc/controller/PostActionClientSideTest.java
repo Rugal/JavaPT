@@ -8,6 +8,7 @@ import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
+import ga.rugal.jpt.core.service.LevelService;
 import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.UserService;
 import java.io.ByteArrayInputStream;
@@ -30,7 +31,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import ga.rugal.jpt.core.service.LevelService;
 
 /**
  *
@@ -91,13 +91,6 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
         levelService.getDAO().delete(level);
     }
 
-    @Test
-    public void testSavePost() throws Exception
-    {
-        LOG.info("save");
-        Assert.assertNotNull(post.getPid());
-    }
-
     private MvcResult testSave() throws Exception
     {
         post.setPid(null);
@@ -118,9 +111,14 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     }
 
     @Test
+    public void save() throws Exception
+    {
+        Assert.assertNotNull(post.getPid());
+    }
+
+    @Test
     public void update_404() throws Exception
     {
-        LOG.info("update");
         Assert.assertNotNull(post.getPid());
         post.setEnable(!post.getEnable());
         this.mockMvc.perform(put("/post/0")

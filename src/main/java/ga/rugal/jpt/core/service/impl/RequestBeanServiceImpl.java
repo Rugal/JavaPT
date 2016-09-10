@@ -73,7 +73,7 @@ public class RequestBeanServiceImpl implements RequestBeanService
             throw new TrackerResponseException(CommonMessageContent.INVALID_INFOHASH);
         }
         //set post by info_hash
-        Post post = postService.getDAO().getByTorrent(bean.getInfoHash());
+        Post post = postService.getDAO().getByInfohash(bean.getInfoHash());
         if (null == post)
         {
             throw new TrackerResponseException(CommonMessageContent.TORRENT_NOT_FOUND);

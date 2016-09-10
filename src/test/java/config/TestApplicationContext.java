@@ -6,6 +6,7 @@ import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.core.entity.Admin;
 import ga.rugal.jpt.core.entity.Announce;
 import ga.rugal.jpt.core.entity.Client;
+import ga.rugal.jpt.core.entity.Invitation;
 import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.PostTag;
@@ -52,7 +53,7 @@ public class TestApplicationContext
     public User user()
     {
         User bean = new User();
-        bean.setEmail("testhappy@128.com");
+        bean.setEmail("testhappy@amazon.com");
         bean.setPassword("test123");
         bean.setRegisterTime(System.currentTimeMillis());
         bean.setStatus(User.Status.VALID);
@@ -168,5 +169,15 @@ public class TestApplicationContext
         File file = new File(SystemDefaultProperties.TORRENT_PATH)
             .listFiles((File dir, String fileName) -> fileName.startsWith("Junit"))[0];
         return file;
+    }
+
+    @Autowired
+    @Bean
+    public Invitation invitation(User user)
+    {
+        Invitation invitation = new Invitation();
+        invitation.setId("TESTCODE");
+        invitation.setInvitor(user);
+        return invitation;
     }
 }

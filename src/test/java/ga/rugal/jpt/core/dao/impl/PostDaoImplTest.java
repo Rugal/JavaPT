@@ -68,7 +68,6 @@ public class PostDaoImplTest extends DBTestBase
     @Test
     public void getPage()
     {
-        LOG.info("getPage");
         int pageNo = 0;
         int pageSize = 1;
         Pagination result = postDao.getPage(pageNo, pageSize);
@@ -80,23 +79,20 @@ public class PostDaoImplTest extends DBTestBase
     @Test
     public void get()
     {
-        LOG.info("get");
         Post p = postDao.get(post.getPid());
         Assert.assertNotNull(p);
     }
 
     @Test
-    public void getByTorrent()
+    public void getByInfohash()
     {
-        LOG.info("getByTorront");
-        Post bean = postDao.getByTorrent(post.getHash());
+        Post bean = postDao.getByInfohash(post.getHash());
         Assert.assertNotNull(bean);
     }
 
     @Test
     public void getAllTorrentsOnly()
     {
-        LOG.info("getAllTorrentsOnly");
         List list = postDao.getAllTorrentsOnly();
         Assert.assertFalse(list.isEmpty());
     }

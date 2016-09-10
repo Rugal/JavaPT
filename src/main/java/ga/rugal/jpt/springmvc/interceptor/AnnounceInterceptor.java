@@ -100,7 +100,7 @@ public class AnnounceInterceptor implements HandlerInterceptor
         }
         String infoHash = requsetBeanService.toSHA1(readParameterFromURL(request.getQueryString(), AnnounceAction.INFO_HASH));
         LOG.trace(infoHash);
-        Post post = postService.getDAO().getByTorrent(infoHash);
+        Post post = postService.getDAO().getByInfohash(infoHash);
         if (null == post)
         {
             throw new TrackerResponseException(CommonMessageContent.TORRENT_NOT_FOUND);

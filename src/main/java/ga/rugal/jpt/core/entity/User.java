@@ -1,7 +1,7 @@
 package ga.rugal.jpt.core.entity;
 
 import com.google.gson.annotations.Expose;
-import config.SystemDefaultProperties;
+import static config.SystemDefaultProperties.SCHEMA;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -22,7 +23,7 @@ import org.hibernate.annotations.FetchMode;
  * @author Rugal Bernstein
  */
 @Entity
-@Table(schema = "jpt", name = "user")
+@Table(schema = SCHEMA, name = "user")
 @Data
 public class User extends BaseObject<User>
 {
@@ -31,8 +32,7 @@ public class User extends BaseObject<User>
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQUENCE_NAME)
-    @SequenceGenerator(name = SEQUENCE_NAME,
-        sequenceName = SystemDefaultProperties.SCHEMA + SEQUENCE_NAME, allocationSize = 1)
+    @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SCHEMA + "." + SEQUENCE_NAME, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     @Expose
@@ -79,6 +79,12 @@ public class User extends BaseObject<User>
 
     @OneToMany(mappedBy = "user")
     private List<Announce> announcesList;
+
+    @OneToMany(mappedBy = "invitor")
+    private List<Invitation> invitationCodeList;
+
+    @OneToOne(mappedBy = "invitee")
+    private Invitation invitorRelation;
 
     @OneToMany(mappedBy = "user")
     @Fetch(FetchMode.SELECT)

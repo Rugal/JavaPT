@@ -73,7 +73,7 @@ public class PostServiceImplTest extends DBTestBase
     public void testTorrentSave() throws IOException
     {
         System.out.println("Save with Torrent");
-        Post bean = postService.getDAO().getByTorrent(post.getHash());
+        Post bean = postService.getDAO().getByInfohash(post.getHash());
         Torrent result = TrackedTorrent.load(bean.getBencode());
         Assert.assertEquals(result.getHexInfoHash(), post.getHash());
     }

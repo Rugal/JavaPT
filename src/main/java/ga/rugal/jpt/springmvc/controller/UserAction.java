@@ -7,6 +7,7 @@ import ga.rugal.jpt.core.service.UserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import ml.rugal.sshcommon.page.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -32,6 +33,14 @@ public class UserAction
 
     @Autowired
     private UserService userService;
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST)
+    public Object createNewUID(@RequestParam("referee") String referee, @RequestParam("code") String code,
+                               HttpServletRequest request, HttpServletResponse response)
+    {
+        return null;
+    }
 
     //Create new UID with invitation
     //Register User with UID
@@ -181,8 +190,13 @@ public class UserAction
                              @RequestParam(name = "pageNo", required = true, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
                              @RequestParam(name = "pageSize", required = true, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize)
     {
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(HttpServletResponse.SC_OK);
-        return userService.getDAO().findByName(username, pageNo, pageSize);
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        Pagination page = userService.getDAO().findByName(username, pageNo, pageSize);
+        if (page.getTotalCount() > 0)
+        {
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        }
+        return page;
     }
 }

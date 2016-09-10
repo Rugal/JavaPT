@@ -24,10 +24,10 @@ public interface PostDao
     Post updateByUpdater(Updater<Post> updater);
 
     @Transactional(readOnly = true)
-    Post getByTorrent(String infoHash);
+    Post getByInfohash(String infoHash);
 
     /**
-     * Get all Torronts. For tracker initialization.
+     * Get all Torronts. This should only be invoked for tracker initialization.
      *
      * @return
      */
