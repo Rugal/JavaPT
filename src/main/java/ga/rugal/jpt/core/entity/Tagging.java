@@ -21,7 +21,7 @@ import lombok.Data;
 @Entity
 @Table(schema = SCHEMA, name = "post_tag")
 @Data
-public class PostTag
+public class Tagging
 {
 
     private static final String SEQUENCE_NAME = "post_tags_ptid_seq";
@@ -53,11 +53,11 @@ public class PostTag
     @Override
     public boolean equals(Object object)
     {
-        if (!(object instanceof PostTag))
+        if (!(object instanceof Tagging))
         {
             return false;
         }
-        PostTag other = (PostTag) object;
+        Tagging other = (Tagging) object;
         return !((this.ptid == null && other.ptid != null) || (this.ptid != null && !this.ptid.equals(other.ptid)));
     }
 

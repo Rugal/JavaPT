@@ -1,7 +1,7 @@
 package ga.rugal.jpt.core.dao;
 
 import ga.rugal.jpt.core.entity.Post;
-import ga.rugal.jpt.core.entity.PostTag;
+import ga.rugal.jpt.core.entity.Tagging;
 import ga.rugal.jpt.core.entity.Tag;
 import java.util.List;
 import ml.rugal.sshcommon.hibernate.Updater;
@@ -15,16 +15,16 @@ import org.springframework.transaction.annotation.Transactional;
 public interface TaggingDao
 {
 
-    PostTag delete(PostTag bean);
+    Tagging delete(Tagging bean);
 
-    PostTag get(Integer id);
+    Tagging get(Integer id);
 
     @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);
 
-    PostTag save(PostTag bean);
+    Tagging save(Tagging bean);
 
-    PostTag updateByUpdater(Updater<PostTag> updater);
+    Tagging updateByUpdater(Updater<Tagging> updater);
 
     /**
      * Get a Tagging of a post by tag. A Post should not have more than 1 tag with same Tag ID.
@@ -35,7 +35,7 @@ public interface TaggingDao
      * @return
      */
     @Transactional(readOnly = true)
-    PostTag get(Post post, Tag tag);
+    Tagging get(Post post, Tag tag);
 
     /**
      * Get all tags of a post.

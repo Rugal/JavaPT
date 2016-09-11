@@ -1,6 +1,6 @@
 package ga.rugal.jpt.core.service.impl;
 
-import ga.rugal.jpt.core.entity.PostTag;
+import ga.rugal.jpt.core.entity.Tagging;
 import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.hibernate.Updater;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +29,9 @@ public class TaggingServiceImpl implements TaggingService
     }
 
     @Override
-    public PostTag update(PostTag bean)
+    public Tagging update(Tagging bean)
     {
-        Updater<PostTag> updater = new Updater<>(bean);
+        Updater<Tagging> updater = new Updater<>(bean);
         return dao.updateByUpdater(updater);
     }
 }

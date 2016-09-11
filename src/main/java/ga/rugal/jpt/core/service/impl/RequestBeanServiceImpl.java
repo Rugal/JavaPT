@@ -41,9 +41,6 @@ public class RequestBeanServiceImpl implements RequestBeanService
 
     /**
      * {@inheritDoc }
-     * <p>
-     * @param b <p>
-     * @throws ga.rugal.jpt.common.tracker.server.TrackerResponseException
      */
     @Override
     @Transactional(readOnly = true)
@@ -121,17 +118,7 @@ public class RequestBeanServiceImpl implements RequestBeanService
     }
 
     /**
-     * Convert a Percent-encoded string into a SHA1 string. It is not functional to use
-     * {@link javax.servlet.ServletRequest#getParameter} since the percent-encoded info_hash and
-     * peer_id will be decoded by Springmvc.
-     * <p>
-     * Refer to
-     * http://stackoverflow.com/questions/5637268/how-do-you-decode-info-hash-information-from-tracker-announce-request
-     * <p>
-     * http://www.asciitable.com/
-     * <p>
-     * @param text <p>
-     * @return
+     * {@inheritDoc }
      */
     @Override
     public String toSHA1(String text)

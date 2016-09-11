@@ -38,6 +38,5 @@ public class TrackerResponseServiceImpl implements TrackerResponseService
             LOG.error(CommonLogContent.ERROR_WRITING_RESPONSE, ex);
             throw ex;
         }
-
     }
 }

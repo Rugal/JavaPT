@@ -11,7 +11,7 @@ import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.common.tracker.server.TrackedPeer;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.common.tracker.server.TrackerResponseException;
-import ga.rugal.jpt.core.service.ClientAnnounceService;
+import ga.rugal.jpt.core.service.AnnounceService;
 import ga.rugal.jpt.core.service.RequestBeanService;
 import ga.rugal.jpt.core.service.Tracker;
 import ga.rugal.jpt.core.service.TrackerResponseService;
@@ -24,8 +24,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -37,18 +36,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
- * A simple announce action implemented by Rugal Bernstein.
+ * A simple torrontRegister action implemented by Rugal Bernstein.
  * <p>
  * Inspired by ttorent(https://github.com/mpetazzoni/ttorrent)
  * <p>
  * @author Rugal Bernstein
  * @since 0.1
  */
+@Slf4j
 @Controller
 public class AnnounceAction
 {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AnnounceAction.class.getName());
 
     @Autowired
     private Tracker tracker;
@@ -60,20 +58,21 @@ public class AnnounceAction
     private TrackerResponseService trackerResponseService;
 
     @Autowired
-    private ClientAnnounceService clientAnnounceService;
+    private AnnounceService announceService;
 
     public static final String INFO_HASH = "info_hash";
 
     public static final String PEER_ID = "peer_id";
 
     /**
+     * Waiting for client software to announce/update.<BR>
      * Support Azureus-style peer id.
      *
      * @param bean     A JavaBean that includes all required information.
      * @param request
      * @param response
      *
-     * @throws java.lang.Exception throw exceptions so that ExceptionHandler could deal with.
+     * @throws java.lang.Exception throw exceptions so that the local ExceptionHandler could deal with.
      */
     @RequestMapping(value = "/announce", method = RequestMethod.GET)
     @ResponseBody
@@ -94,7 +93,7 @@ public class AnnounceAction
         LOG.trace(CommonLogContent.START_UPDATE, trackerUpdateBean.getUser().getUid());
         //-------After get formated tracker update bean, start to use it only--------
         LOG.debug(CommonLogContent.THE_REQUESTED_INFO, trackerUpdateBean.getUser().getUid(), trackerUpdateBean.getInfoHash());
-        // Update the torrent according to the announce event
+        // Update the torrent according to the torrontRegister event
         if (null == tracker)
         {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -102,7 +101,7 @@ public class AnnounceAction
         }
         TrackedPeer peer = tracker.update(trackerUpdateBean);
         // Update user information in database
-        clientAnnounceService.announce(trackerUpdateBean);
+        announceService.announce(trackerUpdateBean);
         //
         //
         //
@@ -118,8 +117,7 @@ public class AnnounceAction
     /**
      * Get request parameter from query string.
      * <p>
-     * This method will separate parameters into map before get the real value. This might be a
-     * performance leak point.
+     * This method will separate parameters into map before get the real value. This might be a performance leak point.
      * <p>
      * @param text
      * @param name <p>
@@ -139,7 +137,7 @@ public class AnnounceAction
     }
 
     /**
-     * Craft a compact normal announce response message from torrent and peers.
+     * Craft a compact normal torrontRegister response message from torrent and peers.
      * <p>
      * Notice the peers field is only in compacted in 0.1 version.
      *

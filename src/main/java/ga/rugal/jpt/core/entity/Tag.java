@@ -39,7 +39,7 @@ public class Tag extends BaseObject<Tag>
     private String name;
 
     @OneToMany(mappedBy = "tag")
-    private List<PostTag> postTagsList;
+    private List<Tagging> postTagsList;
 
     @Override
     protected Class<Tag> getRealClass()

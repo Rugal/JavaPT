@@ -5,7 +5,7 @@ import ga.rugal.jpt.core.dao.AnnounceDao;
 import ga.rugal.jpt.core.entity.Announce;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.service.ClientAnnounceService;
+import ga.rugal.jpt.core.service.AnnounceService;
 import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @Transactional
-public class AnnounceServiceImpl implements ClientAnnounceService
+public class AnnounceServiceImpl implements AnnounceService
 {
 
     @Autowired
@@ -35,15 +35,15 @@ public class AnnounceServiceImpl implements ClientAnnounceService
 
     private Announce save(TrackerUpdateBean bean)
     {
-        Announce clientAnnounce = new Announce();
-        clientAnnounce.setDownload(bean.getDownloaded());
-        clientAnnounce.setUpload(bean.getUploaded());
-        clientAnnounce.setLeft(bean.getLeft());
-        clientAnnounce.setAnnounceTime(System.currentTimeMillis());
-        clientAnnounce.setUser(bean.getUser());
-        clientAnnounce.setClient(bean.getClient());
-        clientAnnounce.setPost(postService.getDAO().getByInfohash(bean.getInfoHash()));
-        return dao.save(clientAnnounce);
+        Announce announce = new Announce();
+        announce.setDownload(bean.getDownloaded());
+        announce.setUpload(bean.getUploaded());
+        announce.setLeft(bean.getLeft());
+        announce.setAnnounceTime(System.currentTimeMillis());
+        announce.setUser(bean.getUser());
+        announce.setClient(bean.getClient());
+        announce.setPost(postService.getDAO().getByInfohash(bean.getInfoHash()));
+        return dao.save(announce);
     }
 
     @Override

@@ -91,7 +91,7 @@ public class Thread extends BaseObject<Thread>
         }
         List<Admin> admins = user.getAdminList();
         //----------This user is admin with sufficient privilege-------------
-        return admins.stream().anyMatch((admin) -> (admin.getRole() == Admin.Role.ADMIN));
+        return admins.stream().anyMatch((admin) -> (admin.getRole() == Admin.Role.ADMINISTRATOR));
     }
 
     @Override

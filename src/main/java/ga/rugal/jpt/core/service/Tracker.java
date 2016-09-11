@@ -14,21 +14,15 @@ public interface Tracker
 {
 
     /**
-     * Announce a new torrent on this tracker.
+     * Announce/Register a new torrent in this tracker. The list of torrents is maintained by this class.
      *
-     * <p>
-     * The fact that torrents must be announced here first makes this tracker a closed BitTorrent
-     * tracker: it will only accept clients for torrents it knows about, and this list of torrents
-     * is managed by the program instrumenting this TrackerImpl class.
-     * </p>
      *
      * @param torrent The Torrent object to start tracking.
      *
-     * @return The torrent object for this torrent on this tracker. This may be different from the
-     *         supplied Torrent object if the tracker already contained a torrent with the same
-     *         hash.
+     * @return Get the existed one if there is a Torront object that has exact same info_hash; otherwise, return the
+     *         input Torront object.
      */
-    TrackedTorrent announce(TrackedTorrent torrent);
+    TrackedTorrent torrontRegister(TrackedTorrent torrent);
 
     boolean containsKey(String hash);
 
@@ -51,9 +45,12 @@ public interface Tracker
     void stop();
 
     /**
+     * Update user profile in database by using {@code TrackerUpdateBean} information sent by user client software.
      *
-     * @param bean <p>
-     * @return <p>
+     * @param bean
+     *
+     * @return The internal representation of user.
+     *
      * @throws ga.rugal.jpt.common.tracker.server.TrackerResponseException
      */
     TrackedPeer update(TrackerUpdateBean bean) throws TrackerResponseException;

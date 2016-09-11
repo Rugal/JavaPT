@@ -1,6 +1,6 @@
 package ga.rugal.jpt.core.service;
 
-import ga.rugal.jpt.core.entity.PostTag;
+import ga.rugal.jpt.core.entity.Tagging;
 import ga.rugal.jpt.core.dao.TaggingDao;
 
 /**
@@ -10,5 +10,5 @@ import ga.rugal.jpt.core.dao.TaggingDao;
 public interface TaggingService extends BaseService<TaggingDao>
 {
 
-    PostTag update(PostTag bean);
+    Tagging update(Tagging bean);
 }

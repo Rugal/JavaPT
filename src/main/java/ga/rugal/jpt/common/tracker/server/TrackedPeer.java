@@ -16,6 +16,7 @@
 package ga.rugal.jpt.common.tracker.server;
 
 import config.SystemDefaultProperties;
+import ga.rugal.jpt.common.CommonLogContent;
 import ga.rugal.jpt.common.tracker.bcodec.BEValue;
 import ga.rugal.jpt.common.tracker.common.Peer;
 import ga.rugal.jpt.common.tracker.common.Torrent;
@@ -25,28 +26,25 @@ import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * A BitTorrent tracker peer.
  *
  * <p>
- * Represents a peer exchanging on a given torrent. In this implementation, we don't really care
- * about the status of the peers and how much they have downloaded / exchanged because we are not a
- * torrent exchange and don't need to keep track of what peers are doing while they're downloading.
- * We only care about when they start, and when they are done.
+ * Represents a peer exchanging on a given torrent. In this implementation, we don't really care about the status of the
+ * peers and how much they have downloaded / exchanged because we are not a torrent exchange and don't need to keep
+ * track of what peers are doing while they're downloading. We only care about when they start, and when they are done.
  * </p>
  *
  * <p>
- * We also never expire peers automatically. Unless peers send a STOPPED announce request, they
- * remain as long as the torrent object they are a part of.
+ * We also never expire peers automatically. Unless peers send a STOPPED announce request, they remain as long as the
+ * torrent object they are a part of.
  * </p>
  */
+@Slf4j
 public class TrackedPeer extends Peer
 {
-
-    private static final Logger logger = LoggerFactory.getLogger(TrackedPeer.class);
 
     private long uploaded;
 
@@ -60,20 +58,20 @@ public class TrackedPeer extends Peer
      * Represents the state of a peer exchanging on this torrent.
      *
      * <p>
-     * Peers can be in the STARTED state, meaning they have announced themselves to us and are
-     * eventually exchanging data with other peers. Note that a peer starting with a completed file
-     * will also be in the started state and will never notify as being in the completed state. This
-     * information can be inferred from the fact that the peer reports 0 bytes left to download.
+     * Peers can be in the STARTED state, meaning they have announced themselves to us and are eventually exchanging
+     * data with other peers. Note that a peer starting with a completed file will also be in the started state and will
+     * never notify as being in the completed state. This information can be inferred from the fact that the peer
+     * reports 0 bytes left to download.
      * </p>
      *
      * <p>
-     * Peers enter the COMPLETED state when they announce they have entirely downloaded the file. As
-     * stated above, we may also elect them for this state if they report 0 bytes left to download.
+     * Peers enter the COMPLETED state when they announce they have entirely downloaded the file. As stated above, we
+     * may also elect them for this state if they report 0 bytes left to download.
      * </p>
      *
      * <p>
-     * Peers enter the STOPPED state very briefly before being removed. We still pass them to the
-     * STOPPED state in case someone else kept a reference on them.
+     * Peers enter the STOPPED state very briefly before being removed. We still pass them to the STOPPED state in case
+     * someone else kept a reference on them.
      * </p>
      */
     public enum PeerState
@@ -99,24 +97,26 @@ public class TrackedPeer extends Peer
      */
     public TrackedPeer(Torrent torrent, String ip, int port, ByteBuffer peerIdByte)
     {
+        this(torrent, ip, port, peerIdByte, 0l, 0l, 0l);
+    }
+
+    public TrackedPeer(Torrent torrent, String ip, int port, ByteBuffer peerIdByte, long uploaded, long downloaded, long left)
+    {
         super(ip, port, peerIdByte);
         this.torrent = torrent;
-
         // Instantiated peers start in the UNKNOWN state.
         this.state = PeerState.UNKNOWN;
         this.lastAnnounce = null;
-
-        this.uploaded = 0;
-        this.downloaded = 0;
-        this.left = 0;
+        this.uploaded = uploaded;
+        this.downloaded = downloaded;
+        this.left = left;
     }
 
     /**
      * Update this peer's state and information.
      *
      * <p>
-     * <b>Note:</b> if the peer reports 0 bytes left to download, its state will be automatically be
-     * set to COMPLETED.
+     * <b>Note:</b> if the peer reports 0 bytes left to download, its state will be automatically be set to COMPLETED.
      * </p>
      *
      * @param bean
@@ -131,7 +131,7 @@ public class TrackedPeer extends Peer
         if (bean.getState() != this.state)
         {
             //Log state change
-            logger.info("Peer {} {} download of {}.", this, bean.getState().name().toLowerCase(), this.torrent);
+            LOG.info(CommonLogContent.STATUS_UPDATE, this, bean.getState().name().toLowerCase(), this.torrent);
         }
         this.state = bean.getState();
         this.lastAnnounce = new Date();
@@ -171,8 +171,7 @@ public class TrackedPeer extends Peer
     }
 
     /**
-     * Returns how many bytes the peer reported it needs to retrieve before its download is
-     * complete.
+     * Returns how many bytes the peer reported it needs to retrieve before its download is complete.
      *
      * @return
      */
@@ -200,8 +199,8 @@ public class TrackedPeer extends Peer
     /**
      * Returns a BEValue representing this peer for inclusion in an announce reply from the tracker.
      *
-     * The returned BEValue is a dictionary containing the peer ID (in its original byte-encoded
-     * form), the peer's IP and the peer's port.
+     * The returned BEValue is a dictionary containing the peer ID (in its original byte-encoded form), the peer's IP
+     * and the peer's port.
      *
      * @return
      *

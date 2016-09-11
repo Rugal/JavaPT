@@ -1,12 +1,13 @@
 package ga.rugal.jpt.core.service.impl;
 
+import com.google.common.collect.Sets;
 import ga.rugal.jpt.core.dao.AdminDao;
 import ga.rugal.jpt.core.entity.Admin;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.AdminService;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import ml.rugal.sshcommon.hibernate.Updater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,11 +34,10 @@ public class AdminServiceImpl implements AdminService
     @Override
     public Admin update(Admin bean)
     {
-
         Updater<Admin> updater = new Updater<>(bean);
         return dao.updateByUpdater(updater);
-        //-----These comments is here for testing transaction consistency.-------
-//        throw new RuntimeException();
+        //-----These comments is here for testing transactional consistency.-------
+        //        throw new RuntimeException();
     }
 
     /**
@@ -55,32 +55,29 @@ public class AdminServiceImpl implements AdminService
      */
     @Transactional(readOnly = true)
     @Override
-    public boolean meetAdminLevels(User user, Admin.Role... roles)
+    public boolean meetAllAdminLevels(User user, Admin.Role... roles)
     {
         List<Admin> admins = this.getDAO().getByUID(user);
         if (admins.isEmpty())
         {
             return false;
         }
-        //Deny access by default if without any required role
-        boolean value = false;
-        //---------------------
-        Set<Admin.Role> ownedLevel = new HashSet<>(5);
-        //Replace user.getAdminList as hibernate lazy loading problem
-        admins.stream().forEach((admin) ->
-            {
-                ownedLevel.add(admin.getRole());
-            });
+        //if contains all the roles
+        return admins.stream().map(admin -> admin.getRole()).collect(Collectors.toSet())
+            .containsAll(Sets.newHashSet(roles));
+    }
 
-        for (Admin.Role requiredRole : roles)
-        {
-            if (ownedLevel.contains(requiredRole))
-            {
-                //If match any role
-                value = true;
-                break;
-            }
-        }
-        return value;
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public boolean meetAnyAdminLevel(User user, Admin.Role... roles)
+    {
+        List<Admin> admins = this.getDAO().getByUID(user);
+        //flatten roles
+        Set<Admin.Role> set = admins.stream().map(admin -> admin.getRole()).collect(Collectors.toSet());
+        //do intersection
+        set.retainAll(Sets.newHashSet(roles));
+        return !set.isEmpty();//at least one role
     }
 }

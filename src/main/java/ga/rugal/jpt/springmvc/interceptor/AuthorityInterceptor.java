@@ -129,7 +129,7 @@ public class AuthorityInterceptor extends BaseInterceptor
         if (null != r)
         {
             User user = userService.getDAO().get(Integer.parseInt(id));
-            value = adminService.meetAdminLevels(user, r.value());
+            value = adminService.meetAnyAdminLevel(user, r.value());
         }
         return value;
     }

@@ -19,7 +19,7 @@ public interface SystemDefaultProperties
 
     final String TORRENT_PATH = "torrents";
 
-    final String TORRENT_SUBFIX = ".torrent";
+    final String TORRENT_SUFIX = ".torrent";
 
     final String BYTE_ENCODING = "UTF-8";
 

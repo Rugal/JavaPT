@@ -61,6 +61,8 @@ public interface CommonLogContent
     //Peer
     final String STALE_PEERS = "Collecting stale peer {}:";
 
+    final String STATUS_UPDATE = "Peer {} {} downloading of {}.";
+
     //Signin
     final String SIGNIN = "User [{0}] signin from host [{1}].";
 

@@ -38,10 +38,9 @@ import org.slf4j.LoggerFactory;
  * Tracked torrents are torrent for which we don't expect to have data files for.
  *
  * <p>
- * {@link TrackedTorrent} objects are used by the BitTorrent tracker to represent a torrent that is
- * announced by the tracker. As such, it is not expected to point to any valid local data like. It
- * also contains some additional information used by the tracker to keep track of which peers
- * exchange on it, etc.
+ * {@link TrackedTorrent} objects are used by the BitTorrent tracker to represent a torrent that is announced by the
+ * tracker. As such, it is not expected to point to any valid local data like. It also contains some additional
+ * information used by the tracker to keep track of which peers exchange on it, etc.
  * </p>
  *
  * @author mpetazzoni
@@ -65,8 +64,7 @@ public class TrackedTorrent extends Torrent
      *
      * @param torrent The meta-info byte data.
      *
-     * @throws IOException When the info dictionary can't be encoded and hashed back to create the
-     *                     torrent's SHA-1 hash.
+     * @throws IOException When the info dictionary can't be encoded and hashed back to create the torrent's SHA-1 hash.
      */
     public TrackedTorrent(byte[] torrent) throws IOException
     {
@@ -170,8 +168,8 @@ public class TrackedTorrent extends Torrent
      * Remove unfresh peers from this torrent.
      *
      * <p>
-     * Collect and remove all non-fresh peers from this torrent. This is usually called by the
-     * periodic peer collector of the BitTorrent tracker.
+     * Collect and remove all non-fresh peers from this torrent. This is usually called by the periodic peer collector
+     * of the BitTorrent tracker.
      * </p>
      */
     public void collectUnfreshPeers()
@@ -211,15 +209,11 @@ public class TrackedTorrent extends Torrent
     }
 
     /**
-     * Update this torrent's swarm from an announce event.
-     * <p>
-     * Either create new peer in tracked list or get it if already existed.
-     * <p>
-     * Then update the status of the tracked peer for future usage.
-     * <p>
-     * This will automatically create a new peer on a 'started' announce event, and remove the peer
-     * on a 'stopped' announce event.
-     * </p>
+     * Update this torrent's swarm from an update event. <BR>
+     * Either create new peer in tracked list or get it if already existed.<BR>
+     * Then update the status of the tracked peer for future usage.<BR>
+     * This will automatically create a new peer on a 'started' announce event, and remove the peer on a 'stopped'
+     * announce event.
      *
      * @param bean
      *
@@ -233,9 +227,16 @@ public class TrackedTorrent extends Torrent
         switch (bean.getEvent())
         {
             case STARTED:
-                peer = new TrackedPeer(this, bean.getIp(), bean.getPort(), bean.getBufferPeerID());
+                if (!this.containsKey(bean.getPeerID()))
+                {
+                    peer = new TrackedPeer(this, bean.getIp(), bean.getPort(), bean.getBufferPeerID());
+                    bean.setState(TrackedPeer.PeerState.STARTED);
+                    this.addPeer(peer);
+                    break;
+                }
+            case NONE:
+                peer = this.getPeer(bean.getPeerID());
                 bean.setState(TrackedPeer.PeerState.STARTED);
-                this.addPeer(peer);
                 break;
             case STOPPED:
                 peer = this.removePeer(bean.getPeerID());
@@ -245,16 +246,11 @@ public class TrackedTorrent extends Torrent
                 peer = this.getPeer(bean.getPeerID());
                 bean.setState(TrackedPeer.PeerState.COMPLETED);
                 break;
-            case NONE:
-                peer = this.getPeer(bean.getPeerID());
-                bean.setState(TrackedPeer.PeerState.STARTED);
-                break;
             default:
                 throw new IllegalArgumentException(CommonMessageContent.BAD_EVENT);
         }
-        LOG.debug(MessageFormat.format(CommonLogContent.UPDATE_CONTENT,
-                                       bean.getUser().getUid(), bean.getInfoHash(), bean.getDownloaded(),
-                                       bean.getUploaded(), bean.getLeft(), bean.getIp()));
+        LOG.debug(MessageFormat.format(CommonLogContent.UPDATE_CONTENT, bean.getUser().getUid(), bean.getInfoHash(),
+                                       bean.getDownloaded(), bean.getUploaded(), bean.getLeft(), bean.getIp()));
         peer.update(bean);
         return peer;
     }
@@ -262,8 +258,7 @@ public class TrackedTorrent extends Torrent
     /**
      * Get a list of peers we can return in an announce response for this torrent.
      *
-     * @param peer The peer making the request, so we can exclude it from the list of returned
-     *             peers.
+     * @param peer The peer making the request, so we can exclude it from the list of returned peers.
      *
      * @return A list of peers we can include in an announce response.
      */

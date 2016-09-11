@@ -3,6 +3,7 @@ package ga.rugal.jpt.core.service.impl;
 import ga.rugal.DBTestBase;
 import ga.rugal.jpt.common.tracker.common.TrackerUpdateBean;
 import ga.rugal.jpt.core.dao.ClientDao;
+import ga.rugal.jpt.core.dao.LevelDao;
 import ga.rugal.jpt.core.dao.PostDao;
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.entity.Announce;
@@ -10,12 +11,11 @@ import ga.rugal.jpt.core.entity.Client;
 import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.service.ClientAnnounceService;
+import ga.rugal.jpt.core.service.AnnounceService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ga.rugal.jpt.core.dao.LevelDao;
 
 /**
  *
@@ -37,7 +37,7 @@ public class AnnounceServiceImplTest extends DBTestBase
     private ClientDao clientDao;
 
     @Autowired
-    private ClientAnnounceService clientAnnounceService;
+    private AnnounceService announceService;
 
     @Autowired
     private Level level;
@@ -55,7 +55,7 @@ public class AnnounceServiceImplTest extends DBTestBase
     private Client client;
 
     @Autowired
-    private Announce clientAnnounce;
+    private Announce announce;
 
     public AnnounceServiceImplTest()
     {
@@ -69,14 +69,14 @@ public class AnnounceServiceImplTest extends DBTestBase
         levelDao.save(level);
         userDao.save(user);
         postDao.save(post);
-        clientAnnounceService.getDAO().save(clientAnnounce);
+        announceService.getDAO().save(announce);
     }
 
     @After
     public void tearDown()
     {
         System.out.println("tearDown");
-        clientAnnounceService.getDAO().delete(clientAnnounce);
+        announceService.getDAO().delete(announce);
         postDao.delete(post);
         userDao.delete(user);
         levelDao.delete(level);
@@ -91,12 +91,12 @@ public class AnnounceServiceImplTest extends DBTestBase
         User before = userDao.get(user.getUid());
         System.out.println(before.getDownload());
         System.out.println(before.getUpload());
-        Announce newer = clientAnnounceService.announce(bean);
+        Announce newer = announceService.announce(bean);
 
         User after = userDao.get(user.getUid());
         System.out.println(after.getDownload());
         System.out.println(after.getUpload());
 
-        clientAnnounceService.getDAO().delete(newer);
+        announceService.getDAO().delete(newer);
     }
 }

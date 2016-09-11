@@ -8,7 +8,7 @@ import ga.rugal.jpt.common.tracker.bcodec.BEncoder;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.core.entity.Post;
-import ga.rugal.jpt.core.entity.PostTag;
+import ga.rugal.jpt.core.entity.Tagging;
 import ga.rugal.jpt.core.entity.Tag;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
@@ -419,7 +419,7 @@ public class PostAction
             return;
         }
         //----------------Persist------------------
-        PostTag bean = new PostTag();
+        Tagging bean = new Tagging();
         bean.setPost(dbPost);
         bean.setTag(dbTag);
         taggingService.getDAO().save(bean);
@@ -457,7 +457,7 @@ public class PostAction
             return;
         }
         //----------------Delete------------------
-        PostTag bean = taggingService.getDAO().get(dbPost, dbTag);
+        Tagging bean = taggingService.getDAO().get(dbPost, dbTag);
         if (null == bean)
         {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);

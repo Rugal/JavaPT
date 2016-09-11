@@ -42,7 +42,7 @@ public class TagAction
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
-    @Role(Admin.Role.ADMIN)
+    @Role(Admin.Role.ADMINISTRATOR)
     public Object save(@RequestBody Tag bean, HttpServletResponse response)
     {
         tagService.getDAO().save(bean);
@@ -62,7 +62,7 @@ public class TagAction
      */
     @ResponseBody
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    @Role(Admin.Role.ADMIN)
+    @Role(Admin.Role.ADMINISTRATOR)
     public void update(@PathVariable("id") Integer id, @RequestParam(value = "name") String name, HttpServletResponse response)
     {
         Tag dbTag = tagService.getDAO().get(id);
@@ -88,7 +88,7 @@ public class TagAction
      */
     @ResponseBody
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    @Role(Admin.Role.ADMIN)
+    @Role(Admin.Role.ADMINISTRATOR)
     public void delete(@PathVariable("id") Integer id, HttpServletResponse response)
     {
         Tag dbTag = tagService.getDAO().get(id);

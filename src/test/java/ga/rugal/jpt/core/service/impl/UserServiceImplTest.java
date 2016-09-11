@@ -4,7 +4,9 @@ import ga.rugal.DBTestBase;
 import ga.rugal.jpt.core.entity.Announce;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author Rugal Bernstein
  */
+@Slf4j
 public class UserServiceImplTest extends DBTestBase
 {
 
@@ -22,6 +25,7 @@ public class UserServiceImplTest extends DBTestBase
     @Autowired
     private User user;
 
+
     public UserServiceImplTest()
     {
     }
@@ -29,29 +33,38 @@ public class UserServiceImplTest extends DBTestBase
     @Before
     public void setUp()
     {
-        System.out.println("setUp");
+        LOG.info("setUp");
         userService.getDAO().save(user);
+
     }
 
     @After
     public void tearDown()
     {
-        System.out.println("tearDown");
+        LOG.info("tearDown");
         userService.getDAO().delete(user);
     }
 
     @Test
-    public void testAnnounce()
+    public void update()
     {
-        System.out.println("clientAnnounce");
-        User bean = user;
-        System.out.println(bean.getDownload());
-        System.out.println(bean.getUpload());
+        long download = user.getDownload(), upload = user.getUpload();
+        user.setDownload(-1l);
+        user.setUpload(-1l);
+        userService.update(user);
+        Assert.assertNotSame(download, user.getDownload());
+        Assert.assertNotSame(upload, user.getUpload());
+    }
+
+    @Test
+    public void announce()
+    {
         Announce announce = new Announce();
         announce.setDownload(100l);
         announce.setUpload(100l);
-        User result = userService.announce(bean, announce);
-        System.out.println(result.getDownload());
-        System.out.println(result.getUpload());
+        long download = user.getDownload(), upload = user.getUpload();
+        userService.announce(user, announce);
+        Assert.assertNotSame(download, user.getDownload());
+        Assert.assertNotSame(upload, user.getUpload());
     }
 }

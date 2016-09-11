@@ -49,7 +49,7 @@ public class TrackerImpl implements Tracker
         /*
          If an event other than 'started' is specified and we also haven't
          seen the peer on this torrent before, something went wrong. A
-         previous 'started' announce request should have been made by the
+         previous 'started' update request should have been made by the
          client that would have had us register that peer on the torrent this
          request refers to.
          */
@@ -62,17 +62,17 @@ public class TrackerImpl implements Tracker
         }
         /*
          When no event is specified, it's a periodic update while the client
-         is operating. If we don't have a peer for this announce, it means
+         is operating. If we don't have a peer for this update, it means
          the tracker restarted while the client was running. Consider this
-         announce request as a 'started' event.
+         update request as a 'started' event.
          */
         if ((null == bean.getEvent() || RequestEvent.NONE == bean.getEvent())
-            && torrent.containsKey(bean.getPeerID()))
+            && !torrent.containsKey(bean.getPeerID()))
         {
             bean.setEvent(RequestEvent.STARTED);
         }
         /*
-         Update the torrent according to the announce event
+         Update the torrent according to the torrontRegister event
          Going to update a peer of a swarm of a torrent
          Must update tracker first then database.
          As state of peer might changes in peer update
@@ -85,7 +85,7 @@ public class TrackerImpl implements Tracker
      * {@inheritDoc }
      */
     @Override
-    public synchronized TrackedTorrent announce(TrackedTorrent torrent)
+    public synchronized TrackedTorrent torrontRegister(TrackedTorrent torrent)
     {
         TrackedTorrent existing = torrents.get(torrent.getHexInfoHash().toUpperCase());
         if (existing != null)

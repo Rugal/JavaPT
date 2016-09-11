@@ -9,7 +9,7 @@ import ga.rugal.jpt.core.entity.Client;
 import ga.rugal.jpt.core.entity.Invitation;
 import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
-import ga.rugal.jpt.core.entity.PostTag;
+import ga.rugal.jpt.core.entity.Tagging;
 import ga.rugal.jpt.core.entity.Tag;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
@@ -58,14 +58,16 @@ public class TestApplicationContext
         bean.setRegisterTime(System.currentTimeMillis());
         bean.setStatus(User.Status.VALID);
         bean.setUsername("tenjin");
+        bean.setDownload(0l);
+        bean.setUpload(0l);
         return bean;
     }
 
     @Autowired
     @Bean
-    public PostTag postTags(Post post, Tag tag)
+    public Tagging postTags(Post post, Tag tag)
     {
-        PostTag postTags = new PostTag();
+        Tagging postTags = new Tagging();
         postTags.setPost(post);
         postTags.setTag(tag);
         return postTags;
@@ -143,6 +145,7 @@ public class TestApplicationContext
     public TrackerUpdateBean trackerUpdateBean(User user, Post post, Client client)
     {
         TrackerUpdateBean bean = new TrackerUpdateBean();
+        bean.setIp("127.0.0.1");
         bean.setClient(client);
         bean.setDownloaded(99l);
         bean.setUploaded(101l);
@@ -151,18 +154,30 @@ public class TestApplicationContext
         bean.setInfoHash(post.getHash());
         bean.setPost(post);
         bean.setUser(user);
-
         return bean;
     }
 
+    /**
+     * The test torrent object instantiate from the test torrent file.
+     *
+     * @param testTorrentFile
+     *
+     * @return
+     *
+     * @throws IOException
+     */
     @Bean
     @Autowired
     public TrackedTorrent torrent(File testTorrentFile) throws IOException
     {
-        TrackedTorrent torrent = TrackedTorrent.load(testTorrentFile);
-        return torrent;
+        return TrackedTorrent.load(testTorrentFile);
     }
 
+    /**
+     * The torrent file of which name starts with Junit. This torrent is not persisted in DB yet, just for testing.
+     *
+     * @return
+     */
     @Bean
     public File testTorrentFile()
     {

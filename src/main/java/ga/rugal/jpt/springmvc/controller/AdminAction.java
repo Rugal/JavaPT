@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = "/admin")
 @Role(value =
 {
-    Admin.Role.ADMIN, Admin.Role.SUPER
+    Admin.Role.ADMINISTRATOR, Admin.Role.SUPER
 })
 public class AdminAction
 {

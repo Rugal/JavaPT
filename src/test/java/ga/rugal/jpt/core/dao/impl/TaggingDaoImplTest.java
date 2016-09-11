@@ -8,7 +8,7 @@ import ga.rugal.jpt.core.dao.TaggingDao;
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
-import ga.rugal.jpt.core.entity.PostTag;
+import ga.rugal.jpt.core.entity.Tagging;
 import ga.rugal.jpt.core.entity.Tag;
 import ga.rugal.jpt.core.entity.User;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +56,7 @@ public class TaggingDaoImplTest extends DBTestBase
     private Tag tag;
 
     @Autowired
-    private PostTag postTags;
+    private Tagging postTags;
 
     public TaggingDaoImplTest()
     {
@@ -96,8 +96,8 @@ public class TaggingDaoImplTest extends DBTestBase
     public void get()
     {
         Integer id = postTags.getPtid();
-        PostTag expResult = postTags;
-        PostTag result = postTagsDao.get(id);
+        Tagging expResult = postTags;
+        Tagging result = postTagsDao.get(id);
         assertEquals(expResult, result);
     }
 }

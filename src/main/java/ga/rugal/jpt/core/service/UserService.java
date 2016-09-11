@@ -13,5 +13,14 @@ public interface UserService extends BaseService<UserDao>
 
     User update(User bean);
 
+    /**
+     * Announce user usage.<BR>
+     * Update user upload, downloading, left etc.,
+     *
+     * @param bean
+     * @param announce
+     *
+     * @return
+     */
     User announce(User bean, Announce announce);
 }

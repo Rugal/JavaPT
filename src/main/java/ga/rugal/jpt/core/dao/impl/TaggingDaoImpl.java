@@ -3,7 +3,7 @@ package ga.rugal.jpt.core.dao.impl;
 import ga.rugal.jpt.common.AliasToBeanNestedResultTransformer;
 import ga.rugal.jpt.core.dao.TaggingDao;
 import ga.rugal.jpt.core.entity.Post;
-import ga.rugal.jpt.core.entity.PostTag;
+import ga.rugal.jpt.core.entity.Tagging;
 import ga.rugal.jpt.core.entity.Tag;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -20,23 +20,23 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Slf4j
 @Repository
-public class TaggingDaoImpl extends HibernateBaseDao<PostTag, Integer> implements TaggingDao
+public class TaggingDaoImpl extends HibernateBaseDao<Tagging, Integer> implements TaggingDao
 {
 
     @Override
-    protected Class<PostTag> getEntityClass()
+    protected Class<Tagging> getEntityClass()
     {
-        return PostTag.class;
+        return Tagging.class;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public PostTag get(Post post, Tag tag)
+    public Tagging get(Post post, Tag tag)
     {
         Criteria criteria = createCriteria();
         criteria.add(Restrictions.eq("tag", tag));
         criteria.add(Restrictions.eq("post", post));
-        return (PostTag) criteria.uniqueResult();
+        return (Tagging) criteria.uniqueResult();
     }
 
     @Override

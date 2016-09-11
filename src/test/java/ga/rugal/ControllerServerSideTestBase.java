@@ -25,7 +25,7 @@ public abstract class ControllerServerSideTestBase extends JUnitSpringTestBase
 {
 
     /**
-     * This is a request handler used to mapping all request into handle ACTION class.
+     * This is a request handler used to map all request into handle ACTION class.
      */
     @Autowired
     public RequestMappingHandlerAdapter handlerAdapter;

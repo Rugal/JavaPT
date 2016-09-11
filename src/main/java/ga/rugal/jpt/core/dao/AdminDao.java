@@ -16,8 +16,15 @@ public interface AdminDao
 
     Admin updateByUpdater(Updater<Admin> updater);
 
+    /**
+     * Get the list of admin roles of a user.
+     *
+     * @param user The user bean.
+       *
+     * @return
+     */
     @Transactional(readOnly = true)
-    List<Admin> getByUID(User uid);
+    List<Admin> getByUID(User user);
 
     Admin delete(Admin bean);
 
