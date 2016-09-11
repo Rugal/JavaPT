@@ -102,6 +102,18 @@ public class User extends BaseObject<User>
         return User.class;
     }
 
+    /**
+     * Update user credit with the given DIFF.
+     *
+     * @param diff This number could be both positive and negative
+     *
+     * @return The new credit
+     */
+    public Integer updateCredit(Integer diff)
+    {
+        return this.credit + diff;
+    }
+
     public enum Status
     {
 

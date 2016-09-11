@@ -54,10 +54,4 @@ public class InvitationDaoImplTest extends DBTestBase
         Invitation bean = invitationDao.get(invitation.getId());
         Assert.assertEquals(invitation, bean);
     }
-
-    @Test
-    public void generate()
-    {
-        Assert.assertEquals(15, invitationDao.generate().length());
-    }
 }

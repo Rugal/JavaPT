@@ -15,6 +15,10 @@ public interface SystemDefaultProperties
 
     final String ID = "id";
 
+    final int INVITATION_CODE_LENGTH = 15;
+
+    final int INVITATION_CREDIT_NEED = 100;
+
     final String CREDENTIAL = "credential";
 
     final String TORRENT_PATH = "torrents";
