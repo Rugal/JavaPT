@@ -20,4 +20,11 @@ public interface InvitationDao
     Pagination getPage(int pageNo, int pageSize);
 
     Invitation get(String id);
+
+    /**
+     * Just creates the invitation code with BCrypt algorithm, length is 15.
+     *
+     * @return
+     */
+    String generate();
 }

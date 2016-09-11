@@ -66,13 +66,10 @@ public class AnnounceServiceImpl implements AnnounceService
         Announce last = this.dao.findLastAnnounce(bean.getUser(), bean.getPost());
         //log the most recent Client Announce
         Announce current = this.save(bean);
-        //compute the difference
+        //compute the difference, consider if this is the first time announcing
         Announce diff = new Announce();
-        if (null != last)
-        {
-            diff.setDownload(current.getDownload() - last.getDownload());
-            diff.setUpload(current.getUpload() - last.getUpload());
-        }
+        diff.setDownload(current.getDownload() - (null != last ? last.getDownload() : 0l));
+        diff.setUpload(current.getUpload() - (null != last ? last.getUpload() : 0l));
         //update user information
         userService.announce(bean.getUser(), diff);
         return current;

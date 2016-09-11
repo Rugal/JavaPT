@@ -18,7 +18,7 @@ public interface UserService extends BaseService<UserDao>
      * Update user upload, downloading, left etc.,
      *
      * @param bean
-     * @param announce
+     * @param announce This is announce is the difference between current and last announce.
      *
      * @return
      */
