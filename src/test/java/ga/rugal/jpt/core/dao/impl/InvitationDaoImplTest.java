@@ -54,4 +54,23 @@ public class InvitationDaoImplTest extends DBTestBase
         Invitation bean = invitationDao.get(invitation.getId());
         Assert.assertEquals(invitation, bean);
     }
+
+    @Test
+    public void isUsable_true()
+    {
+        Assert.assertTrue(invitationDao.isUsable(user, invitation.getId()));
+    }
+
+    @Test
+    public void isUsable_false()
+    {
+        Assert.assertTrue(invitationDao.isUsable(user, ""));
+    }
+
+    @Test
+    public void getUsableCode()
+    {
+        Assert.assertFalse(invitationDao.getUsableCode(user).isEmpty());
+    }
+
 }

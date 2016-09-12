@@ -25,7 +25,6 @@ public class UserServiceImplTest extends DBTestBase
     @Autowired
     private User user;
 
-
     public UserServiceImplTest()
     {
     }
@@ -43,17 +42,6 @@ public class UserServiceImplTest extends DBTestBase
     {
         LOG.info("tearDown");
         userService.getDAO().delete(user);
-    }
-
-    @Test
-    public void update()
-    {
-        long download = user.getDownload(), upload = user.getUpload();
-        user.setDownload(-1l);
-        user.setUpload(-1l);
-        userService.update(user);
-        Assert.assertNotSame(download, user.getDownload());
-        Assert.assertNotSame(upload, user.getUpload());
     }
 
     @Test

@@ -33,7 +33,7 @@ public class TrackerResponseServiceImplTest extends DBTestBase
     }
 
     @Test
-    public void writeResponseBuffer_ok() throws UnsupportedEncodingException, IOException
+    public void writeResponseBuffer() throws UnsupportedEncodingException, IOException
     {
         trackerResponseService.writeResponseBuffer(response, byteBuffer);
         Assert.assertEquals(SAMPLE, response.getContentAsString());

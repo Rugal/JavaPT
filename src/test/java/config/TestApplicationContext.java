@@ -9,8 +9,8 @@ import ga.rugal.jpt.core.entity.Client;
 import ga.rugal.jpt.core.entity.Invitation;
 import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
-import ga.rugal.jpt.core.entity.Tagging;
 import ga.rugal.jpt.core.entity.Tag;
+import ga.rugal.jpt.core.entity.Tagging;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
 import java.io.File;
@@ -60,6 +60,7 @@ public class TestApplicationContext
         bean.setUsername("tenjin");
         bean.setDownload(0l);
         bean.setUpload(0l);
+        bean.setCredit(SystemDefaultProperties.INVITATION_CREDIT_NEED);
         return bean;
     }
 

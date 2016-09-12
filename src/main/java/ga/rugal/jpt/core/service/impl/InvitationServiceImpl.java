@@ -56,6 +56,10 @@ public class InvitationServiceImpl implements InvitationService
     @Override
     public Invitation generate(User invitor)
     {
+        if (invitor.getCredit() < SystemDefaultProperties.INVITATION_CREDIT_NEED)
+        {
+            return null;
+        }
         //create invitation object
         Invitation inv = new Invitation();
         inv.setId(this.generateCode());

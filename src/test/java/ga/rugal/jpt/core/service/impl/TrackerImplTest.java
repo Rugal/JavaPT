@@ -87,11 +87,5 @@ public class TrackerImplTest extends DBTestBase
         Assert.assertEquals(bean.getDownloaded(), tp.getDownloaded());
         Assert.assertEquals(bean.getUploaded(), tp.getUploaded());
         Assert.assertEquals(bean.getLeft(), tp.getLeft());
-
-        //second update should on top of the first one
-        tp = tracker.update(bean);
-        Assert.assertEquals(bean.getDownloaded(), tp.getDownloaded());
-        Assert.assertEquals(bean.getUploaded(), tp.getUploaded());
-        Assert.assertEquals(bean.getLeft(), tp.getLeft());
     }
 }
