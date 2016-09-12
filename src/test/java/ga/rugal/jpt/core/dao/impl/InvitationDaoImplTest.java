@@ -64,7 +64,7 @@ public class InvitationDaoImplTest extends DBTestBase
     @Test
     public void isUsable_false()
     {
-        Assert.assertTrue(invitationDao.isUsable(user, ""));
+        Assert.assertFalse(invitationDao.isUsable(user, ""));
     }
 
     @Test
