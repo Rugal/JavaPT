@@ -408,9 +408,11 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.7.7.201606060606</version>
                 <configuration>
+                    <!-- Sets the output directory for the code coverage report. -->
+                    <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
                     <excludes>
                         <exclude>config/*.class</exclude>
-                        <exclude>**/common/*/*.class</exclude>
+                        <exclude>**/common/**/*.class</exclude>
                         <exclude>**/entity/*.class</exclude>
                         <exclude>**/annotation/*.class</exclude>
                         <exclude>**/interceptor/*.class</exclude>
