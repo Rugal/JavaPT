@@ -13,6 +13,7 @@ import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MvcResult;
@@ -27,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author Rugal Bernstein
  */
+@Ignore
 @Slf4j
 public class TagActionClientSideTest extends ControllerClientSideTestBase
 {

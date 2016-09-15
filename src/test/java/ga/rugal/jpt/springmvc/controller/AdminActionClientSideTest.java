@@ -25,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author Rugal Bernstein
  */
+@Ignore
 public class AdminActionClientSideTest extends ControllerClientSideTestBase
 {
     @Autowired
