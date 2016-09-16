@@ -24,6 +24,13 @@ public interface ThreadDao
 
     Thread updateByUpdater(Updater<Thread> updater);
 
+    /**
+     * Get a list of threads under a specific post.
+     *
+     * @param post
+     *
+     * @return
+     */
     @Transactional(readOnly = true)
     List<Thread> getByPID(Post post);
 }

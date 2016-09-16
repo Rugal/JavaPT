@@ -8,7 +8,6 @@ import ga.rugal.jpt.core.service.AdminService;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import ml.rugal.sshcommon.hibernate.Updater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,15 +30,6 @@ public class AdminServiceImpl implements AdminService
         return dao;
     }
 
-    @Override
-    public Admin update(Admin bean)
-    {
-        Updater<Admin> updater = new Updater<>(bean);
-        return dao.updateByUpdater(updater);
-        //-----These comments is here for testing transactional consistency.-------
-        //        throw new RuntimeException();
-    }
-
     /**
      * {@inheritDoc }
      */
@@ -58,10 +48,6 @@ public class AdminServiceImpl implements AdminService
     public boolean meetAllAdminLevels(User user, Admin.Role... roles)
     {
         List<Admin> admins = this.getDAO().getByUID(user);
-        if (admins.isEmpty())
-        {
-            return false;
-        }
         //if contains all the roles
         return admins.stream().map(admin -> admin.getRole()).collect(Collectors.toSet())
             .containsAll(Sets.newHashSet(roles));

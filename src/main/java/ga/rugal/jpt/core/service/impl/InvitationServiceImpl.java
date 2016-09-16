@@ -87,11 +87,4 @@ public class InvitationServiceImpl implements InvitationService
         updater.include("invitee");
         return dao.updateByUpdater(updater);
     }
-
-    @Override
-    public Invitation update(Invitation bean)
-    {
-        Updater<Invitation> updater = new Updater<>(bean);
-        return dao.updateByUpdater(updater);
-    }
 }

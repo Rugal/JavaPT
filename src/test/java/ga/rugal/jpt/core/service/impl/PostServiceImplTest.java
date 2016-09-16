@@ -74,4 +74,15 @@ public class PostServiceImplTest extends DBTestBase
         Assert.assertNotNull(post.getBencode());
         Assert.assertArrayEquals(torrent.getEncoded(), post.getBencode());
     }
+
+    @Test
+    public void update() throws IOException
+    {
+        Post db = postService.getDAO().get(post.getPid());
+        Integer size = 321123;
+        db.setSize(size);
+        postService.update(db);
+        db = postService.getDAO().get(post.getPid());
+        Assert.assertEquals(size, db.getSize());
+    }
 }

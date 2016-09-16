@@ -9,7 +9,6 @@ import ga.rugal.jpt.core.service.AnnounceService;
 import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import ml.rugal.sshcommon.hibernate.Updater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,16 +43,6 @@ public class AnnounceServiceImpl implements AnnounceService
         announce.setClient(bean.getClient());
         announce.setPost(postService.getDAO().getByInfohash(bean.getInfoHash()));
         return dao.save(announce);
-    }
-
-    @Override
-    public Announce update(Announce bean)
-    {
-
-        Updater<Announce> updater = new Updater<>(bean);
-        return dao.updateByUpdater(updater);
-        //-----These comments is here for testing transaction consistency.-------
-//        throw new RuntimeException();
     }
 
     /**

@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
- * @author Administrator
+ * @author Rugal Bernstein
  */
 @Slf4j
 public class AdminServiceImplTest extends DBTestBase

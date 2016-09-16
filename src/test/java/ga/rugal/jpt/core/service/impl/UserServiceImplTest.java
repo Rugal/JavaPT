@@ -55,4 +55,15 @@ public class UserServiceImplTest extends DBTestBase
         Assert.assertNotSame(download, user.getDownload());
         Assert.assertNotSame(upload, user.getUpload());
     }
+
+    @Test
+    public void update()
+    {
+        Integer credit = 32123;
+        User db = userService.getDAO().get(user.getUid());
+        db.setCredit(credit);
+        userService.update(db);
+        db = userService.getDAO().get(user.getUid());
+        Assert.assertEquals(credit, db.getCredit());
+    }
 }

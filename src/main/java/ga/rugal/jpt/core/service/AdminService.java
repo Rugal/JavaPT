@@ -11,9 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface AdminService extends BaseService<AdminDao>
 {
-
-    Admin update(Admin bean);
-
     /**
      * Tell if the user is an {@link ga.rugal.jpt.core.entity.Admin}. User is considered as an admin if and only if it
      * has at least one {@code Admin.Role}.

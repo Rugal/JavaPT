@@ -9,6 +9,7 @@ import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
@@ -79,6 +80,14 @@ public class ThreadDaoImplTest extends DBTestBase
     {
         Pagination result = threadDao.getPage(post, 1, 1);
         Assert.assertEquals(1, result.getList().size());
+    }
+
+    @Test
+    public void getByPID()
+    {
+        List<Thread> result = threadDao.getByPID(post);
+        Assert.assertFalse(result.isEmpty());
+        Assert.assertEquals(thread, result.get(0));
     }
 
     @Test

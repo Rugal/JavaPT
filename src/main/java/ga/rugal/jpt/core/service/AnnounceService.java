@@ -13,9 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface AnnounceService extends BaseService<AnnounceDao>
 {
-
-    Announce update(Announce bean);
-
     /**
      * Announce a update for user.
      *

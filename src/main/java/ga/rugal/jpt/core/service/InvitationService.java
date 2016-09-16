@@ -10,9 +10,6 @@ import ga.rugal.jpt.core.entity.User;
  */
 public interface InvitationService extends BaseService<InvitationDao>
 {
-
-    Invitation update(Invitation bean);
-
     /**
      * Generate invitation code and generate it for the invitor.<BR>
      * Will update user credit in the mean time. The credit needed is
@@ -35,5 +32,4 @@ public interface InvitationService extends BaseService<InvitationDao>
      * @return The invitation code used in this process.
      */
     Invitation consume(User invitee, Invitation invitation);
-
 }

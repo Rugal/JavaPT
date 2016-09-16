@@ -97,4 +97,18 @@ public class AnnounceServiceImplTest extends DBTestBase
         Assert.assertNotSame(before.getDownload(), after.getDownload());
         Assert.assertNotSame(before.getUpload(), after.getUpload());
     }
+
+    @Test
+    public void findLastAnnounceByTorrent()
+    {
+        Announce last = announceService.findLastAnnounceByTorrent(post);
+        Assert.assertEquals(announce, last);
+    }
+
+    @Test
+    public void findLastAnnounceByUser()
+    {
+        Announce last = announceService.findLastAnnounceByUser(user);
+        Assert.assertEquals(announce, last);
+    }
 }
