@@ -8,8 +8,8 @@ import ga.rugal.jpt.common.tracker.bcodec.BEncoder;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.core.entity.Post;
-import ga.rugal.jpt.core.entity.Tagging;
 import ga.rugal.jpt.core.entity.Tag;
+import ga.rugal.jpt.core.entity.Tagging;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.PostService;
@@ -61,7 +61,8 @@ public class PostAction
     private ThreadService threadService;
 
     /**
-     * GET a page of posts from database.
+     * GET a page of posts from database.<BR>
+     * To reduce the transmission data length, this method will not load fields like 'content'.
      *
      * @param name
      * @param pageNo
@@ -73,12 +74,12 @@ public class PostAction
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET)
     public Object getPage(@RequestParam(name = "name", required = false) String name,
-                          @RequestParam(name = "pageNo", required = false, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
-                          @RequestParam(name = "pageSize", required = false, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize,
+                          @RequestParam(name = "pageNo", defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
+                          @RequestParam(name = "pageSize", defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize,
                           //tag list
                           HttpServletResponse response)
     {
-        //TODO ignore content of each post so as to reduce data transmission
+        response.setStatus(HttpServletResponse.SC_OK);
         return postService.getDAO().getPage(pageNo, pageSize);
     }
 

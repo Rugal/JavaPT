@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -37,7 +36,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author Rugal Bernstein
  */
-@Ignore
 @Slf4j
 public class PostActionClientSideTest extends ControllerClientSideTestBase
 {
@@ -147,6 +145,18 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     }
 
     @Test
+    public void getPage_200() throws Exception
+    {
+        this.mockMvc.perform(get("/post")
+            .param("name", "")
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+    @Test
     public void get_404() throws Exception
     {
         this.mockMvc.perform(get("/post/0")
@@ -175,7 +185,6 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     public void uploadMetainfo_406() throws Exception
     {
         Assert.assertNotNull(post.getPid());
-        Assert.assertNull(post.getBencode());
         InputStream stream = new ByteArrayInputStream(new byte[1]);
         MockMultipartFile mmf = new MockMultipartFile("file", testTorrentFile.getName(),
                                                       MediaType.MULTIPART_FORM_DATA_VALUE,
@@ -192,7 +201,6 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     public void uploadMetainfo_404() throws Exception
     {
         Assert.assertNotNull(post.getPid());
-        Assert.assertNull(post.getBencode());
         MockMultipartFile mmf = new MockMultipartFile("file", testTorrentFile.getName(),
                                                       MediaType.MULTIPART_FORM_DATA_VALUE,
                                                       new FileInputStream(testTorrentFile));
@@ -208,7 +216,6 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     public void uploadMetainfo_202() throws Exception
     {
         Assert.assertNotNull(post.getPid());
-        Assert.assertNull(post.getBencode());
         MockMultipartFile mmf = new MockMultipartFile("file", testTorrentFile.getName(),
                                                       MediaType.MULTIPART_FORM_DATA_VALUE,
                                                       new FileInputStream(testTorrentFile));
@@ -230,7 +237,6 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
             .accept(SystemDefaultProperties.BITTORRENT_MIME, MediaType.APPLICATION_JSON_VALUE))
-            .andDo(print())
             .andExpect(status().isOk())
             .andReturn();
 
