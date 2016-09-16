@@ -8,14 +8,14 @@ import ga.rugal.jpt.core.dao.TaggingDao;
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
-import ga.rugal.jpt.core.entity.Tagging;
 import ga.rugal.jpt.core.entity.Tag;
+import ga.rugal.jpt.core.entity.Tagging;
 import ga.rugal.jpt.core.entity.User;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
 import org.junit.Assert;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,7 @@ public class TaggingDaoImplTest extends DBTestBase
     private Tag tag;
 
     @Autowired
-    private Tagging postTags;
+    private Tagging tagging;
 
     public TaggingDaoImplTest()
     {
@@ -70,7 +70,7 @@ public class TaggingDaoImplTest extends DBTestBase
         userDao.save(user);
         tagDao.save(tag);
         postDao.save(post);
-        postTagsDao.save(postTags);
+        postTagsDao.save(tagging);
     }
 
     @After
@@ -78,7 +78,7 @@ public class TaggingDaoImplTest extends DBTestBase
     {
         LOG.info("tearDown");
         //order is important
-        postTagsDao.delete(postTags);
+        postTagsDao.delete(tagging);
         postDao.delete(post);
         tagDao.delete(tag);
         userDao.delete(user);
@@ -93,11 +93,26 @@ public class TaggingDaoImplTest extends DBTestBase
     }
 
     @Test
+    public void get_pk()
+    {
+        Integer id = tagging.getPtid();
+        Tagging expResult = tagging;
+        Tagging result = postTagsDao.get(id);
+        Assert.assertEquals(expResult, result);
+    }
+
+    @Test
     public void get()
     {
-        Integer id = postTags.getPtid();
-        Tagging expResult = postTags;
-        Tagging result = postTagsDao.get(id);
-        assertEquals(expResult, result);
+        Tagging expResult = tagging;
+        Tagging result = postTagsDao.get(post, tag);
+        Assert.assertEquals(expResult, result);
+    }
+
+    @Test
+    public void getTags()
+    {
+        List<Tag> result = postTagsDao.getTags(post);
+        Assert.assertFalse(result.isEmpty());
     }
 }

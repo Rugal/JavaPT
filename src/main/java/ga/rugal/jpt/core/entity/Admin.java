@@ -91,7 +91,7 @@ public class Admin extends BaseObject<Admin>
     @Override
     public int hashCode()
     {
-        int hash = 7;
+        int hash = 7 + super.hashCode();
         return 37 * hash + (aid != null ? aid.hashCode() : 0);
     }
 }
