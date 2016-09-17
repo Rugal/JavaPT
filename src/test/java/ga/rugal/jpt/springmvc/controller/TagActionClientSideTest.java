@@ -59,6 +59,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
     {
         LOG.info("setUp");
         userService.getDAO().save(user);
+        admin.setRole(Admin.Role.ADMINISTRATOR);
         adminDao.save(admin);
         MvcResult result = saveTag();
         tag.setTid(Integer.parseInt(result.getResponse().getContentAsString()));

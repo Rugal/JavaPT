@@ -41,6 +41,7 @@ public class AdminServiceImplTest extends DBTestBase
     {
         LOG.info("setUp");
         userDao.save(user);
+        admin.setRole(Admin.Role.SUPER);
         adminService.getDAO().save(admin);
     }
 
