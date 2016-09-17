@@ -111,9 +111,12 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     }
 
     @Test
-    public void save() throws Exception
+    public void delete_404() throws Exception
     {
-        Assert.assertNotNull(post.getPid());
+        this.mockMvc.perform(post("/post/0")
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword()))
+            .andExpect(status().isNotFound());
     }
 
     @Test

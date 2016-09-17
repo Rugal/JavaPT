@@ -7,6 +7,7 @@ import ga.rugal.jpt.core.service.TagService;
 import ga.rugal.jpt.springmvc.annotation.Role;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import ml.rugal.sshcommon.page.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -131,7 +132,7 @@ public class TagAction
      * @param pageSize
      * @param response
      *
-     * @return
+     * @return null object if no record found; otherwise return the page object.
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET)
@@ -141,6 +142,12 @@ public class TagAction
                              HttpServletResponse response)
     {
         response.setStatus(HttpServletResponse.SC_OK);
-        return tagService.getDAO().findByName(partialName, pageNo, pageSize);
+        Pagination page = tagService.getDAO().findByName(partialName, pageNo, pageSize);
+        if (page.getTotalCount() <= 0)
+        {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            page = null;
+        }
+        return page;
     }
 }

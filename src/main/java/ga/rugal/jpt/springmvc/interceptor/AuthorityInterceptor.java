@@ -72,10 +72,8 @@ public class AuthorityInterceptor extends BaseInterceptor
         {
             status = false;
             deniedResponse(response);
-            LOG.warn(MessageFormat.format(CommonLogContent.USER_ROLE_FAILED,
-                                          id,
+            LOG.warn(MessageFormat.format(CommonLogContent.USER_ROLE_FAILED, id,
                                           getHandlerFullName(hm)));
-
         }
         return status;
     }

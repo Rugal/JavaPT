@@ -82,7 +82,8 @@ public class UserDaoImplTest extends DBTestBase
     {
         String username = user.getUsername();
         Pagination page = userDao.findByName(username, 1, 1);
-        Assert.assertEquals(1, page.getTotalCount());
+        User db = (User) page.getList().get(0);
+        Assert.assertEquals(user.getUid(), db.getUid());
     }
 
     @Test

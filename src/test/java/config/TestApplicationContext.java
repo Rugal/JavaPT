@@ -137,7 +137,7 @@ public class TestApplicationContext
         bean.setUser(user);
         bean.setGranter(user);
         bean.setSince(System.currentTimeMillis());
-        bean.setRole(Admin.Role.SUPER);
+        bean.setRole(Admin.Role.ADMINISTRATOR);
         return bean;
     }
 

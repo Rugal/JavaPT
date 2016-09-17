@@ -12,11 +12,9 @@ import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.page.Pagination;
-import ml.rugal.sshcommon.springmvc.util.Message;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -32,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author Rugal Bernstein
  */
-@Ignore
 @Slf4j
 public class ThreadActionTest extends ControllerClientSideTestBase
 {
@@ -103,53 +100,78 @@ public class ThreadActionTest extends ControllerClientSideTestBase
     }
 
     @Test
-    public void update() throws Exception
+    public void update_200() throws Exception
     {
         Assert.assertNotNull(thread.getTid());
         thread.setCreateTime(Long.MIN_VALUE);
-        MvcResult result = this.mockMvc.perform(put("/thread/" + thread.getTid())
+        this.mockMvc.perform(put("/thread/" + thread.getTid())
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
             .content(GSON.toJson(thread))
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
-            .andExpect(status().isOk()).andReturn();
-        Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
-        Thread beanUpdated = thread.toObject(message.getData());
-        Assert.assertEquals(beanUpdated.getCreateTime(), thread.getCreateTime());
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void update_404() throws Exception
+    {
+        this.mockMvc.perform(put("/thread/0")
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .content(GSON.toJson(thread))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void get_404() throws Exception
+    {
+        this.mockMvc.perform(get("/thread/0")
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isNotFound());
     }
 
     @Test
     public void get_200() throws Exception
     {
-        LOG.info("getThread");
-        MvcResult result = this.mockMvc.perform(get("/thread/" + thread.getTid())
+        this.mockMvc.perform(get("/thread/" + thread.getTid())
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-            .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
-            .andExpect(status().isOk())
-            .andReturn();
-        Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
-        //special case for this unit test
-        thread = thread.toObject(message.getData());
-        Assert.assertNotNull(thread);
+            .andExpect(status().isOk());
     }
 
     @Test
-    public void testSaveThread()
+    public void delete_404() throws Exception
     {
-        LOG.info("saveThread");
-        Assert.assertNotNull(thread);
-        Assert.assertNotNull(thread.getTid());
+        this.mockMvc.perform(post(String.format("/thread/0"))
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword()))
+            .andExpect(status().isNotFound());
     }
 
     @Test
-    public void testGetThreadByPage() throws Exception
+    public void save_404() throws Exception
     {
-        LOG.info("getThreadByPage");
+        this.mockMvc.perform(post(String.format("/post/0/thread"))
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .content(GSON.toJson(thread))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getThreadByPage_200() throws Exception
+    {
         MvcResult result = this.mockMvc.perform(get(String.format("/post/%d/thread", post.getPid()))
             .param("pageNo", "1").param("pageSize", "1")
             .header(SystemDefaultProperties.ID, user.getUid())
@@ -158,12 +180,16 @@ public class ThreadActionTest extends ControllerClientSideTestBase
             .andExpect(status().isOk())
             .andReturn();
         Pagination page = GSON.fromJson(result.getResponse().getContentAsString(), Pagination.class);
-        Assert.assertEquals(1, page.getTotalPage());
+        Assert.assertEquals(1, page.getTotalCount());
     }
 
     @Test
-    public void save() throws Exception
+    public void getThreadByPage_404() throws Exception
     {
-
+        this.mockMvc.perform(get(String.format("/post/0/thread"))
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword()))
+            .andDo(print())
+            .andExpect(status().isNotFound());
     }
 }
