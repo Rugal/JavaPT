@@ -1,6 +1,8 @@
 # JavaPT
 
 [![Build Status](https://travis-ci.org/Rugal/JavaPT.svg?branch=master)](https://travis-ci.org/Rugal/JavaPT)  [![Circle CI](https://circleci.com/gh/Rugal/JavaPT/tree/master.svg?style=svg)](https://circleci.com/gh/Rugal/JavaPT/tree/master) [ ![Codeship Status for Rugal/JavaPT](https://codeship.com/projects/e0a77ce0-5e45-0133-a3a1-7acfb92b9e01/status?branch=master)](https://codeship.com/projects/111337)
+[![codecov](https://codecov.io/gh/Rugal/JavaPT/branch/development/graph/badge.svg)](https://codecov.io/gh/Rugal/JavaPT)
+
 
 A Java based Private Tracker application.
 
