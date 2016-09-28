@@ -1,7 +1,7 @@
 package ga.rugal.jpt.core.entity;
 
 import com.google.gson.annotations.Expose;
-import config.SystemDefaultProperties;
+import static config.SystemDefaultProperties.SCHEMA;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -19,7 +19,7 @@ import lombok.Data;
  * @author Rugal Bernstein
  */
 @Entity
-@Table(schema = "jpt", name = "tag")
+@Table(schema = SCHEMA, name = "tag")
 @Data
 public class Tag extends BaseObject<Tag>
 {
@@ -28,8 +28,7 @@ public class Tag extends BaseObject<Tag>
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQUENCE_NAME)
-    @SequenceGenerator(name = SEQUENCE_NAME,
-        sequenceName = SystemDefaultProperties.SCHEMA + SEQUENCE_NAME, allocationSize = 1)
+    @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SCHEMA + "." + SEQUENCE_NAME, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     @Expose
@@ -39,11 +38,8 @@ public class Tag extends BaseObject<Tag>
     @Column(length = 50)
     private String name;
 
-    @Column(length = 50)
-    private String icon;
-
     @OneToMany(mappedBy = "tag")
-    private List<PostTag> postTagsList;
+    private List<Tagging> postTagsList;
 
     @Override
     protected Class<Tag> getRealClass()

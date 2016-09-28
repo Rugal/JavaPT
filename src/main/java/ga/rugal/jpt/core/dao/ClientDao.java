@@ -23,14 +23,15 @@ public interface ClientDao
     Client updateByUpdater(Updater<Client> updater);
 
     /**
-     * Get an exact client by extracted cname and version in detail.
+     * Get an exact client by using extracted cname and version.
      * <p>
-     * Different from {@link #findByPeerID(java.lang.String, java.lang.String) }, this method will
-     * not try to find parent client if unable to find exact one.
+     * Different from {@link #findByPeerID(java.lang.String, java.lang.String) }, this method will return null if not
+     * exact client found.
      * <p>
      * @param cname
-     * @param version <p>
-     * @return null if unable to find the exact client software.
+     * @param version
+     *
+     * @return null if unable to find the exact client.
      */
     @Transactional(readOnly = true)
     Client getByPeerID(String cname, String version);

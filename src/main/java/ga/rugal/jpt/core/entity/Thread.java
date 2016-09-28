@@ -1,7 +1,7 @@
 package ga.rugal.jpt.core.entity;
 
 import com.google.gson.annotations.Expose;
-import config.SystemDefaultProperties;
+import static config.SystemDefaultProperties.SCHEMA;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -20,7 +20,7 @@ import lombok.Data;
  * @author Rugal Bernstein
  */
 @Entity
-@Table(schema = "jpt", name = "thread")
+@Table(schema = SCHEMA, name = "thread")
 @Data
 public class Thread extends BaseObject<Thread>
 {
@@ -29,8 +29,7 @@ public class Thread extends BaseObject<Thread>
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQUENCE_NAME)
-    @SequenceGenerator(name = SEQUENCE_NAME,
-        sequenceName = SystemDefaultProperties.SCHEMA + SEQUENCE_NAME, allocationSize = 1)
+    @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SCHEMA + "." + SEQUENCE_NAME, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     @Expose
@@ -92,7 +91,7 @@ public class Thread extends BaseObject<Thread>
         }
         List<Admin> admins = user.getAdminList();
         //----------This user is admin with sufficient privilege-------------
-        return admins.stream().anyMatch((admin) -> (admin.getRole() == Admin.Role.ADMIN));
+        return admins.stream().anyMatch((admin) -> (admin.getRole() == Admin.Role.ADMINISTRATOR));
     }
 
     @Override

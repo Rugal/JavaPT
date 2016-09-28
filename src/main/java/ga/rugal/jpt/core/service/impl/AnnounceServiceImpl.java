@@ -5,11 +5,10 @@ import ga.rugal.jpt.core.dao.AnnounceDao;
 import ga.rugal.jpt.core.entity.Announce;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
-import ga.rugal.jpt.core.service.ClientAnnounceService;
+import ga.rugal.jpt.core.service.AnnounceService;
 import ga.rugal.jpt.core.service.PostService;
 import ga.rugal.jpt.core.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import ml.rugal.sshcommon.hibernate.Updater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @Transactional
-public class AnnounceServiceImpl implements ClientAnnounceService
+public class AnnounceServiceImpl implements AnnounceService
 {
 
     @Autowired
@@ -35,25 +34,15 @@ public class AnnounceServiceImpl implements ClientAnnounceService
 
     private Announce save(TrackerUpdateBean bean)
     {
-        Announce clientAnnounce = new Announce();
-        clientAnnounce.setDownload(bean.getDownloaded());
-        clientAnnounce.setUpload(bean.getUploaded());
-        clientAnnounce.setLeft(bean.getLeft());
-        clientAnnounce.setAnnounceTime(System.currentTimeMillis());
-        clientAnnounce.setUser(bean.getUser());
-        clientAnnounce.setClient(bean.getClient());
-        clientAnnounce.setPost(postService.getDAO().getByTorrent(bean.getInfoHash()));
-        return dao.save(clientAnnounce);
-    }
-
-    @Override
-    public Announce update(Announce bean)
-    {
-
-        Updater<Announce> updater = new Updater<>(bean);
-        return dao.updateByUpdater(updater);
-        //-----These comments is here for testing transaction consistency.-------
-//        throw new RuntimeException();
+        Announce announce = new Announce();
+        announce.setDownload(bean.getDownloaded());
+        announce.setUpload(bean.getUploaded());
+        announce.setLeft(bean.getLeft());
+        announce.setAnnounceTime(System.currentTimeMillis());
+        announce.setUser(bean.getUser());
+        announce.setClient(bean.getClient());
+        announce.setPost(postService.getDAO().getByInfohash(bean.getInfoHash()));
+        return dao.save(announce);
     }
 
     /**
@@ -66,13 +55,10 @@ public class AnnounceServiceImpl implements ClientAnnounceService
         Announce last = this.dao.findLastAnnounce(bean.getUser(), bean.getPost());
         //log the most recent Client Announce
         Announce current = this.save(bean);
-        //compute the difference
+        //compute the difference, consider if this is the first time announcing
         Announce diff = new Announce();
-        if (null != last)
-        {
-            diff.setDownload(current.getDownload() - last.getDownload());
-            diff.setUpload(current.getUpload() - last.getUpload());
-        }
+        diff.setDownload(current.getDownload() - (null != last ? last.getDownload() : 0l));
+        diff.setUpload(current.getUpload() - (null != last ? last.getUpload() : 0l));
         //update user information
         userService.announce(bean.getUser(), diff);
         return current;

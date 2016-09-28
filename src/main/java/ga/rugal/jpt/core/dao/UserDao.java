@@ -1,7 +1,6 @@
 package ga.rugal.jpt.core.dao;
 
 import ga.rugal.jpt.core.entity.User;
-import java.util.List;
 import ml.rugal.sshcommon.hibernate.Updater;
 import ml.rugal.sshcommon.page.Pagination;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,9 +46,11 @@ public interface UserDao
      * Find user by part of name.
      *
      * @param username
+     * @param pageNo
+     * @param pageSize
      *
      * @return
      */
     @Transactional(readOnly = true)
-    List<User> findByName(String username);
+    Pagination findByName(String username, Integer pageNo, Integer pageSize);
 }

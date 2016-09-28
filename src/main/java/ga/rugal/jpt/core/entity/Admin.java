@@ -1,7 +1,7 @@
 package ga.rugal.jpt.core.entity;
 
 import com.google.gson.annotations.Expose;
-import config.SystemDefaultProperties;
+import static config.SystemDefaultProperties.SCHEMA;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +20,7 @@ import lombok.Data;
  */
 @Entity
 @Data
-@Table(schema = "jpt", name = "admin")
+@Table(schema = SCHEMA, name = "admin")
 public class Admin extends BaseObject<Admin>
 {
 
@@ -28,8 +28,7 @@ public class Admin extends BaseObject<Admin>
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQUENCE_NAME)
-    @SequenceGenerator(name = SEQUENCE_NAME,
-        sequenceName = SystemDefaultProperties.SCHEMA + SEQUENCE_NAME, allocationSize = 1)
+    @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SCHEMA + "." + SEQUENCE_NAME, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     @Expose
@@ -68,13 +67,13 @@ public class Admin extends BaseObject<Admin>
     public enum Role
     {
 
-        //User who can create new post to candidate list
+        //Role that can create new post to candidate list
         UPLOADER,
-        //User who can inspect new post and publish them to the tracker
+        //Role that can inspect new post and publish them to the tracker
         INSPECTOR,
-        //User who can access and modify any post
-        ADMIN,
-        //User who can shutdown the whole site
+        //Role that can access and modify any post
+        ADMINISTRATOR,
+        //Role that can shutdown the whole site and tracker
         SUPER;
     }
 
@@ -92,7 +91,7 @@ public class Admin extends BaseObject<Admin>
     @Override
     public int hashCode()
     {
-        int hash = 7;
+        int hash = 7 + super.hashCode();
         return 37 * hash + (aid != null ? aid.hashCode() : 0);
     }
 }

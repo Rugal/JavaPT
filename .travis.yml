@@ -8,3 +8,6 @@ addons:
 before_script:
   - psql -f 'db/jpt.sql' -U postgres
   - cp src/main/resources/jdbc_travis.properties src/main/resources/jdbc.properties
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

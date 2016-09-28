@@ -35,9 +35,8 @@ public class TrackerResponseServiceImpl implements TrackerResponseService
         }
         catch (IOException ex)
         {
-            LOG.error(CommonLogContent.ERROR_WRITING_RESPONSE, ex);
+            LOG.error(CommonLogContent.ERROR_WRITING_RESPONSE);
             throw ex;
         }
-
     }
 }

@@ -8,9 +8,13 @@ import ga.rugal.jpt.common.tracker.bcodec.BEncoder;
 import ga.rugal.jpt.common.tracker.common.Torrent;
 import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.core.entity.Post;
+import ga.rugal.jpt.core.entity.Tag;
+import ga.rugal.jpt.core.entity.Tagging;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.PostService;
+import ga.rugal.jpt.core.service.TagService;
+import ga.rugal.jpt.core.service.TaggingService;
 import ga.rugal.jpt.core.service.ThreadService;
 import ga.rugal.jpt.core.service.UserService;
 import java.io.ByteArrayInputStream;
@@ -42,6 +46,12 @@ public class PostAction
 {
 
     @Autowired
+    private TaggingService taggingService;
+
+    @Autowired
+    private TagService tagService;
+
+    @Autowired
     private PostService postService;
 
     @Autowired
@@ -51,7 +61,8 @@ public class PostAction
     private ThreadService threadService;
 
     /**
-     * GET a page of posts from database.
+     * GET a page of posts from database.<BR>
+     * To reduce the transmission data length, this method will not load fields like 'content'.
      *
      * @param name
      * @param pageNo
@@ -61,13 +72,14 @@ public class PostAction
      * @return
      */
     @ResponseBody
-//    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public Object getPage(@RequestParam(name = "name", required = false) String name,
-                          @RequestParam(name = "pageNo", required = true, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
-                          @RequestParam(name = "pageSize", required = true, defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize,
+                          @RequestParam(name = "pageNo", defaultValue = SystemDefaultProperties.DEFAULT_PAGE_NUMBER) Integer pageNo,
+                          @RequestParam(name = "pageSize", defaultValue = SystemDefaultProperties.DEFAULT_PAGE_SIZE) Integer pageSize,
+                          //tag list
                           HttpServletResponse response)
     {
-        //TODO ignore content of each post so as to reduce data transmission
+        response.setStatus(HttpServletResponse.SC_OK);
         return postService.getDAO().getPage(pageNo, pageSize);
     }
 
@@ -307,7 +319,7 @@ public class PostAction
                              crypted);
     }
 
-    //-----------------------Post related Threads-------------------------
+    //------------------------Post related Threads--------------------------
     /**
      * Persist a thread bean into database. Notice a thread must be attached under a post.<BR>
      * All users are allowed to view the post and thread content, but users that do not reach minimum level requirement
@@ -370,4 +382,112 @@ public class PostAction
         response.setStatus(HttpServletResponse.SC_OK);
         return threadService.getDAO().getPage(post, pageNo, pageSize);
     }
+
+    //--------------------------Tagging-------------------------------------
+    /**
+     * Add a tag to Post
+     *
+     * @param pid      Target Post ID
+     * @param tid      ID of Tag
+     * @param request
+     * @param response
+     *
+     */
+    @ResponseBody
+    @RequestMapping(value = "/{pid}/tag/{tid}", method = RequestMethod.POST)
+    public void tag(@PathVariable("pid") Integer pid, @PathVariable("tid") Integer tid, HttpServletRequest request,
+                    HttpServletResponse response)
+    {
+        //-----------------Existence check------------------
+        Post dbPost = postService.getDAO().get(pid);
+        Tag dbTag = tagService.getDAO().get(tid);
+        if (null == dbPost || null == dbTag)
+        {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        if (null != taggingService.getDAO().get(dbPost, dbTag))
+        {
+            response.setStatus(HttpServletResponse.SC_CONFLICT);
+            return;
+        }
+        //----------------Permission check------------------
+        int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
+        User user = userService.getDAO().get(uid);
+        if (!dbPost.canWrite(user))
+        {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        //----------------Persist------------------
+        Tagging bean = new Tagging();
+        bean.setPost(dbPost);
+        bean.setTag(dbTag);
+        taggingService.getDAO().save(bean);
+        response.setStatus(HttpServletResponse.SC_CREATED);
+    }
+
+    /**
+     * Remove a tag from Post
+     *
+     * @param pid      Target Post ID
+     * @param tid      ID of Tag
+     * @param request
+     * @param response
+     *
+     */
+    @ResponseBody
+    @RequestMapping(value = "/{pid}/tag/{tid}", method = RequestMethod.DELETE)
+    public void untag(@PathVariable("pid") Integer pid, @PathVariable("tid") Integer tid, HttpServletRequest request,
+                      HttpServletResponse response)
+    {
+        //-----------------Existence check------------------
+        Post dbPost = postService.getDAO().get(pid);
+        Tag dbTag = tagService.getDAO().get(tid);
+        if (null == dbPost || null == dbTag)
+        {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        //----------------Permission check------------------
+        int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
+        User user = userService.getDAO().get(uid);
+        if (!dbPost.canWrite(user))
+        {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        //----------------Delete------------------
+        Tagging bean = taggingService.getDAO().get(dbPost, dbTag);
+        if (null == bean)
+        {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        taggingService.getDAO().delete(bean);
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+    }
+
+    /**
+     * GET all tags of a post
+     *
+     * @param pid      primary key of target post.
+     * @param response
+     *
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/{pid}/tag", method = RequestMethod.GET)
+    public Object getPostTags(@PathVariable("pid") Integer pid, HttpServletResponse response)
+    {
+        Post post = postService.getDAO().get(pid);
+        if (null == post)
+        {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return null;
+        }
+        response.setStatus(HttpServletResponse.SC_OK);
+        return taggingService.getDAO().getTags(post);
+    }
+
 }

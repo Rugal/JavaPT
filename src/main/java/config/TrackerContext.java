@@ -10,8 +10,7 @@ import ga.rugal.jpt.springmvc.controller.TrackerAction;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -22,17 +21,14 @@ import org.springframework.context.annotation.FilterType;
  *
  * @author Rugal Bernstein
  */
+@Slf4j
 @Configuration
-@ComponentScan(basePackageClasses = PackageInfo.class, includeFilters
-                                                       = @ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE, classes =
-        {
-            AnnounceAction.class, TrackerAction.class
-        }))
+@ComponentScan(basePackageClasses = PackageInfo.class, includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes =
+{
+    AnnounceAction.class, TrackerAction.class
+}))
 public class TrackerContext
 {
-
-    private static final Logger LOG = LoggerFactory.getLogger(TrackerContext.class.getName());
 
     @Autowired
     private PostService postService;
@@ -41,8 +37,8 @@ public class TrackerContext
     private Tracker tracker;
 
     /**
-     * Create a tracker server in local, with same port to servlet container Spring will start this
-     * tracker after creation of bean.
+     * Create a tracker server in local, with same port to servlet container Spring will start this tracker after
+     * creation of bean.
      *
      * @return
      *
@@ -61,7 +57,6 @@ public class TrackerContext
             {
                 torrentFromFS(tracker);
             }
-
             return tracker;
         }
         catch (Exception e)
@@ -78,7 +73,7 @@ public class TrackerContext
             for (Object bencode : list)
             {
                 TrackedTorrent torrent = TrackedTorrent.load((byte[]) bencode);
-                tracker.announce(torrent);
+                tracker.torrontRegister(torrent);
             }
             LOG.info(CommonLogContent.TRACKER_CREATED, list.size());
         } else
@@ -91,13 +86,13 @@ public class TrackerContext
     {
         File folder = new File(SystemDefaultProperties.TORRENT_PATH);
         LOG.debug(CommonLogContent.OPEN_TORRENT_FOLDER, folder.getAbsolutePath());
-        File[] torrentFiles = folder.listFiles((File dir, String fileName) -> fileName.endsWith(SystemDefaultProperties.TORRENT_SUBFIX));
+        File[] torrentFiles = folder.listFiles((File dir, String fileName) -> fileName.endsWith(SystemDefaultProperties.TORRENT_SUFIX));
         if (null != torrentFiles && torrentFiles.length != 0)
         {
             for (File torrentFile : torrentFiles)
             {
                 TrackedTorrent torrent = TrackedTorrent.load(torrentFile);
-                tracker.announce(torrent);
+                tracker.torrontRegister(torrent);
             }
             LOG.info(CommonLogContent.TRACKER_CREATED, torrentFiles.length);
         } else
@@ -105,5 +100,4 @@ public class TrackerContext
             LOG.info(CommonLogContent.TRACKER_NO_TORRENT);
         }
     }
-
 }

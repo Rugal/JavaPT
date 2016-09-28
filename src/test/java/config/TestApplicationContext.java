@@ -6,10 +6,11 @@ import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.core.entity.Admin;
 import ga.rugal.jpt.core.entity.Announce;
 import ga.rugal.jpt.core.entity.Client;
+import ga.rugal.jpt.core.entity.Invitation;
 import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
-import ga.rugal.jpt.core.entity.PostTag;
 import ga.rugal.jpt.core.entity.Tag;
+import ga.rugal.jpt.core.entity.Tagging;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
 import java.io.File;
@@ -52,19 +53,22 @@ public class TestApplicationContext
     public User user()
     {
         User bean = new User();
-        bean.setEmail("testhappy@128.com");
+        bean.setEmail("testhappy@amazon.com");
         bean.setPassword("test123");
         bean.setRegisterTime(System.currentTimeMillis());
         bean.setStatus(User.Status.VALID);
         bean.setUsername("tenjin");
+        bean.setDownload(0l);
+        bean.setUpload(0l);
+        bean.setCredit(SystemDefaultProperties.INVITATION_CREDIT_NEED);
         return bean;
     }
 
     @Autowired
     @Bean
-    public PostTag postTags(Post post, Tag tag)
+    public Tagging postTags(Post post, Tag tag)
     {
-        PostTag postTags = new PostTag();
+        Tagging postTags = new Tagging();
         postTags.setPost(post);
         postTags.setTag(tag);
         return postTags;
@@ -75,8 +79,9 @@ public class TestApplicationContext
     {
         Client bean = new Client();
         bean.setEnable(true);
-        bean.setName("transmit");
-        bean.setVersion("*");
+        bean.setName("Test client");
+        bean.setVersion("1");
+        bean.setCname("Test");
         return bean;
     }
 
@@ -106,7 +111,6 @@ public class TestApplicationContext
     public Tag tag()
     {
         Tag bean = new Tag();
-        bean.setIcon("rugal.jpg");
         bean.setName("Test use only");
         return bean;
     }
@@ -133,7 +137,7 @@ public class TestApplicationContext
         bean.setUser(user);
         bean.setGranter(user);
         bean.setSince(System.currentTimeMillis());
-        bean.setRole(Admin.Role.SUPER);
+        bean.setRole(Admin.Role.ADMINISTRATOR);
         return bean;
     }
 
@@ -142,6 +146,7 @@ public class TestApplicationContext
     public TrackerUpdateBean trackerUpdateBean(User user, Post post, Client client)
     {
         TrackerUpdateBean bean = new TrackerUpdateBean();
+        bean.setIp("127.0.0.1");
         bean.setClient(client);
         bean.setDownloaded(99l);
         bean.setUploaded(101l);
@@ -150,23 +155,45 @@ public class TestApplicationContext
         bean.setInfoHash(post.getHash());
         bean.setPost(post);
         bean.setUser(user);
-
         return bean;
     }
 
+    /**
+     * The test torrent object instantiate from the test torrent file.
+     *
+     * @param testTorrentFile
+     *
+     * @return
+     *
+     * @throws IOException
+     */
     @Bean
     @Autowired
     public TrackedTorrent torrent(File testTorrentFile) throws IOException
     {
-        TrackedTorrent torrent = TrackedTorrent.load(testTorrentFile);
-        return torrent;
+        return TrackedTorrent.load(testTorrentFile);
     }
 
+    /**
+     * The torrent file of which name starts with Junit. This torrent is not persisted in DB yet, just for testing.
+     *
+     * @return
+     */
     @Bean
     public File testTorrentFile()
     {
         File file = new File(SystemDefaultProperties.TORRENT_PATH)
             .listFiles((File dir, String fileName) -> fileName.startsWith("Junit"))[0];
         return file;
+    }
+
+    @Autowired
+    @Bean
+    public Invitation invitation(User user)
+    {
+        Invitation invitation = new Invitation();
+        invitation.setId("TESTCODE");
+        invitation.setInvitor(user);
+        return invitation;
     }
 }

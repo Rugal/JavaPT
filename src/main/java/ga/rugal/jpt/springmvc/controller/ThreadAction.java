@@ -45,15 +45,15 @@ public class ThreadAction
      */
     @ResponseBody
     @RequestMapping(value = "/{tid}", method = RequestMethod.PUT)
-    public Object update(@PathVariable("tid") Integer tid, @RequestBody Thread bean,
-                         HttpServletRequest request, HttpServletResponse response)
+    public void update(@PathVariable("tid") Integer tid, @RequestBody Thread bean, HttpServletRequest request,
+                       HttpServletResponse response)
     {
         //-------------Existence check---------------
         Thread dbThread = threadService.getDAO().get(tid);
         if (null == dbThread)
         {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return null;
+            return;
         }
         //------------Permission check---------------
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
@@ -61,12 +61,11 @@ public class ThreadAction
         if (!dbThread.canWrite(user))
         {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return null;
+            return;
         }
         bean.setTid(tid);
         threadService.update(bean);
-        response.setStatus(HttpServletResponse.SC_OK);
-        return bean;
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
     /**
@@ -80,14 +79,14 @@ public class ThreadAction
      */
     @ResponseBody
     @RequestMapping(value = "/{tid}", method = RequestMethod.DELETE)
-    public Object delete(@PathVariable("tid") Integer tid, HttpServletRequest request, HttpServletResponse response)
+    public void delete(@PathVariable("tid") Integer tid, HttpServletRequest request, HttpServletResponse response)
     {
         //-------------Existence check---------------
         Thread dbThread = threadService.getDAO().get(tid);
         if (null == dbThread)
         {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return null;
+            return;
         }
         //------------Permission check---------------
         int uid = Integer.parseInt(request.getHeader(SystemDefaultProperties.ID));
@@ -95,11 +94,10 @@ public class ThreadAction
         if (!dbThread.canWrite(user))
         {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return null;
+            return;
         }
         threadService.getDAO().delete(dbThread);
-        response.setStatus(HttpServletResponse.SC_ACCEPTED);
-        return null;
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
     /**

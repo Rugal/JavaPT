@@ -36,6 +36,9 @@ public class UserServiceImpl implements UserService
         return dao.updateByUpdater(updater);
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public User announce(User bean, Announce announce)
     {

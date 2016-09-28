@@ -5,9 +5,10 @@ import ga.rugal.jpt.core.dao.AdminDao;
 import ga.rugal.jpt.core.dao.UserDao;
 import ga.rugal.jpt.core.entity.Admin;
 import ga.rugal.jpt.core.entity.User;
+import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author Rugal Bernstein
  */
+@Slf4j
 public class AdminDaoImplTest extends DBTestBase
 {
 
@@ -38,7 +40,7 @@ public class AdminDaoImplTest extends DBTestBase
     @Before
     public void setUp()
     {
-        System.out.println("setUp");
+        LOG.info("setUp");
         userDao.save(user);
         adminDao.save(admin);
     }
@@ -46,29 +48,25 @@ public class AdminDaoImplTest extends DBTestBase
     @After
     public void tearDown()
     {
-        System.out.println("tearDown");
+        LOG.info("tearDown");
         //order is important
         adminDao.delete(admin);
         userDao.delete(user);
     }
 
     @Test
-    public void testGetPage()
+    public void getPage()
     {
-        System.out.println("getPage");
-        int pageNo = 0;
-        int pageSize = 1;
-        Pagination result = adminDao.getPage(pageNo, pageSize);
-        System.out.println(result.getList().size());
+        Pagination result = adminDao.getPage(1, 1);
+        Assert.assertFalse(result.getList().isEmpty());
     }
 
     @Test
-    public void testFindById()
+    public void get()
     {
-        System.out.println("findById");
         Integer id = admin.getAid();
         Admin expResult = admin;
         Admin result = adminDao.get(id);
-        assertEquals(expResult, result);
+        Assert.assertEquals(expResult, result);
     }
 }

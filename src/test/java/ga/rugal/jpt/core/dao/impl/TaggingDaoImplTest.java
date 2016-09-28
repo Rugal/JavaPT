@@ -1,28 +1,31 @@
 package ga.rugal.jpt.core.dao.impl;
 
 import ga.rugal.DBTestBase;
+import ga.rugal.jpt.core.dao.LevelDao;
 import ga.rugal.jpt.core.dao.PostDao;
-import ga.rugal.jpt.core.dao.PostTagsDao;
 import ga.rugal.jpt.core.dao.TagDao;
+import ga.rugal.jpt.core.dao.TaggingDao;
 import ga.rugal.jpt.core.dao.UserDao;
-import ga.rugal.jpt.core.entity.Post;
-import ga.rugal.jpt.core.entity.PostTag;
-import ga.rugal.jpt.core.entity.Tag;
-import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.entity.Level;
+import ga.rugal.jpt.core.entity.Post;
+import ga.rugal.jpt.core.entity.Tag;
+import ga.rugal.jpt.core.entity.Tagging;
+import ga.rugal.jpt.core.entity.User;
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ga.rugal.jpt.core.dao.LevelDao;
 
 /**
  *
  * @author Rugal Bernstein
  */
-public class PostTagsDaoImplTest extends DBTestBase
+@Slf4j
+public class TaggingDaoImplTest extends DBTestBase
 {
 
     @Autowired
@@ -35,7 +38,7 @@ public class PostTagsDaoImplTest extends DBTestBase
     private PostDao postDao;
 
     @Autowired
-    private PostTagsDao postTagsDao;
+    private TaggingDao postTagsDao;
 
     @Autowired
     private LevelDao levelDao;
@@ -53,29 +56,29 @@ public class PostTagsDaoImplTest extends DBTestBase
     private Tag tag;
 
     @Autowired
-    private PostTag postTags;
+    private Tagging tagging;
 
-    public PostTagsDaoImplTest()
+    public TaggingDaoImplTest()
     {
     }
 
     @Before
     public void setUp()
     {
-        System.out.println("setUp");
+        LOG.info("setUp");
         levelDao.save(level);
         userDao.save(user);
         tagDao.save(tag);
         postDao.save(post);
-        postTagsDao.save(postTags);
+        postTagsDao.save(tagging);
     }
 
     @After
     public void tearDown()
     {
-        System.out.println("tearDown");
+        LOG.info("tearDown");
         //order is important
-        postTagsDao.delete(postTags);
+        postTagsDao.delete(tagging);
         postDao.delete(post);
         tagDao.delete(tag);
         userDao.delete(user);
@@ -83,22 +86,33 @@ public class PostTagsDaoImplTest extends DBTestBase
     }
 
     @Test
-    public void testGetPage()
+    public void getPage()
     {
-        System.out.println("getPage");
-        int pageNo = 0;
-        int pageSize = 1;
-        Pagination result = postTagsDao.getPage(pageNo, pageSize);
-        System.out.println(result.getList().size());
+        Pagination result = postTagsDao.getPage(1, 1);
+        Assert.assertEquals(1, result.getList().size());
     }
 
     @Test
-    public void testGetByID()
+    public void get_pk()
     {
-        System.out.println("getByID");
-        Integer id = postTags.getPtid();
-        PostTag expResult = postTags;
-        PostTag result = postTagsDao.get(id);
-        assertEquals(expResult, result);
+        Integer id = tagging.getPtid();
+        Tagging expResult = tagging;
+        Tagging result = postTagsDao.get(id);
+        Assert.assertEquals(expResult, result);
+    }
+
+    @Test
+    public void get()
+    {
+        Tagging expResult = tagging;
+        Tagging result = postTagsDao.get(post, tag);
+        Assert.assertEquals(expResult, result);
+    }
+
+    @Test
+    public void getTags()
+    {
+        List<Tag> result = postTagsDao.getTags(post);
+        Assert.assertFalse(result.isEmpty());
     }
 }

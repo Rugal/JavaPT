@@ -1,7 +1,7 @@
 package ga.rugal.jpt.core.entity;
 
 import com.google.gson.annotations.Expose;
-import config.SystemDefaultProperties;
+import static config.SystemDefaultProperties.SCHEMA;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,17 +19,16 @@ import lombok.Data;
  * @author Rugal Bernstein
  */
 @Entity
-@Table(name = "post_tag", schema = "jpt")
+@Table(schema = SCHEMA, name = "post_tag")
 @Data
-public class PostTag
+public class Tagging
 {
 
     private static final String SEQUENCE_NAME = "post_tags_ptid_seq";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQUENCE_NAME)
-    @SequenceGenerator(name = SEQUENCE_NAME,
-        sequenceName = SystemDefaultProperties.SCHEMA + SEQUENCE_NAME, allocationSize = 1)
+    @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SCHEMA + "." + SEQUENCE_NAME, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     @Expose
@@ -54,11 +53,11 @@ public class PostTag
     @Override
     public boolean equals(Object object)
     {
-        if (!(object instanceof PostTag))
+        if (!(object instanceof Tagging))
         {
             return false;
         }
-        PostTag other = (PostTag) object;
+        Tagging other = (Tagging) object;
         return !((this.ptid == null && other.ptid != null) || (this.ptid != null && !this.ptid.equals(other.ptid)));
     }
 

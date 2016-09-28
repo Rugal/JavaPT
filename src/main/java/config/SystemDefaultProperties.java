@@ -11,15 +11,19 @@ public interface SystemDefaultProperties
 
     boolean TORRENT_FROM_DB = true;
 
-    final String SCHEMA = "jpt.";
+    final String SCHEMA = "jpt";
 
     final String ID = "id";
+
+    final int INVITATION_CODE_LENGTH = 15;
+
+    final int INVITATION_CREDIT_NEED = 100;
 
     final String CREDENTIAL = "credential";
 
     final String TORRENT_PATH = "torrents";
 
-    final String TORRENT_SUBFIX = ".torrent";
+    final String TORRENT_SUFIX = ".torrent";
 
     final String BYTE_ENCODING = "UTF-8";
 

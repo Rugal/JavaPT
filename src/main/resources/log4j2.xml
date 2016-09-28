@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="filename">target/app.log</Property>
+    </Properties>
+    <Appenders>
+        <Console name="STDOUT">
+            <PatternLayout>
+                <Pattern>
+                    %date{DEFAULT} - %highlight{[%-5level]}{FATAL=Yellow, ERROR=red, WARN=Magenta, INFO=Bright Green, DEBUG=Bright Cyan, TRACE=Bright White} %class:%line :: %message %n
+                </Pattern>
+            </PatternLayout>
+        </Console>
+        <RollingRandomAccessFile name="ROLLING" fileName="target/app.log"
+                                 filePattern="target/app-%d{yyyy-MM-dd-HH-mm}.log.gz">
+            <PatternLayout>
+                <Pattern>
+                    %date{DEFAULT} - [%-5level] %class:%line :: %message %n
+                </Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+        </RollingRandomAccessFile>
+    </Appenders>
+    <Loggers>
+        <Root level="ERROR">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+        <Logger name="ga.rugal.jpt" level="TRACE" additivity="false">
+            <AppenderRef ref="STDOUT"/>
+        </Logger>
+        <Logger name="ga.rugal.jpt.common" level="INFO" additivity="false">
+            <AppenderRef ref="STDOUT"/>
+        </Logger>
+        <Logger name="config" level="INFO" additivity="false">
+            <AppenderRef ref="STDOUT"/>
+        </Logger>
+        <Logger name="org.hibernate" level="ERROR">
+            <AppenderRef ref="STDOUT"/>
+        </Logger>
+        <Logger name="org.springframework" level="ERROR">
+            <AppenderRef ref="STDOUT"/>
+        </Logger>
+    </Loggers>
+</Configuration>

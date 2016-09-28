@@ -19,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class LevelDaoImpl extends HibernateBaseDao<Level, Integer> implements LevelDao
 {
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     @Transactional(readOnly = true)
     public Level getLevel(Long upload, Long download)

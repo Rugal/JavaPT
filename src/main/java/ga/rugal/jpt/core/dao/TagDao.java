@@ -1,7 +1,6 @@
 package ga.rugal.jpt.core.dao;
 
 import ga.rugal.jpt.core.entity.Tag;
-import java.util.List;
 import ml.rugal.sshcommon.hibernate.Updater;
 import ml.rugal.sshcommon.page.Pagination;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +20,17 @@ public interface TagDao
 
     Tag save(Tag bean);
 
+    /**
+     * Find tags that names contain given `partialName` parameter.
+     *
+     * @param partialName
+     * @param pageNo      The page number
+     * @param pageSize    Size of each page
+     *
+     * @return A page of target objects.
+     */
     @Transactional(readOnly = true)
-    List<Tag> findByName(String partialName);
+    Pagination findByName(String partialName, int pageNo, int pageSize);
 
     Tag updateByUpdater(Updater<Tag> updater);
 

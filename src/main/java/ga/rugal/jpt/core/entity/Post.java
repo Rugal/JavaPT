@@ -1,7 +1,7 @@
 package ga.rugal.jpt.core.entity;
 
 import com.google.gson.annotations.Expose;
-import config.SystemDefaultProperties;
+import static config.SystemDefaultProperties.SCHEMA;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -22,7 +22,7 @@ import lombok.Data;
  * @author Rugal Bernstein
  */
 @Entity
-@Table(schema = "jpt", name = "post")
+@Table(schema = SCHEMA, name = "post")
 @Data
 public class Post extends BaseObject<Post>
 {
@@ -31,8 +31,7 @@ public class Post extends BaseObject<Post>
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQUENCE_NAME)
-    @SequenceGenerator(name = SEQUENCE_NAME,
-        sequenceName = SystemDefaultProperties.SCHEMA + SEQUENCE_NAME, allocationSize = 1)
+    @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SCHEMA + "." + SEQUENCE_NAME, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     @Expose
@@ -81,7 +80,7 @@ public class Post extends BaseObject<Post>
     private User author;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private List<PostTag> postTagsList;
+    private List<Tagging> postTagsList;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Thread> threadList;
@@ -126,7 +125,7 @@ public class Post extends BaseObject<Post>
         }
         List<Admin> admins = user.getAdminList();
         //----------This user is admin with sufficient privilege-------------
-        return admins.stream().anyMatch((admin) -> (admin.getRole() == Admin.Role.ADMIN));
+        return admins.stream().anyMatch((admin) -> (admin.getRole() == Admin.Role.ADMINISTRATOR));
     }
 
     @Override

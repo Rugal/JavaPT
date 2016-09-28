@@ -72,10 +72,8 @@ public class AuthorityInterceptor extends BaseInterceptor
         {
             status = false;
             deniedResponse(response);
-            LOG.warn(MessageFormat.format(CommonLogContent.USER_ROLE_FAILED,
-                                          id,
+            LOG.warn(MessageFormat.format(CommonLogContent.USER_ROLE_FAILED, id,
                                           getHandlerFullName(hm)));
-
         }
         return status;
     }
@@ -129,7 +127,7 @@ public class AuthorityInterceptor extends BaseInterceptor
         if (null != r)
         {
             User user = userService.getDAO().get(Integer.parseInt(id));
-            value = adminService.meetAdminLevels(user, r.value());
+            value = adminService.meetAnyAdminLevel(user, r.value());
         }
         return value;
     }

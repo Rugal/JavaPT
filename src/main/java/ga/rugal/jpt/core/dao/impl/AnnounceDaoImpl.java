@@ -44,11 +44,6 @@ public class AnnounceDaoImpl extends HibernateBaseDao<Announce, Long> implements
         crit.addOrder(Order.desc("announceTime"));
         crit.setMaxResults(1);
         List<Announce> list = crit.list();
-        Announce ca = null;
-        if (!list.isEmpty())
-        {
-            ca = list.get(0);
-        }
-        return ca;
+        return list.isEmpty() ? null : list.get(0);
     }
 }

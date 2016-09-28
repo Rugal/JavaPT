@@ -8,8 +8,8 @@ import ga.rugal.jpt.common.tracker.server.TrackedTorrent;
 import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
+import ga.rugal.jpt.core.service.LevelService;
 import ga.rugal.jpt.core.service.PostService;
-import ga.rugal.jpt.core.service.UserLevelService;
 import ga.rugal.jpt.core.service.UserService;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -59,7 +59,7 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     private Level level;
 
     @Autowired
-    private UserLevelService levelService;
+    private LevelService levelService;
 
     @Autowired
     private UserService userService;
@@ -91,13 +91,6 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
         levelService.getDAO().delete(level);
     }
 
-    @Test
-    public void testSavePost() throws Exception
-    {
-        LOG.info("save");
-        Assert.assertNotNull(post.getPid());
-    }
-
     private MvcResult testSave() throws Exception
     {
         post.setPid(null);
@@ -118,9 +111,17 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     }
 
     @Test
+    public void delete_404() throws Exception
+    {
+        this.mockMvc.perform(post("/post/0")
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword()))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void update_404() throws Exception
     {
-        LOG.info("update");
         Assert.assertNotNull(post.getPid());
         post.setEnable(!post.getEnable());
         this.mockMvc.perform(put("/post/0")
@@ -144,6 +145,18 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void getPage_200() throws Exception
+    {
+        this.mockMvc.perform(get("/post")
+            .param("name", "")
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk());
     }
 
     @Test
@@ -175,7 +188,6 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     public void uploadMetainfo_406() throws Exception
     {
         Assert.assertNotNull(post.getPid());
-        Assert.assertNull(post.getBencode());
         InputStream stream = new ByteArrayInputStream(new byte[1]);
         MockMultipartFile mmf = new MockMultipartFile("file", testTorrentFile.getName(),
                                                       MediaType.MULTIPART_FORM_DATA_VALUE,
@@ -192,7 +204,6 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     public void uploadMetainfo_404() throws Exception
     {
         Assert.assertNotNull(post.getPid());
-        Assert.assertNull(post.getBencode());
         MockMultipartFile mmf = new MockMultipartFile("file", testTorrentFile.getName(),
                                                       MediaType.MULTIPART_FORM_DATA_VALUE,
                                                       new FileInputStream(testTorrentFile));
@@ -208,7 +219,6 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     public void uploadMetainfo_202() throws Exception
     {
         Assert.assertNotNull(post.getPid());
-        Assert.assertNull(post.getBencode());
         MockMultipartFile mmf = new MockMultipartFile("file", testTorrentFile.getName(),
                                                       MediaType.MULTIPART_FORM_DATA_VALUE,
                                                       new FileInputStream(testTorrentFile));
@@ -230,7 +240,6 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
             .accept(SystemDefaultProperties.BITTORRENT_MIME, MediaType.APPLICATION_JSON_VALUE))
-            .andDo(print())
             .andExpect(status().isOk())
             .andReturn();
 

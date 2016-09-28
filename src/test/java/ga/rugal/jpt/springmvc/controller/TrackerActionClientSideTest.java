@@ -3,10 +3,10 @@ package ga.rugal.jpt.springmvc.controller;
 import config.SystemDefaultProperties;
 import ga.rugal.ControllerClientSideTestBase;
 import ga.rugal.jpt.core.entity.Admin;
-import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.entity.Level;
+import ga.rugal.jpt.core.entity.User;
 import ga.rugal.jpt.core.service.AdminService;
-import ga.rugal.jpt.core.service.UserLevelService;
+import ga.rugal.jpt.core.service.LevelService;
 import ga.rugal.jpt.core.service.UserService;
 import org.junit.After;
 import org.junit.Before;
@@ -28,7 +28,7 @@ public class TrackerActionClientSideTest extends ControllerClientSideTestBase
 {
 
     @Autowired
-    private UserLevelService levelService;
+    private LevelService levelService;
 
     @Autowired
     private UserService userService;
@@ -51,6 +51,7 @@ public class TrackerActionClientSideTest extends ControllerClientSideTestBase
         System.out.println("setUp");
         levelService.getDAO().save(level);
         userService.getDAO().save(user);
+        admin.setRole(Admin.Role.SUPER);
         adminService.getDAO().save(admin);
     }
 
