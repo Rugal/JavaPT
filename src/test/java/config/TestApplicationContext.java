@@ -182,7 +182,7 @@ public class TestApplicationContext
     @Bean
     public File testTorrentFile()
     {
-        File file = new File(SystemDefaultProperties.TORRENT_PATH)
+        File file = new File(SystemDefaultProperties.STATIC_PATH + "/" + SystemDefaultProperties.TORRENT_PATH)
             .listFiles((File dir, String fileName) -> fileName.startsWith("Junit"))[0];
         return file;
     }

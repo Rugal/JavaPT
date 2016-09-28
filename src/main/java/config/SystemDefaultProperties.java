@@ -21,6 +21,8 @@ public interface SystemDefaultProperties
 
     final String CREDENTIAL = "credential";
 
+    final String STATIC_PATH = "static";
+
     final String TORRENT_PATH = "torrents";
 
     final String TORRENT_SUFIX = ".torrent";
@@ -63,5 +65,4 @@ public interface SystemDefaultProperties
     final String UID = "uid";
 
     final String BITTORRENT_MIME = "application/x-bittorrent";
-
 }
