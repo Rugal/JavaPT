@@ -11,3 +11,9 @@ database:
 test:
   post:
     - bash <(curl -s https://codecov.io/bash)
+
+deployment:
+  product:
+    branch: master
+      heroku:
+        appname: javapt
