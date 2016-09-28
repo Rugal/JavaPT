@@ -5,9 +5,7 @@ HOST: http://polls.apiblueprint.org/
 
 ## Group User
 
-
-
-### Create New UID with Invitation [/user/uid?referee={referee}&code={code}]
+### Create New UID with Invitation [/user/uid{?referee,code}]
 
 #### Create New UID [POST]
 This API will request to create a new `UID` with which a user can register within certain minutes.   
@@ -39,8 +37,7 @@ Please include the `UID` in payload as it is a mandatory field for user registra
     + Body
 
             {
-                "uid":19,
-                "username":"Rugal",
+                "uid":19, "username":"Rugal",
                 "credential":"unencrypted-password", 
                 "email":"email@email.com"
             }
@@ -59,8 +56,9 @@ Please include the `UID` in payload as it is a mandatory field for user registra
 
 + Parameters
     + uid (number) - Target ID for future operations
+Operations on a specific user.
 
-#### Get User [GET]
+#### Get [GET]
 Get the profile of specific user by its `uid`.   
 
 + Request
@@ -86,8 +84,7 @@ Get the profile of specific user by its `uid`.
     User profile not found.
     + Body
 
-
-#### Deregister User [DELETE]
+#### Deregister [DELETE]
 
 Deregistration will not delete user profile in database, but set its status as unloginnable.   
 Just like updating user, only uid in URL will be operated, authentication fields are just for user identity verification.   
@@ -108,7 +105,7 @@ Just like updating user, only uid in URL will be operated, authentication fields
     User profile not found.
     + Body
 
-#### Update User [PUT]
+#### Update [PUT]
 Update some fields of a user profile.  
 
 + Request (application/json)
@@ -134,13 +131,15 @@ Update some fields of a user profile.
     User profile not found.
     + Body
 
-### Search User by Partial Name [/user?name={name}]
-Search for users that contains `name` in their `username` field.  
+### Search User by Partial Name [/user{?name,pageNo,pageSize}]
+Search for users that contains `name` in their `username` field.   
 
 + Parameters
-    + name (string) - Userame to check
+    + name (string, required) - Userame to check
+    + pageNo (number, optional) - number of page
+    + pageSize (number, optional) - size for each page
 
-#### Search User [GET]
+#### Search [GET]
 + Request
     + Header
 
@@ -148,30 +147,35 @@ Search for users that contains `name` in their `username` field.
             credential: {credential}
 
 + Response 200 (application/json)
-    Return a list of user profiles that their username contains given `name`.  
+    Return a list of matched user profiles.  
     + Body
 
-            [
-                {"uid":1, "username":"Rugal"},
-                {"uid":2, "username":"Tenjin"},
-                {"uid":3, "username":"Adel"},
-            ]
+            {
+                "pageNo":1, "pageSize":20, "totalCount":100,
+                "list":
+                [
+                    {"uid":1, "username":"Rugal"},
+                    {"uid":2, "username":"Tenjin"},
+                    {"uid":3, "username":"Adel"}
+                ]
+            }
 
 + Response 401
     Unauthorized access.
     + Body
+
 + Response 404
-    User profile not found.
+    No matched user profile found.
     + Body
 
-
-### Search User by EMail [/user?email={email}]
+### Get User by EMail [/user{?email}]
 Search for user whose email address is the `email` in parameter.  
 
 + Parameters
     + email (string) - EMail address to search.  
+Try to get a user by its corresponding email.
 
-#### Search User [GET]
+#### Get [GET]
 + Request
     + Header
 
@@ -183,8 +187,7 @@ Search for user whose email address is the `email` in parameter.
     + Body
 
             {
-                "uid":1, 
-                "username":"Rugal" 
+                "uid":1,  "username":"Rugal" 
             }
 
 + Response 401
@@ -194,14 +197,13 @@ Search for user whose email address is the `email` in parameter.
     User profile not found.
     + Body
 
-
-
-
 ## Group Post
 
-### Add Post [/post]
+### Create Post [/post]
+Create a post by posting metadata of it.   
+Metadata means the human readable content like title, movie name, content, minLevel.   
 
-#### Add Post [POST]
+#### Create [POST]
 
 + Request (application/json)
     + Header
@@ -210,7 +212,7 @@ Search for user whose email address is the `email` in parameter.
             credential: {credential}
 
     + Body
-    
+
             {
                 "title":"Test title for a Post","enabled":true,"size":100,
                 "infoHash":"7036CA4C717C0D9FEABB26F9A60C63DD887F8FCC",
@@ -228,11 +230,12 @@ Search for user whose email address is the `email` in parameter.
     + Body
 
 ### Post Operation [/post/{pid}]
+Operation on specific post.
 
 + Parameters
     + pid (number) - Target ID for future operations
 
-#### Get Post [GET]
+#### Get [GET]
 All users are allowed to view the post and thread content.  
 But users that do not reach minimum level are unable to download torrent files and the data files.  
 
@@ -259,7 +262,7 @@ But users that do not reach minimum level are unable to download torrent files a
     Post not found.
     + Body
 
-#### Update Post [PUT]
+#### Update [PUT]
 Only author and administrator can update post.  
 User can update all fields except `PID`.  
 + Request
@@ -285,7 +288,7 @@ User can update all fields except `PID`.
     Post not found.
     + Body
 
-#### Delete Post [DELETE]
+#### Delete [DELETE]
 Only author and administrator can delete a post.  
 + Request
     + Header
@@ -303,16 +306,59 @@ Only author and administrator can delete a post.
     Post not found.
     + Body
 
+### Search Post [/post{?name,pageNo,pageSize,tag}]
+All users are allowed to view the post and thread content.   
+But users that do not reach minimum level are unable to access metainfo and the data files.   
+
++ Parameters
+    + name (string, optional) - partial name to search
+    + tag (string, optional) - filter posts by tags, could have multiple tags, separated by comma
+    + pageNo (number, optional) - number of page
+    + pageSize (number, optional) - size for each page
+
+#### Search [GET]
+
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 200
+    Return the meta content of a post.
+    + Body
+
+            {
+                "pageNo":1, "pageSize":20, "totalCount":100,
+                "list":
+                [
+                    {"pid":1,"title":"Test title for a Post","size":100,"minLevel":{"lid":1}},
+                    {"pid":2,"title":"ATest title for a Post","size":100,"minLevel":{"lid":1}}
+                ]
+            }
+
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    Post not found.
+    + Body
+
 ## Group Torrent
 
-### Torrent File Operation [/post/{pid}/metainfo]
+### Metainfo Operation [/post/{pid}/metainfo]
+For operations on Metainfo.    
+Metainfo is the `info` section in torront file, including `files`, `name`, `source`, `piece length`.  
+Metainfo is contained in torront file.  
 
 + Parameters
     + pid (number) - Target ID for future operations
 
-#### Upload File [POST]
-Attach an torrent to a post.  
-Reuploading will override old file.   
+#### Upload [POST]
+Upload a torront file to a post.   
+Metainfo will be extracted from torront file and stored into DB.   
+Reuploading overrides existing file.   
+
 + Request (application/x-bittorrent)
     + Header
 
@@ -339,10 +385,12 @@ Reuploading will override old file.
     Invalid torrent file.  
     + Body
 
-
-#### Download File [GET]
-Download the torrent file of a post.  
+#### Download [GET]
+Download the torront file of a post.   
+Torront file consists of Metainfo and Announce URL.    
+Announce URL in Metainfo will be dynamically calculated.  
 User level will be checked.  
+
 + Request
     + Header
 
@@ -367,12 +415,13 @@ User level will be checked.
 
 ## Group Thread
 
-### Reply to Post [/post/{pid}/thread]
+### Thread under Post [/post/{pid}/thread{?pageNo,pageSize}]
+Operations to threads of post.  
+
 + Parameters
     + pid (number) - Target post ID for future operations
 
-#### Add Thread [POST]
-Attach a thread to a Post.  
+#### Add [POST]
 
 + Request (application/json)
     + Header
@@ -399,14 +448,48 @@ Attach a thread to a Post.
     The reply-to Post not found.
     + Body
 
+#### Get a page of thread of a Post [GET]
+
++ Parameters
+    + pageNo (number, optional) - number of page
+    + pageSize (number, optional) - size for each page
+
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 200
+    Return a list of threads.  
+    + Body
+
+            {
+                "pageNo":1, "pageSize":20, "totalCount":100,
+                "list":
+                [
+                    {"tid":1,"content":"TEST CONTENT","postTime":-9223372036854775808},
+                    {"tid":2,"content":"TEST CONTENT","postTime":-9223372036854775808}
+                ]
+            }
+
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    The Post not found.
+    + Body
+
 ### Thread Operation [/thread/{tid}]
+Operations to a specific thread.   
+
 + Parameters
     + tid (number) - Target post ID for future operations
 
 #### Get Thread [GET]
 Get thread with specific `TID`.  
 All users are allowed to view the post and thread content.  
-But users that do not reach minimum level are unable to download torrent files and the data files.  
+
 + Request
     + Header
 
@@ -427,7 +510,6 @@ But users that do not reach minimum level are unable to download torrent files a
 + Response 404
     Thread not found.
     + Body
-
 
 #### Update Thread [PUT]
 Update thread.  
@@ -469,4 +551,292 @@ Delete thread.
     + Body
 + Response 404
     Thread not found.
+    + Body
+
+
+## Group Tag
+
+### Add Tag [/tag]
+Only administrator can create tag.  
+
+#### Create [POST]
++ Request (application/json)
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
+    + Body
+
+            {
+                "name":"Test tag"
+            }
+
++ Response 201
+    Return ID of this tag.
+    + Body
+
+            19
+
++ Response 401
+    Unauthorized access.
+    + Body
+
+### Search Tag [/tag{?name}]
+Search tags that their names contain the given `name` parameter.  
+
++ Parameters
+    + name (string) - partial name
+
+#### Search [GET]
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 200
+    Return the list of matched tags.
+    + Body
+
+            {
+                "pageNo":1, "pageSize":20, "totalCount":100,
+                "list":
+                [
+                    {"tid":1, "name":"test tag"},
+                    {"tid":2, "name":"new tag"},
+                ]
+            }
+
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    No matched tag found.
+    + Body
+
+
+### Tag Operations [/tag/{tid}]
+
++ Parameters
+    + tid (number) - Target tag ID for future operations
+
+#### Get [GET]
+All users are allowed to view the tag information.   
+
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 200
+    Return the meta content of a tag.
+    + Body
+
+            {
+                "name":"test tag"
+            }
+
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    Tag not found.
+    + Body
+
+#### Update [PUT]
+Only administrator can update tag.   
+
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
+    + Body
+    
+            {
+                "name":"new name"
+            }
+
++ Response 204
+    Update completed.
+    + Body
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    Tag not found.
+    + Body
++ Response 409
+    Tag name conflicted.  
+    + Body
+
+#### Delete [DELETE]
+Only administrator can delete a tag.  
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 204
+    Tag deleted.
+    + Body
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    Tag not found.
+    + Body
+
+
+## Group Tagging
+
+### Tag Operation of Post [/post/{pid}/tag/{tid}]
+Only author and administrator could add and delete tags.  
+
++ Parameters
+    + pid (number) - Target post ID for future operations
+    + tid (number) - Target tag ID for future operations
+
+#### Tag a Post [POST]
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 201
+    Post tagged.
+    + Body
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    Tag or Post not found.
+    + Body
++ Response 409
+    Post already tagged.  
+    + Body
+
+#### Untag a Post [DELETE]
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 204
+    Tag removed from Post.
+    + Body
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    Tag or Post not found.
+    + Body
+
+
+### Get tags of a post [/post/{pid}/tag]
+Get a list of tags under a post
+
++ Parameters
+    + pid (number) - Target post ID for future operations
+
+
+#### Get [GET]
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 200
+    Return tags of this Post.
+    + Body
+
+            [
+                {"tid":1, "name":"test tag"},
+                {"tid":2, "name":"new tag"},
+            ]
+
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 404
+    Post not found.
+    + Body
+
+
+
+## Group Invitation
+
+### Create invitation code [/invitation]
+Create an invitation code by the will of a user.    
+A user could create an invitation code to invite new user.   
+But the inviter need to consume a certain mount of credits in order to create the code.   
+
+#### Create [POST]
+
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 201
+    Invitation code created.
+    + Body
+
+            AAABBBCCCDDD
+
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 412
+    Invitation code not created due to insufficiency of credit.
+    + Body
+
+
+
+
+## Group Tracker Management
+
+### Tracker [/tracker]
+Only `superuser` could operate the Tracker instance.
+
+#### Start tracker [POST]
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 201
+    Tracker instance started.
+    + Body
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 409
+    Tracker instance exists.
+    + Body
+
+#### Stop tracker [DELETE]
++ Request
+    + Header
+
+            id: {uid}
+            credential: {credential}
+
++ Response 201
+    Tracker instance stopped.
+    + Body
++ Response 401
+    Unauthorized access.
+    + Body
++ Response 409
+    Tracker instance not exists.
     + Body
