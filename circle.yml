@@ -17,3 +17,7 @@ deployment:
     branch: master
     heroku:
       appname: javapt
+  development:
+    branch: development
+    heroku:
+      appname: javapt-dev
