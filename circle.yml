@@ -15,5 +15,5 @@ test:
 deployment:
   product:
     branch: master
-      heroku:
-        appname: javapt
+    heroku:
+      appname: javapt
