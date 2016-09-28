@@ -7,15 +7,15 @@
         <Console name="STDOUT">
             <PatternLayout>
                 <Pattern>
-                    %date{DEFAULT} - %highlight{[%-5level]}{FATAL=Yellow, ERROR=red, WARN=Magenta, INFO=Bright Green, DEBUG=Bright Cyan, TRACE=Bright White} %class:%line :: %message %n
+                    %date{DEFAULT} - %highlight{[%-5level]}{FATAL=Yellow, ERROR=red, WARN=Magenta, INFO=Bright Green, DEBUG=Bright Cyan, TRACE=Bright White} %class@%line :: %message %n
                 </Pattern>
             </PatternLayout>
         </Console>
-        <RollingRandomAccessFile name="ROLLING" fileName="target/app.log"
+        <RollingRandomAccessFile name="ROLL" fileName="target/app.log"
                                  filePattern="target/app-%d{yyyy-MM-dd-HH-mm}.log.gz">
             <PatternLayout>
                 <Pattern>
-                    %date{DEFAULT} - [%-5level] %class:%line :: %message %n
+                    %date{DEFAULT} - %highlight{[%-5level]}{FATAL=Yellow, ERROR=red, WARN=Magenta, INFO=Bright Green, DEBUG=Bright Cyan, TRACE=Bright White} %class@%line :: %message %n
                 </Pattern>
             </PatternLayout>
             <Policies>
@@ -27,15 +27,19 @@
     <Loggers>
         <Root level="ERROR">
             <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="ROLL"/>
         </Root>
         <Logger name="ga.rugal.jpt" level="TRACE" additivity="false">
             <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="ROLL"/>
         </Logger>
         <Logger name="ga.rugal.jpt.common" level="INFO" additivity="false">
             <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="ROLL"/>
         </Logger>
         <Logger name="config" level="INFO" additivity="false">
             <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="ROLL"/>
         </Logger>
         <Logger name="org.hibernate" level="ERROR">
             <AppenderRef ref="STDOUT"/>
