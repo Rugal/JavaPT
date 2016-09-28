@@ -7,3 +7,7 @@ database:
     # replace CircleCI's generated database.yml
     - cp src/main/resources/jdbc_circleci.properties src/main/resources/jdbc.properties
     - psql -f 'static/db/jpt.sql' circle_test ubuntu
+
+test:
+  post:
+    - bash <(curl -s https://codecov.io/bash)
