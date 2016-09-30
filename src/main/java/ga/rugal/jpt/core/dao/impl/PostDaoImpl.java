@@ -50,6 +50,15 @@ public class PostDaoImpl extends HibernateBaseDao<Post, Integer> implements Post
 
     @Override
     @Transactional(readOnly = true)
+    public Post get(Integer id)
+    {
+        Post bean = super.get(id);
+        bean.setBencode(null);
+        return bean;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Post getByInfohash(String infoHash)
     {
         return this.findUniqueByProperty("hash", infoHash);
