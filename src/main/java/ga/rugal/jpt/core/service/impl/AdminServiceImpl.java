@@ -58,10 +58,6 @@ public class AdminServiceImpl implements AdminService
     public boolean meetAllAdminLevels(User user, Admin.Role... roles)
     {
         List<Admin> admins = this.getDAO().getByUID(user);
-        if (admins.isEmpty())
-        {
-            return false;
-        }
         //if contains all the roles
         return admins.stream().map(admin -> admin.getRole()).collect(Collectors.toSet())
             .containsAll(Sets.newHashSet(roles));

@@ -54,6 +54,12 @@ public class AdminServiceImplTest extends DBTestBase
     }
 
     @Test
+    public void update()
+    {
+        adminService.update(admin);
+    }
+
+    @Test
     public void isAdmin()
     {
         Assert.assertTrue(adminService.isAdmin(user));

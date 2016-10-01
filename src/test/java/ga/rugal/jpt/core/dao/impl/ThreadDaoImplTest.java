@@ -9,6 +9,7 @@ import ga.rugal.jpt.core.entity.Level;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
@@ -88,5 +89,12 @@ public class ThreadDaoImplTest extends DBTestBase
         Thread expResult = thread;
         Thread result = threadDao.get(id);
         Assert.assertEquals(expResult, result);
+    }
+
+    @Test
+    public void getByPID()
+    {
+        List<Thread> result = threadDao.getByPID(post);
+        Assert.assertFalse(result.isEmpty());
     }
 }

@@ -78,8 +78,7 @@ public class AliasToBeanNestedResultTransformer extends AliasedTupleSubsetResult
         return root;
     }
 
-    private void handleSubEntities(Object[] tuple, String[] aliases)
-        throws HibernateException
+    private void handleSubEntities(Object[] tuple, String[] aliases) throws HibernateException
     {
         String fieldName = "";
         String aliasName = "";
@@ -150,23 +149,20 @@ public class AliasToBeanNestedResultTransformer extends AliasedTupleSubsetResult
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void manageEntities(String fieldName, String aliasName, Object tupleValue)
         throws NoSuchFieldException, SecurityException
     {
         Class<?> subclass = findClass(fieldName);
         if (!subEntities.containsKey(fieldName))
         {
-            List<Object> list = new ArrayList<Object>();
-            list.add(new ArrayList<Object>());
-            list.add(new ArrayList<String>());
+            List<Object> list = new ArrayList<>();
+            list.add(new ArrayList<>());
+            list.add(new ArrayList<>());
             list.add(FIELDNAME_INDEX, subclass);
             subEntities.put(fieldName, list);
         }
-        ((List<Object>) subEntities.get(fieldName).get(TUPE_INDEX))
-            .add(tupleValue);
-        ((List<String>) subEntities.get(fieldName).get(ALISES_INDEX))
-            .add(aliasName);
+        ((List<Object>) subEntities.get(fieldName).get(TUPE_INDEX)).add(tupleValue);
+        ((List<String>) subEntities.get(fieldName).get(ALISES_INDEX)).add(aliasName);
     }
 
     private void cleanParams(Object[] tuple, String[] aliases)
@@ -185,10 +181,6 @@ public class AliasToBeanNestedResultTransformer extends AliasedTupleSubsetResult
         }
     }
 
-    @SuppressWarnings(
-        {
-            "unchecked", "rawtypes"
-        })
     private void loadSubEntities(Object root) throws HibernateException
     {
         try
@@ -221,7 +213,7 @@ public class AliasToBeanNestedResultTransformer extends AliasedTupleSubsetResult
                 }
             }
         }
-        catch (Exception e)
+        catch (InstantiationException | IllegalAccessException | HibernateException e)
         {
             throw new HibernateException(e);
         }

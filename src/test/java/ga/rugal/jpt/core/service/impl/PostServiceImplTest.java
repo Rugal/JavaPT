@@ -74,4 +74,10 @@ public class PostServiceImplTest extends DBTestBase
         Assert.assertNotNull(post.getBencode());
         Assert.assertArrayEquals(torrent.getEncoded(), post.getBencode());
     }
+
+    @Test
+    public void update() throws IOException
+    {
+        postService.update(post);
+    }
 }

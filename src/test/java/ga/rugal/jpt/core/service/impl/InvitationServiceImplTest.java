@@ -67,4 +67,10 @@ public class InvitationServiceImplTest extends DBTestBase
         Assert.assertNull(invitationService.generate(user));
         user.setCredit(SystemDefaultProperties.INVITATION_CREDIT_NEED);
     }
+
+    @Test
+    public void update()
+    {
+        invitationService.update(invitation);
+    }
 }

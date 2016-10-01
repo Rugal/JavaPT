@@ -7,15 +7,15 @@
         <Console name="STDOUT">
             <PatternLayout>
                 <Pattern>
-                    %date{DEFAULT} - %highlight{[%-5level]}{FATAL=Yellow, ERROR=red, WARN=Magenta, INFO=Bright Green, DEBUG=Bright Cyan, TRACE=Bright White} %class@%line :: %message %n
+                    %date{yyyy-mm-hh HH:mm} - %highlight{[%-5level]}{FATAL=Yellow, ERROR=red, WARN=Magenta, INFO=Bright Green, DEBUG=Bright Cyan, TRACE=Bright White} %class#%line - %message %n
                 </Pattern>
             </PatternLayout>
         </Console>
         <RollingRandomAccessFile name="ROLL" fileName="target/app.log"
-                                 filePattern="target/app-%d{yyyy-MM-dd-HH-mm}.log.gz">
+                                 filePattern="target/app-%d{yyyy-MM-dd-HH}.log.gz">
             <PatternLayout>
                 <Pattern>
-                    %date{DEFAULT} - %highlight{[%-5level]}{FATAL=Yellow, ERROR=red, WARN=Magenta, INFO=Bright Green, DEBUG=Bright Cyan, TRACE=Bright White} %class@%line :: %message %n
+                    %date{yyyy-mm-hh HH:mm} - %highlight{[%-5level]}{FATAL=Yellow, ERROR=red, WARN=Magenta, INFO=Bright Green, DEBUG=Bright Cyan, TRACE=Bright White} %class#%line - %message %n
                 </Pattern>
             </PatternLayout>
             <Policies>
@@ -41,7 +41,7 @@
             <AppenderRef ref="STDOUT"/>
             <AppenderRef ref="ROLL"/>
         </Logger>
-        <Logger name="org.hibernate" level="ERROR">
+        <Logger name="org.hibernate" level="OFF">
             <AppenderRef ref="STDOUT"/>
         </Logger>
         <Logger name="org.springframework" level="ERROR">

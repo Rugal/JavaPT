@@ -29,8 +29,8 @@ import java.util.Set;
  * B-encoding encoder.
  *
  * <p>
- * This class provides utility methods to encode objects and {@link BEValue}s to B-encoding into a
- * provided output stream.
+ * This class provides utility methods to encode objects and {@link BEValue}s to B-encoding into a provided output
+ * stream.
  * </p>
  *
  * <p>
@@ -76,8 +76,7 @@ public class BEncoder
                             bencode((Map<String, BEValue>) o, out);
                         } else
                         {
-                            throw new IllegalArgumentException("Cannot bencode: "
-                                                               + o.getClass());
+                            throw new IllegalArgumentException("Cannot bencode: " + o.getClass());
                         }
                     }
                 }
