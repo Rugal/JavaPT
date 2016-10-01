@@ -60,6 +60,15 @@ public class ClientDaoImplTest extends DBTestBase
         Client result = clientDao.findByPeerID("unable", "unable");
         Assert.assertEquals("*", result.getCname());
         Assert.assertEquals("*", result.getVersion());
+        Assert.assertFalse(result.getEnable());
+    }
+
+    @Test
+    public void findByPeerID_UT()
+    {
+        Client result = clientDao.findByPeerID("UT", "unable");
+        Assert.assertEquals("*", result.getVersion());
+        Assert.assertTrue(result.getEnable());
     }
 
     @Test
