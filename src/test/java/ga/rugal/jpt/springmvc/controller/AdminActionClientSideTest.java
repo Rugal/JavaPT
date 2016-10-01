@@ -28,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Ignore
 public class AdminActionClientSideTest extends ControllerClientSideTestBase
 {
+
     @Autowired
     private Gson GSON;
 

@@ -14,8 +14,7 @@ public abstract class BaseInterceptor implements HandlerInterceptor
     protected final Gson gson = new Gson();
 
     /**
-     * Use this method to produce response content when user access is denied because of some
-     * specific reason.
+     * Use this method to produce response content when user access is denied because of some specific reason.
      *
      * Write content in response body.
      *

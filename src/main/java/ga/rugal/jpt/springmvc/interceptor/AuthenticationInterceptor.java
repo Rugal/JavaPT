@@ -14,8 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 /**
  *
- * A authentication interceptor than authenticate any matched request by some credential. Store
- * username and credential in request header.
+ * A authentication interceptor than authenticate any matched request by some credential. Store username and credential
+ * in request header.
  * <p>
  * Useful when implementing Restful API.
  * <p>
@@ -30,12 +30,11 @@ public class AuthenticationInterceptor extends BaseInterceptor
     private UserService userService;
 
     /**
-     * This interceptor do its jos on all handlers except null null null null null null null null
-     * null null null null     {@link ga.rugal.jpt.springmvc.controller.AnnounceAction#announce(ga.rugal.jpt.common.tracker.common.ClientRequestMessageBean, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     * This interceptor do its jos on all handlers except null null null null null null null null null null null null
+     * null null null null null null     {@link ga.rugal.jpt.springmvc.controller.AnnounceAction#announce(ga.rugal.jpt.common.tracker.common.ClientRequestMessageBean, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      * } <BR>
-     * Any request that needs authentication must include their
-     * {@link ga.rugal.jpt.common.SystemDefaultProperties#ID} and
-     * {@link ga.rugal.jpt.common.SystemDefaultProperties#CREDENTIAL} in request header.<p>
+     * Any request that needs authentication must include their {@link ga.rugal.jpt.common.SystemDefaultProperties#ID}
+     * and {@link ga.rugal.jpt.common.SystemDefaultProperties#CREDENTIAL} in request header.<p>
      * Example:<BR>
      * curl: <BR> {@code curl -H'id:1' -H'credential:123456'}
      * <p>
@@ -71,8 +70,7 @@ public class AuthenticationInterceptor extends BaseInterceptor
 
     /**
      * This method is just for generating a response with forbidden content.<BR>
-     * May throw IOException inside because unable to get response body writer, but this version
-     * will shelter it.
+     * May throw IOException inside because unable to get response body writer, but this version will shelter it.
      *
      *
      * @param response The response corresponding to the request.

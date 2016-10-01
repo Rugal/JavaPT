@@ -90,6 +90,7 @@ public class UserDaoImplTest extends DBTestBase
     {
         Assert.assertFalse(userDao.authenticate(user.getUid(), "Test"));
     }
+
     @Test
     public void authenticate_true()
     {

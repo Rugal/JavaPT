@@ -25,8 +25,8 @@ public interface AnnounceDao
     Announce updateByUpdater(Updater<Announce> updater);
 
     /**
-     * Find the most recent client announce record by user and torrent. Either User or Post
-     * parameters or both could be null, that means to nullify their query in SQL.
+     * Find the most recent client announce record by user and torrent. Either User or Post parameters or both could be
+     * null, that means to nullify their query in SQL.
      * <p>
      * @param user the user that has reported this announce. If null, then ignore user query.
      * @param post the post that related with target torrent. If null, then ignore post query.

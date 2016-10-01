@@ -56,18 +56,17 @@ import org.slf4j.LoggerFactory;
  * A torrent file tracked by the controller's BitTorrent tracker.
  *
  * <p>
- * This class represents an active torrent on the tracker. The torrent information is kept
- * in-memory, and is created from the byte blob one would usually find in a <tt>.torrent</tt> file.
+ * This class represents an active torrent on the tracker. The torrent information is kept in-memory, and is created
+ * from the byte blob one would usually find in a <tt>.torrent</tt> file.
  * </p>
  *
  * <p>
- * Each torrent also keeps a repository of the peers seeding and leeching this torrent from the
- * tracker.
+ * Each torrent also keeps a repository of the peers seeding and leeching this torrent from the tracker.
  * </p>
  *
  * @author mpetazzoni
- * @see <a href="http://wiki.theory.org/BitTorrentSpecification#Metainfo_File_Structure">Torrent
- * meta-info file structure specification</a>
+ * @see <a href="http://wiki.theory.org/BitTorrentSpecification#Metainfo_File_Structure">Torrent meta-info file
+ * structure specification</a>
  */
 public class Torrent
 {
@@ -146,14 +145,14 @@ public class Torrent
     /**
      * Create a new torrent from meta-info binary data.
      *
-     * Parses the meta-info data (which should be B-encoded as described in the BitTorrent
-     * specification) and create a Torrent object from it.
+     * Parses the meta-info data (which should be B-encoded as described in the BitTorrent specification) and create a
+     * Torrent object from it.
      *
      * @param torrent The meta-info byte data.
      * @param seeder  Whether we'll be seeding for this torrent or not.
      *
-     * @throws IOException When the info dictionary can't be read or encoded and hashed back to
-     *                     create the torrent's SHA-1 hash.
+     * @throws IOException When the info dictionary can't be read or encoded and hashed back to create the torrent's
+     *                     SHA-1 hash.
      */
     public Torrent(byte[] torrent, boolean seeder) throws IOException
     {
@@ -173,13 +172,13 @@ public class Torrent
          * Parses the announce information from the decoded meta-info structure.
          *
          * <p>
-         * If the torrent doesn't define an announce-list, use the mandatory announce field value as
-         * the single tracker in a single announce tier. Otherwise, the announce-list must be parsed
-         * and the trackers from each tier extracted.
+         * If the torrent doesn't define an announce-list, use the mandatory announce field value as the single tracker
+         * in a single announce tier. Otherwise, the announce-list must be parsed and the trackers from each tier
+         * extracted.
          * </p>
          *
-         * @see <a href="http://bittorrent.org/beps/bep_0012.html">BitTorrent BEP#0012 "Multitracker
-         * Metadata Extension"</a>
+         * @see <a href="http://bittorrent.org/beps/bep_0012.html">BitTorrent BEP#0012 "Multitracker Metadata
+         * Extension"</a>
          */
         try
         {
@@ -327,8 +326,8 @@ public class Torrent
      * Get this torrent's name.
      *
      * <p>
-     * For a single-file torrent, this is usually the name of the file. For a multi-file torrent,
-     * this is usually the name of a top-level directory containing those files.
+     * For a single-file torrent, this is usually the name of the file. For a multi-file torrent, this is usually the
+     * name of a top-level directory containing those files.
      * </p>
      * <p>
      * @return
@@ -501,8 +500,7 @@ public class Torrent
     }
 
     /**
-     * Convert a byte string to a string containing an hexadecimal representation of the original
-     * data.
+     * Convert a byte string to a string containing an hexadecimal representation of the original data.
      *
      * @param bytes The byte array to convert.
      * <p>
@@ -519,8 +517,8 @@ public class Torrent
     }
 
     /**
-     * Return an hexadecimal representation of the bytes contained in the given string, following
-     * the default, expected byte encoding.
+     * Return an hexadecimal representation of the bytes contained in the given string, following the default, expected
+     * byte encoding.
      *
      * @param input The input string.
      * <p>
@@ -543,9 +541,8 @@ public class Torrent
      * Determine how many threads to use for the piece hashing.
      *
      * <p>
-     * If the environment variable TTORRENT_HASHING_THREADS is set to an integer value greater than
-     * 0, its value will be used. Otherwise, it defaults to the number of processors detected by the
-     * Java Runtime.
+     * If the environment variable TTORRENT_HASHING_THREADS is set to an integer value greater than 0, its value will be
+     * used. Otherwise, it defaults to the number of processors detected by the Java Runtime.
      * </p>
      *
      * @return How many threads to use for concurrent piece hashing.
@@ -600,8 +597,7 @@ public class Torrent
      *
      * @param torrent The abstract {@link File} object representing the
      * <tt>.torrent</tt> file to load.
-     * @param seeder  Whether we are a seeder for this torrent or not (disables local data
-     *                validation).
+     * @param seeder  Whether we are a seeder for this torrent or not (disables local data validation).
      * <p>
      * @return
      *
@@ -620,8 +616,8 @@ public class Torrent
      * Create a {@link Torrent} object for a file.
      *
      * <p>
-     * Hash the given file to create the {@link Torrent} object representing the Torrent metainfo
-     * about this file, needed for announcing and/or sharing said file.
+     * Hash the given file to create the {@link Torrent} object representing the Torrent metainfo about this file,
+     * needed for announcing and/or sharing said file.
      * </p>
      *
      * @param source    The file to use in the torrent.
@@ -643,13 +639,12 @@ public class Torrent
      * Create a {@link Torrent} object for a set of files.
      *
      * <p>
-     * Hash the given files to create the multi-file {@link Torrent} object representing the Torrent
-     * meta-info about them, needed for announcing and/or sharing these files. Since we created the
-     * torrent, we're considering we'll be a full initial seeder for it.
+     * Hash the given files to create the multi-file {@link Torrent} object representing the Torrent meta-info about
+     * them, needed for announcing and/or sharing these files. Since we created the torrent, we're considering we'll be
+     * a full initial seeder for it.
      * </p>
      *
-     * @param parent    The parent directory or location of the torrent files, also used as the
-     *                  torrent's name.
+     * @param parent    The parent directory or location of the torrent files, also used as the torrent's name.
      * @param files     The files to add into this torrent.
      * @param announce  The announce URI that will be used for this torrent.
      * @param createdBy The creator's name, or any string identifying the torrent's creator.
@@ -669,8 +664,8 @@ public class Torrent
      * Create a {@link Torrent} object for a file.
      *
      * <p>
-     * Hash the given file to create the {@link Torrent} object representing the Torrent metainfo
-     * about this file, needed for announcing and/or sharing said file.
+     * Hash the given file to create the {@link Torrent} object representing the Torrent metainfo about this file,
+     * needed for announcing and/or sharing said file.
      * </p>
      *
      * @param source       The file to use in the torrent.
@@ -693,13 +688,12 @@ public class Torrent
      * Create a {@link Torrent} object for a set of files.
      *
      * <p>
-     * Hash the given files to create the multi-file {@link Torrent} object representing the Torrent
-     * meta-info about them, needed for announcing and/or sharing these files. Since we created the
-     * torrent, we're considering we'll be a full initial seeder for it.
+     * Hash the given files to create the multi-file {@link Torrent} object representing the Torrent meta-info about
+     * them, needed for announcing and/or sharing these files. Since we created the torrent, we're considering we'll be
+     * a full initial seeder for it.
      * </p>
      *
-     * @param source       The parent directory or location of the torrent files, also used as the
-     *                     torrent's name.
+     * @param source       The parent directory or location of the torrent files, also used as the torrent's name.
      * @param files        The files to add into this torrent.
      * @param pieceLength
      * @param announceList The announce URIs organized as tiers that will be used for this torrent
@@ -721,13 +715,12 @@ public class Torrent
      * Helper method to create a {@link Torrent} object for a set of files.
      *
      * <p>
-     * Hash the given files to create the multi-file {@link Torrent} object representing the Torrent
-     * meta-info about them, needed for announcing and/or sharing these files. Since we created the
-     * torrent, we're considering we'll be a full initial seeder for it.
+     * Hash the given files to create the multi-file {@link Torrent} object representing the Torrent meta-info about
+     * them, needed for announcing and/or sharing these files. Since we created the torrent, we're considering we'll be
+     * a full initial seeder for it.
      * </p>
      *
-     * @param parent       The parent directory or location of the torrent files, also used as the
-     *                     torrent's name.
+     * @param parent       The parent directory or location of the torrent files, also used as the torrent's name.
      * @param files        The files to add into this torrent.
      * @param announce     The announce URI that will be used for this torrent.
      * @param announceList The announce URIs organized as tiers that will be used for this torrent
@@ -850,8 +843,8 @@ public class Torrent
      * Return the concatenation of the SHA-1 hashes of a file's pieces.
      *
      * <p>
-     * Hashes the given file piece by piece using the default Torrent piece length (see
-     * {@link #PIECE_LENGTH}) and returns the concatenation of these hashes, as a string.
+     * Hashes the given file piece by piece using the default Torrent piece length (see {@link #PIECE_LENGTH}) and
+     * returns the concatenation of these hashes, as a string.
      * </p>
      *
      * <p>

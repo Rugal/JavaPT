@@ -31,8 +31,8 @@ import org.apache.commons.io.input.AutoCloseInputStream;
  * B-encoding decoder.
  *
  * <p>
- * A b-encoded byte stream can represent byte arrays, numbers, lists and maps (dictionaries). This
- * class implements a decoder of such streams into {@link BEValue}s.
+ * A b-encoded byte stream can represent byte arrays, numbers, lists and maps (dictionaries). This class implements a
+ * decoder of such streams into {@link BEValue}s.
  * </p>
  *
  * <p>
@@ -77,8 +77,7 @@ public class BDecoder
      * Decode a B-encoded stream.
      *
      * <p>
-     * Automatically instantiates a new BDecoder for the provided input stream and decodes its root
-     * member.
+     * Automatically instantiates a new BDecoder for the provided input stream and decodes its root member.
      * </p>
      *
      * @param in The input stream to read from.
@@ -95,8 +94,7 @@ public class BDecoder
      * Decode a B-encoded byte buffer.
      *
      * <p>
-     * Automatically instantiates a new BDecoder for the provided buffer and decodes its root
-     * member.
+     * Automatically instantiates a new BDecoder for the provided buffer and decodes its root member.
      * </p>
      *
      * @param data The {@link ByteBuffer} to read from.
@@ -111,12 +109,10 @@ public class BDecoder
     }
 
     /**
-     * Returns what the next b-encoded object will be on the stream or -1 when the end of stream has
-     * been reached.
+     * Returns what the next b-encoded object will be on the stream or -1 when the end of stream has been reached.
      *
      * <p>
-     * Can return something unexpected (not '0' .. '9', 'i', 'l' or 'd') when the stream isn't
-     * b-encoded.
+     * Can return something unexpected (not '0' .. '9', 'i', 'l' or 'd') when the stream isn't b-encoded.
      * </p>
      *
      * This might or might not read one extra byte from the stream.
@@ -131,8 +127,8 @@ public class BDecoder
     }
 
     /**
-     * Gets the next indicator and returns either null when the stream has ended or b-decodes the
-     * rest of the stream and returns the appropriate BEValue encoded object.
+     * Gets the next indicator and returns either null when the stream has ended or b-decodes the rest of the stream and
+     * returns the appropriate BEValue encoded object.
      * <p>
      * @return <p>
      * @throws java.io.IOException
@@ -356,10 +352,9 @@ public class BDecoder
     /**
      * Returns a byte[] containing length valid bytes starting at offset zero.
      *
-     * @throws EOFException If InputStream.read() returned -1 before all requested bytes could be
-     *                      read. Note that the byte[] returned might be bigger then requested but
-     *                      will only contain length valid bytes. The returned byte[] will be reused
-     *                      when this method is called again.
+     * @throws EOFException If InputStream.read() returned -1 before all requested bytes could be read. Note that the
+     *                      byte[] returned might be bigger then requested but will only contain length valid bytes. The
+     *                      returned byte[] will be reused when this method is called again.
      */
     private byte[] read(int length) throws IOException
     {

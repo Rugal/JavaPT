@@ -32,29 +32,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Slf4j
 public class TagActionClientSideTest extends ControllerClientSideTestBase
 {
-    
+
     @Autowired
     private Gson GSON;
-    
+
     @Autowired
     private LevelService levelService;
-    
+
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private Level level;
-    
+
     @Autowired
     private Tag tag;
-    
+
     @Autowired
     private User user;
-    
+
     public TagActionClientSideTest()
     {
     }
-    
+
     @Before
     public void setUp() throws Exception
     {
@@ -64,7 +64,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
         MvcResult result = saveTag();
         tag.setTid(Integer.parseInt(result.getResponse().getContentAsString()));
     }
-    
+
     @After
     public void tearDown() throws Exception
     {
@@ -73,7 +73,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
         userService.getDAO().delete(user);
         levelService.getDAO().delete(level);
     }
-    
+
     private MvcResult saveTag() throws Exception
     {
         return this.mockMvc.perform(post("/tag")
@@ -84,7 +84,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
             .andExpect(status().isCreated())
             .andReturn();
     }
-    
+
     private void deleteTag() throws Exception
     {
         this.mockMvc.perform(delete("/tag/" + tag.getTid())
@@ -93,7 +93,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
             .andDo(print())
             .andExpect(status().isNoContent());
     }
-    
+
     @Test
     public void get_200() throws Exception
     {
@@ -107,7 +107,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
         Tag db = GSON.fromJson(result.getResponse().getContentAsString(), Tag.class);
         Assert.assertEquals(tag, db);
     }
-    
+
     @Test
     public void get_404() throws Exception
     {
@@ -118,7 +118,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
             .andDo(print())
             .andExpect(status().isNotFound());
     }
-    
+
     @Test
     public void update_204() throws Exception
     {
@@ -129,7 +129,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
             .andDo(print())
             .andExpect(status().isNoContent());
     }
-    
+
     @Test
     public void update_404() throws Exception
     {
@@ -140,7 +140,7 @@ public class TagActionClientSideTest extends ControllerClientSideTestBase
             .andDo(print())
             .andExpect(status().isNotFound());
     }
-    
+
     @Test
     public void findByName_200() throws Exception
     {

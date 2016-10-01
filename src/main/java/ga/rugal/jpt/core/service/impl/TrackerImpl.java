@@ -167,8 +167,7 @@ public class TrackerImpl implements Tracker
      * The unfreshed peer collector thread.
      *
      * <p>
-     * Every PEER_COLLECTION_FREQUENCY_SECONDS, this thread will collect unfreshed peers from all
-     * announced torrents.
+     * Every PEER_COLLECTION_FREQUENCY_SECONDS, this thread will collect unfreshed peers from all announced torrents.
      * </p>
      */
     private class PeerCollectorThread extends Thread

@@ -23,8 +23,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Authorization interceptor that judge if this handler or method is accessible by this user.<BR>
- * Because authentication has been done in {@code AuthenticationInterceptor}, this interceptor will
- * not check identity but query role and privilege from database, then check its accessibility.
+ * Because authentication has been done in {@code AuthenticationInterceptor}, this interceptor will not check identity
+ * but query role and privilege from database, then check its accessibility.
  *
  * @author Rugal Bernstein
  * @since 0.1
@@ -43,8 +43,8 @@ public class AuthorityInterceptor extends BaseInterceptor
 
     /**
      * This is a pretty simple implementation.<BR>
-     * Some of handlers require specific admin level to invoke. Here this interceptor use annotation
-     * to reflect required level before seeing if this user is qualified.<p>
+     * Some of handlers require specific admin level to invoke. Here this interceptor use annotation to reflect required
+     * level before seeing if this user is qualified.<p>
      * Hence request can do nothing about the privileges.
      *
      * @param request
@@ -87,8 +87,7 @@ public class AuthorityInterceptor extends BaseInterceptor
 
     /**
      * This method is just for generating a response with forbidden content.<BR>
-     * May throw IOException inside because unable to get response body writer, but this version
-     * will shelter it.
+     * May throw IOException inside because unable to get response body writer, but this version will shelter it.
      *
      *
      * @param response The response corresponding to the request.
@@ -112,8 +111,8 @@ public class AuthorityInterceptor extends BaseInterceptor
 
     /**
      * check roles of this user and required role of handler.<BR>
-     * If this handler require no role, treat this as Permit all. Otherwise, check user role. Only
-     * accessible if this user contain specific role that defined in {@code Role} annotation
+     * If this handler require no role, treat this as Permit all. Otherwise, check user role. Only accessible if this
+     * user contain specific role that defined in {@code Role} annotation
      *
      * @param id
      * @param hm
@@ -135,8 +134,7 @@ public class AuthorityInterceptor extends BaseInterceptor
     }
 
     /**
-     * Get annotation for current handler method. From method level if defined, otherwise From class
-     * level if defined.
+     * Get annotation for current handler method. From method level if defined, otherwise From class level if defined.
      *
      * @param <A>
      * @param hm

@@ -4,16 +4,16 @@ package ga.rugal.jpt.common.tracker.common.protocol;
  * Announce request event types.
  *
  * <p>
- * When the client starts exchanging on a torrent, it must contact the torrent's tracker with a
- * 'started' announce request, which notifies the tracker this client now exchanges on this torrent
- * (and thus allows the tracker to report the existence of this peer to other clients).
+ * When the client starts exchanging on a torrent, it must contact the torrent's tracker with a 'started' announce
+ * request, which notifies the tracker this client now exchanges on this torrent (and thus allows the tracker to report
+ * the existence of this peer to other clients).
  * </p>
  *
  * <p>
- * When the client stops exchanging, or when its download completes, it must also send a specific
- * announce request. Otherwise, the client must send an eventless (NONE), periodic announce request
- * to the tracker at an interval specified by the tracker itself, allowing the tracker to refresh
- * this peer's status and acknowledge that it is still there.
+ * When the client stops exchanging, or when its download completes, it must also send a specific announce request.
+ * Otherwise, the client must send an eventless (NONE), periodic announce request to the tracker at an interval
+ * specified by the tracker itself, allowing the tracker to refresh this peer's status and acknowledge that it is still
+ * there.
  * </p>
  */
 public enum RequestEvent

@@ -97,8 +97,8 @@ public class RequestBeanServiceImpl implements RequestBeanService
     }
 
     /**
-     * Extract peer id from percent-encoded format into client name, version and random number. set
-     * those data into TrackerUpdateBean.
+     * Extract peer id from percent-encoded format into client name, version and random number. set those data into
+     * TrackerUpdateBean.
      * <p>
      * @param bean
      * @param peerID <p>

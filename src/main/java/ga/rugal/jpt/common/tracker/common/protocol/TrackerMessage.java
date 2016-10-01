@@ -21,9 +21,9 @@ import java.nio.ByteBuffer;
  * BitTorrent tracker protocol messages representations.
  *
  * <p>
- * This class and its <em>*TrackerMessage</em> subclasses provide POJO representations of the
- * tracker protocol messages, for at least HTTP and UDP trackers' protocols, along with easy parsing
- * from an input ByteBuffer to quickly get a usable representation of an incoming message.
+ * This class and its <em>*TrackerMessage</em> subclasses provide POJO representations of the tracker protocol messages,
+ * for at least HTTP and UDP trackers' protocols, along with easy parsing from an input ByteBuffer to quickly get a
+ * usable representation of an incoming message.
  * </p>
  *
  * @author mpetazzoni
@@ -67,8 +67,7 @@ public abstract class TrackerMessage
      * Constructor for the base tracker message type.
      *
      * @param type The message type.
-     * @param data A byte buffer containing the binary data of the message (a B-encoded map, a UDP
-     *             packet data, etc.).
+     * @param data A byte buffer containing the binary data of the message (a B-encoded map, a UDP packet data, etc.).
      */
     protected TrackerMessage(Type type, ByteBuffer data)
     {
@@ -124,8 +123,8 @@ public abstract class TrackerMessage
      * Base interface for connection request messages.
      *
      * <p>
-     * This interface must be implemented by all subtypes of connection request messages for the
-     * various tracker protocols.
+     * This interface must be implemented by all subtypes of connection request messages for the various tracker
+     * protocols.
      * </p>
      *
      * @author mpetazzoni
@@ -139,8 +138,8 @@ public abstract class TrackerMessage
      * Base interface for connection response messages.
      *
      * <p>
-     * This interface must be implemented by all subtypes of connection response messages for the
-     * various tracker protocols.
+     * This interface must be implemented by all subtypes of connection response messages for the various tracker
+     * protocols.
      * </p>
      *
      * @author mpetazzoni
@@ -154,8 +153,7 @@ public abstract class TrackerMessage
      * Base interface for tracker error messages.
      *
      * <p>
-     * This interface must be implemented by all subtypes of tracker error messages for the various
-     * tracker protocols.
+     * This interface must be implemented by all subtypes of tracker error messages for the various tracker protocols.
      * </p>
      *
      * @author mpetazzoni
@@ -167,8 +165,8 @@ public abstract class TrackerMessage
          * The various tracker error states.
          *
          * <p>
-         * These errors are reported by the tracker to a client when expected parameters or
-         * conditions are not present while processing an announce request from a BitTorrent client.
+         * These errors are reported by the tracker to a client when expected parameters or conditions are not present
+         * while processing an announce request from a BitTorrent client.
          * </p>
          */
         public enum FailureReason

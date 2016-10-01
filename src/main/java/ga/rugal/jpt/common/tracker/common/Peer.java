@@ -23,8 +23,8 @@ import java.nio.ByteBuffer;
  * A basic BitTorrent peer.
  *
  * <p>
- * This class is meant to be a common base for the tracker and client, which would presumably
- * subclass it to extend its functionality and fields.
+ * This class is meant to be a common base for the tracker and client, which would presumably subclass it to extend its
+ * functionality and fields.
  * </p>
  *
  * @author mpetazzoni
@@ -231,8 +231,7 @@ public class Peer
     }
 
     /**
-     * Tells if two peers seem to look alike (i.e. they have the same IP, port and peer ID if they
-     * have one).
+     * Tells if two peers seem to look alike (i.e. they have the same IP, port and peer ID if they have one).
      *
      * @param other
      *

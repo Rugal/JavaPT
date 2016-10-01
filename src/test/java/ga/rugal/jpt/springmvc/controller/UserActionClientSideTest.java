@@ -29,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Slf4j
 public class UserActionClientSideTest extends ControllerClientSideTestBase
 {
+
     @Autowired
     private Gson GSON;
 

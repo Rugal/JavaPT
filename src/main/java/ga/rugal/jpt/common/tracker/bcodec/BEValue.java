@@ -30,8 +30,7 @@ public class BEValue
 {
 
     /**
-     * The B-encoded value can be a byte array, a Number, a List or a Map. Lists and Maps contains
-     * BEValues too.
+     * The B-encoded value can be a byte array, a Number, a List or a Map. Lists and Maps contains BEValues too.
      */
     private final Object value;
 
@@ -95,8 +94,7 @@ public class BEValue
     /**
      * Returns this BEValue as a String, interpreted with the specified encoding.
      *
-     * @param encoding The encoding to interpret the bytes as when converting them into a
-     *                 {@link String}.
+     * @param encoding The encoding to interpret the bytes as when converting them into a {@link String}.
      *
      * @return
      *

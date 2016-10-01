@@ -12,8 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 /**
  * This is a base test class for JUNIT test in controller testing<BR/>
- * It is really a very simple but useful test class, which skipped using web server, hence saved a
- * lot of time in
+ * It is really a very simple but useful test class, which skipped using web server, hence saved a lot of time in
  * deployment!
  *
  * @author Rugal Bernstein

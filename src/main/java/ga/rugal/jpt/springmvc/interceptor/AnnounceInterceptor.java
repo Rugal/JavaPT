@@ -83,8 +83,8 @@ public class AnnounceInterceptor implements HandlerInterceptor
     }
 
     /**
-     * I decided to use torrent information in "post" table as the primary storage. Because any post
-     * must have its related torrent file.
+     * I decided to use torrent information in "post" table as the primary storage. Because any post must have its
+     * related torrent file.
      * <p>
      * @param request <p>
      * @throws TrackerResponseException
@@ -150,8 +150,7 @@ public class AnnounceInterceptor implements HandlerInterceptor
 
     /**
      * This method is just for generating a response with forbidden content.<BR>
-     * May throw IOException inside because unable to get response body writer, but this version
-     * will shelter it.
+     * May throw IOException inside because unable to get response body writer, but this version will shelter it.
      *
      *
      * @param response The response corresponding to the request.

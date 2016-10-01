@@ -4,8 +4,8 @@ import java.nio.ByteBuffer;
 import javax.validation.constraints.NotNull;
 
 /**
- * This is a JavaBean that are sent from client. Just one JavaBean includes all properties needed.
- * We will extract information from this bean to generate a formal tracker update bean.
+ * This is a JavaBean that are sent from client. Just one JavaBean includes all properties needed. We will extract
+ * information from this bean to generate a formal tracker update bean.
  * <p>
  * Actually in 0.1 version, info_hash and peer_id fields need to be injected separately.
  *
