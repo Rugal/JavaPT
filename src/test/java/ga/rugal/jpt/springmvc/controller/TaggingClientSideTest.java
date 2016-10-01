@@ -16,7 +16,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -88,12 +87,9 @@ public class TaggingClientSideTest extends ControllerClientSideTestBase
 
     private void tagging() throws Exception
     {
-
         this.mockMvc.perform(post(String.format("/post/%d/tag/%d", post.getPid(), tag.getTid()))
             .header(SystemDefaultProperties.ID, user.getUid())
-            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(GSON.toJson(tag)))
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword()))
             .andDo(print())
             .andExpect(status().isCreated());
     }
@@ -117,4 +113,75 @@ public class TaggingClientSideTest extends ControllerClientSideTestBase
             .andExpect(status().isOk());
     }
 
+    @Test
+    public void getPostTags_404() throws Exception
+    {
+        this.mockMvc.perform(get("/post/0/tag")
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword()))
+            .andDo(print())
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void tagging_noTag_404() throws Exception
+    {
+        this.mockMvc.perform(post(String.format("/post/%d/tag/0", post.getPid()))
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword()))
+            .andDo(print())
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void tagging_noPost_404() throws Exception
+    {
+        this.mockMvc.perform(post("/post/0/tag/0")
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword()))
+            .andDo(print())
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void tagging_409() throws Exception
+    {
+        this.mockMvc.perform(post(String.format("/post/%d/tag/%d", post.getPid(), tag.getTid()))
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword()))
+            .andDo(print())
+            .andExpect(status().isConflict());
+    }
+
+    @Test
+    public void untagging_noPost_404() throws Exception
+    {
+        this.mockMvc.perform(delete(String.format("/post/0/tag/0", post.getPid(), tag.getTid()))
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword()))
+            .andDo(print())
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void untagging_noTag_404() throws Exception
+    {
+        this.mockMvc.perform(delete(String.format("/post/%d/tag/0", post.getPid()))
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword()))
+            .andDo(print())
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void untagging_noTagging_404() throws Exception
+    {
+        untagging();
+        this.mockMvc.perform(delete(String.format("/post/%d/tag/%d", post.getPid(), tag.getTid()))
+            .header(SystemDefaultProperties.ID, user.getUid())
+            .header(SystemDefaultProperties.CREDENTIAL, user.getPassword()))
+            .andDo(print())
+            .andExpect(status().isNotFound());
+        tagging();
+    }
 }

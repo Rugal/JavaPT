@@ -113,7 +113,7 @@ public class PostActionClientSideTest extends ControllerClientSideTestBase
     @Test
     public void delete_404() throws Exception
     {
-        this.mockMvc.perform(post("/post/0")
+        this.mockMvc.perform(delete("/post/0")
             .header(SystemDefaultProperties.ID, user.getUid())
             .header(SystemDefaultProperties.CREDENTIAL, user.getPassword()))
             .andExpect(status().isNotFound());
