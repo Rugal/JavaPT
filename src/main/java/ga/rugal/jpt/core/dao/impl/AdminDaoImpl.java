@@ -27,7 +27,7 @@ public class AdminDaoImpl extends HibernateBaseDao<Admin, Integer> implements Ad
         Criteria crit = createCriteria();
         crit.add(Restrictions.eq("user", user));
         List<Admin> list = (List<Admin>) crit.list();
-        return list;
+        return (List<Admin>) list;
     }
 
     @Override

@@ -49,6 +49,6 @@ public class InvitationDaoImpl extends HibernateBaseDao<Invitation, String> impl
         crit.add(Restrictions.eq("invitor", invitor));
         crit.add(Restrictions.isNull("invitee"));
         crit.setProjection(Projections.property("id"));
-        return crit.list();
+        return (List<String>) crit.list();
     }
 }

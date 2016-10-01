@@ -3,8 +3,8 @@ package ga.rugal.jpt.core.dao.impl;
 import ga.rugal.jpt.common.AliasToBeanNestedResultTransformer;
 import ga.rugal.jpt.core.dao.TaggingDao;
 import ga.rugal.jpt.core.entity.Post;
-import ga.rugal.jpt.core.entity.Tagging;
 import ga.rugal.jpt.core.entity.Tag;
+import ga.rugal.jpt.core.entity.Tagging;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import ml.rugal.sshcommon.hibernate.HibernateBaseDao;
@@ -51,7 +51,7 @@ public class TaggingDaoImpl extends HibernateBaseDao<Tagging, Integer> implement
             .add(Projections.property("t.name").as("name"))
         );
         criteria.setResultTransformer(new AliasToBeanNestedResultTransformer(Tag.class));
-        return criteria.list();
+        return (List<Tag>) criteria.list();
     }
 
 }
