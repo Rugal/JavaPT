@@ -15,6 +15,7 @@ import ga.rugal.jpt.core.entity.Thread;
 import ga.rugal.jpt.core.entity.User;
 import java.io.File;
 import java.io.IOException;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -195,5 +196,26 @@ public class TestApplicationContext
         invitation.setId("TESTCODE");
         invitation.setInvitor(user);
         return invitation;
+    }
+
+    @Bean
+    public String uriString()
+    {
+        String crypted = BCrypt.hashpw("11", BCrypt.gensalt());
+        return "/announce?"
+               + "uid=1"
+               + "&info_hash=%5c%84ao.%28%d0%3b%f9%c1%27%d7%bc%ca%a4%cf%0f%d5%7bC"
+               + "&peer_id=-UT3440-%cf%9f%a0%d5%82%2f%dd%25%8bY%d8%11"
+               + "&port=20443"
+               + "&uploaded=0"
+               + "&downloaded=0"
+               + "&left=2472252877"
+               + "&corrupt=0"
+               + "&key=02182ADA"
+               + "&event=started"
+               + "&numwant=200"
+               + "&compact=1"
+               + "&no_peer_id=1"
+               + "&credential=" + crypted;
     }
 }

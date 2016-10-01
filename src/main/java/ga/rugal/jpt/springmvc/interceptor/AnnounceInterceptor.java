@@ -63,15 +63,6 @@ public class AnnounceInterceptor implements HandlerInterceptor
         try
         {
             userValidation(request);
-        }
-        catch (TrackerResponseException e)
-        {
-            deniedResponse(request, response, e.getMessage());
-            return false;
-        }
-        //Credential validation
-        try
-        {
             credentialValidation(request);
         }
         catch (TrackerResponseException e)
@@ -79,10 +70,12 @@ public class AnnounceInterceptor implements HandlerInterceptor
             deniedResponse(request, response, e.getMessage());
             return false;
         }
+        //Credential validation
         return true;
     }
 
     /**
+     * Validate user identity with given credential.<BR>
      * I decided to use torrent information in "post" table as the primary storage. Because any post
      * must have its related torrent file.
      * <p>
@@ -91,7 +84,6 @@ public class AnnounceInterceptor implements HandlerInterceptor
      */
     private void credentialValidation(HttpServletRequest request) throws TrackerResponseException
     {
-        //Credential validation begin
         String credential = request.getParameter(SystemDefaultProperties.CREDENTIAL);
         if (null == credential || credential.isEmpty())
         {
@@ -109,16 +101,24 @@ public class AnnounceInterceptor implements HandlerInterceptor
         if (!BCrypt.checkpw(candidate, credential))
         {
             //be sure our real credential must be:
-            //uid:pid-> BCrypt
+            //uid:pid --> BCrypt
             LOG.warn(MessageFormat.format(CommonLogContent.FRAUD_REQUEST,
                                           request.getRemoteAddr(),
                                           request.getParameter(SystemDefaultProperties.UID),
                                           infoHash));
             throw new TrackerResponseException(CommonMessageContent.INVALID_CREDENTIAL);
         }
-        //Credential validation completed
     }
 
+    /**
+     * Validate the existence of UID.
+     *
+     * @param request
+     *
+     * @return
+     *
+     * @throws TrackerResponseException
+     */
     private User userValidation(HttpServletRequest request) throws TrackerResponseException
     {
         //User validation begin
