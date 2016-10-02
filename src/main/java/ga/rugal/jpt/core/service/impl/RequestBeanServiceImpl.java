@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 /**
  * Use this service class for better decoupling.
@@ -53,7 +54,7 @@ public class RequestBeanServiceImpl implements RequestBeanService
         bean.setUploaded(b.getUploaded());
         bean.setLeft(b.getLeft());
         bean.setIp(b.getIp());
-        bean.setNo_peer_id(b.getNoPeerId());
+        bean.setNo_peer_id(b.getNo_peer_id());
         bean.setNumwant(b.getNumwant());
         bean.setPort(b.getPort());
         bean.setTrackerid(b.getTrackerid());
@@ -63,7 +64,7 @@ public class RequestBeanServiceImpl implements RequestBeanService
         try
         {
             //any torrent hash info must be in upper case
-            bean.setInfoHash(toSHA1(b.getInfoHash()));
+            bean.setInfoHash(toSHA1(b.getInfo_hash()));
         }
         catch (RuntimeException e)
         {
@@ -76,8 +77,7 @@ public class RequestBeanServiceImpl implements RequestBeanService
             throw new TrackerResponseException(CommonMessageContent.TORRENT_NOT_FOUND);
         }
         bean.setPost(post);
-        //
-        readPeerID(bean, b.getPeerId());
+        readPeerID(bean, b.getPeer_id());
         //Do database search for user and client
         User user = userService.getDAO().get(b.getUid());
         if (null == user)
@@ -123,7 +123,7 @@ public class RequestBeanServiceImpl implements RequestBeanService
     @Override
     public String toSHA1(String text)
     {
-        if (null == text || text.isEmpty())
+        if (StringUtils.isEmpty(text))
         {
             return null;
         }
