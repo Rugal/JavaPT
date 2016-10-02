@@ -415,13 +415,12 @@
                 <version>0.7.7.201606060606</version>
                 <configuration>
                     <!-- Sets the output directory for the code coverage report. -->
-                    <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
+                    <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
                     <excludes>
                         <exclude>config/*.class</exclude>
                         <exclude>**/common/**/*.class</exclude>
                         <exclude>**/entity/*.class</exclude>
                         <exclude>**/annotation/*.class</exclude>
-                        <exclude>**/interceptor/*.class</exclude>
                         <exclude>**/multipart/*.class</exclude>
                     </excludes>
                 </configuration>
