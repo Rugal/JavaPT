@@ -78,11 +78,11 @@ public class PostServiceImplTest extends DBTestBase
     @Test
     public void update() throws IOException
     {
-        Post db = postService.getDAO().get(post.getPid());
+        Post db = postService.getDAO().get(post.getPid(), false);
         Integer size = 321123;
         db.setSize(size);
         postService.update(db);
-        db = postService.getDAO().get(post.getPid());
+        db = postService.getDAO().get(post.getPid(), false);
         Assert.assertEquals(size, db.getSize());
     }
 }

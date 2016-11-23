@@ -46,19 +46,21 @@ public class TrackerActionClientSideTest extends ControllerClientSideTestBase
     private Admin admin;
 
     @Before
-    public void setUp()
+    public void setUp() throws Exception
     {
         System.out.println("setUp");
         levelService.getDAO().save(level);
         userService.getDAO().save(user);
         admin.setRole(Admin.Role.SUPER);
         adminService.getDAO().save(admin);
+        start();
     }
 
     @After
-    public void tearDown()
+    public void tearDown() throws Exception
     {
         System.out.println("tearDown");
+        stop();
         adminService.getDAO().delete(admin);
         userService.getDAO().delete(user);
         levelService.getDAO().delete(level);
@@ -67,8 +69,6 @@ public class TrackerActionClientSideTest extends ControllerClientSideTestBase
     @Test
     public void testServer() throws Exception
     {
-        stop();
-        start();
     }
 
     private void start() throws Exception

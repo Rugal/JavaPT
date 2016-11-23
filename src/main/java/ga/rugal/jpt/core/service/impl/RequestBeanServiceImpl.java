@@ -141,5 +141,4 @@ public class RequestBeanServiceImpl implements RequestBeanService
         }
         return sb.toString().toUpperCase();
     }
-
 }

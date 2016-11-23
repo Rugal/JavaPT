@@ -15,22 +15,24 @@
  */
 package ga.rugal.jpt.common.tracker.common;
 
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+
+import config.SystemDefaultProperties;
 
 /**
  * A basic BitTorrent peer.
  *
  * <p>
- * This class is meant to be a common base for the tracker and client, which would presumably
- * subclass it to extend its functionality and fields.
+ * This class is meant to be a common base for the tracker and client, which would presumably subclass it to extend its functionality and
+ * fields.
  * </p>
  *
  * @author mpetazzoni
  */
-public class Peer
-{
+public class Peer {
 
     private final InetSocketAddress address;
 
@@ -45,45 +47,41 @@ public class Peer
      *
      * @param address The peer's address, with port.
      */
-    public Peer(InetSocketAddress address)
-    {
+    public Peer(InetSocketAddress address) {
         this(address, null);
     }
 
     /**
      * Instantiate a new peer.
      *
-     * @param ip   The peer's IP address.
+     * @param ip The peer's IP address.
      * @param port The peer's port.
      */
-    public Peer(String ip, int port)
-    {
+    public Peer(String ip, int port) {
         this(new InetSocketAddress(ip, port), null);
     }
 
     /**
      * Instantiate a new peer.
      *
-     * @param ip         The peer's IP address.
-     * @param port       The peer's port.
+     * @param ip The peer's IP address.
+     * @param port The peer's port.
      * @param peerIdByte The byte-encoded peer ID.
      */
-    public Peer(String ip, int port, ByteBuffer peerIdByte)
-    {
+    public Peer(String ip, int port, ByteBuffer peerIdByte) {
         this(new InetSocketAddress(ip, port), peerIdByte);
     }
 
     /**
      * Instantiate a new peer.
      *
-     * @param address    The peer's address, with port.
+     * @param address The peer's address, with port.
      * @param peerIdByte The byte-encoded peer ID.
      */
-    public Peer(InetSocketAddress address, ByteBuffer peerIdByte)
-    {
+    public Peer(InetSocketAddress address, ByteBuffer peerIdByte) {
         this.address = address;
         this.hostId = String.format("%s:%d", this.address.getAddress(),
-                                    this.address.getPort());
+                this.address.getPort());
 
         this.setPeerId(peerIdByte);
     }
@@ -93,8 +91,7 @@ public class Peer
      * <p>
      * @return
      */
-    public boolean hasPeerId()
-    {
+    public boolean hasPeerId() {
         return this.peerId != null;
     }
 
@@ -103,8 +100,7 @@ public class Peer
      * <p>
      * @return
      */
-    public ByteBuffer getPeerIdByte()
-    {
+    public ByteBuffer getPeerIdByte() {
         return this.peerId;
     }
 
@@ -113,22 +109,18 @@ public class Peer
      *
      * @param peerId The new peer ID for this peer.
      */
-    public void setPeerId(ByteBuffer peerId)
-    {
-        if (peerId != null)
-        {
+    public void setPeerId(ByteBuffer peerId) {
+        if (peerId != null) {
             this.peerId = peerId;
             this.hexPeerId = Torrent.byteArrayToHexString(peerId.array());
-        } else
-        {
+        } else {
             this.peerId = null;
             this.hexPeerId = null;
         }
     }
 
-    public String getPeerId()
-    {
-        return new String(this.peerId.array());
+    public String getPeerId() throws UnsupportedEncodingException {
+        return new String(this.peerId.array(), SystemDefaultProperties.BYTE_ENCODING);
     }
 
     /**
@@ -136,8 +128,7 @@ public class Peer
      * <p>
      * @return
      */
-    public String getHexPeerId()
-    {
+    public String getHexPeerId() {
         return this.hexPeerId;
     }
 
@@ -146,10 +137,8 @@ public class Peer
      * <p>
      * @return
      */
-    public String getShortHexPeerId()
-    {
-        return String.format("..%s",
-                             this.hexPeerId.substring(this.hexPeerId.length() - 6).toUpperCase());
+    public String getShortHexPeerId() {
+        return String.format("..%s", this.hexPeerId.substring(this.hexPeerId.length() - 6).toUpperCase());
     }
 
     /**
@@ -157,8 +146,7 @@ public class Peer
      * <p>
      * @return
      */
-    public String getIp()
-    {
+    public String getIp() {
         return this.address.getAddress().getHostAddress();
     }
 
@@ -167,8 +155,7 @@ public class Peer
      * <p>
      * @return
      */
-    public InetAddress getAddress()
-    {
+    public InetAddress getAddress() {
         return this.address.getAddress();
     }
 
@@ -177,8 +164,7 @@ public class Peer
      * <p>
      * @return
      */
-    public int getPort()
-    {
+    public int getPort() {
         return this.address.getPort();
     }
 
@@ -187,8 +173,7 @@ public class Peer
      * <p>
      * @return
      */
-    public String getHostIdentifier()
-    {
+    public String getHostIdentifier() {
         return this.hostId;
     }
 
@@ -197,8 +182,7 @@ public class Peer
      *
      * @return
      */
-    public byte[] getRawIp()
-    {
+    public byte[] getRawIp() {
         return this.address.getAddress().getAddress();
     }
 
@@ -208,22 +192,18 @@ public class Peer
      * @return
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder s = new StringBuilder("peer://")
-            .append(this.getIp()).append(":").append(this.getPort())
-            .append("/");
+                .append(this.getIp()).append(":").append(this.getPort())
+                .append("/");
 
-        if (this.hasPeerId())
-        {
+        if (this.hasPeerId()) {
             s.append(this.hexPeerId.substring(this.hexPeerId.length() - 6));
-        } else
-        {
+        } else {
             s.append("?");
         }
 
-        if (this.getPort() < 10000)
-        {
+        if (this.getPort() < 10000) {
             s.append(" ");
         }
 
@@ -231,23 +211,20 @@ public class Peer
     }
 
     /**
-     * Tells if two peers seem to look alike (i.e. they have the same IP, port and peer ID if they
-     * have one).
+     * Tells if two peers seem to look alike (i.e. they have the same IP, port and peer ID if they have one).
      *
      * @param other
      *
      * @return
      */
-    public boolean looksLike(Peer other)
-    {
-        if (other == null)
-        {
+    public boolean looksLike(Peer other) {
+        if (other == null) {
             return false;
         }
 
         return this.hostId.equals(other.hostId)
-               && (this.hasPeerId()
-                   ? this.hexPeerId.equals(other.hexPeerId)
-                   : true);
+                && (this.hasPeerId()
+                ? this.hexPeerId.equals(other.hexPeerId)
+                : true);
     }
 }

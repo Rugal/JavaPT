@@ -14,6 +14,13 @@ public interface UserDao
 
     User delete(User bean);
 
+    /**
+     * Get user object, without password.
+     *
+     * @param id
+     *
+     * @return
+     */
     User get(Integer id);
 
     Pagination getPage(int pageNo, int pageSize);
@@ -33,7 +40,7 @@ public interface UserDao
     boolean authenticate(Integer uid, String password);
 
     /**
-     * Get user with related email address.
+     * Get user with related email address, without password.
      *
      * @param email
      *

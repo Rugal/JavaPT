@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.hibernate.HibernateException;
 import org.hibernate.property.PropertyAccessor;
 import org.hibernate.property.PropertyAccessorFactory;
@@ -221,7 +222,7 @@ public class AliasToBeanNestedResultTransformer extends AliasedTupleSubsetResult
                 }
             }
         }
-        catch (Exception e)
+        catch (IllegalAccessException | InstantiationException | HibernateException e)
         {
             throw new HibernateException(e);
         }

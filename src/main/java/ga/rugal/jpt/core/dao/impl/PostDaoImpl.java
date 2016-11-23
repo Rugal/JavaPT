@@ -48,11 +48,42 @@ public class PostDaoImpl extends HibernateBaseDao<Post, Integer> implements Post
         return findByCriteria(criteria, pageNo, pageSize);
     }
 
+    private Post removeKeyInfo(Post bean)
+    {
+        if (null != bean)
+        {
+            bean.setBencode(null);
+        }
+        return bean;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Post get(Integer pid)
+    {
+        return this.get(pid, false);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Post get(Integer pid, boolean withBencode)
+    {
+        Post bean = super.get(pid);
+        return withBencode ? bean : this.removeKeyInfo(bean);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public Post getByInfohash(String infoHash)
     {
-        return this.findUniqueByProperty("hash", infoHash);
+        Post bean = this.findUniqueByProperty("hash", infoHash);
+        return this.removeKeyInfo(bean);
     }
 
     @Override

@@ -1,12 +1,10 @@
 package config;
 
-import com.google.gson.Gson;
-import com.zaxxer.hikari.HikariDataSource;
-import ga.rugal.jpt.core.entity.PackageInfo;
 import java.util.Properties;
+
 import javax.sql.DataSource;
+
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,6 +15,10 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.google.gson.Gson;
+import com.zaxxer.hikari.HikariDataSource;
+import ga.rugal.jpt.core.entity.PackageInfo;
+
 /**
  * Java based application context configuration class.
  * <p>
@@ -25,14 +27,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @author Rugal Bernstein
  * @since 0.2
  */
+@ComponentScan(basePackageClasses = ga.PackageInfo.class)
 @Configuration
 @EnableTransactionManagement
 @PropertySource(
     {
-        "classpath:jdbc.properties",
-        "classpath:hibernate.properties"
+        "classpath:hibernate.properties", "classpath:jdbc_${spring.profiles.active}.properties"
     })
-@ComponentScan(basePackageClasses = ga.rugal.jpt.core.PackageInfo.class)
 public class ApplicationContext
 {
 
@@ -49,18 +50,6 @@ public class ApplicationContext
     public static final String DIALECT = "hibernate.dialect";
 
     public static final String PACKAGE_TO_SCAN = PackageInfo.class.getPackage().getName();
-
-    @Value("${jdbc.username}")
-    private String username;
-
-    @Value("${jdbc.password}")
-    private String password;
-
-    @Value("${jdbc.driverClassName}")
-    private String driverClassName;
-
-    @Value("${jdbc.url}")
-    private String url;
 
     @Value("${" + AUTOCOMMIT + "}")
     private String autocommit;
@@ -80,32 +69,48 @@ public class ApplicationContext
     @Value("${" + DIALECT + "}")
     private String dialect;
 
+    @Value("${jdbc.username}")
+    private String username;
+
+    @Value("${jdbc.password}")
+    private String password;
+
+    @Value("${jdbc.driverClassName}")
+    private String driverClassName;
+
+    @Value("${jdbc.url}")
+    private String url;
+
     @Bean
-    public Gson GSON()
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer()
+    {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    @Bean
+    public Gson gson()
     {
         return new Gson();
     }
 
-//<editor-fold defaultstate="collapsed" desc="HikariCP Datasoure Configuration" >
+//<editor-fold defaultstate="collapsed" desc="HikariCP Data Source Configuration">
     @Bean(destroyMethod = "close")
     public DataSource dataSource()
     {
         HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        dataSource.setJdbcUrl(url);
-        dataSource.setDriverClassName(driverClassName);
+        dataSource.setUsername(this.username);
+        dataSource.setPassword(this.password);
+        dataSource.setJdbcUrl(this.url);
+        dataSource.setDriverClassName(this.driverClassName);
         dataSource.setConnectionTestQuery("SELECT 1;");
         dataSource.setMaximumPoolSize(3);
         dataSource.setAutoCommit(false);
-        //------------------------------
         return dataSource;
     }
 //</editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="Hibernate Session factory configuration">
     @Bean
-    @Autowired
     public LocalSessionFactoryBean sessionFactory(DataSource datasouce, Properties hibernateProperties)
     {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
@@ -132,18 +137,10 @@ public class ApplicationContext
 
 //<editor-fold defaultstate="collapsed" desc="Hibernate transaction manager">
     @Bean
-    @Autowired
     public HibernateTransactionManager transactionManager(SessionFactory sessionFactory)
     {
         HibernateTransactionManager txManager = new HibernateTransactionManager(sessionFactory);
         return txManager;
     }
 //</editor-fold>
-
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer()
-    {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
-
 }

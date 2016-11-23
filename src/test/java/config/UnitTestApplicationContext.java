@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 0.2
  */
 @Configuration
-public class TestApplicationContext
+public class UnitTestApplicationContext
 {
 
     @Bean

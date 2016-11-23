@@ -1,7 +1,11 @@
 package ga.rugal.jpt.common.tracker.common;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+
 import javax.validation.constraints.NotNull;
+
+import config.SystemDefaultProperties;
 import lombok.Data;
 
 /**
@@ -54,18 +58,18 @@ public class ClientRequestMessageBean
     {
     }
 
-    public ByteBuffer getBufferPeerId()
+    public ByteBuffer getBufferPeerId() throws UnsupportedEncodingException
     {
-        return ByteBuffer.wrap(peer_id.getBytes());
+        return ByteBuffer.wrap(peer_id.getBytes(SystemDefaultProperties.BYTE_ENCODING));
     }
 
-    public byte[] getByteInfoHash()
+    public byte[] getByteInfoHash() throws UnsupportedEncodingException
     {
-        return info_hash.getBytes();
+        return info_hash.getBytes(SystemDefaultProperties.BYTE_ENCODING);
     }
 
-    public byte[] getBytePeerId()
+    public byte[] getBytePeerId() throws UnsupportedEncodingException
     {
-        return peer_id.getBytes();
+        return peer_id.getBytes(SystemDefaultProperties.BYTE_ENCODING);
     }
 }

@@ -1,7 +1,7 @@
 package ga.rugal.jpt.core.entity;
 
-import com.google.gson.annotations.Expose;
 import static config.SystemDefaultProperties.SCHEMA;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.google.gson.annotations.Expose;
 import lombok.Data;
 
 /**
@@ -41,7 +43,7 @@ public class Invitation
     @Override
     public String toString()
     {
-        return String.format("%s[ id=%d ]", this.getClass().getName(), this.id);
+        return String.format("%s[ id=%s ]", this.getClass().getName(), this.id);
     }
 
     @Override

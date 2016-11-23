@@ -67,6 +67,7 @@ public class UserDaoImplTest extends DBTestBase
         User expResult = user;
         User result = userDao.get(id);
         Assert.assertEquals(expResult, result);
+        Assert.assertNull(result.getPassword());
     }
 
     @Test
@@ -75,6 +76,7 @@ public class UserDaoImplTest extends DBTestBase
         String email = user.getEmail();
         User dbUser = userDao.getByEmail(email);
         Assert.assertEquals(user, dbUser);
+        Assert.assertNull(dbUser.getPassword());
     }
 
     @Test
@@ -84,6 +86,7 @@ public class UserDaoImplTest extends DBTestBase
         Pagination page = userDao.findByName(username, 1, 1);
         User db = (User) page.getList().get(0);
         Assert.assertEquals(user.getUid(), db.getUid());
+        Assert.assertNull(db.getPassword());
     }
 
     @Test
@@ -91,6 +94,7 @@ public class UserDaoImplTest extends DBTestBase
     {
         Assert.assertFalse(userDao.authenticate(user.getUid(), "Test"));
     }
+
     @Test
     public void authenticate_true()
     {

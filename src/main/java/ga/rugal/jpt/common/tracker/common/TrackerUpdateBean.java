@@ -1,11 +1,14 @@
 package ga.rugal.jpt.common.tracker.common;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+
+import config.SystemDefaultProperties;
 import ga.rugal.jpt.common.tracker.common.protocol.RequestEvent;
 import ga.rugal.jpt.common.tracker.server.TrackedPeer;
 import ga.rugal.jpt.core.entity.Client;
 import ga.rugal.jpt.core.entity.Post;
 import ga.rugal.jpt.core.entity.User;
-import java.nio.ByteBuffer;
 import lombok.Data;
 
 /**
@@ -13,8 +16,7 @@ import lombok.Data;
  * @author Rugal Bernstein
  */
 @Data
-public class TrackerUpdateBean
-{
+public class TrackerUpdateBean {
 
     //Fields below are primitive data
     private TrackedPeer.PeerState state;
@@ -62,13 +64,11 @@ public class TrackerUpdateBean
 
     private Post post;
 
-    public ByteBuffer getBufferPeerID()
-    {
-        return ByteBuffer.wrap(getPeerID().getBytes());
+    public ByteBuffer getBufferPeerID() throws UnsupportedEncodingException {
+        return ByteBuffer.wrap(getPeerID().getBytes(SystemDefaultProperties.BYTE_ENCODING));
     }
 
-    public String getPeerID()
-    {
+    public String getPeerID() {
         return this.getCname() + this.getVersion() + this.getRandom();
     }
 }

@@ -261,7 +261,7 @@ public class PostAction
                            HttpServletResponse response)
     {
         //----------------Existence check------------------
-        Post post = postService.getDAO().get(pid);
+        Post post = postService.getDAO().get(pid, true);
         if (null == post)
         {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);

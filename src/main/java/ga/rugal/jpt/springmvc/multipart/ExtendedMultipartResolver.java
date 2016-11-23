@@ -1,6 +1,7 @@
 package ga.rugal.jpt.springmvc.multipart;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 /**
@@ -15,7 +16,6 @@ public class ExtendedMultipartResolver extends CommonsMultipartResolver
 
     private boolean isMultipartContent(HttpServletRequest request)
     {
-        String httpMethod = request.getMethod().toLowerCase();
         // test for allowed methods here...
         String contentType = request.getContentType();
         return (contentType != null && contentType.toLowerCase().startsWith(MULTIPART));

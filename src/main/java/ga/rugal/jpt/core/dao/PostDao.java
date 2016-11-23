@@ -15,7 +15,24 @@ public interface PostDao
 
     Post delete(Post bean);
 
-    Post get(Integer id);
+    /**
+     * Get user object with bencode setting.
+     *
+     * @param id
+     * @param withBencode specifier if Bencode should be included
+     *
+     * @return
+     */
+    Post get(Integer pid, boolean withBencode);
+
+    /**
+     * Get post object, without Bencode by default.
+     *
+     * @param pid
+     *
+     * @return
+     */
+    Post get(Integer pid);
 
     Pagination getPage(int pageNo, int pageSize);
 
